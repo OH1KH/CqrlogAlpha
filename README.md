@@ -11,3 +11,4 @@ Until this get fixed you find current versions you are looking for from:
 (ready compiled): https://github.com/OH1KH/cqrlog/tree/loc_testing/compiled
 
 See you there, 73!
+

@@ -1,34 +1,35 @@
 # CqrlogAlpha is a clone based on the work of OK2CQR & OK1RR.
-## It has over 500 smaller or bigger differences to official Cqrlog.
+## It has over 570 smaller or bigger differences to official Cqrlog.
 ### I am maintaining this software mainly for my own use, but feel free to use/modify it for your own needs by the rules of Open software licence and HamSprit rules.
+### Alpha version changes can be found from [Changelog](https://htmlpreview.github.io/?https://github.com/OH1KH/CqrlogALpha/blob/main/src/changelog.html)  
+### Some Cqrlog related videos can be found from  <https://www.youtube.com/channel/UC3yPCVYmfeBzDSwTosOe2fQ>
 ----------------------------------------------------------------------------------------------------
 
-This folder holds ready compiled binary files of source branch "loc_testing" that is the version of Cqrlog that I am using myself daily.
-I call it Alpha version.
-At the moment (2024-05-01) it is mostly compatible with official Cqrlog. Depending what happens to official Cqrlog development it may not be so in future.
-
-Note that source (one step backwards from this "compiled" folder)  may have bigger version number and have changes and fixes made after ready compiled versions are released.
-Source is more as "daily snapshot" and may have more bugs.
+This folder holds ready compiled binary files of CqrlogAlpha that I am using myself daily.
+I call it Alpha version, but that does not mean it is somehow under construction (a testing version).
 Compiled binary versions are released after it seems that biggest bugs are found and fixed.
+
+It is mostly compatible with official Cqrlog. Depending what happens to official Cqrlog development it may not be so in future.
 
 ## NOTES:
 
- #### NOTE: Upgrading instructions for using script, manual install or compile from shource can be foud below. Just scroll down ...
+ #### NOTE: Upgrading instructions for using script, manual install or compile from source can be foud below. Just scroll down ...
 
 
- #### NOTE: Upgrading to 2.6.0.(125) ,or higer, will add database table "cqrlog_common.states" and set version to 7.
- This database upgrade should be backwards compatible (none of old versions are interested in new table)
+ #### NOTE: Upgrading to _(125)_ ,or higer, will add database table "cqrlog_common.states" and set version to 7.
+ This database upgrade should be backwards compatible (none of old versions are interested in new table created)
 
  #### NOTE: For now on binaries are compiled using system that has GLIBC version 2.35.
 If you can not start Cqrlog after update check your GLIBC version with command console: ***ldd --version***
 Update GLIBC if it is below 2.3.5.
-If you do not want to do that you can compile this source (see 1 folder up) with your current OS version and get it running.
-Note that the Alpha source version is usually one step higher than ready compiled versions.
+If you do not want to do that you can compile this source (see parent folder) with your current OS version and get it running.
+
+ #### NOTE: It may be that some OS versions crash if your desktop uses Wayland. Switching over to X should help.
 
 
 ## ABOUT THESE BINARY FILES:
 
- Binaries (cqr2,cqr3,cqr5,cqr6 zips) include latest Alpha versions.
+ Binaries (cqr2,cqr3,cqr5,cqr6 zips) include latest CarlogAlpha versions.
  
  To see updates in this alpha version look at <https://github.com/OH1KH/cqrlog/commits/loc_testing>
 
@@ -49,8 +50,6 @@ Alpha BINARIES:
 **These binary files do not work alone. All binaries must be either copied over complete, working, official installation**
 ** or used with required dependency packages and with folder /usr/share/cqrlog having all files from official install**
 
-It may be that some (Rpi confirmed) versions crash if your desktop uses Wayland. Switching over to X should help.
-Otherwise you have to compile the source by yourself and see if that produces runable binary result for Wayland.
 
 ------------------WARNINGS-----------------
 ===========================================

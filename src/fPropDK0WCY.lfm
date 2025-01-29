@@ -1,0 +1,358 @@
+object frmPropDK0WCY: TfrmPropDK0WCY
+  Left = 978
+  Height = 308
+  Top = 169
+  Width = 223
+  Caption = 'Propagation DK0WCY'
+  ClientHeight = 308
+  ClientWidth = 223
+  Constraints.MinHeight = 275
+  Constraints.MinWidth = 200
+  KeyPreview = True
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnDblClick = FormDblClick
+  OnKeyUp = FormKeyUp
+  OnShow = FormShow
+  LCLVersion = '3.6.0.0'
+  object lblBoulAidx: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblInfo
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 81
+    Width = 92
+    BorderSpacing.Top = 5
+    Caption = 'Boulder A-idx:'
+    ParentColor = False
+  end
+  object lblCurKidx: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblKiel3K
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 147
+    Width = 89
+    BorderSpacing.Top = 5
+    Caption = 'Kiel cur K-idx:'
+    ParentColor = False
+  end
+  object lblSolarFlx: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblKidxG
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 191
+    Width = 66
+    BorderSpacing.Top = 5
+    Caption = 'Solar flux:'
+    ParentColor = False
+  end
+  object lblSunSNr: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblSolarFlx
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 213
+    Width = 73
+    BorderSpacing.Top = 5
+    Caption = 'Sunspot nr:'
+    ParentColor = False
+  end
+  object lblGeomFi: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblSolAct
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 257
+    Width = 92
+    BorderSpacing.Top = 5
+    Caption = 'Geomag field:'
+    ParentColor = False
+  end
+  object DBoulAidx: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblBoulAidx
+    Left = 120
+    Height = 17
+    Top = 81
+    Width = 68
+    Caption = 'DBoulAidx'
+    ParentColor = False
+  end
+  object DCurKidx: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblCurKidx
+    Left = 120
+    Height = 17
+    Top = 147
+    Width = 61
+    Caption = 'DCurKidx'
+    ParentColor = False
+    ParentFont = False
+  end
+  object DSolarFlx: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblSolarFlx
+    Left = 120
+    Height = 17
+    Top = 191
+    Width = 63
+    Caption = 'DSolarFlx'
+    ParentColor = False
+  end
+  object DSunSNr: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblSunSNr
+    Left = 120
+    Height = 17
+    Top = 213
+    Width = 57
+    Caption = 'DSunSNr'
+    ParentColor = False
+  end
+  object DGeomFi: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblGeomFi
+    Left = 120
+    Height = 17
+    Top = 257
+    Width = 59
+    Caption = 'DGeomFi'
+    ParentColor = False
+  end
+  object lblInfo: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 59
+    Width = 41
+    BorderSpacing.Top = 5
+    Caption = 'lblInfo'
+    ParentColor = False
+  end
+  object sbtnRefresh: TSpeedButton
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = DAurora
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 192
+    Height = 20
+    Hint = 'Refresh statistic'
+    Top = 279
+    Width = 23
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000064000000640000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000235328FF2D6B32FF000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000525F2AFF5AA462FF58A15EFF37833EFF347E3AFF317A36FF2E7533FF2768
+      2BFF1D4E20FF0000000000000000000000000000000000000000000000002652
+      35FF62AC6AFF85C88DFF85C78BFF82C688FF7FC486FF7CC282FF79C180FF71B9
+      78FF5FA865FF49914EFF1A4E35FF000000000000000000000000000000006A9B
+      61FF66B06EFF8ACA92FF89CA90FF86C88DFF83C68AFF80C587FF7EC384FF7BC2
+      81FF6DBB74FF76BE7CFF59A05DFF1B4C23FF0000000000000000000000000000
+      00007DC283FF67B16FFF64AD6BFF43944BFF408F47FF3C8A43FF398540FF549D
+      5AFF74BA7AFF79C17FFF77BF7DFF4A914FFF0000000000000000000000000000
+      00000000000085AC6AFF6BAF6FFF000000000000000000000000000000004452
+      24FF468D4BFF75BB7BFF70BD77FF63AB69FF1E5021FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000234C24FF61A867FF7BC282FF76BC7CFF3A7E43FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000023564AFF64AB6BFF7FC486FF79BE81FF428444FF00000000000000000000
+      0000000000000000000000000000000000000000000000000000000000002755
+      2CFF3A8142FF81C388FF7DC485FF6EB375FF265B2AFF00000000000000000000
+      00005FBA6AFF5CB667FF59B364FF56AE60FF53AA5DFF50A659FF4DA156FF68B1
+      70FF88C890FF8DCC95FF8BCB92FF5DA564FF0000000000000000000000000000
+      000062BE6DFFA5DAAEFFA2D8ACFFA1D8AAFF9ED6A7FF9CD5A5FF99D4A2FF97D2
+      9FFF8CCD95FF91CF99FF73B87BFF2D6331FF0000000000000000000000000000
+      000064C170FFA6DBB0FFA6DAAFFFA3D9ADFFA2D8ABFF9FD7A8FF9CD5A5FF94D0
+      9DFF83C58CFF6CB474FF316A37FF000000000000000000000000000000000000
+      000066C472FF64C270FF62BF6EFF60BC6BFF5DB868FF5BB565FF57B062FF4E9E
+      57FF3B7941FF0000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000
+    }
+    OnClick = sbtnRefreshClick
+    ShowHint = True
+    ParentShowHint = False
+  end
+  object lblSolAct: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblSunSNr
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 235
+    Width = 89
+    BorderSpacing.Top = 5
+    Caption = 'Solar activity:'
+    ParentColor = False
+  end
+  object lblKielAidx: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblBoulAidx
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 103
+    Width = 67
+    BorderSpacing.Top = 5
+    Caption = 'Kiel A-idx:'
+    ParentColor = False
+  end
+  object lblAurora: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblGeomFi
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 279
+    Width = 47
+    BorderSpacing.Top = 5
+    Caption = 'Aurora:'
+    ParentColor = False
+  end
+  object DKielAidx: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblKielAidx
+    Left = 120
+    Height = 17
+    Top = 103
+    Width = 64
+    Caption = 'DKielAidx'
+    ParentColor = False
+  end
+  object DSolAct: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblSolAct
+    Left = 120
+    Height = 17
+    Top = 235
+    Width = 51
+    Caption = 'DSolAct'
+    ParentColor = False
+  end
+  object DAurora: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblAurora
+    Left = 120
+    Height = 17
+    Top = 279
+    Width = 53
+    Caption = 'DAurora'
+    ParentColor = False
+  end
+  object lblKiel3K: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblKielAidx
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 125
+    Width = 88
+    BorderSpacing.Top = 5
+    Caption = 'Kiel 3-hour K:'
+    ParentColor = False
+  end
+  object DKiel3K: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblKiel3K
+    Left = 120
+    Height = 17
+    Top = 125
+    Width = 52
+    Caption = 'DKiel3K'
+    ParentColor = False
+    ParentFont = False
+  end
+  object lblInfoUTC: TLabel
+    AnchorSideLeft.Control = ImageKidx
+    AnchorSideTop.Control = lblInfoDate
+    Left = 120
+    Height = 17
+    Top = 5
+    Width = 68
+    Caption = 'lblInfoUTC'
+    ParentColor = False
+  end
+  object lblInfoFrom: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblInfoDate
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 27
+    Width = 74
+    BorderSpacing.Top = 5
+    Caption = 'lblInfoFrom'
+    ParentColor = False
+    ParentFont = False
+    OnMouseDown = lblInfoFromMouseDown
+    OnMouseEnter = lblInfoFromMouseEnter
+    OnMouseLeave = lblInfoFromMouseLeave
+  end
+  object ImageKidx: TImage
+    AnchorSideLeft.Control = lblKiel3K
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblKidxG
+    AnchorSideTop.Side = asrCenter
+    Left = 120
+    Height = 20
+    Top = 167
+    Width = 72
+    BorderSpacing.Left = 22
+  end
+  object lblKidxG: TLabel
+    AnchorSideLeft.Control = lblInfoDate
+    AnchorSideTop.Control = lblCurKidx
+    AnchorSideTop.Side = asrBottom
+    Left = 10
+    Height = 17
+    Top = 169
+    Width = 97
+    BorderSpacing.Top = 5
+    Caption = 'K-idx graph 3h:'
+    ParentColor = False
+  end
+  object lblInfoDate: TLabel
+    AnchorSideTop.Control = Owner
+    Left = 10
+    Height = 17
+    Top = 5
+    Width = 72
+    BorderSpacing.Top = 5
+    Caption = 'lblInfoDate'
+    ParentColor = False
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = lblInfoFrom
+    AnchorSideTop.Side = asrBottom
+    Left = 61
+    Height = 5
+    Top = 49
+    Width = 100
+    BorderSpacing.Top = 5
+    TabOrder = 0
+  end
+  object tmrProp: TTimer
+    Enabled = False
+    OnTimer = tmrPropTimer
+    Left = 16
+    Top = 288
+  end
+end

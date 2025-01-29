@@ -1,0 +1,689 @@
+object frmRbnFilter: TfrmRbnFilter
+  Left = 433
+  Height = 661
+  Top = 48
+  Width = 689
+  BorderStyle = bsDialog
+  Caption = 'RBN filter criteria'
+  ClientHeight = 661
+  ClientWidth = 689
+  OnShow = FormShow
+  Position = poOwnerFormCenter
+  LCLVersion = '2.2.6.0'
+  object grpDXStation: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 3
+    Height = 655
+    Top = 3
+    Width = 683
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 3
+    BorderSpacing.Top = 3
+    BorderSpacing.Right = 3
+    BorderSpacing.Bottom = 3
+    Caption = 'DX station '
+    ClientHeight = 637
+    ClientWidth = 681
+    TabOrder = 0
+    object grpCallisgn: TGroupBox
+      AnchorSideLeft.Control = grpSource
+      AnchorSideTop.Control = edtDate
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = grpCallsignFrom
+      AnchorSideRight.Side = asrBottom
+      Left = 6
+      Height = 137
+      Top = 191
+      Width = 672
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 6
+      Caption = ' Callsign '
+      ClientHeight = 119
+      ClientWidth = 670
+      TabOrder = 6
+      object rbAllDx: TRadioButton
+        Left = 16
+        Height = 23
+        Top = 16
+        Width = 43
+        Caption = 'All'
+        Checked = True
+        TabOrder = 0
+        TabStop = True
+      end
+      object rbOnlyCall: TRadioButton
+        Left = 16
+        Height = 23
+        Top = 48
+        Width = 161
+        Caption = 'Only these callsigns:'
+        TabOrder = 1
+      end
+      object rbOnlyCallReg: TRadioButton
+        Left = 16
+        Height = 23
+        Top = 80
+        Width = 199
+        Caption = 'Only these by expression: '
+        TabOrder = 3
+      end
+      object edtDXOnlyCall: TEdit
+        Left = 240
+        Height = 34
+        Top = 48
+        Width = 272
+        CharCase = ecUppercase
+        TabOrder = 2
+        Text = 'EDTDXONLYCALL'
+      end
+      object edtDXOnlyExpres: TEdit
+        Left = 240
+        Height = 34
+        Top = 80
+        Width = 272
+        CharCase = ecUppercase
+        TabOrder = 4
+        Text = 'EDTDXONLYEXPRES'
+      end
+      object Label9: TLabel
+        Left = 528
+        Height = 17
+        Top = 56
+        Width = 89
+        Caption = 'K1B, K1N etc.'
+        ParentColor = False
+      end
+      object Label10: TLabel
+        Left = 528
+        Height = 17
+        Top = 87
+        Width = 68
+        Caption = 'K[0..9]A?Z'
+        ParentColor = False
+      end
+    end
+    object rbIgnWkdHour: TRadioButton
+      AnchorSideLeft.Control = grpSource
+      AnchorSideTop.Control = edtLastHours
+      AnchorSideTop.Side = asrCenter
+      Left = 6
+      Height = 23
+      Top = 117
+      Width = 166
+      BorderSpacing.Top = 3
+      Caption = 'Ignore worked in last '
+      Checked = True
+      TabOrder = 1
+      TabStop = True
+    end
+    object edtLastHours: TEdit
+      AnchorSideLeft.Control = edtDate
+      AnchorSideTop.Control = grpSource
+      AnchorSideTop.Side = asrBottom
+      Left = 169
+      Height = 34
+      Top = 111
+      Width = 41
+      BorderSpacing.Top = 3
+      TabOrder = 2
+      Text = '48'
+    end
+    object lblIgnoreHours: TLabel
+      AnchorSideLeft.Control = edtLastHours
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtLastHours
+      AnchorSideTop.Side = asrCenter
+      Left = 216
+      Height = 17
+      Top = 120
+      Width = 226
+      BorderSpacing.Left = 6
+      Caption = 'hours on the same band and mode'
+      ParentColor = False
+    end
+    object rbIgnWkdDate: TRadioButton
+      AnchorSideLeft.Control = grpSource
+      AnchorSideTop.Control = edtDate
+      AnchorSideTop.Side = asrCenter
+      Left = 6
+      Height = 23
+      Top = 157
+      Width = 157
+      BorderSpacing.Top = 3
+      Caption = 'Ignore worked after '
+      TabOrder = 3
+    end
+    object edtDate: TEdit
+      AnchorSideLeft.Control = rbIgnWkdDate
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtLastHours
+      AnchorSideTop.Side = asrBottom
+      Left = 169
+      Height = 34
+      Top = 151
+      Width = 119
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      TabOrder = 4
+      Text = '2000-10-10'
+    end
+    object edtTime: TEdit
+      AnchorSideLeft.Control = edtDate
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtDate
+      Left = 294
+      Height = 34
+      Top = 151
+      Width = 66
+      BorderSpacing.Left = 6
+      TabOrder = 5
+      Text = '12:12'
+    end
+    object lblDateTimeFormat: TLabel
+      AnchorSideLeft.Control = edtTime
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtTime
+      AnchorSideTop.Side = asrCenter
+      Left = 369
+      Height = 17
+      Top = 160
+      Width = 150
+      BorderSpacing.Left = 9
+      Caption = '(YYYY-MM-DD, HH:MM)'
+      ParentColor = False
+    end
+    object chkOnlyeQSL: TCheckBox
+      AnchorSideLeft.Control = grpCallsignFrom
+      AnchorSideTop.Control = chkOnlyLoTW
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 556
+      Width = 169
+      BorderSpacing.Top = 6
+      Caption = 'Show only eQSL users'
+      TabOrder = 10
+    end
+    object chkOnlyLoTW: TCheckBox
+      AnchorSideLeft.Control = grpCallsignFrom
+      AnchorSideTop.Control = grpCallsignFrom
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 527
+      Width = 172
+      BorderSpacing.Top = 11
+      Caption = 'Show only LoTW users'
+      TabOrder = 8
+    end
+    object chkNewDXConly: TCheckBox
+      AnchorSideLeft.Control = grpCallsignFrom
+      AnchorSideTop.Control = Bevel1
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 596
+      Width = 431
+      BorderSpacing.Top = 6
+      Caption = 'Show only spots that are "New one"/"New band"/"New mode" '
+      TabOrder = 11
+    end
+    object grpSource: TGroupBox
+      AnchorSideLeft.Control = grpDXStation
+      AnchorSideTop.Control = grpDXStation
+      Left = 6
+      Height = 105
+      Top = 3
+      Width = 576
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 3
+      Caption = ' Source data from '
+      ClientHeight = 87
+      ClientWidth = 574
+      TabOrder = 0
+      object lblContent: TLabel
+        AnchorSideLeft.Control = grpSource
+        AnchorSideTop.Control = edtSrcCont
+        AnchorSideTop.Side = asrCenter
+        Left = 6
+        Height = 17
+        Top = 12
+        Width = 67
+        BorderSpacing.Left = 6
+        Caption = 'Continent:'
+        ParentColor = False
+      end
+      object edtSrcCont: TEdit
+        AnchorSideLeft.Control = lblContent
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = grpSource
+        Left = 79
+        Height = 34
+        Top = 3
+        Width = 280
+        BorderSpacing.Left = 6
+        BorderSpacing.Top = 3
+        CharCase = ecUppercase
+        TabOrder = 0
+        Text = 'EDTSRCCONT'
+      end
+      object lblContExample: TLabel
+        AnchorSideLeft.Control = btnSrcContAll
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = lblContent
+        AnchorSideTop.Side = asrCenter
+        Left = 415
+        Height = 17
+        Top = 12
+        Width = 93
+        BorderSpacing.Left = 6
+        Caption = 'AF, AN, AS etc'
+        ParentColor = False
+      end
+      object btnSrcContAll: TButton
+        AnchorSideLeft.Control = edtSrcCont
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtSrcCont
+        AnchorSideTop.Side = asrCenter
+        Left = 365
+        Height = 27
+        Top = 7
+        Width = 44
+        BorderSpacing.Left = 6
+        Caption = 'All'
+        OnClick = btnSrcContAllClick
+        TabOrder = 1
+      end
+      object lblSrcCall: TLabel
+        AnchorSideLeft.Control = lblContent
+        AnchorSideTop.Control = edtSrcCall
+        AnchorSideTop.Side = asrCenter
+        Left = 6
+        Height = 17
+        Top = 46
+        Width = 56
+        Caption = 'Callsign:'
+        ParentColor = False
+      end
+      object edtSrcCall: TEdit
+        AnchorSideLeft.Control = edtSrcCont
+        AnchorSideTop.Control = edtSrcCont
+        AnchorSideTop.Side = asrBottom
+        Left = 79
+        Height = 34
+        Hint = 'Start of callsign(s), or full callsign(s),c omma separated'
+        Top = 37
+        Width = 280
+        CharCase = ecUppercase
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 2
+        Text = 'EDTSRCCALL'
+      end
+      object btnSrcCallAll: TButton
+        AnchorSideLeft.Control = edtSrcCont
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtSrcCall
+        AnchorSideTop.Side = asrCenter
+        Left = 365
+        Height = 27
+        Top = 41
+        Width = 44
+        BorderSpacing.Left = 6
+        Caption = 'All'
+        OnClick = btnSrcCallAllClick
+        TabOrder = 3
+      end
+      object lblCallExample: TLabel
+        AnchorSideLeft.Control = btnSrcContAll
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtSrcCall
+        AnchorSideTop.Side = asrCenter
+        Left = 415
+        Height = 17
+        Top = 46
+        Width = 136
+        BorderSpacing.Left = 6
+        Caption = 'OK, OH1, AB1CD, etc'
+        ParentColor = False
+      end
+    end
+    object grpCallsignFrom: TGroupBox
+      AnchorSideLeft.Control = grpCallisgn
+      AnchorSideTop.Control = grpCallisgn
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = grpDXStation
+      AnchorSideRight.Side = asrBottom
+      Left = 6
+      Height = 185
+      Top = 331
+      Width = 672
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Top = 3
+      BorderSpacing.Right = 3
+      Caption = 'Callsign From'
+      ClientHeight = 167
+      ClientWidth = 670
+      TabOrder = 7
+      object lblContinentFrom: TLabel
+        AnchorSideLeft.Control = grpCallsignFrom
+        AnchorSideTop.Control = edtDXCont
+        AnchorSideTop.Side = asrCenter
+        Left = 3
+        Height = 17
+        Top = 12
+        Width = 67
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 3
+        Caption = 'Continent:'
+        ParentColor = False
+      end
+      object edtDXCont: TEdit
+        AnchorSideLeft.Control = lblContinentFrom
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = grpCallsignFrom
+        Left = 94
+        Height = 34
+        Top = 3
+        Width = 280
+        BorderSpacing.Left = 24
+        BorderSpacing.Top = 3
+        CharCase = ecUppercase
+        TabOrder = 0
+        Text = 'EDTDXCONT'
+      end
+      object lblContExFrom: TLabel
+        AnchorSideLeft.Control = lblBandExFrom
+        AnchorSideTop.Control = edtDXCont
+        AnchorSideTop.Side = asrCenter
+        Left = 518
+        Height = 17
+        Top = 12
+        Width = 93
+        Caption = 'AF, AN, AS etc'
+        ParentColor = False
+      end
+      object lblBandFrom: TLabel
+        AnchorSideLeft.Control = lblContinentFrom
+        AnchorSideTop.Control = edtDXBand
+        AnchorSideTop.Side = asrCenter
+        Left = 3
+        Height = 17
+        Top = 46
+        Width = 44
+        Caption = 'Bands:'
+        ParentColor = False
+      end
+      object edtDXBand: TEdit
+        AnchorSideLeft.Control = edtDXCont
+        AnchorSideTop.Control = edtDXCont
+        AnchorSideTop.Side = asrBottom
+        Left = 94
+        Height = 34
+        Top = 37
+        Width = 368
+        CharCase = ecUppercase
+        TabOrder = 2
+        Text = 'EDTDXBAND'
+      end
+      object lblBandExFrom: TLabel
+        AnchorSideLeft.Control = btnDxBandsAll
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtDXBand
+        AnchorSideTop.Side = asrCenter
+        Left = 518
+        Height = 17
+        Top = 46
+        Width = 131
+        BorderSpacing.Left = 12
+        Caption = '160M, 80M, RIG etc.'
+        ParentColor = False
+      end
+      object edtDXMode: TEdit
+        AnchorSideLeft.Control = edtDXBand
+        AnchorSideTop.Control = edtDXBand
+        AnchorSideTop.Side = asrBottom
+        Left = 94
+        Height = 34
+        Top = 71
+        Width = 344
+        CharCase = ecUppercase
+        TabOrder = 4
+        Text = 'EDTDXMODE'
+      end
+      object lblModeFrom: TLabel
+        AnchorSideLeft.Control = lblContinentFrom
+        AnchorSideTop.Control = edtDXMode
+        AnchorSideTop.Side = asrCenter
+        Left = 3
+        Height = 17
+        Top = 80
+        Width = 47
+        Caption = 'Modes:'
+        ParentColor = False
+      end
+      object Label8: TLabel
+        AnchorSideLeft.Control = lblBandExFrom
+        AnchorSideTop.Control = edtDXMode
+        AnchorSideTop.Side = asrCenter
+        Left = 518
+        Height = 17
+        Top = 80
+        Width = 126
+        Caption = 'CW,  RTTY, RIG etc.'
+        ParentColor = False
+      end
+      object edtDXCnty: TEdit
+        AnchorSideLeft.Control = edtDXMode
+        AnchorSideTop.Control = edtDXMode
+        AnchorSideTop.Side = asrBottom
+        Left = 94
+        Height = 34
+        Top = 105
+        Width = 184
+        CharCase = ecUppercase
+        TabOrder = 6
+        Text = 'EDTDXCNTY'
+      end
+      object lblCountryFrom: TLabel
+        AnchorSideLeft.Control = lblContinentFrom
+        AnchorSideTop.Control = edtDXCnty
+        AnchorSideTop.Side = asrCenter
+        Left = 3
+        Height = 17
+        Top = 114
+        Width = 66
+        Caption = 'Countries:'
+        ParentColor = False
+      end
+      object btnDxContAll: TButton
+        AnchorSideLeft.Control = edtDXCont
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtDXCont
+        AnchorSideTop.Side = asrCenter
+        Left = 374
+        Height = 27
+        Top = 7
+        Width = 44
+        Caption = 'All'
+        OnClick = btnDxContAllClick
+        TabOrder = 1
+      end
+      object btnDxBandsAll: TButton
+        AnchorSideLeft.Control = edtDXBand
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtDXBand
+        AnchorSideTop.Side = asrCenter
+        Left = 462
+        Height = 28
+        Top = 40
+        Width = 44
+        Caption = 'All'
+        OnClick = btnDxBandsAllClick
+        TabOrder = 3
+      end
+      object btnDxModeAll: TButton
+        AnchorSideLeft.Control = edtDXMode
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtDXMode
+        AnchorSideTop.Side = asrCenter
+        Left = 438
+        Height = 27
+        Top = 75
+        Width = 44
+        Caption = 'All'
+        OnClick = btnDxModeAllClick
+        TabOrder = 5
+      end
+      object btnDXCCnty: TButton
+        AnchorSideLeft.Control = edtDXCnty
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtDXCnty
+        AnchorSideTop.Side = asrCenter
+        Left = 278
+        Height = 25
+        Top = 110
+        Width = 30
+        Caption = '...'
+        OnClick = btnDXCCntyClick
+        TabOrder = 7
+      end
+      object lblNotCountry: TLabel
+        AnchorSideLeft.Control = btnDXCCnty
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = btnDXCCnty
+        AnchorSideTop.Side = asrCenter
+        Left = 311
+        Height = 17
+        Top = 114
+        Width = 49
+        BorderSpacing.Left = 3
+        Caption = 'or NOT '
+        ParentColor = False
+      end
+      object edtDXCNotCnty: TEdit
+        AnchorSideLeft.Control = lblNotCountry
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = lblNotCountry
+        AnchorSideTop.Side = asrCenter
+        Left = 363
+        Height = 34
+        Top = 105
+        Width = 175
+        BorderSpacing.Left = 3
+        CharCase = ecUppercase
+        TabOrder = 8
+        Text = 'EDTDXCNOTCNTY'
+      end
+      object btnDXCNotCnty: TButton
+        AnchorSideLeft.Control = edtDXCNotCnty
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = edtDXCNotCnty
+        AnchorSideTop.Side = asrCenter
+        Left = 541
+        Height = 25
+        Top = 110
+        Width = 30
+        BorderSpacing.Left = 3
+        Caption = '...'
+        OnClick = btnDXCNotCntyClick
+        TabOrder = 9
+      end
+    end
+    object Bevel1: TBevel
+      AnchorSideLeft.Control = grpCallsignFrom
+      AnchorSideTop.Control = chkOnlyeQSL
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = grpCallsignFrom
+      AnchorSideRight.Side = asrBottom
+      Left = 12
+      Height = 5
+      Top = 585
+      Width = 660
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+    end
+    object btnOK: TButton
+      AnchorSideTop.Control = grpSource
+      AnchorSideRight.Control = grpDXStation
+      AnchorSideRight.Side = asrBottom
+      Left = 597
+      Height = 25
+      Top = 15
+      Width = 75
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 12
+      BorderSpacing.Right = 9
+      Caption = 'OK'
+      OnClick = btnOKClick
+      TabOrder = 12
+    end
+    object btnCancel: TButton
+      AnchorSideLeft.Control = btnOK
+      AnchorSideTop.Control = btnOK
+      AnchorSideTop.Side = asrBottom
+      Left = 597
+      Height = 25
+      Top = 46
+      Width = 75
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 9
+      Cancel = True
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 13
+    end
+    object lblSpotDelay: TLabel
+      AnchorSideLeft.Control = edtSpotDelay
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = chkOnlyLoTW
+      AnchorSideTop.Side = asrCenter
+      Left = 294
+      Height = 17
+      Top = 530
+      Width = 159
+      BorderSpacing.Left = 6
+      Caption = 'ms delay between spots'
+      ParentColor = False
+    end
+    object edtSpotDelay: TEdit
+      AnchorSideLeft.Control = chkOnlyLoTW
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblSpotDelay
+      AnchorSideTop.Side = asrCenter
+      Left = 238
+      Height = 34
+      Hint = 'Adjust delay between received spots printing. '#10'Big value may cause delayed show up,'#10'small value hard to read speed (good filtering may be needed ).'#10'Use small values during high band activity.'#10'Values: 5ms .. 600ms'
+      Top = 521
+      Width = 50
+      BorderSpacing.Left = 60
+      MaxLength = 3
+      NumbersOnly = True
+      OnExit = edtSpotDelayExit
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 9
+    end
+    object chkToBandMap: TCheckBox
+      AnchorSideLeft.Control = edtSpotDelay
+      AnchorSideTop.Control = chkOnlyeQSL
+      AnchorSideTop.Side = asrCenter
+      Left = 238
+      Height = 23
+      Hint = 'When selected and BandMap is open spots that have DXCC N,M,B '#10'(New DXCC, New Mode, New Band) are sent to BandMap.'#10'BandMap spot uses DXCLuster spot color settings (set them there)'
+      Top = 556
+      Width = 263
+      Caption = 'Send N,B,M DXCC spots to BandMap'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 14
+    end
+  end
+end

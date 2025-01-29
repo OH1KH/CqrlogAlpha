@@ -1,0 +1,91 @@
+object dmDXCluster: TdmDXCluster
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
+  OldCreateOrder = False
+  Height = 363
+  HorizontalOffset = 694
+  VerticalOffset = 383
+  Width = 400
+  object qBands: TSQLQuery
+    FieldDefs = <>
+    BeforeOpen = qBandsBeforeOpen
+    Transaction = trBands
+    Options = []
+    Params = <>
+    ParseSQL = False
+    left = 144
+    top = 60
+  end
+  object trBands: TSQLTransaction
+    Active = False
+    Action = caNone
+    Options = []
+    left = 144
+    top = 120
+  end
+  object trQ1: TSQLTransaction
+    Active = False
+    Action = caNone
+    Options = []
+    left = 24
+    top = 120
+  end
+  object Q1: TSQLQuery
+    FieldDefs = <>
+    BeforeOpen = Q1BeforeOpen
+    Transaction = trQ1
+    Options = []
+    Params = <>
+    ParseSQL = False
+    left = 25
+    top = 60
+  end
+  object trQ: TSQLTransaction
+    Active = False
+    Action = caNone
+    Options = []
+    left = 80
+    top = 120
+  end
+  object Q: TSQLQuery
+    FieldDefs = <>
+    BeforeOpen = QBeforeOpen
+    Transaction = trQ
+    Options = []
+    Params = <>
+    ParseSQL = False
+    left = 82
+    top = 60
+  end
+  object trDXCCRef: TSQLTransaction
+    Active = False
+    Action = caNone
+    Options = []
+    left = 216
+    top = 120
+  end
+  object qDXCCRef: TSQLQuery
+    FieldDefs = <>
+    BeforeOpen = qDXCCRefBeforeOpen
+    Transaction = trDXCCRef
+    Options = []
+    Params = <>
+    ParseSQL = False
+    left = 216
+    top = 60
+  end
+  object trCallAlert: TSQLTransaction
+    Active = False
+    Options = []
+    left = 24
+    top = 236
+  end
+  object qCallAlert: TSQLQuery
+    FieldDefs = <>
+    Transaction = trCallAlert
+    Options = []
+    Params = <>
+    left = 24
+    top = 188
+  end
+end

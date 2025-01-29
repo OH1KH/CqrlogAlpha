@@ -1,0 +1,973 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectOptions>
+    <Version Value="12"/>
+    <General>
+      <Flags>
+        <LRSInOutputDirectory Value="False"/>
+        <CompatibilityMode Value="True"/>
+      </Flags>
+      <SessionStorage Value="InProjectDir"/>
+      <AutoCreateForms Value="False"/>
+      <Title Value="cqrlog"/>
+      <Icon Value="0"/>
+      <Resources Count="1">
+        <Resource_0 FileName="../images/world_borders.png" Type="RCDATA" ResourceName="WORLD_BORDERS"/>
+      </Resources>
+    </General>
+    <VersionInfo>
+      <AutoIncrementBuild Value="True"/>
+      <MinorVersionNr Value="3"/>
+      <RevisionNr Value="1"/>
+      <BuildNr Value="2202"/>
+      <StringTable ProductVersion="0.3.1.2026"/>
+    </VersionInfo>
+    <MacroValues Count="1">
+      <Macro3 Name="LCLWidgetType" Value="gtk2"/>
+    </MacroValues>
+    <BuildModes Count="1">
+      <Item1 Name="default" Default="True"/>
+      <SharedMatrixOptions Count="4">
+        <Item1 ID="887029194029" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt5"/>
+        <Item2 ID="890734883088" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk3"/>
+        <Item3 ID="102898540782" Modes="default" Type="IDEMacro" MacroName="LCLWidgetType" Value="gtk2"/>
+        <Item4 ID="587735805546" Type="IDEMacro" MacroName="LCLWidgetType" Value="qt6"/>
+      </SharedMatrixOptions>
+    </BuildModes>
+    <PublishOptions>
+      <Version Value="2"/>
+      <DestinationDirectory Value="/home/saku/lazarus/cqrlog_work/cqrlog-devel/src/pub"/>
+    </PublishOptions>
+    <RunParams>
+      <local>
+        <CommandLineParams Value="--debug=0"/>
+        <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T &apos;Lazarus Run Output&apos; -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+      </local>
+      <environment>
+        <UserOverrides Count="2">
+          <Variable0 Name="FIREBIRD" Value="/home/ok2cqr/projekty/cqrlog/testing"/>
+          <Variable1 Name="HEAPTRC" Value="1"/>
+        </UserOverrides>
+      </environment>
+      <FormatVersion Value="2"/>
+      <Modes Count="1">
+        <Mode0 Name="default">
+          <local>
+            <CommandLineParams Value="--debug=0"/>
+            <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T &apos;Lazarus Run Output&apos; -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
+          </local>
+          <environment>
+            <UserOverrides Count="2">
+              <Variable0 Name="FIREBIRD" Value="/home/ok2cqr/projekty/cqrlog/testing"/>
+              <Variable1 Name="HEAPTRC" Value="1"/>
+            </UserOverrides>
+          </environment>
+        </Mode0>
+      </Modes>
+    </RunParams>
+    <RequiredPackages Count="10">
+      <Item1>
+        <PackageName Value="TurboPowerIPro"/>
+        <MinVersion Major="1" Valid="True"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="SQLDBLaz"/>
+        <MinVersion Major="1" Release="1" Valid="True"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="SDFLaz"/>
+        <MinVersion Minor="1" Release="1" Valid="True"/>
+      </Item3>
+      <Item4>
+        <PackageName Value="SynEdit"/>
+        <MinVersion Major="1" Valid="True"/>
+      </Item4>
+      <Item5>
+        <PackageName Value="TAChartLazarusPkg"/>
+        <MinVersion Valid="True"/>
+      </Item5>
+      <Item6>
+        <PackageName Value="RunTimeTypeInfoControls"/>
+        <MinVersion Minor="1" Valid="True"/>
+      </Item6>
+      <Item7>
+        <PackageName Value="LCL"/>
+      </Item7>
+      <Item8>
+        <PackageName Value="FCL"/>
+        <MinVersion Major="1" Valid="True"/>
+      </Item8>
+      <Item9>
+        <PackageName Value="DBFLaz"/>
+        <MinVersion Minor="1" Release="1" Valid="True"/>
+      </Item9>
+      <Item10>
+        <PackageName Value="MemDSLaz"/>
+        <MinVersion Major="1" Minor="2" Release="1" Valid="True"/>
+      </Item10>
+    </RequiredPackages>
+    <Units Count="126">
+      <Unit0>
+        <Filename Value="cqrlog.lpr"/>
+        <IsPartOfProject Value="True"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="fNewQSO.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmNewQSO"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="fMain.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMain"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="fPreferences.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPreferences"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="dUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmUtils"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="fChangeLocator.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmChangeLocator"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="dData.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmData"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="dDXCC.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmDXCC"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="fMarkQSL.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMarkQSL"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="fDXCCStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDXCCStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="fSort.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSort"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="fFilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmFilter"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="fImportProgress.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmImportProgress"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit12>
+      <Unit13>
+        <Filename Value="fImportTest.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmImportTest"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit13>
+      <Unit14>
+        <Filename Value="fSelectDXCC.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSelectDXCC"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit14>
+      <Unit15>
+        <Filename Value="fGrayline.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmGrayline"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit15>
+      <Unit16>
+        <Filename Value="fCallbook.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCallbook"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="fTRXControl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmTRXControl"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit17>
+      <Unit18>
+        <Filename Value="fFreq.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmFreq"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit18>
+      <Unit19>
+        <Filename Value="fChangeFreq.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmChangeFreq"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit19>
+      <Unit20>
+        <Filename Value="fAdifImport.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmAdifImport"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit20>
+      <Unit21>
+        <Filename Value="fSplash.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSplash"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit21>
+      <Unit22>
+        <Filename Value="fQTHProfiles.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmQTHProfiles"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit22>
+      <Unit23>
+        <Filename Value="fNewQTHProfile.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmNewQTHProfile"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit23>
+      <Unit24>
+        <Filename Value="fEnterFreq.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmEnterFreq"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit24>
+      <Unit25>
+        <Filename Value="fExportProgress.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmExportProgress"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit25>
+      <Unit26>
+        <Filename Value="fNewDXCluster.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmNewDXCluster"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit26>
+      <Unit27>
+        <Filename Value="fDXCluster.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDXCluster"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit27>
+      <Unit28>
+        <Filename Value="dDXCluster.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmDXCluster"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit28>
+      <Unit29>
+        <Filename Value="fWorking.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmWorking"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit29>
+      <Unit30>
+        <Filename Value="fSerialPort.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSerialPort"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit30>
+      <Unit31>
+        <Filename Value="fQSLMgr.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmQSLMgr"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit31>
+      <Unit32>
+        <Filename Value="fSendSpot.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSendSpot"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit32>
+      <Unit33>
+        <Filename Value="fQSODetails.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmQSODetails"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit33>
+      <Unit34>
+        <Filename Value="fUpgrade.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmUpgrade"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit34>
+      <Unit35>
+        <Filename Value="fWAZITUStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmWAZITUStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit35>
+      <Unit36>
+        <Filename Value="fIOTAStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmIOTAStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit36>
+      <Unit37>
+        <Filename Value="fClubSettings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmClubSettings"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit37>
+      <Unit38>
+        <Filename Value="fLoadClub.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmLoadClub"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit38>
+      <Unit39>
+        <Filename Value="fRefCall.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRefCall"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit39>
+      <Unit40>
+        <Filename Value="fBandMap.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmBandMap"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit40>
+      <Unit41>
+        <Filename Value="fBandMapFilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmBandMapFilter"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit41>
+      <Unit42>
+        <Filename Value="fLongNote.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmLongNote"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit42>
+      <Unit43>
+        <Filename Value="fDatabaseUpdate.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDatabaseUpdate"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit43>
+      <Unit44>
+        <Filename Value="fExLabelPrint.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmExLabelPrint"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit44>
+      <Unit45>
+        <Filename Value="fImportLoTWWeb.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmImportLoTWWeb"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit45>
+      <Unit46>
+        <Filename Value="fLoTWExport.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmLoTWExport"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit46>
+      <Unit47>
+        <Filename Value="fGroupEdit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmGroupEdit"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit47>
+      <Unit48>
+        <Filename Value="fDefaultFreq.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDefaultFreq"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit48>
+      <Unit49>
+        <Filename Value="uCWKeying.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit49>
+      <Unit50>
+        <Filename Value="fCustomStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCustomStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit50>
+      <Unit51>
+        <Filename Value="fKeyTexts.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmKeyTexts"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit51>
+      <Unit52>
+        <Filename Value="fCWType.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCWType"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit52>
+      <Unit53>
+        <Filename Value="fSplitSettings.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSplitSettings"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit53>
+      <Unit54>
+        <Filename Value="fShowStations.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmShowStations"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit54>
+      <Unit55>
+        <Filename Value="uMyIni.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit55>
+      <Unit56>
+        <Filename Value="fPropagation.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPropagation"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit56>
+      <Unit57>
+        <Filename Value="fSQLConsole.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSQLConsole"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit57>
+      <Unit58>
+        <Filename Value="fCallAttachment.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCallAttachment"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit58>
+      <Unit59>
+        <Filename Value="fEditDetails.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmEditDetails"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit59>
+      <Unit60>
+        <Filename Value="fQSLViewer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmQSLViewer"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit60>
+      <Unit61>
+        <Filename Value="fSCP.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSCP"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit61>
+      <Unit62>
+        <Filename Value="fDBConnect.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDBConnect"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit62>
+      <Unit63>
+        <Filename Value="fNewLog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmNewLog"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit63>
+      <Unit64>
+        <Filename Value="fRebuildMembStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRebuildMembStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit64>
+      <Unit65>
+        <Filename Value="uVersion.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit65>
+      <Unit66>
+        <Filename Value="fDXClusterList.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDXClusterList"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit66>
+      <Unit67>
+        <Filename Value="fAbout.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmAbout"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit67>
+      <Unit68>
+        <Filename Value="fChangelog.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmChangelog"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit68>
+      <Unit69>
+        <Filename Value="fBigSquareStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmBigSquareStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit69>
+      <Unit70>
+        <Filename Value="feQSLUpload.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmeQSLUpload"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit70>
+      <Unit71>
+        <Filename Value="feQSLDownload.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmeQSLDownload"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit71>
+      <Unit72>
+        <Filename Value="fSOTAExport.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSOTAExport"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit72>
+      <Unit73>
+        <Filename Value="fNewQSODefValues.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmNewQSODefValues"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit73>
+      <Unit74>
+        <Filename Value="fQSLExpPref.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmQSLExpPref"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit74>
+      <Unit75>
+        <Filename Value="fRotControl.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRotControl"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit75>
+      <Unit76>
+        <Filename Value="dLogUpload.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmLogUpload"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit76>
+      <Unit77>
+        <Filename Value="fLogUploadStatus.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmLogUploadStatus"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit77>
+      <Unit78>
+        <Filename Value="frCWKeys.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fraCWKeys"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+      </Unit78>
+      <Unit79>
+        <Filename Value="fCallAlert.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCallAlert"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit79>
+      <Unit80>
+        <Filename Value="fNewCallAlert.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmNewCallAlert"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit80>
+      <Unit81>
+        <Filename Value="fConfigStorage.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmConfigStorage"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit81>
+      <Unit82>
+        <Filename Value="fBandMapWatch.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmBandMapWatch"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit82>
+      <Unit83>
+        <Filename Value="fRbnFilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRbnFilter"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit83>
+      <Unit84>
+        <Filename Value="fRbnMonitor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRbnMonitor"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit84>
+      <Unit85>
+        <Filename Value="fRbnServer.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRbnServer"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit85>
+      <Unit86>
+        <Filename Value="fRadioMemories.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmRadioMemories"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit86>
+      <Unit87>
+        <Filename Value="fAddRadioMemory.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmAddRadioMemory"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit87>
+      <Unit88>
+        <Filename Value="fException.pas"/>
+        <IsPartOfProject Value="True"/>
+        <HasResources Value="True"/>
+      </Unit88>
+      <Unit89>
+        <Filename Value="fCommentToCall.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCommentToCall"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit89>
+      <Unit90>
+        <Filename Value="fNewCommentToCall.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmNewCommentToCall"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit90>
+      <Unit91>
+        <Filename Value="fFindCommentToCall.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmFindCommentToCall"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit91>
+      <Unit92>
+        <Filename Value="frExportPref.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="fraExportPref"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+      </Unit92>
+      <Unit93>
+        <Filename Value="fExportPref.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmExportPref"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit93>
+      <Unit94>
+        <Filename Value="fWorkedGrids.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmWorkedGrids"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit94>
+      <Unit95>
+        <Filename Value="fPropDK0WCY.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmPropDK0WCY"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit95>
+      <Unit96>
+        <Filename Value="fContest.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmContest"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit96>
+      <Unit97>
+        <Filename Value="fMonWsjtx.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmMonWsjtx"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit97>
+      <Unit98>
+        <Filename Value="fXfldigi.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmxfldigi"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit98>
+      <Unit99>
+        <Filename Value="uColorMemo.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit99>
+      <Unit100>
+        <Filename Value="dMembership.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmMembership"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit100>
+      <Unit101>
+        <Filename Value="dSatellite.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmSatellite"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit101>
+      <Unit102>
+        <Filename Value="uRigControl.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit102>
+      <Unit103>
+        <Filename Value="uRotControl.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit103>
+      <Unit104>
+        <Filename Value="aziloc.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit104>
+      <Unit105>
+        <Filename Value="azidis3.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit105>
+      <Unit106>
+        <Filename Value="fCWKeys.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCWKeys"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit106>
+      <Unit107>
+        <Filename Value="fEDIExport.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmEDIExport"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit107>
+      <Unit108>
+        <Filename Value="fDOKStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDOKStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit108>
+      <Unit109>
+        <Filename Value="fCabrilloExport.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCabrilloExport"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit109>
+      <Unit110>
+        <Filename Value="fContestFilter.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmContestFilter"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit110>
+      <Unit111>
+        <Filename Value="uDbUtils.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit111>
+      <Unit112>
+        <Filename Value="dQTHProfile.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="dmQTHProfile"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="DataModule"/>
+      </Unit112>
+      <Unit113>
+        <Filename Value="uInternalConnection.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit113>
+      <Unit114>
+        <Filename Value="uConnectionInfo.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit114>
+      <Unit115>
+        <Filename Value="fChangeOperator.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmChangeOperator"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit115>
+      <Unit116>
+        <Filename Value="fRemind.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmReminder"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit116>
+      <Unit117>
+        <Filename Value="znacmech.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit117>
+      <Unit118>
+        <Filename Value="gline2.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit118>
+      <Unit119>
+        <Filename Value="fSearch.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmSearch"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit119>
+      <Unit120>
+        <Filename Value="fDbSqlSel.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDbSqlSel"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit120>
+      <Unit121>
+        <Filename Value="fProgress.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmProgress"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit121>
+      <Unit122>
+        <Filename Value="fDbError.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmDbError"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit122>
+      <Unit123>
+        <Filename Value="fCountyStat.lfm"/>
+        <IsPartOfProject Value="True"/>
+      </Unit123>
+      <Unit124>
+        <Filename Value="fCountyStat.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="frmCountyStat"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+      </Unit124>
+      <Unit125>
+        <Filename Value="fDbError.lfm"/>
+        <IsPartOfProject Value="True"/>
+      </Unit125>
+    </Units>
+  </ProjectOptions>
+  <CompilerOptions>
+    <Version Value="11"/>
+    <SearchPaths>
+      <Libraries Value="$(LazarusDir)/lcl"/>
+      <OtherUnitFiles Value="lnet/lib;synapse"/>
+    </SearchPaths>
+    <Parsing>
+      <SyntaxOptions>
+        <CStyleOperator Value="False"/>
+      </SyntaxOptions>
+    </Parsing>
+    <CodeGeneration>
+      <Optimizations>
+        <OptimizationLevel Value="2"/>
+      </Optimizations>
+    </CodeGeneration>
+    <Linking>
+      <Debugging>
+        <DebugInfoType Value="dsDwarf2Set"/>
+      </Debugging>
+    </Linking>
+    <Other>
+      <Verbosity>
+        <ShowNotes Value="False"/>
+        <ShowHints Value="False"/>
+        <ShowDebugInfo Value="True"/>
+      </Verbosity>
+      <CustomOptions Value="-dNO_CONTEST"/>
+      <CreateMakefileOnBuild Value="True"/>
+    </Other>
+  </CompilerOptions>
+  <Debugging>
+    <Exceptions Count="1">
+      <Item1>
+        <Name Value="EInterfaceCritical"/>
+      </Item1>
+    </Exceptions>
+  </Debugging>
+</CONFIG>

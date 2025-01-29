@@ -1,0 +1,124 @@
+OS<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+<head>
+    <title>CQRLOG </title>
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top"><img src="img/exc.png"></td>
+        <td bgcolor=ffffcc valign="top" align="justify"><strong>
+            <font color="red">WARNING!</font></strong>
+            Backup your data often! BACKUP your log directory at the end of EVERY session!
+            All that you need to backup and store in a safe place is the log database directory
+            located in the ~/.config/cqrlog/database folder, or you can enable the autobackup function
+            in Preferences. This autobackup function creates an ADIF file with a backup of your log.
+            /td>
+    </tr>
+    </tbody>
+</table>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div style="text-align: left;"><strong>CQRLOG for LINUX by OK2CQR &amp; OK1RR</strong></div>
+<p align=center><img src=img/line.png></p>
+
+<h3 ><a name="m3"></a>TRX Control</h3>
+<img src="img/h117.png" name="7"  width="320" height="360">
+<img src="img/h118.png" name="8"  width="320" height="360">
+<img src="img/h118b.png" name="8"  width="320" height="360">
+</img>
+<p>
+TRX Control window shows current frequency and buttons that allow change of band, mode, memory and rig. 
+<br>Additional selections are User defined buttons, Power buttons, Vfo A and B buttons and memory information field.
+<br>When pressing band selection button rig moves to that band using predefined frequency of currently active mode. Default frequencies and User buttons can be defined in <a href="h1.html#ah7">preferecences/TRX control</a>.
+<br><a name="mouse"></a><p>
+You can set a new frequency by <strong>clicking first frequency display with mouse left button</strong>:
+<ul><li><strong>Using keyboard:</strong></li>
+    <ul><li>Press <strong>Ins</strong> key to change between Insert and Replace mode (Replace mode = bigger cursor)</li>
+	<li>Move cursor with <strong>Arrow left</strong> and <strong>Arrow right</strong> keys</li>
+	<li>Use <strong>Backspace</strong> and <strong>Del</strong> keys to remove selected number</li>
+	<li>Instead you can press first <strong>Ctrl+A</strong> and then type in whole new frequency</li>
+	<li>Press <strong>Enter key</strong> to end editing. Set frequency command is then sent to rig.</li>
+    </ul><strong>Using mouse:</strong><ul>
+	<li>Move <strong>mouse cursor</strong> over the number you want to change</li>
+	<li>Roll <strong>mouse wheel</strong> to change number up or down. Changes are sent to rig.</li>
+	<ul><li>Speed of change is tied to <strong>TRXControl/Poll</strong> value.You need to decrease <strong>Poll</strong> to get faster actions</li></ul>
+	<li>Click <strong>mouse roll</strong>,  press <strong>Enter key</strong>,  or <strong>move mouse cursor away</strong> from Frequency display to end editimg</li>
+    </ul>
+</p>
+You can select rig vfo with buttons <strong>A</strong> and <strong>B</strong> but there may be no feedback what vfo is currenty used (Icom brand rigs do not support "Get_vfo" command).
+</p><a name="m4"></a><p>If <strong>M_up</strong> or <strong>M_dwn</strong> are pressed or memory is selected by double click of memory list, the information text will show up to <strong>Mem Info</strong> field. If frequency is changed manually after that info text will disappear.
+<br>If memory does not have info text (max 25chr) just <strong>x of y</strong> is displayed where x refers to memory order in Add/Modify memory list and y total amount of memories.
+<strong>None</strong> (in red) indicates that there are no memory lines.
+<br>With <strong>P-on/off/stb</strong> buttons current rig can be set ON, OFF or STANDBY (if it supports rigctld power commands).
+<br>Default setting for power buttons is hidden. You can change it via dropdown menu "Preferences". They are also hidden if rig can not support power commands.
+<br><br><strong>M_up</strong> and <strong>M_dwn</strong> buttons select next/previous entry from memory list. <strong>M_Wri</strong> adds entry to memory list from current rig frequency and mode and info field shows<strong> "MW ok"</strong>.
+<br><br>You can change rig frequency by clicking frequency display. Then you can enter a new <strong>MHz value</strong> and press enter.
+<br>You can also use mouse wheel to change frequency. One wheel step is 100Hz, Keeping <strong>Shift key</strong> pressed the step is 1kHz. Keeping <strong>Ctrl key</strong> pressed the step is 10kHz.
+Keeping both keys pressed the step is 1MHz.
+<br>If you use mouse wheel the rig frequency is changed while turning. There is no need to press enter then. Just move mouse cursor away from frequency display.
+
+<ul><li><strong>NOTE: </strong>Check <strong>pereferences/TRXcontrol/Switch only between mode related memories</strong><br>Cqrlog TRXcontrol memories are categorized by mode (groups). CW, SSB(=AM+USB+LSB+FM), RTTY(=RTTY+DATA+PKTLSB+PKTUSB+PKTFM)[no mode selector for PKT*  but you may "M wri" them anyway]. 
+So do not wonder if you get smaller amount of memories than in your list when pressing <strong>M_up</strong> and <strong>M_dwn</strong> with "Show mode related" checked.
+</li></ul>
+<img src="img/h122.png" name="9"  width="393" height="367">
+ <img src="img/h121.png" name="10"  width="373" height="367">
+</img>
+<br/>
+<br>You can <strong>search a memory</strong> by clicking the first (header) line of grid. Search is done against the column you clicked.
+<br>You can set rig by double click of an memory row in <strong>Open  memory list</strong>. Similar action happen also in <strong>Add/Modify memories</strong>. The differense is that you can keep
+ <strong>Open memory list</strong> open while loggeing qsos etc. Where as <strong>Add/Modify memories</strong>, when open, blocks other functionality.
+ <br>While <strong>Add/Modify memories</strong> is open you can use buttons in right frame. Texts of buttons are quite self explaining.
+ <br>Deleting a memory line, or all lines, do not have any further warning questions (Are you sure?). In case you deleted something wrong just close window with  <strong>Cancel</strong>. No changes are recorded then.
+<br>Closing <strong>Add/Modify memories</strong> is done with buttons <strong>OK</strong> or <strong>Cancel</strong>. Closing <strong> Open memory list</strong> window must be done using <strong>x</strong> at top right corner of window.
+<br> <strong> Open memory list</strong> closes also if <strong>Add/Modify memories</strong> is opened. They can not be open at same time.
+<br><br> If you make changes to <strong>preferences/TRXControl</strong> after that just select another radio (even if not existing) from radio buttons <strong>Radio 1</strong> , <strong>Radio 2</strong>. Then select back the previous radio and new values are read. It is possible also reload settings from <strong>NewQSO/File/Refresh TRX/ROT control</strong>.</p>
+
+</p><p>See also <a href="h1.html#ah7">setting up TRX/ROTControl</a>
+</p>
+<p>
+<h3 ><a name="m5"></a>Rot Control</h3>
+</p>
+<p>
+
+From NewQSO/Window you can open <strong>Rotor control</strong> window.
+<p><img src="img/h121a.png" name="121a"><img src="img/h121aa.png" name="121aa"><img src="img/h121b.png" name="121b">
+<img src="img/h121e.png" name="121e"><img src="img/h121c.png" name="121c"><img src="img/h121d.png" name="121d">
+</p>
+Window shows current position of rotor with <strong>numerical display, Short and Long path Buttons and radio buttons to select rotor 1 or rotor 2</strong>.
+<br>User can resize window and select <strong>additional bar display, direction and stop buttons</strong>.
+<br>Small numbers on top of bar display shows current rotor limits. Usually this is 0..360, but may be also -180..180 depending on rotor model, or other user defined limits.
+<br>Direction drive buttons run rotor until stop button is pressed or maximum 15sec time limit is reached.
+<br><br> When a call is entered to <strong>NewQSO</strong> callsign field and cursor is moved away from that field <strong>DXCC info</strong> part gets filled against call prefix and/or locator grid,
+ then, when <strong>DXCC/AZIM</strong> shows a value, it is possible to press <strong>Short Path</strong> or <strong>Long Path buttons</strong> and your ro
+ tor will turn your antenna to that direction.
+<br><br>It is also possible to set new direction by a <strong> mouse left click on Azimuth display</strong>.
+Procedure is simlar as <a href="#mouse"> setting frequency</a> with TRXControl.
+
+<br><br>Pressing <strong>Stop button</strong> stops rotor turning started either with path or turn buttons.</p>
+<p>Progress bar displays Az value relative to AzLimits (if Use \dump_state is checked in preferences) so do not wonder if it in some cases may look different than numerical true direction display. 
+<br>If error message is received from rotctld button area turns red. If requested turn command is ok, but az_min or az_maz limits change requested direction from true direction 
+(then antenna may not always reach requested direction) button area will turn yellow as warning sign.
+<br>The length of color flash depends on poll rate and is error permanent or not.
+<br>
+<br>If you make changes to <strong>preferences/Rot Control</strong> after that just select another rotor (even if not existing) from radio buttons <strong>Rotor 1</strong> , <strong>Rotor 2</strong>. Then select back the previous rotor and new values are read. It is possible also reload settings from <strong>
+NewQSO/File/Refresh TRX/ROT control</strong>.</p>
+</p><p>See also <a href="h1.html#ah7">setting up TRX/ROTControl</a>
+</p><table width="100%" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+</body>
+</html>

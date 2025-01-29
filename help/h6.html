@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>CQRLOG - Supported Radio Types</title>
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top"><img src="img/exc.png"></td>
+        <td bgcolor=ffffcc valign="top" align="justify"><strong>
+            <font color="red">WARNING!</font></strong>
+            Backup your data often! BACKUP your log directory at the end of EVERY session!
+            All that you need to backup and store in a safe place is the log database directory
+            located in the ~/.config/cqrlog/database folder, or you can enable the autobackup function
+            in Preferences. This autobackup function creates an ADIF file with a backup of your log.
+            /td>
+    </tr>
+    </tbody>
+</table>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div style="text-align: left;"><strong>CQRLOG for LINUX by OK2CQR &amp; OK1RR</strong></div>
+<p align=center><img src=img/line.png></p>
+<strong><h2>Supported radio types</h2></strong>
+<br>
+<div style="text-align: justify;">
+    The actual list of supported radios depends on the hamlib version, not Cqrlog itself.
+    You can obtain the actual list using the command terminal with:
+<pre>
+rigctld --list
+</pre>
+    Remember, the <i>rigctld</i> executable must be on your path that it usually is after installation.<br>
+    There's no standardized protocol to remotely control one's rig, be it a Ham radio
+    transceiver, a SWL receiver, any kind of scanner or other mobile.
+    Many manufacturers have designed their own proprietary protocol, implemented in
+    some of their product family. Therefore, each rig family will require a Hamlib
+    backend to set the VFO frequency, change mode and passband width, get current
+    signal strength, etc.
+    <br><br>Communication between Hamlib(rigctld) and Cqrlog is standardized and when Hamlib supports your rig Cqrlog will also support it. 
+    <br>Note that with Hamlib, as well as with Cqrlog, package maintainers very often offer old versions to install. That's why it is recommended to compile both from source code that is available from github.com. That way you will get the latest versions for use.
+    <br><a href="https://github.com/Hamlib/Hamlib">https://github.com/Hamlib/Hamlib</a>
+    <br><a href="https://github.com/ok2cqr/cqrlog">https://github.com/ok2cqr/cqrlog</a>
+    <br><br>
+    <table width="100%" border="0" cellpadding="5" cellspacing="2">
+        <tbody>
+        <tr>
+            <td valign="top"><img src="img/note.png"></td>
+            <td style="width: 100%; text-align: justify; background-color: rgb(234, 234, 234);">
+                <strong><font color="blue">Note:</font></strong> If your radio is not on the list,
+                it does not mean that it is not supported at all. The Elecraft K3 radio works as K2
+                (Rig# 221), you could also try one of the Kenwood radios. The Ten-Tec Omni-VI uses the
+                Icom IC-735 backend.
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+</div>
+<p align=center><img src=img/line.png></p>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>CQRLOG - Voice messages</title>
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top"><img src="img/exc.png"></td>
+        <td bgcolor=ffffcc valign="top" align="justify"><strong>
+            <font color="red">WARNING!</font></strong>
+            Backup your data often! BACKUP your log directory at the end of EVERY session!
+            All that you need to backup and store in a safe place is the log database directory
+            located in the ~/.config/cqrlog/database folder, or you can enable the autobackup function
+            in Preferences. This autobackup function creates an ADIF file with a backup of your log.
+            /td>
+    </tr>
+    </tbody>
+</table>
+
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div style="text-align: left;"><strong>CQRLOG for LINUX by OK2CQR &amp; OK1RR</strong></div>
+<p align=center><img src=img/line.png></p>
+
+<h2><strong>Voice messages</strong></h2><p>
+Voice keying can be used in same way as CW messages.</br>
+Either pressing function keys F1 .. F10 when "NewQso"-window is active, or clicking buttons F1 .. F10 from "CWkeys"-window.</br>
+</br>
+If mode is SSB, FM or AM  then voice messages will be sent. Otherwise CW messages will be sent.
+</p><p>
+When F-key is pressed, or button clicked, program will execute a script or try to start rig's internal voice memories using Hamlib/rigctld command.
+<br>Selection between running a script or using rigctld is selected at <b>Preferences/TRXControl/Send rig voice</b>. Checking it uses rigctld, uncheck uses script.
+<br>
+Script used is <b> ~/.config/cqrlog/voice_keyer/voice_keyer.sh</b> with Fkey name (F1 .. F10) as 1st parameter.
+</br> Script will then do what user wants to happen with that key/button. It can be anything, not just playing a voice recording.
+So it is very flexible.</p><p>
+Here is a sample of script. Modfy it against your needs:
+<BR><BR>
+<pre>
+#!/bin/bash
+
+   #Comment lines are starting with hash "#" (except the first one '#!/bin/bash'). 
+   #You can omit them when writing your script
+   #This script requires program 'ncat' (also called 'nc') 
+   # 'pidof' and player you select (defaut 'mpg123') to be installed.
+
+
+  #You can test this script from command line by typing:
+
+  #  voice_keyer.sh F10.mp3  (without typing hash (#) at beginning of line)
+
+  #It will then play file F10.mp3 if all is ok.
+
+
+   #the script begins:
+   #Define your sound player's name below (mpg123, aplay, etc..)
+   #If you do not get any sound out:
+   #Yor rig may exist as one sound card of Linux. 
+   #To get your voice message directed to right sound card consult your player's
+   #man pages how to select right sound output device and add those parameter(s)
+   #after your player's name (within those parenthesis).
+
+myplayer="mpg123"
+
+   #rigctld PTT commands
+rigctldPttCmdON="T 1"
+rigctldPttCmdOFF="T 0"
+
+   #if Hamlib/rigctld method does not work with you it might be that you have
+   #very latest rigctld and/or you use start parameter '--vfo' with it
+   #then put hash (#) in front of above two lines and remove hash (#) from
+   #start of next two lines
+
+# rigctldPttCmdON="T currVFO 1" 
+# rigctldPttCmdOFF="T currVFO 0"
+
+
+   #Search the sound file that was given as first start parameter with script name
+FILE="$1.mp3"
+if [ ! -e $FILE ]
+ then 
+ echo "$FILE Not Found!"
+ exit 1
+fi
+
+  #search audio your player 
+command -v $myplayer >/dev/null 2>&1 
+  if [ $? != 0 ]
+   then 
+    echo "$myplayer is not installed.  Aborting."
+    exit 1
+   fi
+
+   #check that we are not already playing something
+   pidof -q $myplayer
+   if [ $? = 0 ]
+      then
+       echo "$myplayer is already playing, exit!"
+       exit 1
+      fi
+
+echo "PTT on"
+
+   #This puts your rig ptt ON if you have 'cwdaemon' program in use.
+   #If you want to use this then remove hash (#) from the beginning of next line
+
+#echo -e '\033a1' | nc -q 1 -u localhost 6789 &
+
+   #This puts your rig ptt ON using hamlib rigctld (same as Cqrlog uses for rig)
+   #if you do not want to use this method put hash (#) to beginning of next line.
+
+echo -e $rigctldPttCmdON |nc localhost 4532
+
+   #the last words in above line (after 'nc') should be same as your 
+   #'Host' and 'Port number' in Cqrlpg/preferences/TRXControl
+
+echo "Play"
+$myplayer $FILE
+echo "PTT off"
+
+   #This puts your rig ptt OFF if you have 'cwdaemon' program in use.
+   #then remove hash (#) from the  beginning of next line
+
+#echo -e '\033a0' | nc -q 1 -u localhost 6789 &
+
+   #This puts your rig ptt OFF using hamlib rigctld (same as Cqrlog uses for rig)
+   #if you do not want to use this method put hash (#) to beginning of next line.
+
+echo -e $rigctldPttCmdOFF |nc localhost 4532
+
+   #the last words in above line (after 'nc') should be same as your 
+   #'Host' and 'Port number' in Cqrlpg/preferences/TRXControl
+
+
+   #If you want to use VOX put hash in start of all four lines 
+   #that controls PTT ON and OFF
+
+   #script ends
+exit
+
+</pre>
+</p>
+
+
+
+
+<p align=center><img src=img/line.png></p>
+<br>
+<table width="100%" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+</body>
+</html>

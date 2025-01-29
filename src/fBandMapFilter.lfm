@@ -1,0 +1,297 @@
+object frmBandMapFilter: TfrmBandMapFilter
+  Left = 227
+  Height = 224
+  Top = 102
+  Width = 667
+  BorderStyle = bsDialog
+  Caption = 'Band map filter'
+  ClientHeight = 224
+  ClientWidth = 667
+  OnClose = FormClose
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.2.6.0'
+  object GroupBox1: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 6
+    Height = 120
+    Top = 6
+    Width = 648
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    ClientHeight = 118
+    ClientWidth = 646
+    TabOrder = 0
+    object rbNoWkdHour: TRadioButton
+      AnchorSideLeft.Control = rbShowAll
+      AnchorSideTop.Control = rbShowAll
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 41
+      Width = 233
+      BorderSpacing.Top = 12
+      Caption = 'Do not show call worked in last '
+      TabOrder = 0
+    end
+    object rbNoWkdDate: TRadioButton
+      AnchorSideLeft.Control = rbNoWkdHour
+      AnchorSideTop.Control = rbNoWkdHour
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 76
+      Width = 224
+      BorderSpacing.Top = 12
+      Caption = 'Do not show call worked after '
+      TabOrder = 1
+    end
+    object edtDate: TEdit
+      AnchorSideLeft.Control = edtLastHours
+      AnchorSideTop.Control = rbNoWkdDate
+      AnchorSideTop.Side = asrCenter
+      Left = 239
+      Height = 34
+      Top = 70
+      Width = 96
+      TabOrder = 2
+      Text = '2000-10-10'
+    end
+    object edtTime: TEdit
+      AnchorSideLeft.Control = edtDate
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = rbNoWkdDate
+      AnchorSideTop.Side = asrCenter
+      Left = 341
+      Height = 34
+      Top = 70
+      Width = 56
+      BorderSpacing.Left = 6
+      TabOrder = 3
+      Text = '12:12'
+    end
+    object lblDateTime: TLabel
+      AnchorSideLeft.Control = edtTime
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtTime
+      AnchorSideTop.Side = asrCenter
+      Left = 403
+      Height = 17
+      Top = 79
+      Width = 77
+      BorderSpacing.Left = 6
+      Caption = '(date, time)'
+      ParentColor = False
+    end
+    object edtLastHours: TEdit
+      AnchorSideLeft.Control = rbNoWkdHour
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = rbNoWkdHour
+      AnchorSideTop.Side = asrCenter
+      Left = 239
+      Height = 34
+      Top = 35
+      Width = 41
+      TabOrder = 4
+      Text = '48'
+    end
+    object lblHours: TLabel
+      AnchorSideLeft.Control = edtLastHours
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtLastHours
+      AnchorSideTop.Side = asrCenter
+      Left = 286
+      Height = 17
+      Top = 44
+      Width = 226
+      BorderSpacing.Left = 6
+      Caption = 'hours on the same band and mode'
+      ParentColor = False
+    end
+    object rbShowAll: TRadioButton
+      AnchorSideLeft.Control = GroupBox1
+      AnchorSideTop.Control = GroupBox1
+      Left = 6
+      Height = 23
+      Top = 6
+      Width = 81
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      Caption = 'Show all'
+      Checked = True
+      TabOrder = 5
+      TabStop = True
+    end
+    object chkShowActiveBandFil: TCheckBox
+      AnchorSideLeft.Control = edtLastHours
+      AnchorSideTop.Control = rbShowAll
+      AnchorSideTop.Side = asrCenter
+      Left = 242
+      Height = 23
+      Top = 6
+      Width = 58
+      BorderSpacing.Left = 3
+      Caption = 'band'
+      TabOrder = 6
+    end
+    object chkRevOrder: TCheckBox
+      AnchorSideLeft.Control = edtTime
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = rbShowAll
+      Left = 397
+      Height = 23
+      Top = 6
+      Width = 117
+      Caption = 'Reverse order'
+      TabOrder = 7
+    end
+    object chkShowActiveModeFil: TCheckBox
+      AnchorSideLeft.Control = chkShowActiveBandFil
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = rbShowAll
+      AnchorSideTop.Side = asrCenter
+      Left = 303
+      Height = 23
+      Top = 6
+      Width = 63
+      BorderSpacing.Left = 3
+      Caption = 'mode'
+      TabOrder = 8
+    end
+    object lblActive: TLabel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = rbShowAll
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = chkShowActiveBandFil
+      Left = 124
+      Height = 17
+      Top = 9
+      Width = 115
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 3
+      Caption = 'Show only active:'
+      ParentColor = False
+    end
+  end
+  object GroupBox2: TGroupBox
+    AnchorSideLeft.Control = GroupBox1
+    AnchorSideTop.Control = GroupBox1
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 80
+    Top = 132
+    Width = 482
+    BorderSpacing.Top = 6
+    ClientHeight = 78
+    ClientWidth = 480
+    TabOrder = 1
+    object chkOnlyeQSL: TCheckBox
+      AnchorSideLeft.Control = GroupBox2
+      AnchorSideTop.Control = GroupBox2
+      Left = 6
+      Height = 23
+      Top = 6
+      Width = 169
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      Caption = 'Show only eQSL users'
+      TabOrder = 0
+    end
+    object chkOnlyLoTW: TCheckBox
+      AnchorSideLeft.Control = chkOnlyeQSL
+      AnchorSideTop.Control = chkOnlyeQSL
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 41
+      Width = 172
+      BorderSpacing.Top = 12
+      Caption = 'Show only LoTW users'
+      TabOrder = 1
+    end
+    object seFreqWidth: TSpinEdit
+      AnchorSideLeft.Control = lbFreqW
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = lbFreqW
+      AnchorSideTop.Side = asrBottom
+      Left = 261
+      Height = 34
+      Top = 29
+      Width = 55
+      BorderSpacing.Top = 6
+      MaxValue = 30
+      MinValue = 8
+      TabOrder = 2
+      Value = 12
+    end
+    object seCallWidth: TSpinEdit
+      AnchorSideLeft.Control = lbCallW
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = lbCallW
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Side = asrBottom
+      Left = 375
+      Height = 34
+      Top = 29
+      Width = 55
+      BorderSpacing.Top = 6
+      MaxValue = 30
+      MinValue = 8
+      TabOrder = 3
+      Value = 12
+    end
+    object lbFreqW: TLabel
+      AnchorSideLeft.Control = chkOnlyeQSL
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = chkOnlyeQSL
+      Left = 255
+      Height = 17
+      Top = 6
+      Width = 66
+      BorderSpacing.Left = 80
+      Caption = 'FreqWidth'
+      ParentColor = False
+    end
+    object lbCallW: TLabel
+      AnchorSideLeft.Control = lbFreqW
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = chkOnlyeQSL
+      Left = 371
+      Height = 17
+      Top = 6
+      Width = 63
+      BorderSpacing.Left = 50
+      Caption = 'CallWidth'
+      ParentColor = False
+    end
+  end
+  object btnOK: TButton
+    AnchorSideTop.Control = btnCancel
+    AnchorSideRight.Control = btnCancel
+    Left = 498
+    Height = 25
+    Top = 187
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 6
+    Caption = 'OK'
+    OnClick = btnOKClick
+    TabOrder = 2
+  end
+  object btnCancel: TButton
+    AnchorSideRight.Control = GroupBox1
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = GroupBox2
+    AnchorSideBottom.Side = asrBottom
+    Left = 579
+    Height = 25
+    Top = 187
+    Width = 75
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 3
+  end
+end

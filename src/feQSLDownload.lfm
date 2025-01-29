@@ -1,0 +1,204 @@
+object frmeQSLDownload: TfrmeQSLDownload
+  Left = 703
+  Height = 520
+  Top = 188
+  Width = 520
+  HorzScrollBar.Page = 469
+  VertScrollBar.Page = 314
+  AutoScroll = True
+  Caption = 'Download data from eQSL.cc'
+  ClientHeight = 520
+  ClientWidth = 520
+  Constraints.MinHeight = 500
+  Constraints.MinWidth = 500
+  OnClose = FormClose
+  OnShow = FormShow
+  LCLVersion = '2.2.6.0'
+  object gbProgress: TGroupBox
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 289
+    Top = 181
+    Width = 520
+    Align = alClient
+    Caption = 'Progress'
+    ClientHeight = 271
+    ClientWidth = 518
+    TabOrder = 0
+    object mStat: TMemo
+      Left = 1
+      Height = 269
+      Top = 1
+      Width = 516
+      Align = alClient
+      BorderSpacing.Left = 1
+      BorderSpacing.Top = 1
+      BorderSpacing.Right = 1
+      BorderSpacing.Bottom = 1
+      OnChange = mStatChange
+      ScrollBars = ssAutoBoth
+      TabOrder = 0
+    end
+  end
+  object Panel1: TPanel
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 181
+    Top = 0
+    Width = 520
+    Align = alTop
+    BevelOuter = bvNone
+    ClientHeight = 181
+    ClientWidth = 520
+    TabOrder = 1
+    object gbSettings: TGroupBox
+      AnchorSideLeft.Control = Panel1
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 1
+      Height = 176
+      Top = 2
+      Width = 518
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 1
+      BorderSpacing.Top = 1
+      BorderSpacing.Right = 1
+      BorderSpacing.Bottom = 1
+      Caption = 'Settings'
+      ClientHeight = 158
+      ClientWidth = 516
+      TabOrder = 0
+      object Label3: TLabel
+        AnchorSideLeft.Control = gbSettings
+        AnchorSideTop.Control = edtDateFrom
+        AnchorSideTop.Side = asrCenter
+        Left = 12
+        Height = 17
+        Top = 9
+        Width = 260
+        BorderSpacing.Left = 12
+        Caption = 'Return QSL records received on or after '
+        ParentColor = False
+      end
+      object edtDateFrom: TEdit
+        AnchorSideLeft.Control = Label3
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = gbSettings
+        Left = 275
+        Height = 34
+        Top = 0
+        Width = 190
+        BorderSpacing.Left = 3
+        TabOrder = 0
+      end
+      object chkShowNew: TCheckBox
+        AnchorSideLeft.Control = chkChangeDate
+        AnchorSideTop.Control = chkChangeDate
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 103
+        Width = 383
+        BorderSpacing.Top = 3
+        Caption = 'Show new comfirmed QSOs after download and import'
+        TabOrder = 1
+      end
+      object Label4: TLabel
+        AnchorSideTop.Control = edtQTH
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = edtQTH
+        Left = 174
+        Height = 17
+        Top = 46
+        Width = 98
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 3
+        Caption = 'QTH Nickname'
+        ParentColor = False
+      end
+      object edtQTH: TEdit
+        AnchorSideLeft.Control = edtDateFrom
+        AnchorSideTop.Control = edtDateFrom
+        AnchorSideTop.Side = asrBottom
+        Left = 275
+        Height = 34
+        Top = 37
+        Width = 190
+        BorderSpacing.Top = 3
+        TabOrder = 2
+      end
+      object chkChangeDate: TCheckBox
+        AnchorSideLeft.Control = Label3
+        AnchorSideTop.Control = edtQTH
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 23
+        Top = 77
+        Width = 424
+        BorderSpacing.Top = 6
+        Caption = 'Set Rcvd date to be current date -1 after succesfull download'
+        OnChange = chkChangeDateChange
+        TabOrder = 3
+      end
+    end
+  end
+  object pnlButtons: TPanel
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 50
+    Top = 470
+    Width = 520
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 50
+    ClientWidth = 520
+    TabOrder = 2
+    object btnClose: TButton
+      AnchorSideTop.Control = pnlButtons
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = pnlButtons
+      AnchorSideRight.Side = asrBottom
+      Left = 418
+      Height = 25
+      Top = 13
+      Width = 96
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 6
+      Cancel = True
+      Caption = 'Close'
+      ModalResult = 2
+      TabOrder = 0
+    end
+    object btnPreferences: TButton
+      AnchorSideLeft.Control = pnlButtons
+      AnchorSideTop.Control = pnlButtons
+      AnchorSideTop.Side = asrCenter
+      Left = 6
+      Height = 25
+      Top = 13
+      Width = 96
+      BorderSpacing.Left = 6
+      Caption = 'Preferences'
+      OnClick = btnPreferencesClick
+      TabOrder = 1
+    end
+    object btnDownload: TButton
+      AnchorSideLeft.Control = pnlButtons
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = pnlButtons
+      AnchorSideTop.Side = asrCenter
+      Left = 110
+      Height = 25
+      Top = 13
+      Width = 300
+      BorderSpacing.Top = 6
+      Caption = 'Download data from eQSL website'
+      OnClick = btnDownloadClick
+      TabOrder = 2
+    end
+  end
+end

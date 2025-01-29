@@ -1,0 +1,23 @@
+#!/bin/bash
+FILE=/etc/apparmor.d/local/usr.sbin.mysqld
+IFILE=/etc/init.d/apparmor
+FTMP=`mktemp /tmp/tmp.XXXXXX`
+if [ -f $FILE ]
+then
+  grep -v "@{HOME}/.config/cqrlog/database/" $FILE >> $FTMP
+  cat $FTMP > $FILE
+  echo ""
+  echo Changes removed from $FILE
+  echo "Restarting apparmor..."
+  echo ""  
+  if [ -f $IFILE ]
+  then
+    if which invoke-rc.d >/dev/null 2>&1; then
+       invoke-rc.d apparmor restart
+    else
+      /etc/init.d/apparmor restart
+    fi
+  fi
+fi
+rm $FTMP
+#DEBHELPER#

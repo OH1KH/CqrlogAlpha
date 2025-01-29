@@ -1,0 +1,958 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>CQRLOG - Preferences</title>
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top"><img src="img/exc.png"></td>
+        <td bgcolor=#ffffcc valign="top" align="justify"><strong>
+            <font color="red">WARNING!</font></strong>
+            Backup your data often! BACKUP your log directory at the end of EVERY session!
+            All that you need to backup and store in a safe place is the log database directory
+            located in the ~/.config/cqrlog/database folder, or you can enable the autobackup function
+            in Preferences. This autobackup function creates an ADIF file with a backup of your log.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div style="text-align: left;"><strong>CQRLOG for LINUX by OK2CQR &amp; OK1RR</strong></div>
+<p align=center><img src=img/line.png></p>
+<a name=ah0><h2><strong>Starting cqrlog</strong></h2>
+<p>Installing cqrlog from package should create a start up selection to your system startup menu.
+<br>Cqrlog can also be started from command terminal by typing: cqrlog ,follwed with return key.
+<br>There are some additional startup parameters that you can use with command terminal, or add them to your startup menu parameters of cqrlog.
+ Those parameters can be listed in command terminal starting cqrlog as: cqrlog -h , or: cqrlog --help
+<br><br><img src=img/h0.png border=0>
+<br><br>Starting with <strong>--remote</strong> or <strong>-r</strong> takes one letter argument <strong>J</strong>,<strong> M</strong> or <strong>K</strong> that is not case sensitive. Letters correspond quick control keys in NewQSO/File to start three remote modes.
+<br>When one of these are assigned cqrlog will jump to selected remote mode 10 seconds after startup is complete.
+<br><br>Starting with <strong>--debug</strong> takes one number (NR) usually<strong> 1</strong> to see full debug. Thtere are also some negative numbers in use to limit debug prints to certain functions. Mainly for developer usage.
+
+</p>
+<a name=ah1><h2><strong>Preferences</strong></h2>
+<div align=justify>The first step you need is to set up your log preferences. From the
+    logging window, choose the 'File' menu item and 'Preferences' (or Ctrl-P).<br><br>
+    <img src=img/h2.png border=0>
+    <br><br>
+    A multitab window appears, allowing setup of the following parameters:<br>
+    <ul style="margin-left: 40px;">
+        <li><a href="h1.html#ah2">Program</a></li>
+        <li><a href="h1.html#ah3">Station</a></li>
+        <li><a href="h1.html#ah4">New QSO</a></li>
+        <li><a href="h1.html#ah5">Visible columns</a></li>
+        <li><a href="h1.html#ah6">Bands</a></li>
+        <li><a href="h1.html#ah7">TRX Control</a></li>
+        <li><a href="h1.html#ah8">Modes</a></li>
+        <li><a href="h1.html#ah9">QTH Profiles</a></li>
+        <li><a href="h1.html#ah10">Export</a></li>
+        <li><a href="h1.html#ah11">DX Cluster</a></li>
+        <li><a href="h1.html#ah12">Fonts</a></li>
+        <li><a href="h1.html#ah13">WAZ, ITU Zones</a></li>
+        <li><a href="h1.html#ah14">IOTA</a></li>
+        <li><a href="h1.html#ah15">Membership</a></li>
+        <li><a href="h1.html#bh1">Bandmap</a></li>
+        <li><a href="h1.html#bh2">xplanet support</a></li>
+        <li><a href="h1.html#bh3">Zip code tracking</a></li>
+        <li><a href="h1.html#bh4">LoTW support</a></li>
+        <li><a href="h1.html#ch1">CW interface</a></li>
+        <li><a href="h1.html#ch2">fldigi interface</a></li>
+        <li><a href="fldxml.html">fldigi XmlRpc remote</a></li>
+        <li><a href="h1.html#ch2b">wsjt-x interface</a></li>        
+        <li><a href="h1.html#ch2c">ADIF interface</a></li>        
+        <li><a href="h1.html#ch3">Exit & Auto backup</a></li>
+        <li><a href="h1.html#ch4">External viewers</a></li>
+        <li><a href="h1.html#ch5">Callbook support</a></li>
+        <li><a href="h1.html#ch6">RBN support</a></li>
+        <li><a href="h1.html#ch7">Online log upload support</a></li>
+    </ul>
+    The first tab of the 'Preferences' dialog is labelled 'Program'. Here you can setup the
+    main program behaviour.<br><br>
+    <a name=ah2><h2><strong>Program</strong></h2></a>
+    <img src=img/h5.png border=0>
+    <br><br>
+    The <strong>Internet connection</strong> is important to those who are behind a proxy.
+    The data required does not need further explanation, hopefully. CQRLOG attempts to connect
+    if you try to connect to the DX Cluster (either via web or telnet) and/or if you hit F6
+    to access the HamQTH.com/QRZ.COM callbook data.
+    <br><br>
+    Other settings are:<br><br>
+    <strong>Web browser for cqrlog</strong> - If you do not fill this cqrlog tires to find system default browser. Quite often it places xgd-open as default browser. xgd-open is a linux tool script that tries to find system default browser.
+    <br>Most cases it works, but in some cases xdg-open strips hashtag links away from url path. That makes the right help page open, but from start. Not from chapter you might expect.
+    <br>Fix for this is to give path and filename to your real browser. It does not have to be same as your system default one. You can compare results opening first BandMap window and pressing blue ? (help) button.
+    <br>Do it first with cqrlog found browser (xdg-open). Then change your favorite browser path and name (like /usr/bin/firefox) and repeat pressing ? of Band Map.
+    <br>If no difference, you do not need to change default (unless you want use different browser than system default with cqrlog).
+    <br><strong>Hint:</strong> If you click Web browser name edit box a file open dialog opens and you can navigate to your browser. If you place cursor on Web browser name edit box, press left button and keep it down, you can paint exisiting text and use delete button to clear it and type new text.
+    <br><br>    
+    
+    <strong>get UTC time from computer time</strong> - CQRLOG will read UTC from the system time.
+    If you uncheck the option, you can set the difference between UTC and your local time manually
+    both for sunrise/sunset and qso time.
+    <br><br>
+    <strong>Grayline offset</strong> - sometimes the gray line position is not accurate.
+    You can set your own correction.
+    <br><br>
+    <strong>Great circle </strong> Short and Long path line plotting on Grayline map  may be adjusted here. Plotting step is decimal degrees &gt; 0.0 and &lt; 40.0. In polar areas where distance/degree is smaller this value is divided by integer divisor value &gt; 0 and &lt; 40.
+    <br>You may test different values if you like. If Columns are left empty the default values 0.1 and 10 are replaced.
+    <br>Color for Short- and Longpath lines can be selected, as well as the line plot width (1 -5 pixels)
+    <br>If rotor control is used also beam heading path may be plotted on Grayline map. Color, plot line width and length may be adjusted.
+    <br><b>Note:</b>At N and S polar areas beam length may be cutted to avoid false plotting. Then reduce the lenght of beam line (fixes to calculation routine are welcome)
+    <br><br>
+    <strong>Check for newer version of CqrlogAlpha after program startup</strong></a> - if checked,
+    CQRLOG will check if any update of the CqrlogAlpha version is available from OH1KH's GitHub    <br><br>
+    <strong>Check for newer version of DXCC tables after program startup</strong></a> - if checked,
+    CQRLOG will check if any update of the country files is available. If a new version is found,
+    an update will be performed, however you are asked first if you want this update.<br><br>
+    <strong>Check for newer version of qsl managers database after program startup</strong> - if
+    checked, CQRLOG will check if any update of the QSL Managers database is available. If a new
+    version is found, an update will be performed, however you are asked first if you want
+    this update.<br><br>
+    <strong>Check for newer version of DOK database after program startup</strong> - if
+    checked, CQRLOG will check if any update of the DOK database is available. If a new
+    version is found, an update will be performed, however you are asked first if you want
+    this update.<br><br>
+    <img src=img/h67.png border=0><br><br>
+    <strong>Show deleted countries in statistics</strong></a> - adds formerly valid countries
+    to statistics and overall DXCC counts.<br><br>
+    <strong>Show sunrise/sunset in UTC</strong> - if checked, sunrise and sunset times are shown
+    in UTC, otherwise in local time. Set up the proper time difference for both grayline
+    and sun rise/set.<br><br>
+    <strong>Show statistics in</strong> metres (m) or Megahertz (MHz). Selecting one of the radio
+    buttons affects the statistics appearing at the bottom of logging screen:<br><br>
+    <img src=img/h27.png border=0><br><br>
+    and also the headers of the main statistics (DXCC, WAZ and ITU).
+    <br><br>
+    <strong>Configuration storage settings</strong> - if you have one common database and several
+    computers with CQRLOG installed, you can choose which configuration items will be stored
+    only on the local computer and which will be stored in the database. Configuration stored
+    in the database will be common for all computers but local configuration will affect CQRLOG
+    on the local computer only. E.g. if you have two computers in hamshack, both are connected to
+    the common database. Now you can choose that TRX control, CW keying interface and position
+    of opened windows will be stored only to local computer.
+    You'll be able to have different TRX control configuration, windows postions, number of
+    opened windows etc. on each computer.
+</div>
+<p align=center><img src=img/line.png></p>
+<a name=ah3><h2><strong>Station</strong></h2></a>
+<img src=img/h6.png border=0><br><br>
+<div align=justify>
+    Enter your call, name, QTH and QRA Locator here. Remember, that the entered call is also used
+    as the login for the DX Cluster and is displayed on all stats exported to html. The QRA locator
+    is of high importance because it determines your accurate position (ie. you don't need to enter
+    your exact coordinates). The QRA Locator is used in beam heading and distance computation as
+    well as the start point of the simplified path to the other station which appears on the
+    grayline map.<br>Locator writing format is forced to "AB12cd" that follows definition  https://en.wikipedia.org/wiki/Maidenhead_Locator_System#Description_of_the_system 
+    <br><br>
+    If you want to use the export function to export contest logs as .edi file you can fill in your
+    personal data into the filelds in the <strong>General</strong> section. Those are then also 
+    exported to your contest logs.
+</div>
+<p align=center><img src=img/line.png></p>
+<a name=ah4><h2><strong>New QSO</strong></h2></a>
+<img src=img/h7.png border=0><br><br>
+<div align=justify>
+    Here are the default values for a new QSO. Remember, that if the radio interface control is
+    active, the default frequency does not appear on the logging screen. The preset RST values
+    will apppear in their corresponding boxes.
+    <br><br>
+    The <strong>Change default values</strong> button allows you to change the frequencies available in
+    the drop down menu in the NewQSO window. Very useful if you have favourite frequencies
+    and don't have the radio connected to the computer.<br>
+    The <strong>'Use spacebar to move between fields'</strong> is very interesting and probably the
+    most natural way but it works only if you are moving forwards. To move between fields,
+    there are two other generic possibilities (TAB key and up/down arrow keys) which
+    remain unaffected even if you check the spacebar option. </br>
+    The <strong>'Refresh data after save QSO'</strong> affects the data displayed in the QSO List (Ctrl-O). If checked, each
+    QSO appears in this list immediately after logging, however the refresh procedure is
+    quite slow. To save time, keep this box unchecked. </br>
+    The <strong>'Skip over mode and frequency when radio is connected'</strong> is very important if the radio control is active.</br>
+    The <strong>'Enable auto search on HamQTH.com/QRZ.COM/QRZCQ.com'</strong> switches on the automated search
+    for HamQTH/QRZ callbook data for any worked station. This option does the same as F6 on the
+    logging screen, however it can be rather slow depending on the HamQTH.com/QRZ.COM server
+    availability.</br> 
+    The <strong>'Show recent QSO records for last ** days'</strong> limits the QSO records
+    listed in the logging screen. Do not set the number of days too high, a high number can
+    cause program speed issues! The default value of 5 days is appropriate for most cases.</br>
+    The <strong>instead show QSOs B4 with logged call</strong> changes recent QSO records to list of worked before list with just logged callsign.
+    I.E. Same list you can see while you have edited a new call, but not yet saved as logged qso. This works only, as option, if
+     <em>'Show recent QSO records for last ** days'</em> is first checked.</br>
+    The <strong>In previous QSO list show also QSO with call/p</strong> etc. means you can see
+    previous QSO with a station even if he was active from another country with his
+    call/prefix. E.g. if you enter OK2CQR, you'll also see previous QSOs with him when he
+    was OM/OK2CQR, SP/OK2CQR etc.</br>
+    The <strong>Enable satellite mode</strong> Opens second tab 'Satellte' to NewQSO/DXCC statistic view. There you can select used satellite name,
+    RX frequency and also propagation mode for logged qso.</br>
+    If you enable the <strong>Upload SAT info to AMSAT status page</strong> cqrlog will upload a status info to the AMSAT satellite status page. This only happens for satellite QSOs (i.e. propagation mode is "SAT"). The status page can be found under: <a target="_blank" href="https://www.amsat.org/status/">https://www.amsat.org/status/</a>.<br>
+    <strong>User defined web button</strong> defaults to www.qrzcq.com requesting info for currently existing call in NewQSO, but you can define URL address you want and use listed macros if needed.<br><br>
+    Keys and Shortcuts for NewQSO Window you will find <a href="h20.html#ah16">here</a>.<br>
+</div>
+
+<p align=center><img src=img/line.png></p>
+<a name=ah5><h2><strong>Visible columns</strong></h2></a>
+<img src=img/h8.png border=0><br><br>
+<div align=justify>
+    Checked columns are visible in the previous QSO list appearing at the top of the
+    logging screen. Except "Distance" that makes calculated distances visible at QSO list panel area.
+    <br>Display of distances requires that preferences/station/locator is set and applied (automatic) to every qso and that at least 4 digit locator (when "ll" is added as 5 and 6th char) of destination station is logged.
+    Sometimes importing logs from other logging program may leave my locator unset. In this case QSO list/File/Group edit must be used for updating my locator field.
+</div>
+<p align=center><img src=img/line.png></p>
+<a name=ah6><h2><strong>Bands</strong></h2></a>
+<img src=img/h9.png border=0><br><br>
+<div align=justify>
+    Checked bands are visible in both statistics appearing at the bottom of logging screen
+    (bands/modes of the actual logged station) and main DXCC, WAZ and ITU zones statistics.
+    It also affects the Challenge points at the bottom of the DXCC statistics.<br><br>
+    Pressing button <strong>frequencies</strong> band, and mode limits within bands, can be set.<br>
+    <strong>NOTE:</strong>You can quick access frequency table from NewQSO by clicking label <strong>Mode </strong>
+    <img src=img/h9b4.png border=0><br><br>
+    You can use old table to define CW/DATA/SSB areas, or you can use new table for more exact definition of CW/DATA/SSB/AM/FM areas bu checking checkbox<br>
+    <strong>Use new mode/frequencies definition table</strong><br>
+    In both cases select the band from table and then press button <strong>Modify</strong> to edit frequency values of that band.
+    <br><br>
+    The view of old frequency table and edit form:
+    <br>
+</div><br>
+<img src=img/h9b.png border=0> <img src=img/h9b1.png border=0><br><br>
+<div align=justify>
+    <br><br>
+    When using new table zero (0) values in mode frequencies indicate that mode is not in use at that band.
+    After database upgrading all mode values are set to zero but you can init them using button <strong>
+    InitFreqTable</strong>.<br>
+    This will set all values based on the old table's CW/DATA/SSB limits. It is usefull only at first time as it
+    overrides all frequency values in all bands.
+    <br><br>The view of new frequency table and edit form:
+    <br><br>
+</div>
+<img src=img/h9b2.png border=0><br><br><img src=img/h9b3.png border=0>&nbsp;&nbsp;&nbsp;&nbsp;<img src=img/h9b5.png border=0><br><br>
+<div align=justify>
+    <br>
+    If segments are overlapping priority is for DATA,AM and FM as they probably are narrow segments inside CW or SSB
+    <br>First checked is SSB. Then CW is checked and can override SSB segment.
+    <br>Modes AM,FM,DATA (in that order) can override CW or SSB segments.
+    <br>You can define whole band divided for CW and SSB. Over them you can define small segments of AM,FM,or DATA and they can
+    <br>roll over CW and SSB segments. FM can roll over AM and DATA can roll over FM (or AM) if overlapping.        
+    <br>
+<p align=center><img src=img/line.png></p>
+<a name=ah7><h2><strong>TRX Control</strong></h2></a>
+<img src=img/h10.png border=0><br><br>
+
+<br>Running same time CQRLOG and other software that uses same rig's CAT control can not be done by just setting rig same parameters to both programs.
+    That causes problems. See this document for more information: <a href="https://github.com/OH1KH/cqrlog/blob/loc_testing/compiled/setting_rigctld_for_all_programs.pdf">https://github.com/OH1KH/cqrlog/blob/loc_testing/compiled/setting_rigctld_for_all_programs.pdf</a>
+    
+    <ul><li><strong>Note: </strong>CQRLOG supports operating with six Rigs but only one can be active at a time.
+    </li></ul>
+    <strong>Path to rigctld binary</strong> This tells Cqrlog from where to find rigctld that is a part of Hamlib. That is important for two
+    reasons. 
+    <br>1st The rig model list is loaded from rigctld when preferences open. That makes model list to be always up to date and Cqrlog
+    supports always all rigs that current rigctld can support.
+    <br>2nd rigctld is started when Cqrlog starts (most of cases). Writing whole path makes rigctld to be found also the when it is not found
+    from default path.
+    <ul><li><strong> Note: </strong>Usuallly rigctld is found from /usr/bin, but if you have compiled it by yourself from source it may default to /usr/local/bin
+    </li></ul>
+    <strong>Nr of radios:</strong> With this you can select how many radios Cqrlog will support (Max 6, now).
+    <br><br>
+    <strong>Name:</strong>This is the radio name that you will see in combo box selector lists: TRXControl, Prefrences/TRXControl, Modes, CW interface.
+    If rig is not defined, means rig Model is empty, you will see "None" here. If you want to remove existing rig definition select it from selector, then clear
+    rig Model manually using delete key and change selector to another rig, or close prfereces with "OK" button.
+    <br>This will remove also rig's Modes and CW interface definition from configuration file. Next time you select deleted rig Cqrlog will load all defaults to settings.
+    <ul><li><strong>Note: </strong>If you have 3 rigs and you delete rig #2 Cqrlog does not reorder selection list. Your rig #3 stays as 3rd in 
+    selector list and #2 becomes "None"
+    </ul></li>
+    <strong>Host:</strong> computer where rigctld is running, localhost is fine for most cases but can be IP address of another computer where
+    rigctld is running (I.E. even over local network or internet) <br><br>
+    <strong>RIG model:</strong> choose your radio model from the list.
+    <br> Rig models below 10 (Dummy, NET rigctld, FLRig, TRXManager) are using TCP communication and so the <strong>Device</strong> as well
+     as <strong>Radio serial parameters</strong> do not need settings.
+    <br><br>
+    <strong>Device:</strong> device which the radio is connected to. /dev/ttyS0 is COM1, /dev/ttyS1
+    is COM2 etc. If you use USB to serial interface, the device will usually be /dev/ttyUSB0
+    for COM1 etc. If you are using Ubuntu or Debian, <strong>you have to be member of the dialout users
+    group</strong> to have rights to the serial ports.
+    <ul><li><strong> Note: </strong>When connecting to rigctld emulator that imitates a rig via TCP connection the IPaddress and port may be written here like: 192.168.60.1:1234    
+    </li><li><strong> Note: </strong>With recent rigctlds you can use also names in /dev/serial/by-id/ folder. That way the device name does not change
+    like it often happens if you reorder USB wires in PS's sokets.
+    <br>(I.E my ci7300 shows out as /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_IC-7300_03003483-if00-port0  )
+    </li></ul>
+    <strong>Poll rate:</strong> specifies how often CQRLOG should read data from rigctld. 500 milliseconds is defaut. 
+    If your rig is old and slow values 1000 - 3000 may work better.
+    <br><br>
+    <strong>Port number</strong> is the number of the port used to communicate with rigctld.
+    Default value of rigctld is 4532.
+    <br><br>
+    <strong>Extra command line arguments</strong> usefull when you have to specify more parameters to
+    rigctld. E.g. CIV address (--civaddr=ID, where ID is the CIV address) or similars. See rigctld man page for supported parameters.
+    <br><br>
+    <strong>Use CWR insted of CW</strong> means that mode CW will use reverse sideband in receive.
+    <br><br>
+    <strong>Run rigctld when program starts</strong> is usually checked but when rig model #2 <strong>Hamlib Net Rigctld</strong> is used then
+    it is unchecked and disabled because with that rig model we are trying to connect externally running rigctld. Either in same PC or in network.
+    <br>If rig model #1 <strong>Hamlib Dummy</strong> is selected <strong>Run rigctld when program starts</strong>  is forced to be checked. 
+    This allows testing and simulated operations without rig with CAT control.
+    <ul><li><strong> Note: </strong>If you use Cqrlog without connected rig it may be usefull to select rig model #1. Then you can open TRXConrol
+    window and set bands, modes and frequency from there that might be more convinient than selecting them from NewQSO window.
+    <br>Model Hamlib Dummy starts default from 145MHz frequency. Seeing that in TRXControl window tells you that Dummy rig is running.
+    </li></ul>
+    <strong>Use \chkvfo</strong> is normally checked. Then cqrlog tries to find out is rigctld started with parameter "--vfo" because
+     that changes rigctld command format. Uncheck of this disables this function. Use it in case of problems. This may be default ON in future
+     Hamlibs version > 5.
+    <br><br>
+    <strong>Serial port parameters</strong> Use the manual of your rig, please choose the correct options.
+    Very often it is much better to specify only serial speed and leave other options as default.
+    Default value means that the default settings from HamLib will be used. That should be fine in normal cases.
+    <br><br>
+    <strong>Rig pwr ON cmd</strong> When checked Cqrlog will send power ON command at startup to rig if rig can support power commands.
+    <br><br>
+    <strong>Set UTC to Rig</strong> When checked Cqrlog will send "set_clock" command with current UTC time to rig on next full minute change after initialization.
+    <br><strong>Note:</strong> All rigs do not support set_clock command.
+    <br><br>
+    <strong>Send rig voice</strong> When checked Cqrlog will send "send_voice_mem" rigctld command to activate rig's internal voice memory message.
+     When unchecked Cqrlog executes voice keyer script. See: <a href="h28.html">Voice messages</a>
+    <br><strong>Note:</strong> All rigs do not support send_voice_mem command.
+    <br><br>
+    <strong>Compound poll</strong> When checked Cqrlog will send rig poll command as one line "+f +m +v". That is Cqrlog default.
+    <br>When unchecked every command will be sent with LineEnding, I.E. in it's own line. This may help poor rigctld emulators like WFview.
+    <br><br>
+    <strong>User defined TRXControl buttons</strong> can be defined here. Your defined buttons will be shown in the TRX Control window after
+     you select this option using the <strong>Preferences menu/Show Usr buttons</strong> in the <strong>TRXControl window.</strong> 
+     <br>
+     The first column is button name shown (4char max). In the same area the second column is for the command(s) to execute. 
+     Definition can consist one command or several ones in a queue.
+     <br> rigctld commands may be used directly or if definition starts with word "<strong>run</strong>" (without quotes) 
+     it can be a program or script name with full file path.
+      <br><ul> <li>
+    <strong>Note:</strong> Rigctld supports raw command <strong>W</strong>. Parameter for it is the rig cat command in bytes. Prefix<strong> \0x</strong> must be added for Hex values. Usr1 command in picture Sets IC7300 to 60m CW with 500Hz filter and reduces output power to leagal limit with raw command.
+    </li> <li>
+    <strong>Note:</strong> To run program or script it's name with full path must be entered. If file is command script then first line of it must tell what it is written for. If it is bash command script it's first line must be
+    <strong>#!/bin/bash </strong> if not, button definition must have <strong>run /bin/bash /tmp/my_test.sh</strong> to tell that bash is used to call the script.
+    </li> <li>
+    <strong>Note:</strong> Several rigctld commands can be written in same button definition. Usr3 command in picture  moves rig to 70MHz and then sets CW mode with 500Hz bandwidth filter.
+    </li><br> <li>
+    <strong>Note:  There is NO feedback from commands to cqrlog !</strong>
+    </li></ul>
+    <strong>Switch only between mode related memories</strong> if this option is cheched, only memories related to
+    current
+    operating mode will be used. E.g. you are on CW right now, CQRLOG will switch only between memories with CW mode.
+    When you switch to
+    USB or LSB, CQRLOG will use memories both with USB and LSB mode.<br><br>
+    <strong>Show communication with TRX in console</strong> sometimes TRX control doesn't work. Check this option, run
+    CQRLOG from console and
+    you'll see the communication between TRX and Hamlib. This could help to find out what is wrong.<br><br>
+    <strong>Change default frequencies</strong><br>
+    The default frequencies which the radio tunes if you click a band button in the 'TRX control'
+    panel can be changed to your preferences. The mode is switched in accordance to the band plan,
+    there is actually a separate set of default frequencies for each CW, SSB, RTTY, AM and FM modes.
+    Click the 'Change default frequencies' button and set up frequencies of your choice.<br><br>
+    <strong>Split settings</strong><br>
+    Split TX operation is made by using rig's XIT feature if rig supports it. Then there is no need to set both vfos for qso, just one and do the splitting with XIT. 
+    <br>Split is activated from NewQSO with keys Ctrl-1 ... Ctrl-9.
+    <br>Ctrl-0 will disable XIT. 
+    <br>Ctrl-9 has a random value 0-990Hz that is added to setting if split is up. If split is down it is subtracted.<br>
+    
+<br>
+<img src=img/h100.png border=0> <img src=img/h100b.png border=0><br>
+
+<a name=ah7b><h2><strong>ROT Control</strong></h2></a>
+<img src=img/h10b.png border=0><br><br>
+<br>
+Setting up Rotator control is very similar to setting up Rig control. Rotor models 1 and 2 (Dummy, NET rotctld ) are using TCP communication and so the <strong>Device</strong> as well
+     as <strong>Rotor serial parameters</strong> do not need settings.<br><br>
+<br>
+<br>If <strong>Use rotctld \dump_state info for limits</strong> cheked rotctld asks turning limits AzMin and AzMax values from rotctld with command <strong>'+\dump_state'</strong>.
+ That makes user possible to set turning limits other than rotator default turn with
+ <strong>Extra command line arguments</strong>. Using string <strong> --set-conf=min_az=10,max_az=355</strong>  you can set rotator so that cqrlog will never turn it below 10deg or over 355deg.
+ <br>Using negative value at az_min causes Cqrlog set it's 0degrees "P"-command to given negative value (while still displaying 0). I.E if az_min=-180 Cqrlog will use turning commands from "P-180" to "P180".
+ <br>Without negative az_min or when checkbox  <strong>Use rotctld \dump_state info for limits</strong> is not set Cqrlog sends commands in usual range "P0 to "P360".
+ </p><p>Some rotators have turn from -180deg-0deg-180deg (south stop), like Hamlib Dummy test rotator.
+ <br>Most of rotators have turn 0deg - 360deg.
+ <br>Some may turn 0deg - >360 deg. With them cqrlog never drives values over 360, but reads position right if rotor sends over 360 deg value (sent_value-360 = cqrlog display).
+</p> 
+<p>See also <a href="h30.html">Operation: TRX/ROT Control</a>
+</p><p align=center><img src=img/line.png></p>
+<p> 
+<a name="mem"><strong>Add/Modify memory</strong></a><br><br>
+You can define your own favourite frequencis and swich between them directly in New QSO window using ALT+V (Mem down)
+and
+ALT+B (Mem up). These keys are used in N6TR clones to switch between bands.<br>
+You can also switch between memory frequencies with TRXControl's <strong>M up</strong> and <strong>M dwn</strong> buttons and set rig frequencies
+ by double clicking rows in TRXControl's Add/Modify memory list.
+
+</p>
+<img src="img/h121.png"><br><br>
+<a name=ah8><h2><strong>Modes</strong></h2></a>
+<img src=img/h11.png border=0><br><br>
+<p>Here you can set up the default bandwidth for any of the supported modes (CW - SSB - DATA - AM - FM) for rig selectd from <strong>Radio </strong>
+selector list box.
+If your rig is tuned to the corresponding band segment or if you switch the mode from TRXControl buttons CQRLOG will change the bandwidth
+ to the defined value. 
+<br>Setting 0 (zero) to values means that rig should use default bandwidth. This is good selection also when rig can not support bandwidth
+settings (like some ICOM rigs).
+<br>Setting -1 here means that bandwidth setting must be kept as it was. This also needs that rigctld supports negative value (version >=  4).
+<br><br>
+<strong>Log mode </strong>This is the data mode you most often use. Defaulting to RTTY. From mode selector you can select another mode.
+If mode does not exist you have to define it in <strong>User defined digital modes</strong> and then come back to mode selector.
+<br>
+This mode efftects to DXCluster window's spot line coloring (See <a href="h1.html#ah11">DX Cluster</a> ) and also sets defined mode if DX spot line
+is double clicked.
+<br><br>
+<strong>CAT cmd </strong>This is the rigctld mode command that needs to be sent to rig to get rig to proper mode for <strong>Log mode</strong>.
+<br><br>
+<strong>Use also reverse (cat -> rig) </strong>This defines if Cqrlog should show <strong>Log mode</strong> when rig is set to <strong>CAT cmd </strong>
+mode. This may have a pitfall. If your settings are for example SSTV and USB then Cqrlog will select mode as SSTV also when you are working USB fone qsos.
+<br>Usually this needs not to be set if DATA qsos are worked with external program using Cqrlog remote modes.
+<br><br>
+<strong>User defined digital modes</strong> can be set up in a separate box. Use comma as a separator, ie. MYMODE1,MYMODE2 etc.<br>
+User should add digital modes (submode names) exactly as written in this table <a href="https://adif.org/312/ADIF_312.htm#Mode_Enumeration">ADIF.org: Mode_Enumeration</a> 
+If mode is missing from <strong>NewQSO/mode</strong> selection list and not added to <strong>User defined digital modes</strong> it may prevent ADIF import causing "wrong mode" error.
+<ul><li>
+<strong>Note:</strong> Cqrlog uses internally modified mode name. We call it here <strong>CqrMode</strong>. CqrMode is created from ADIF mode and
+ submode with conversion table. CqrMode is mainly ADIF submode if it exist, with some exceptions.
+<br>Cqrlog will create four files in ~/.config/cqrlog folder for this use if they do not exist. One is a brief <strong>README_modefiles</strong> explaining three other files purposes.
+</li></ul>
+If files exist they are not overwritten keeping possible user changes there. How ever user must do backups by himself if files are edited from original format.
+These files apply to all logs created. They are not log based.
+<ul><li>
+<strong>submode_mode.txt</strong>
+<br> This file holds submode=mode pairs used to convert incoming mode+submode pair to CqrMode that mainly is the submode.
+<br><br> All pairs must be in uppercase format. User can add or delete mode pairs with text editor if definition at
+<br> <a href="https://adif.org/312/ADIF_312.htm#Mode_Enumeration">ADIF.org: Mode_Enumeration</a> changes. 
+<br>"Self invented" mode names should not be used! Just one mode pair is accepted in one line.
+<br> The first line is never read (lower case). It just shows the order of submode and mode.
+<br><br>This file is used also when qso record is ADIF exported. Then CqrMode is converted back to mode+sumbode tags.
+<br>
+</li>
+<li><strong>import_mode.txt</strong>
+<br>This file holds a list of deprecated ADIF submodes that are accepted only for input. They are used in CqrModes but they will never be ADIF exported out from Cqrlog.
+<br><br> All lines must be in uppercase format. User can add or delete lines with text editor if definition at
+<br> <a href="https://adif.org/312/ADIF_312.htm#Mode_Enumeration">ADIF.org: Mode_Enumeration</a> changes. 
+<br>"Self invented" mode names should not be used!  Just one mode is accepted in one line.
+<br> The first line is never read (lower case). It just shows the meaning of then list. 
+<br><br>This file is used also when qso record is ADIF exported. It prevents submode in list to export and only mode is exported.
+<br>
+
+</li>
+<li><strong>exception_mode.txt</strong>
+<br>This file holds submode=mode pairs used to convert incoming mode+submode pair to CqrMode when CqrMode can not use ADIF submode directly.
+<br>For example by ADIF definition mode SSB  has submodes USB and LSB. How ever Cqrlog does not use those as CqrMode, but uses only SSB.
+ Then CqrMode is converted as SSB. How ever after exception the mode can not have it's submode back when exporting ADIF from Cqrlog.
+<br><br>This file can also have conversion from rigctld given mode to ADIF mode. For example with IC7300 rigctld shows mode PACKETUSB if rig is set to usb and data mode:
+<br> then this file can convert PACKETUSB to PKT that is ADIF standard format.
+<br><br> All pairs must be in uppercase format. User can add or delete mode pairs with text editor when needed.
+<br>How ever in case of outgoing modes (outgoing mode is at right side of mode pair) <a href="https://adif.org/312/ADIF_312.htm#Mode_Enumeration">ADIF.org: Mode_Enumeration</a> should be used.
+<br>"Self invented" mode names should not be used! Just one mode pair is accepted in one line.
+<br> The first line is never read (lower case). It just shows the order of submode and mode.
+</li>
+</ul>
+
+</p>
+<p align=center><img src=img/line.png></p>
+<a name=ah9><h2><strong>QTH Profiles</strong></h2></a>
+<img src=img/h12.png border=0><br><br>
+CQRLOG uses QTH Profiles. Your QTH and equipment details can be entered here. If you are
+logging a new QSO, choose the appropriate profile. Later, you can see which rig and antenna
+were used but the main purpose is usage in filters. You can create a filter with QTH Profile
+as one of the criteria, a later filtering of QSOs made on your portable operation or QRP
+activity is possible. This method seems more effective than the usual portable log, even if
+you are using MM0XXX/P as your call it will probably contain a mixture of all portable
+activities together. With QTH Profile, it is always possible to make a separate 'log'
+for each operation.
+<p align=center><img src=img/line.png></p>
+<a name=ah10><h2><strong>Export</strong></h2></a>
+<img src=img/h13.png border=0><br><br>
+<table width="100%" border="0" cellpadding="5" cellspacing="2">
+    <tbody>
+    <tr>
+        <td valign="top">
+            <img src="img/bulb.png"></td>
+        <td bgcolor="#ccffff" valign="top"><strong><font color="blue">
+            Our tip:</font></strong> Check all fields if you backup your whole log. Nothing will be lost
+            and the amount of data is not large, compared to a very reduced export.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br><br>
+This option allows an easy setup of the log fields to be exported into ADIF or HTML format.
+<br>Only checked fields are exported. The 'Column' option names columns at header line. 'Width' option denotes the column width in approx. count of 16px characters. 
+Both options affect only for the HTML export. 
+<br>The SAT mode field is not stored in the database but instead calculated on the fly from frequency and RX frequency and for SAT QSOs only.
+<br>Width setting is ignored if "HTML auto column width" is checked when longest text in column (column name or data) sets the column width.
+<br><br>Distances are not exported when doing log backup at cqlog closing phase. They will be calculated and exported (if selected) in ADIF, HTML and QSL label printing.
+ Calculation of distances requires that preferences/station/locator is set and applied (automatic) to every qso and that at least 4 digit locator
+  (in case "ll" is added as 5 and 6th char to get the center of grid) of destination station logged. 
+<br>Sometimes importing logs from other logging program may leave own station locator unset. In this case QSO list/File/Group edit must be used for updating "my locator" field.
+
+<br><br>
+<a name=ah11><h2><strong>DX cluster</strong></h2></a>
+<img src=img/h14.png border=0><br><br>
+<strong>Show only spots</strong><br>
+This dialog allows an easy setup of the DX cluster spot filtering. Check the bands and modes you want
+to display. 
+<br><br><strong>Note: </strong>Mode checkboxes here refer to <a href="h1.html#ah8">Preferences/Modes</a> set for every rig separately, and DATA refers to setting of "Log mode" there.
+<br>Each mode's frequency limits are set at <a href="h1.html#ah6">Preferences/Bands/Frequencies</a>.
+<br>Without proper setting of these spot filtering can not work and may not drop Spots you wish to disable, or may not show Spots you want to see.
+<br><br> If you want to supress (ie. filter out) spots for some DX countries, put
+those prefixes in the box below. Use a semicolon as a separator.
+<p>
+<strong>Callsign alert</strong><br>Allows you to enter callsigns that you are interested in. Eg. some special station for an award etc.<br>
+<strong>Run this command when callsign is spotted</strong><br>Will run select command when any of callsigns you've enter appears in the cluster.<br>
+E.g. use this if you want to see small window with information:<br><br>
+<i> zenity --info --text='Callsign $CALLSIGN detected at $FREQ $MODE' --title=Info</i><br><br>
+You have to install zenity, first. <i>(Thans to SV2RCK for the tip!)</i>
+<br><br>A variant for the KDE desktop.<br>
+The display duration in seconds (here 5) can be set here. The window closes automatically.
+<br><br><i>kdialog --title=Spot-Info --passivepopup "Callsign $CALLSIGN detected at $FREQ $MODE" 5</i>
+<br><br>
+This is also possible with "notify-send". The display duration is set in ms (-t 5000).
+<br><br>
+<i>notify-send -t 5000 "Spot-Info" "Callsign $CALLSIGN detected at $FREQ $MODE"</i>
+<br><br>
+"Kdialog" is installed by default using the 'kdebase-bin' package. For "notify-send" the 'libnotify-bin' package must be installed. <i>(Thans to Wolfgang, DL2KI, for the tip!)</i>
+
+
+</p>
+<p>
+<strong>Show country name in the DX cluster spot</strong><br>Next to every spot, you will se the coutry name of the DX station<br>
+<strong>Send these commands to telnet DXCluster when connected</strong><br>One or several commands with comma separated can be sent to DXCluster after connect is initialized.
+ If your command(s) have space(s) between, 
+<br>like "<strong>acc/spot by_zone 14,15,16 and not (on hf/data or on hf/rtty)</strong>" it is recommended to close each command between double quotes.<br>
+<strong>Connect to DX cluster after program startup</strong><br>After log is opened, cqrlog will connect to your default cluster. Please remember that
+username and password(if needed) have to be filled in the cluster list.
+</p>
+<p align=center><img src=img/line.png></p>
+<a name=ah12><h2><strong>Fonts</strong></h2></a>
+<img src=img/h15.png border=0><br><br>
+This dialog is self explanatory. Choose the appropriate font size to prevent any screen
+garbage and a nice look to the buttons.
+<p align=center><img src=img/line.png></p>
+<a name=ah13><h2><strong>WAZ, ITU zones</strong></h2></a>
+<img src=img/h16.png border=0><br><br>
+This is the color coding setup for the 'Details' window. New ones can be displayed in
+different color and QSL status is indicated verbosely in the 'Details' window.
+The 'Show info' boxes must be checked to display the relevant info.
+<p align=center><img src=img/line.png></p>
+<a name=ah14><h2><strong>IOTA</strong></h2></a>
+<img src=img/h17.png border=0><br><br>
+New IOTA color coding and QSL status can be set up here. The 'Show info' boxes must be
+checked to display the relevant info.
+<p align=center><img src=img/line.png></p>
+<a name=ah15><h2><strong>Membership</strong></h2></a>
+<img src=img/h31.png border=0><br><br>
+The primary aim of the 'Membership' info is tracking of members of a club or stations
+valid for an award. The info is derived from the call sign entered into the 'Call' box on
+the logging screen. CQRLOG can track member's calls from up to 5 databases simultaneously.
+To set up the tracking, do the following steps:<br><br>
+<strong>1. Choose a Club to be tracked.</strong> Click the first long button in the 'First
+club' box. A long list of Clubs appears.<br><br><img src=img/h37.png border=0><br><br>
+<strong>2. Click the 'Load' button.</strong> The membership data is loaded from the text
+database in the 'members' subfolder of your CQRLOG directory. A box with the number of
+converted records appears.<br><br><img src=img/h38.png border=0><br><br>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top">
+            <img src="img/note.png"></td>
+        <td bgcolor=#eaeaea valign="top" align="justify"><strong>
+            <font color="blue">Note:</font></strong> There are 2 places where membership list files are stored.
+            <br><strong>--Global files--</strong> are stored in /usr/share/cqrlog/members folder and will be 
+            updated with cqrlog version updates.
+            <br><strong>--Local files--</strong>, a place where you can save your own membership list files, is
+            ~/.config/cqrlog/members folder.
+            <br>List files there are saved over cqrlog version updates. Folder ~/.config is hidden so you must configure your
+            file browser to 'show hidden files and folders' to see it.
+            <br><br>When creating your own member list files you can use one of Global files as example.
+            <br>File name must have extension ".txt" and be a plain text file written with linux editor that ends lines to "\n", in hex #0A (LF character).
+            <br>Editors that use "\r\n", in hex #0D#0A (CR+LF charactes) [Windows style linefeeds] do not produce a working list file.
+            <br>1st line is membership list name, 2nd a short description. Do not put any additional spaces after name and description.
+            <br>It can lead to situaton where Club member list selection does not stay in preferences over cqrlog restart.
+            <br>3rd and following lines are CALLSIGN;membership_number. One pair for a line. No spaces, semicolon as delimiter.  Note ONLY CAPS written callsigns will work.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br><br>
+<strong>3. Click the 'Settings' button.</strong> A new dialog appears:<br><br>
+<img src=img/h32.png border=0><br><br>
+The color coding scheme for new members, new band, new mode, need of a QSL card and an
+already confirmed contact can be set up in the left half of the window. You can see here
+also my preferred color settings.<br><br>
+This dialog also allows you to set up the messages appearing in the 'Details' window if
+you work a member of a club which is tracked. This can be anything, my preferred messages
+are:<br>
+<pre>New %s member! (%c #%n)
+New band %s member! (%c #%n)
+New mode %s member! (%c #%n)
+QSL needed for %s member! (%c #%n)
+Already confirmed %s member! (%c #%n)</pre>
+<br>
+Note also the regular expressions used in the messages. The complete list is here:<br>
+<pre>%l - long club name
+%s - short club name
+%n - club number
+%c - callsign</pre>
+<br>
+The right half of this screen contains the join rules.
+<table border="0" cellpadding="5" cellspacing="2">
+    <tbody>
+    <tr>
+        <td valign="top">
+            <img src="img/h35.png"></td>
+        <td valign="top"><img src="img/h36.png">
+        </td>
+    </tr>
+    </tbody>
+</table>
+Here you can set up which fields from the QSO entry should be bound with the appropriate
+column in the membership database. Because the most relevant is the call sign in the QSO
+and the membership database contains also mostly the call sign, use the defaults
+- the 'clubcall' in the 'join ... field in club database' and the 'call' in the
+'with ... field in main database'.<br><br>
+The lower part contains a dialog allowing the set up of where the resulting info will be stored.
+<br><br>
+<img src=img/h34.png border=0><br><br>While logging, you will see the info in the
+corresponding field. The most preferred field is 'Award'. Since this field is used for
+check purposes only, all info (more memberships) are displayed in a single line which can
+be longer than the corresponding field on the logging screen. You can navigate here
+with the cursor but the well formated and color coded results in verbose form are
+displayed in the 'Details' window.<br><br>
+<img src=img/h33.png border=0>
+<br><br>
+<a name=bh1><h2><strong>Bandmap</strong></h2></a>
+<img src=img/h61.png border=0><br><br>The Band map is a well known feature of many
+contesting programs, however it is also great in a general logging program. It contains
+a mix of filtered DX Cluster spots and your own entries where you can store call and
+frequency of a station which you can't work just now but you want to return to later.<br><br>
+A very useful option of the Band Map is the <strong>'entries aging'</strong>.
+Depending on the time left since entry 'birth', the color changes to lighter tone until
+the entry disappears. There are two levels between appearance and disappearance of the entry.
+The times of these two levels and the time of disappearance can be set. If you change
+the aging times, restart CQRLOG. Remember that a program restart will be needed to make
+the changes take effect!<br><br>
+The spots can be color coded to highlight new countries, new band countries etc., in
+the same way as in the DX Cluster window - check the <strong>'Use the same color as the spot'</strong>
+option. If this option remains unchecked, all entries are shown in black (with aging
+to dark grey and light grey) and your own entries, <strong>made with Ctrl-A</strong>
+or the <strong>Big Plus key</strong> on the numerical keyboard, are shown in blue.
+Also, another set of <strong>Watched</strong> and <strong>Ignored</strong> entries can be defined.<br><br>
+The content of the Band map can be stored if leaving the log. Check the <strong>'Save band
+    map after close'</strong> option.<br><br>The <strong>'Show only active mode'</strong> and <strong>'Show
+    only active band'</strong> options providing an additional level of cluster spot filtering.
+When checked, the Band Map will show only spots for the mode or band which the radio is on.
+The spots are sorted by frequency, so you will see what is on the band - at a glance.
+No doubt you will prefer this over the DX Cluster window which contains a mess of rolling
+spots, often hard to 'catch'. Finally, if the <strong>'Delete station from band map after
+    QSO'</strong> option is checked, the entry with a worked station disappers from the Band Map.
+If such a station is spotted again, it will appear again in the Band Map.
+
+<br><br> You can also set width for frequency and call columns. After change clear is needed to get all lines to have even columns.
+<br><br>See also <a href="h21.html#bh19">Bandmap operation<a>
+<br><br>
+<a name=bh2><h2><strong>xplanet support</strong></h2></a>
+<img src=img/h66.png border=0><br><br>
+To ensure correct rendering of the azimuthal map with DX Cluster spots, the external
+program xplanet must be installed and several parameters must be set up. First,
+install xplanet. Many distributions have this program either on the installation media
+(CD, DVD) or xplanet exists in the form of a corresponding package
+(rpm, deb, tgz, ebuild etc.). If not, download source codes from:<br>
+<a href="http://xplanet.sourceforge.net/download.php">
+    <strong>http://xplanet.sourceforge.net/download.php</strong></a><br><br>
+Follow the usual installation instructions:<br>
+<pre>./configure
+make
+make install</pre>
+There are no known dependencies issues.<br><br>
+<div align=justify>
+    The first thing to be set up is the path to the xplanet binary. The default
+    <pre>/usr/local/bin/xplanet</pre>
+    is OK in most cases for installation from sources,
+    the usual path for installation from precompiled packages is
+    <pre>/usr/bin/xplanet</pre>
+    Adjust the <strong>window size</strong> (remember to set up a square, ie. 400x400,
+    300x300 etc. to avoid strange effects). Also, the <strong>window position</strong>
+    must be set up to create a nice looking screen. Use the <strong>Test it!</strong>
+    button to see how your settings affect the resulting screen.<br><br>
+    There are also other settings that you may like to change. Open ~/.config/cqrlog/xplanet/geoconfig file with text editor.
+    With lines in [earth] section:
+    <br>twilight=50
+    <br>shade=5
+    <br>you can create Grayline. Adjust values suitable for you. For other settings: consult xplanet man pages.
+    <br>
+    Xplanet can refresh its display at a preset interval. This is very useful because it
+    can read the spot (entry) list and update the displayed data. To avoid a 'flooded',
+    unreadable window, the number of displayed spots/entries must be limited. It seems
+    that 20 is the maximum to keep the display garbage away. Actually, the number of
+    spots (entries) is not limited by the program but by the readability. If you change
+    the number of spots to be displayed or if the spots should (should not) be sent to
+    xplanet,  Remember that the change may take some refresh periods to make the changes take effect!<br><br>
+    Set up the source (DX Cluster, Band map, Wsjtx, None) by checking the appropriate radio button
+    in the '<strong>Show stations from</strong>' section. The '<strong>Projection</strong>'
+    has 4 options:<br>
+    <ul>
+        <li><strong>3D</strong> - shows the globe as viewed from space. This rendering
+            type without any projection is very nice, however the very distant points will not be
+            visible, also spots or band map entries of distant DX locations will disappear.
+            Angles should be true because the globe is 'centered' on your location. Distances
+            are <strong>not true</strong> because of the lack of projection. This eye candy is
+            therefore good for those who do not work DX stations.
+        </li>
+        <li><strong>Azimuthal</strong> - is the usual directional map which you will find
+            useful for any rotator indication. Both angles and distances are true, however the
+            continent patterns may look a bit strange to those who are not very accustomed
+            to this projection. The azimuthal projection is the best for a DXer.
+        </li>
+        <li><strong>Azimuthal without background</strong> - is the same as above but the
+            background which contains the angle (polar) scale is not rendered. It is an
+            'emergency' solution which is useful if you have not enough space to set up
+            the main xplanet window as a square.
+        </li>
+        <li><strong>Rectangular</strong> - is the same as Grayline map has
+        </li>
+    </ul>
+    The center locator for the xplanet window can be customized by configuring in on 
+    this page. In case the field is empty the default locator of the station is used.<br>
+    If you want to have your own position displayed within xplanet check the <strong>Show own 
+    position within xplanet</strong> checkbox. Own position is always shown with selected default color.<br>
+    The xplanet window has also functions to display Qso short path and Beam path (if rotor assigned) with selected colors
+    in the 3D-like, azimuthal projection or rectangular picture.
+    <br><br>
+    <a name=bh3><h2><strong>Zip code tracking</strong></h2></a>
+    <img src=img/h69.png border=0><br><br>
+    Zip code tracking allows you to determine states, counties, provinces and other
+    geographical details if the postal zip code structure allows such operations. The zip
+    code itself is retrieved from the callbook address. The database is located in
+    the /zipcodes folder. If set up properly, the F6 key is used to determine US state,
+    US county and Italian province.<br><br>
+    <strong>Setup: </strong>The database must be loaded before use and the target (field)
+    must be specified. Also, the position of the zip code (line begin or end) must be set
+    up.<br><br>
+    <a name=bh4><h2><strong>LoTW/eQSL support</strong></h2></a>
+    <img src="img/h76.png"><br><br>
+    Provide your user name for eQSL/LoTW and the password (this is <strong>not</strong>
+    the password sent to US amateurs via postcard!). Choose if you want to include LoTW
+    confirmation in the statistics and <strong>New country</strong> and <strong>New band country</strong>
+    info messages.
+    <br>Normally you do not need to touch eQSL addresses. But in case something changes at eQSL web pages it might be possible to fix it here without rebuilding cqrlog program.<br><br>
+    <a name=ch1><h2><strong>CW interface</strong></h2></a>
+    <img src="img/h95.png"><br><br>
+    Choose your preferred CW interface for radio you have selected from <strong>Radio</strong> selector list.
+    <br>There are 5 options: None, WinKeyer ,cwdaemon, K3NG keyer and HamLib in <strong>CW interface type</strong> selector list.
+    <br>We strongly recommend <strong>Winkeyer</strong> by Steve Elliot, K1EL, which provides 'all in one' keying, including one of most 
+    advanced paddle keyers available.
+    <br><br><strong>Use potentiometer's CW speed</strong> Cqrlog does not send <strong>given default CW speed</strong> command to Winkeyer
+    when it is initialized.
+    <br>
+    <strong>cwdaemon</strong> should be seen as a backup option with many limitations, which may need a custom linux kernel to avoid. If cwdaemon is used, only keyboard keying is possible.
+    <br>
+    <strong>Send hex bytes to keyer</strong> (not for Hamlib) as the final stage of keyer initialization. Hex bytes 00-FF can be used and they must be comma separated.
+    <br>Format of entered bytes can be 0xFF,xFF or plain FF. This allows special settings to be entered to keyer like weighting, iambic A or B etc. 
+    <br>You must consult your keyer's manual to find suitable hex values for your needs.
+    
+    <br><strong>Min speed/Max speed </strong> can be defined (within 5-99WPM). These are limits you can access using PgUp/PgDn to adjust CW speed. Consult your keyer's manual to find speed limits of the keyer.
+    <br><strong>Speed step</strong> of PgUp/PgDn keys can also be defined. This is same value for all keyer types.
+    
+    
+    <br><strong>Do not reset when switching radios</strong> prevents keyer reset (that sets CW speed to given default). 
+    This option does not apply with Hamlib keyer in use.
+    <br><br>
+    Detailed setup of the CW devices are here:
+    <ul>
+        <li><a href=wkusb.html><strong>Winkeyer</strong></a></li>
+        <li><a href=cwd.html><strong>cwdaemon</strong></a>
+        <li><a href="http://blog.radioartisan.com/arduino-cw-keyer/" target="_blank">
+            <strong>K3NG</strong></a></li>
+        <li><a href=cwh.html><strong>HamLib</strong></a>
+    </ul>
+    For further steps (CW messages edit, keyboard keyer operation) - click
+    <a href=h26.html><strong>here</strong></a>.
+    <br><br>
+    <a name=ch2><h2><strong>fldigi interface</strong></h2></a>
+    First, <strong>fldigi</strong> must be installed and functional.
+    Preferences must be set up to operate with fldigi. Set up the path to fldigi, and if you wish
+    to start it when CQRLOG switches to remote mode. Other parameters including the way that
+    the CQRLOG - fldigi combo should handle the frequency, mode and RST. CQRLOG also loads
+    the fldigi contents to keep the data, so the 'polling' period should be set up.
+    The 2 seconds interval is a very acceptable default.<br><br>
+    
+    The way the CQRLOG - fldigi combo handles the frequency, mode and RST is rather important.
+    Keep in mind that CQRLOG operates in remote mode which means that the logger is offline
+    and therefore does not display the actual frequency and mode on the logging screen. If
+    you properly set up the <strong>fldigi</strong> mode and frequency control, both are correctly
+    displayed in the <strong>fldigi</strong> window. <strong>Choose the fldigi</strong> option in
+    <strong>Frequency from</strong>, <strong>Mode from</strong> and <strong>RST from</strong> boxes and you don't
+    need to watch the logger, except the QSO list in the upper portion of the logging screen.
+    When logging/saving a contact, frequency, mode and RST should appear correctly in this QSO list.
+    If you choose the CQRLOG option, you must set the mode in CQRLOG which seems less sensible.
+    <br><br>See also:<a href="fldxml.html#fl1"> Using fldigi withXmlRpc remote mode</a><br>
+    <br><br>
+    <a name=ch2b></a>
+    <p><img src="img/h101.png"><br><br>
+    <h2><strong>wsjt-x interface</strong></h2>
+    Setting wsjt-x interface is mainly same as setting fldigi. How ever communication is done via UDP frames and so the IP address and Port must be specified.
+    <br>Default values are <strong>127.0.0.1</strong> or <strong>localhost</strong> for address and <strong>2237</strong> for port. These are set in wsjt-x settings/reporting and if changed there, must also to be changed here.
+    <br>
+    Address can also be other PC's IP address if wsjt-x is running in different networked PC than cqrlog, or even<strong> 0.0.0.0</strong> when cqrlog listens all transmits from every wsjt-x in network.
+
+    <br><br>You can also use a multicast address for both <strong>wsjt-x/settings/Reporting/UDP Server</strong> and <strong>cqrlog/preferences/fldigi/wsjt interface/wsjt addr</strong>. Cqrlog will handle ip addresses starting with "239." as multicast addresses.
+    <br>With multicast you are able to run several programs listening to wsjt-x udp broadcasts at same time. To start with multicast try multicast group address "239.255.0.0" for both cqrlog and wsjt-x (and also other programs needed to listen wsjt-x)
+    <br><br>
+    Using <strong> WB4 chk starts from</strong> it is possible to limit log search starting from given date for callsign and/or locator.
+    <br>Setting checkbox will apply given date as start date. Otherwise, when unchecked, whole log is searched through.
+    <br>These limits will affect to callsign and/or locator coloring in wsjt-x monitor and worked grids map summary counts and grid painting.    
+    <br>
+    WB4 can be handy when working <strong>ARRL International Grid Chase </strong>or <strong>ARRL RTTY-FT8</strong> like contests if one does not like to create separate log for that purpose.
+    <br><br><img src="img/h101b.png"><br><br>
+    Pressing calendar icon is easy way to set date. Double click on selected date closes calendar and sets the date. Pressing ESC closes calendar, but does not set date. Date can also be typed in manually.
+    </p>
+    <a name=ch2c></a>
+    <h2><strong>ADIF interface</strong></h2>
+    Setting of ADIF interface is similar as wsjt-x interface. Only IP address and PORT have to be set if they are not defaults.
+    <br>Default values are <strong>127.0.0.1</strong> or <strong>localhost</strong> for address and <strong>2333</strong> for port. These are set in wsjt-x, or js8call, settings/reporting and if changed there, must also to be changed here.
+    <br>
+    Address can also be other PC's IP address if wsjt-x is running in different networked PC than cqrlog, or even 0.0.0.0 when cqrlog listens all transmits from every wsjt-x in network.
+    That is an easy choice because it works in all cases, even when running applications in different virtual machine of same PC. Just remember to open firewall for UPD port that is used.
+<br><br>
+    At WSJT-X 2.1.0 settings ADIF remote is renamed to "Secondary UDP server (deprecated)" and it is reported to be removed completely in future. Because of that it is now possible to set cqrlog's ADIF port to wsjt-x UDP server port number. WSJT-X 2.1.x UDP frames contain message #12 that
+     includes log information in ADIF format and ADIF remote can now parse that from binary data if you do not like to have monitoring properties (using wsjt remote) but want just qso logging (using ADIF remote).
+    <br><br>
+    ADIF remote has now better support for QRZ/HamQTH info fetch. If this is not allowed in preferences, or if there is no reponse from Web max waiting time (timeout)  is 5 seconds (You can not remove this property, so be patient. You can not have new qso for logging during 5 seconds!).
+    <br>While having qso you can write some notes like Name, QTH, Comment to QSO, etc. to NewQSO and it will saved with qso data during next wsjt-x "log qso/OK" event. They will not be overwritten by possible Qrz/HamQth info.
+    <br><br>
+    <strong>NOTE !!</strong> Wstx- does not send contest -name, -number and -string in ADIF logging datagram. Contest exchanges are placed to regular rst_s and rst_r strings. So cqrlog can not fill proper contest columns when logging is done with ADIF datagram using ADIF remote. 
+    <br><br>
+    
+    <a name=ch3><h2><strong>Exit & Auto backup</strong></h2></a>
+    To increase the safety of your log data, CQRLOG is equipped with an <strong>Auto backup</strong>
+    option which allows you to export (ADIF) and store the log data in a safe location.
+    The ADIF format was choosen because of its text format. The output file can be compressed
+    in tar.gz format.<br><br>
+    <img src="img/h102.png"><br><br>
+    Of course, the export and compression takes some time, depending on the log size (QSO count).
+    If you are not in a hurry, allow the program 2-3 minutes to perform this safety measure.
+    We reccomend you backup your log to your hard drive from there it should be copied to
+    other media (your server, USB flash, a memory card etc.).<br>Distances are not exported in backup phase. So do not expect to find them from backup file.
+    </br></br><img src="img/h119.png"><br><br>
+    Check both "Enable autobackup after program ends" and "Ask before creating a backup" to prevent closing cqrlog accidently. Answering <strong>"Cancel"</strong> to question returns to NewQso without backup.
+    <a name=ch4><h2><strong>External viewers</strong></h2></a>
+    <br>
+    <img src="img/h111.png"><br><br>Set up the viewers used for browsing the notes related to a particular callsign.
+    <br>
+    The notes in the call_data subfolder can contain text, html, pdf and image files.
+    To enable reading of all file types, corresponding viewers must be set up properly,
+    ie. must be in the system path.<br>
+    <br><strong>Note:</strong> Setting html browser here affects only to call attachments and it can be different than system default, or different than selected at preferences/program tab.
+    <br><strong>Hint:</strong> If you click Web browser name edit box a file open dialog opens and you can navigate to your browser. If you place cursor on Web browser name edit box, press left button and keep it down, you can paint exisiting text and use delete button to clear it and type new text.
+    <a name=ch5><h2><strong>Callbook support</strong></h2></a>
+    CQRLOG supports <a href="http://HamQTH.com">HamQTH</a>,  <a href="http://qrz.com">QRZ.com</a> and  <a href="http://qrzcq.com">QRZCQ.com</a>
+    callbooks but only access through the XML interface is supported. HamQTH has a free interface,
+    for QRZ.com and QRZCQ.com you have to pay an annual fee.<br><br>
+    <img src="img/h1112.png"><br><br>
+
+    <a name=ch6><h2><strong>RBN support</strong></h2></a>
+    CQRLOG can receive spots from RBN and show them on the Gray line map or RBN monitor (text list). It's very nice to
+    see where your signal has been decoded especially when you are calling CQ on an empty band.
+    <br>RBN support settings for Grayline map is done at Preferences.
+    <br>Setup for RBN monitor (text display) is done at RBN montor (NewQSO/WINDOW/RBN monitor) with toolbuttons.
+    <br>See: <a href="./h31.html">Operation/RBN monitor</a>
+    <br><br>
+    <img src="img/h1114.png"><br><br>
+    <ul>
+      <li><strong>Login:</strong> - your user name to log in to RBN. It's usually your own callsign.</li>
+      <li><strong>Watch for:</strong> the callsign you are watching for, usually your own callsign but can be any. You can also type in prefix followed by asterisk I.E. OK* etc.
+       If you leave this field empty, every spot will be shown on the grayline map.</li>
+      <li><strong>Signal strength</strong> How strong you are will be clear very quickly when you look
+    at the map with the dots in different colours. Which colour will be used can be set here.</li>
+      <li><strong>After window opens</strong> - check these options if you want to autoconnect
+    to RBN when the Grayline and/or RBN Monitor window opens. If you have closed cqrlog with window(s) open they will open at next program start
+    and so also connection is made.</li>
+    <ul>
+      <li><strong>Autoconnect RBN Grayline</strong> connects Grayline map to RBN.
+      <br>Connection to RBN must be done either here with <strong>Autoconnect RBN Monitor</strong> or <strong>manually</strong> at Grayline window side.</li>
+      <li><strong>Autoconnect RBN Monitor</strong> connects RBN Monitor to RBN site. See: <a href="./h31.html">Operation/RBN monitor</a></li>
+      <li><strong>Link Grayline to RBN Monitor</strong> links Grayline to same connection as RBN Monitor uses. It saves one connection as the same RBN connection can be used for both Grayline dotting and RBN Monitor listing.
+      </li>
+      <strong>Note:</strong> Linking alone does not start Grayline dotting.When linked, Grayline dotting and RBN Monitor listing both uses their own filter settings what call(s) to follow.
+      <br><strong>Note:</strong> "Connect RBN Grayline" and "Link Grayline to RBN Monitor" are alternatives. You can not select both of them at same time.</li>
+    </ul>
+      <li><strong>Delete old information after XX seconds</strong> The dots won't stay on the map forever.
+    180 seconds (3 minutes) is a good default value.
+    <br><strong>Note:</strong> Dots also depend on the band, if you change band, dots will always be deleted. All data is band related.</li>
+    </ul>
+    <br><br>
+
+    <a name=ch7><h2><strong>Online log upload support</strong></h2></a>
+    CQRLOG supports online log upload to <a href="http://HamQTH.com">HamQTH</a>,
+    <a href="https://secure.clublog.org/loginform.php">ClubLog.org</a>,
+    <a href="http://hrdlog.net/">HRDLOG.net</a> and
+    <a href="https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/#contact">N1MM+ UDP contact messages</a><br>
+    <img src="img/h1116.png"><br><br>
+    Both ClubLog and HamQTH need a username and password, Clublog also needs the email address
+    used when you registered. HRDLog.net needs only user name and the code you got by e-mail.
+    N1MM+ format UDP messages require a hostname/IP and port number in format <i>hostname:port</i> (e.g. 127.0.0.1:5444).
+    You can set different color for each service. This color will be used for status messages
+    which will inform you about upload progress.
+    <strong>Upload QSO data immediately after save, update or delete</strong> means that every
+    insert/update or delete will be uploaded automatically. But if you change something in
+    QSO list window with hot keys e.g. Ctrl-S, Ctrl-W etc. and/or download data
+    from eQSL/LoTW, changes won't be uploaded. All will be uploaded after you save/delete QSO
+    or if you choose Online log and Upload to all online logs menu.<br>
+
+    <a name=ch8><h3>How to get it to work?</h3></a>
+    <ul>
+        <li>check if you have set correct username, password (email, Code)</li>
+        <li>in case Url address of online log API has changed you are able to change it here</li>
+        <li>export all data from the log to ADIF file</li>
+        <li>import this adif file to the website of online log you are going to use
+            (if you are using HamQTH, please wait untill the email about a successful import arrives)
+        </li>
+        <li>open QSO list window, click to <strong>Online log</strong> menu and choose
+            <strong>Mark QSO as uploaded to all logs</strong>, CQRLOG marks all QSO as uploaded
+        </li>
+    </ul>
+    That's all, Now if you insert/edit or delete a QSO, it will also be uploaded to the online log.
+    <br><br>
+    <strong>Close the "Status of log upload" window after successful upload</strong>
+    if you don't want to have Log upload status window visible, check this option and
+    windows will be closed after upload to online log is finished.
+    <br><br>
+    <strong>Ignore changes caused by LoTW/eQSL upload or download</strong> - every change of
+    a qso will cause a new upload to the online log database. Sometimes it can be useful to
+    have the opportunity to disable it when upload/download data to LoTW/eQSL. These changes
+    won't be logged and QSO won't be uploaded to any online log.
+</div>
+<p align=center><img src=img/line.png></p>
+<br>
+<table width="100%" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<a name=ch9><h2><strong>Propagation</strong></h2></a>
+<p><img src=img/propag.png></p><br><br>
+Propagation setup lets you choose if the <strong>NewQSO/Window/Propagation</strong> show the propagation information either as an image, or text information. Source of the image variant can be selected from given web address.
+<br>If text information is selected you can select what kind of information will be shown using check boxes.
+<br><br></p>
+<p align=center><img src=img/line.png></p>
+<br>
+<table width="100%" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+
+</body>
+</html>

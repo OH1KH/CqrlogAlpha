@@ -1,0 +1,70 @@
+object frmExportPref: TfrmExportPref
+  Left = 232
+  Height = 519
+  Top = 131
+  Width = 931
+  BorderStyle = bsDialog
+  Caption = 'Choose fields to export'
+  ClientHeight = 519
+  ClientWidth = 931
+  OnShow = FormShow
+  Position = poOwnerFormCenter
+  LCLVersion = '2.0.6.0'
+  object btnOK: TButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 844
+    Height = 25
+    Top = 36
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 36
+    BorderSpacing.Right = 12
+    Caption = 'OK'
+    OnClick = btnOKClick
+    TabOrder = 0
+  end
+  object btnCancel: TButton
+    AnchorSideLeft.Control = btnOK
+    AnchorSideTop.Control = btnOK
+    AnchorSideTop.Side = asrBottom
+    Left = 844
+    Height = 25
+    Top = 73
+    Width = 75
+    BorderSpacing.Top = 12
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object btnReSet: TButton
+    AnchorSideLeft.Control = btnOK
+    AnchorSideTop.Control = btnCancel
+    AnchorSideTop.Side = asrBottom
+    Left = 844
+    Height = 25
+    Top = 110
+    Width = 75
+    BorderSpacing.Top = 12
+    Caption = 'Re/Set All'
+    OnClick = btnReSetClick
+    TabOrder = 2
+  end
+  inline fraExportPref1: TfraExportPref
+    Left = 8
+    Top = 8
+    TabOrder = 3
+    DesignLeft = 1719
+    DesignTop = 168
+    inherited lblField1: TLabel
+      AnchorSideLeft.Control = fraExportPref1
+      AnchorSideTop.Control = fraExportPref1
+    end
+    inherited chkAutoColumn: TCheckBox
+      OnChange = chkAutoColumnChange
+    end
+  end
+end

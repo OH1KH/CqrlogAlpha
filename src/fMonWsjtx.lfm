@@ -1,0 +1,809 @@
+object frmMonWsjtx: TfrmMonWsjtx
+  Left = 12
+  Height = 345
+  Top = 58
+  Width = 582
+  AllowDropFiles = True
+  Caption = 'Wsjt-x CQ-monitor'
+  ClientHeight = 345
+  ClientWidth = 582
+  Constraints.MinHeight = 200
+  Constraints.MinWidth = 300
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnDropFiles = FormDropFiles
+  OnHide = FormHide
+  OnShow = FormShow
+  LCLVersion = '3.6.0.0'
+  object pnlAlert: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = pnlFollow
+    Left = 2
+    Height = 45
+    Top = 251
+    Width = 578
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 2
+    BorderSpacing.Right = 2
+    BorderSpacing.Bottom = 2
+    ClientHeight = 45
+    ClientWidth = 578
+    TabOrder = 0
+    object tbmyAll: TToggleBox
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlAlert
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 49
+      Height = 32
+      Top = 6
+      Width = 45
+      Caption = 'All'
+      Font.Color = clRed
+      ParentFont = False
+      TabOrder = 0
+      OnChange = tbmyAllChange
+    end
+    object tbTCAlert: TToggleBox
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlAlert
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = EditAlert
+      AnchorSideBottom.Side = asrCenter
+      Left = 186
+      Height = 32
+      Top = 6
+      Width = 50
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 3
+      Caption = 'Text'
+      Font.Height = -13
+      Font.Name = 'Sans'
+      ParentFont = False
+      TabOrder = 1
+      OnChange = tbTCAlertChange
+    end
+    object EditAlert: TEdit
+      AnchorSideLeft.Control = pnlAlert
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = pnlAlert
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 239
+      Height = 34
+      Top = 5
+      Width = 100
+      BorderSpacing.Bottom = 4
+      TabOrder = 2
+      OnEnter = EditAlertEnter
+      OnExit = EditAlertExit
+    end
+    object tbLocAlert: TToggleBox
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlAlert
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = pnlAlert
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Side = asrBottom
+      Left = 524
+      Height = 31
+      Top = 7
+      Width = 50
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 3
+      Caption = 'Loc'
+      Font.Color = clRed
+      ParentFont = False
+      TabOrder = 3
+      OnChange = tbLocAlertChange
+    end
+    object tbAlert: TToggleBox
+      AnchorSideLeft.Control = EditAlert
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlAlert
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 342
+      Height = 32
+      Top = 6
+      Width = 50
+      BorderSpacing.Left = 3
+      Caption = 'Alert'
+      Font.Color = clRed
+      ParentFont = False
+      TabOrder = 4
+      OnChange = tbAlertChange
+    end
+    object tbmyAlrt: TToggleBox
+      AnchorSideLeft.Control = pnlAlert
+      AnchorSideTop.Control = pnlAlert
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 32
+      Top = 6
+      Width = 45
+      BorderSpacing.Left = 3
+      Caption = 'My'
+      Font.Color = clRed
+      ParentFont = False
+      TabOrder = 5
+      OnChange = tbmyAlrtChange
+    end
+    object btFtxtName: TButton
+      AnchorSideTop.Control = tbLocAlert
+      AnchorSideRight.Control = tbLocAlert
+      Left = 451
+      Height = 31
+      Top = 7
+      Width = 70
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 3
+      Caption = 'Name73'
+      TabOrder = 6
+      Visible = False
+      OnClick = btFtxtNameClick
+    end
+  end
+  object pnlFollow: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 2
+    Height = 45
+    Top = 298
+    Width = 578
+    Anchors = [akLeft, akRight, akBottom]
+    BorderSpacing.Left = 2
+    BorderSpacing.Right = 2
+    BorderSpacing.Bottom = 2
+    ClientHeight = 45
+    ClientWidth = 578
+    TabOrder = 1
+    Visible = False
+    object edtFollow: TEdit
+      AnchorSideLeft.Control = edtFollowCall
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlFollow
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = pnlFollow
+      AnchorSideRight.Side = asrBottom
+      Left = 155
+      Height = 34
+      Top = 5
+      Width = 419
+      Align = alCustom
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 3
+      BorderSpacing.Right = 3
+      ReadOnly = True
+      TabOrder = 1
+      OnDblClick = edtFollowDblClick
+    end
+    object edtFollowCall: TEdit
+      AnchorSideLeft.Control = tbFollow
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlFollow
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 72
+      Height = 34
+      Top = 5
+      Width = 80
+      BorderSpacing.Left = 3
+      TabOrder = 0
+      OnEnter = edtFollowCallEnter
+      OnExit = edtFollowCallExit
+      OnKeyDown = edtFollowCallKeyDown
+    end
+    object tbFollow: TToggleBox
+      AnchorSideLeft.Control = pnlFollow
+      AnchorSideTop.Control = pnlFollow
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 32
+      Top = 6
+      Width = 65
+      BorderSpacing.Left = 3
+      Caption = 'Follow'
+      Font.Color = clRed
+      ParentFont = False
+      TabOrder = 2
+      OnChange = tbFollowChange
+    end
+  end
+  object lblInfo: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Side = asrBottom
+    Left = 52
+    Height = 17
+    Top = 34
+    Width = 479
+    BorderSpacing.Top = 5
+    Caption = 'Yoy may now minimize this window. Printing back to Wsjt-x Band Activity'
+    ParentColor = False
+    Visible = False
+  end
+  object chkCbCQ: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 5
+    Height = 23
+    Hint = 'Send colors based by your logged qsos back to WSJT-x''s display.'
+    Top = 310
+    Width = 70
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 5
+    BorderSpacing.Bottom = 12
+    Caption = 'CBCQs'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 2
+    Visible = False
+    OnChange = chkCbCQChange
+  end
+  object chkdB: TCheckBox
+    AnchorSideLeft.Control = chkCbCQ
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
+    Left = 78
+    Height = 23
+    Hint = 'Show decoded signal strength'
+    Top = 310
+    Width = 43
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 3
+    BorderSpacing.Bottom = 12
+    Caption = 'dB'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 3
+    Visible = False
+    OnChange = chkdBChange
+  end
+  object sgMonitor: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideBottom.Control = pnlFollow
+    Left = 2
+    Height = 294
+    Top = 0
+    Width = 578
+    Align = alClient
+    AutoEdit = False
+    AutoFillColumns = True
+    BorderSpacing.Left = 2
+    BorderSpacing.Right = 2
+    BorderSpacing.Bottom = 51
+    BorderStyle = bsNone
+    ColCount = 9
+    Columns = <    
+      item
+        DropDownRows = 0
+        MinSize = 4
+        MaxSize = 4
+        ReadOnly = True
+        SizePriority = 0
+        Title.Caption = 'dFreq'
+        Width = 51
+      end    
+      item
+        Alignment = taRightJustify
+        DropDownRows = 0
+        MinSize = 3
+        MaxSize = 3
+        ReadOnly = True
+        SizePriority = 0
+        Title.Caption = 'Snr'
+        Width = 30
+      end    
+      item
+        Alignment = taRightJustify
+        DropDownRows = 0
+        MinSize = 1
+        MaxSize = 1
+        ReadOnly = True
+        SizePriority = 0
+        Title.Caption = 'Fill'
+        Width = 10
+      end    
+      item
+        DropDownRows = 0
+        MaxSize = 10
+        ReadOnly = True
+        SizePriority = 0
+        Title.Caption = 'call'
+        Width = 135
+      end    
+      item
+        Alignment = taRightJustify
+        DropDownRows = 0
+        MinSize = 2
+        MaxSize = 2
+        ReadOnly = True
+        SizePriority = 0
+        Title.Caption = 'Gr'
+        Width = 28
+      end    
+      item
+        DropDownRows = 0
+        MinSize = 2
+        MaxSize = 2
+        ReadOnly = True
+        SizePriority = 0
+        Title.Caption = 'id'
+        Width = 27
+      end    
+      item
+        DropDownRows = 0
+        MinSize = 15
+        MaxSize = 15
+        ReadOnly = True
+        SizePriority = 0
+        Title.Caption = 'Country'
+        Width = 178
+      end    
+      item
+        DropDownRows = 0
+        MinSize = 20
+        ReadOnly = True
+        Title.Caption = 'DXCC status'
+        Width = 119
+      end    
+      item
+        DropDownRows = 0
+        MaxSize = 512
+        ReadOnly = True
+        Title.Caption = 'RawReply'
+        Width = 0
+        Visible = False
+      end>
+    FixedCols = 0
+    FixedRows = 0
+    GridLineWidth = 0
+    HeaderHotZones = []
+    HeaderPushZones = []
+    ParentFont = False
+    PopupMenu = popColors
+    TabOrder = 4
+    OnDblClick = sgMonitorDblClick
+    OnDrawCell = sgMonitorDrawCell
+    ColWidths = (
+      51
+      30
+      10
+      135
+      28
+      27
+      178
+      119
+      0
+    )
+  end
+  object pnlSelects: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    Left = 60
+    Height = 32
+    Top = 0
+    Width = 463
+    AutoSize = True
+    BorderWidth = 3
+    ClientHeight = 32
+    ClientWidth = 463
+    TabOrder = 5
+    Visible = False
+    OnClick = pnlSelectsClick
+    object chknoHistory: TCheckBox
+      AnchorSideLeft.Control = cbflw
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 100
+      Height = 23
+      Hint = 'Clear monitor lines at start of every period'
+      Top = 5
+      Width = 56
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 1
+      Caption = 'nHst'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      OnChange = chknoHistoryChange
+    end
+    object chknoTxt: TCheckBox
+      AnchorSideLeft.Control = chknoHistory
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 157
+      Height = 23
+      Hint = 'Do not show decoded lines, just alerts and follow '
+      Top = 5
+      Width = 55
+      BorderSpacing.Top = 6
+      Caption = 'nTxt'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+      OnChange = chknoTxtChange
+    end
+    object cbflw: TCheckBox
+      AnchorSideLeft.Control = lblBand
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 49
+      Height = 23
+      Hint = 'Set follow to one callsign or part of it '
+      Top = 5
+      Width = 49
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 2
+      Caption = 'Flw'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+      OnChange = cbflwChange
+    end
+    object chkMap: TCheckBox
+      AnchorSideLeft.Control = chknoTxt
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 212
+      Height = 23
+      Hint = 'Switch between CQ monitor (show CQ lines) and Map (show all band traffic)'
+      Top = 5
+      Width = 54
+      BorderSpacing.Top = 6
+      Caption = 'Map'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+      OnChange = chkMapChange
+    end
+    object chkStopTx: TCheckBox
+      AnchorSideLeft.Control = chkMap
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 266
+      Height = 23
+      Hint = 'Stop your TX if station you called answered to someone else.'
+      Top = 5
+      Width = 50
+      Caption = 'sTX'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+      OnChange = chkStopTxChange
+    end
+    object chkUState: TCheckBox
+      AnchorSideLeft.Control = chkStopTx
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrCenter
+      Left = 316
+      Height = 23
+      Hint = 'Show station USA state by FCC '#10'(this may show different than Cqrlog''s prefix based state view)'
+      Top = 5
+      Width = 49
+      BorderSpacing.Right = 2
+      Caption = 'USt'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 6
+      OnChange = chkUStateChange
+    end
+    object chkDx: TCheckBox
+      AnchorSideLeft.Control = chkUState
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      Left = 367
+      Height = 23
+      Hint = 'Show only DX (for you) stations.'#10'Continents to show are selected when checked, or rigth mouse click if already checked.'
+      Top = 5
+      Width = 44
+      Caption = 'Dx'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 5
+      OnClick = chkDxClick
+      OnMouseUp = chkDxMouseUp
+    end
+    object lblMode: TLabel
+      AnchorSideLeft.Control = chkDx
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Side = asrBottom
+      Left = 423
+      Height = 17
+      Top = 8
+      Width = 36
+      BorderSpacing.Left = 12
+      Caption = 'Mode'
+      Layout = tlBottom
+      ParentColor = False
+      OnClick = pnlSelectsClick
+    end
+    object lblBand: TLabel
+      AnchorSideLeft.Control = pnlSelects
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      AnchorSideBottom.Side = asrBottom
+      Left = 4
+      Height = 17
+      Top = 8
+      Width = 33
+      BorderSpacing.Right = 12
+      Caption = 'Band'
+      Layout = tlBottom
+      ParentColor = False
+      OnClick = pnlSelectsClick
+    end
+  end
+  object pnlTrigPop: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 3
+    Top = 0
+    Width = 582
+    Anchors = [akTop, akLeft, akRight]
+    BevelOuter = bvNone
+    TabOrder = 6
+    OnMouseEnter = pnlTrigPopMouseEnter
+  end
+  object chkSort: TCheckBox
+    AnchorSideLeft.Control = chkdB
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = chkdB
+    AnchorSideTop.Side = asrCenter
+    AnchorSideBottom.Side = asrCenter
+    Left = 124
+    Height = 23
+    Hint = 'Sort view by column.'#10'Column can be selected when checkbox is set, or rigth mouse click if already checked.'#10'Columns are:    dB   (  callsign  locator12  locator34  )*  state/cqdir '#10'Corresponding column numbers are 1..7'#10'NOTES:'#10'- Sort happen by dB (col1), if set,  even when it is not visible in monitor'#10'- dB sort output is as ascii sort order, not integer sort.'#10'- Sorting breaks color coding but worked print lowcase letters, never worked bold'
+    Top = 310
+    Width = 52
+    BorderSpacing.Left = 3
+    Caption = 'Sort'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 7
+    OnClick = chkSortClick
+    OnMouseUp = chkSortMouseUp
+  end
+  object edtFltMap: TEdit
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = chkSort
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 499
+    Height = 34
+    Hint = 'Put here a callsign or part of it to see only those in Map when filter is checked.'
+    Top = 304
+    Width = 80
+    Anchors = [akTop, akRight]
+    AutoSize = False
+    BorderSpacing.Right = 3
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+    OnChange = edtFltMapChange
+    OnEnter = edtFltMapEnter
+    OnExit = edtFltMapExit
+    OnKeyDown = edtFltMapKeyDown
+    OnMouseUp = edtFltMapMouseUp
+  end
+  object chkFlt: TCheckBox
+    AnchorSideLeft.Control = chkSort
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = chkdB
+    AnchorSideTop.Side = asrCenter
+    AnchorSideBottom.Side = asrCenter
+    Left = 179
+    Height = 23
+    Hint = 'Enable or disable filtering'
+    Top = 310
+    Width = 58
+    BorderSpacing.Left = 3
+    Caption = 'Filter'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+    OnClick = chkFltClick
+  end
+  object popColors: TPopupMenu
+    OnPopup = popColorsPopup
+    Left = 104
+    Top = 88
+    object cmHead: TMenuItem
+      Caption = 'Set color of:'
+      object cmNever: TMenuItem
+        Caption = 'Qso/Loc/State never before'
+        OnClick = cmNeverClick
+      end
+      object cmBand: TMenuItem
+        Caption = 'Qso/Loc/State on this band but other mode'
+        OnClick = cmBandClick
+      end
+      object cmAny: TMenuItem
+        Caption = 'Qso/Loc/State on other band '
+        OnClick = cmAnyClick
+      end
+      object cmHere: TMenuItem
+        Caption = 'Qso/Loc/State before this band and mode'
+        OnClick = cmHereClick
+      end
+      object cmCqDx: TMenuItem
+        Caption = 'Directed CQ warning'
+        OnClick = cmCqDxClick
+      end
+      object cmMapCq: TMenuItem
+        Caption = 'Map mode: Cq caller background'
+        OnClick = cmMapCqClick
+      end
+    end
+    object cmFont: TMenuItem
+      Caption = 'Set Font'
+      OnClick = cmFontClick
+    end
+  end
+  object popColorDlg: TColorDialog
+    Title = 'Choose color'
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    Left = 224
+    Top = 88
+  end
+  object popFontDlg: TFontDialog
+    Title = 'Choose font'
+    MinFontSize = 0
+    MaxFontSize = 0
+    Left = 288
+    Top = 88
+  end
+  object tmrCqPeriod: TTimer
+    Enabled = False
+    OnTimer = tmrCqPeriodTimer
+    Left = 160
+    Top = 144
+  end
+  object tmrFollow: TTimer
+    Enabled = False
+    OnTimer = tmrFollowTimer
+    Left = 224
+    Top = 144
+  end
+  object tmrUSDB: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = tmrUSDBTimer
+    Left = 104
+    Top = 144
+  end
+  object tmrStartupDone: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = tmrStartupDoneTimer
+    Left = 288
+    Top = 144
+  end
+  object popDx: TPopupMenu
+    OnClose = popDxClose
+    Left = 160
+    Top = 88
+    object ShAll: TMenuItem
+      Caption = 'Show All'
+      OnClick = ShAllClick
+    end
+    object ShAF: TMenuItem
+      Caption = 'Show AF'
+      OnClick = ShAFClick
+    end
+    object ShAS: TMenuItem
+      Caption = 'Show AS'
+      OnClick = ShAFClick
+    end
+    object ShEU: TMenuItem
+      Caption = 'Show EU'
+      OnClick = ShAFClick
+    end
+    object ShNA: TMenuItem
+      Caption = 'Show NA'
+      OnClick = ShAFClick
+    end
+    object ShOC: TMenuItem
+      Caption = 'Show OC'
+      OnClick = ShAFClick
+    end
+    object ShSA: TMenuItem
+      Caption = 'Show SA'
+      OnClick = ShAFClick
+    end
+  end
+  object popSort: TPopupMenu
+    Left = 356
+    Top = 88
+    object mnuSort1: TMenuItem
+      Caption = 'by column 1'
+      OnClick = mnuSort1Click
+    end
+    object mnuSort2: TMenuItem
+      Caption = 'by column 2'
+      OnClick = mnuSort1Click
+    end
+    object mnuSort3: TMenuItem
+      Caption = 'by column 3'
+      OnClick = mnuSort1Click
+    end
+    object mnuSort4: TMenuItem
+      Caption = 'by column 4'
+      OnClick = mnuSort1Click
+    end
+    object mnuSort5: TMenuItem
+      Caption = 'by column 5'
+      OnClick = mnuSort1Click
+    end
+    object mnuSort6: TMenuItem
+      Caption = 'by column 6'
+      OnClick = mnuSort1Click
+    end
+    object mnuSort7: TMenuItem
+      Caption = 'by column 7'
+      OnClick = mnuSort1Click
+    end
+  end
+end

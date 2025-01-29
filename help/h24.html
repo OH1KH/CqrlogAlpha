@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>CQRLOG - Statistics</title>
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top"><img src="img/exc.png"></td>
+        <td bgcolor=ffffcc valign="top" align="justify"><strong>
+            <font color="red">WARNING!</font></strong>
+            Backup your data often! BACKUP your log directory at the end of EVERY session!
+            All that you need to backup and store in a safe place is the log database directory
+            located in the ~/.config/cqrlog/database folder, or you can enable the autobackup function
+            in Preferences. This autobackup function creates an ADIF file with a backup of your log.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div style="text-align: left;"><strong>CQRLOG for LINUX by OK2CQR &amp; OK1RR</strong></div>
+<p align=center><img src=img/line.png></p>
+<a name="ah23"><h2><strong>Statistics</strong></h2></a>
+There are 5 basic types of online statistics:
+<ul>
+    <li><a href="h24.html#dxcc">DXCC</a></li>
+    <li><a href="h24.html#waz_itu">WAZ zones</a></li>
+    <li><a href="h24.html#waz_itu">ITU zones</a></li>
+    <li><a href="h24.html#iota">IOTA</a></li>
+    <li><a href="h24.html#dok">DOK</a></li>
+</ul>
+<p align=center><img src=img/line.png></p>
+
+
+<a name=dxcc><strong>DXCC</strong></a><br><br>
+The statistics can be viewed from both the login screen and the QSO list, however the menu
+is slightly different. While the logging screen only allows viewing the statistics,
+the QSO list can trigger a DXCC statistics rebuild.
+<table cellspacing="2" border="0" cellpadding="5">
+    <tbody>
+    <tr>
+        <td><strong>Logging screen</strong></td>
+        <td><strong>QSO List</strong></td>
+    </tr>
+    <tr>
+        <td valign="top"><img src="img/h20.png" border="0">
+        <td valign="top">
+            <img src="img/h46.png"></td>
+        </td></tr>
+    </tbody>
+</table>
+The main difference is that the 'Details' window can ionly be activated (if not activated
+at program startup, <a href="h1.html#ah4"><strong>see 'Preferences'</strong></a>)
+from the logging screen.
+Statistics <a href="h3.html#ah30"><strong>rebuilding</strong></a> is only possible
+from the QSO list.<br><br>
+The only statistics which should be maintained are the DXCC ones. With the exception of
+the footer of the DXCC detailed presentation, all DXCC scores are based on actual valid
+contries on the current DXCC list, ie. <strong>NO</strong> deleted countries. Other
+stats are computed while logging.<br><br>
+There are several presentations of DXCC statistics. A summary is displayed in the
+QSO List, just above the table.<br>
+<img src="img/h56.png" border="0"><br><br>
+The detailed statistics are displayed from the logging screen by clicking on the
+'Statistics' item of the upper menu bar.<br>
+<img src="img/h57.png" border="0"><br>
+The 'X' denotes a worked country, the 'Q' a confirmed country, the 'L' a confirmed country by LOTW
+and the 'E' a confirmed country by eQSL.<br>
+The order is <strong>PHONE - CW - DIGI</strong>. The example above shows, that Rodrigues,
+3B9, has been worked on 30 metres CW only, on 20 and 17 metres CW and SSB and on 15 metres
+CW, SSB and digital modes.<br><br>
+<img src="img/h58.png" border="0"><br>
+The summary footer shows your actual score band by band on all modes, worked and
+confirmed separately. The 'Totals' column shows your band point score per DXCC
+Challenge rules. The framed counts showing <strong>ALL TIME DXCC scores</strong>
+with deleted countries. It is the only instance showing this.<br><br>
+The 'Export to HTML' button allows exporting of your whole statistics into a nicely
+formatted HTML page. This is an exact copy of the detailed DXCC stats presentation,
+including the footer with all-time scores.
+<p align=center><img src=img/line.png></p>
+
+
+<a name=waz_itu><strong>WAZ and ITU Zones</strong></a><br><br>
+Both statistics are similar and very simple.<br><br>
+<img src="img/h59.png" border="0"><br><br>
+Again, the 'X' denotes worked, the 'Q' confirmed, the footer contains totals of worked
+and confirmed zones, band by band.
+<p align=center><img src=img/line.png></p>
+
+
+<a name=iota><strong>IOTA</strong></a><br><br>
+<img src="img/h60.png" border="0">
+<br><br>
+The IOTA statistics presentation is slightly different. An IOTA reference number and
+the station worked (confirmed) is displayed. These statistics are derived from the IOTA
+records of each logged contact. If a QSO record does not contain IOTA information but
+the station <strong>is</strong> valid for IOTA, the statistics do not reflect this fact.
+So update regularly!<br><br>
+The small check box in the left lower corner toggles the worked/confirmed scores.
+The 'Save' button exports the statistics to an ASCII text file.
+<p align=center><img src=img/line.png></p>
+
+
+<a name=dok><strong>DOK</strong></a><br><br>
+<img src="img/dok_statistic.png" border="0">
+<br><br>
+The DOK statistics give you an overview of your collected German DOKs. 
+These statistic is derived from the DOK field of each logged contact.<br>
+If a QSO record does not contain DOK information, the statistics do not reflect this fact.<br><br>
+To resolve the DOK into a readable name, please activate in menu preferences - program the setting "Check for newer version of DOK database after program startup". This will download dok.csv and sdok.csv files to ~/.config/cqrlog/dok_data<br>
+The option 'Show logged (S)DOKs only' will reduce the list, to show only worked DOKs and not all known DOks.<br>
+The ComboBox 'DOK & SDOK' give you the option to see DOK&SDOK, only DOK and only SDOK.<br>
+<strong>Caution: </strong> Be aware that the DOK statistic window will not open, when dok.csv and sdok.csv files are missing on  ~/.config/cqrlog/dok_data.<br><br>
+
+The 'Export to HTML' button exports the statistics to a HTML table file.<br>
+The 'Show station list' button will show a list of all stations behind the selected and confirmed DOKs.<br><br>
+
+<img src="img/StationList.png" border="0">
+<p>
+The BIG SQUARE and COUNTY gives you band based report of worked Squares or Counties.<br>
+With County the column filling must be excactly same with all similar counties. Count is based to compare and even one space in county name can make different results.<br>
+The 'Save to...' button exports the statistics to a HTML file.<br><br>
+<img src="img/SquareStat.png" border="0">
+<img src="img/CountyStat.png" border="0"><br>
+</p>
+<p align=center><img src=img/line.png></p>
+
+
+
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+</div></body>
+</html>

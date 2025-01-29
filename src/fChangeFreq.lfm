@@ -1,0 +1,551 @@
+object frmChangeFreq: TfrmChangeFreq
+  Left = 812
+  Height = 255
+  Top = 195
+  Width = 567
+  VertScrollBar.Page = 184
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsDialog
+  Caption = 'Frequency'
+  ClientHeight = 255
+  ClientWidth = 567
+  OnShow = FormShow
+  Position = poScreenCenter
+  LCLVersion = '3.6.0.0'
+  object lblBBegin: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 6
+    Height = 17
+    Top = 6
+    Width = 73
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 6
+    Caption = 'Band begin'
+    ParentColor = False
+  end
+  object lblBEnd: TLabel
+    AnchorSideLeft.Control = edtBegin
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblBBegin
+    Left = 118
+    Height = 17
+    Top = 6
+    Width = 61
+    BorderSpacing.Left = 12
+    Caption = 'Band end'
+    ParentColor = False
+  end
+  object btnOK: TButton
+    AnchorSideLeft.Control = edtTXOffset
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblBBegin
+    Left = 470
+    Height = 25
+    Top = 12
+    Width = 75
+    BorderSpacing.Left = 30
+    BorderSpacing.Top = 6
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    TabOrder = 7
+    OnClick = btnOKClick
+  end
+  object btnCancel: TButton
+    AnchorSideLeft.Control = btnOK
+    AnchorSideTop.Control = btnOK
+    AnchorSideTop.Side = asrBottom
+    Left = 470
+    Height = 25
+    Top = 43
+    Width = 75
+    BorderSpacing.Top = 6
+    BorderSpacing.InnerBorder = 4
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 8
+  end
+  object lblRXOff: TLabel
+    AnchorSideLeft.Control = edtEnd
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblBBegin
+    Left = 230
+    Height = 17
+    Top = 6
+    Width = 60
+    BorderSpacing.Left = 12
+    Caption = 'RX offset'
+    ParentColor = False
+  end
+  object lblTXoff: TLabel
+    AnchorSideLeft.Control = edtRXOffset
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblBBegin
+    Left = 340
+    Height = 17
+    Top = 6
+    Width = 59
+    BorderSpacing.Left = 12
+    Caption = 'TX offset'
+    ParentColor = False
+  end
+  object edtTXOffset: TEdit
+    AnchorSideLeft.Control = lblTXoff
+    Left = 340
+    Height = 34
+    Top = 24
+    Width = 100
+    TabOrder = 3
+    Text = '0'
+    OnEnter = edtBeginEnter
+    OnExit = edtBeginExit
+    OnKeyPress = ChkKeyPress
+  end
+  object edtRXOffset: TEdit
+    AnchorSideLeft.Control = lblRXOff
+    AnchorSideTop.Control = lblRXOff
+    AnchorSideTop.Side = asrBottom
+    Left = 230
+    Height = 34
+    Top = 23
+    Width = 98
+    TabOrder = 2
+    Text = '0'
+    OnEnter = edtBeginEnter
+    OnExit = edtBeginExit
+    OnKeyPress = ChkKeyPress
+  end
+  object edtEnd: TEdit
+    AnchorSideLeft.Control = lblBEnd
+    AnchorSideTop.Control = lblBEnd
+    AnchorSideTop.Side = asrBottom
+    Left = 118
+    Height = 34
+    Top = 23
+    Width = 100
+    TabOrder = 1
+    OnEnter = edtBeginEnter
+    OnExit = edtBeginExit
+    OnKeyPress = ChkKeyPress
+  end
+  object edtBegin: TEdit
+    AnchorSideLeft.Control = lblBBegin
+    AnchorSideTop.Control = lblBBegin
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 34
+    Top = 23
+    Width = 100
+    TabOrder = 0
+    OnEnter = edtBeginEnter
+    OnExit = edtBeginExit
+    OnKeyPress = ChkKeyPress
+  end
+  object pnlNew: TPanel
+    AnchorSideLeft.Control = lblBBegin
+    AnchorSideTop.Control = lblBlindAnhor
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 6
+    Height = 185
+    Hint = 'Set frequency borders for Band (Begin, End). '#10'RX and TX offsets are needed to get right frequency values if you use transverter.'#10'Mode areas can be in any order inside Band Begin and Band End. '#10'If mode is not used set both Begin and End to 0 (zero).'#10'.'#10'If segments are overlapping priority is for DATA,AM and FM as they probably'#10'are narrow segments inside CW or SSB.'#10'.'#10'First checked is SSB. Then CW is checked and can override SSB segment.'#10'Modes AM,FM,DATA can override CW or SSB segments.'#10'.'#10'You can define whole band divided for CW and SSB. Over them you can define'#10'small segments of AM,FM,or DATA and they can roll over CW and SSB segments.'#10'FM can roll over AM and DATA can roll over FM(and AM) if overlapping.   '#10'See: Help/Quick start/Bands                 '
+    Top = 64
+    Width = 440
+    ClientHeight = 185
+    ClientWidth = 440
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 6
+    object lblCWBegin: TLabel
+      AnchorSideLeft.Control = pnlNew
+      AnchorSideTop.Control = pnlNew
+      Left = 1
+      Height = 17
+      Top = 1
+      Width = 63
+      Caption = 'CW Begin'
+    end
+    object blCWEnd: TLabel
+      AnchorSideLeft.Control = edtB_cw
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblCWBegin
+      Left = 113
+      Height = 17
+      Top = 1
+      Width = 50
+      BorderSpacing.Left = 12
+      Caption = 'CW End'
+    end
+    object lblDataBegin: TLabel
+      AnchorSideLeft.Control = edtE_cw
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblCWBegin
+      Left = 225
+      Height = 17
+      Top = 1
+      Width = 75
+      BorderSpacing.Left = 12
+      Caption = 'DATA Begin'
+    end
+    object lblDataEnd: TLabel
+      AnchorSideLeft.Control = edtB_data
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblCWBegin
+      Left = 337
+      Height = 17
+      Top = 1
+      Width = 62
+      BorderSpacing.Left = 12
+      Caption = 'DATA End'
+    end
+    object edtB_cw: TEdit
+      AnchorSideLeft.Control = lblCWBegin
+      AnchorSideTop.Control = lblCWBegin
+      AnchorSideTop.Side = asrBottom
+      Left = 1
+      Height = 34
+      Top = 18
+      Width = 100
+      TabOrder = 0
+      OnEnter = edtBeginEnter
+      OnExit = edtB_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtE_cw: TEdit
+      AnchorSideLeft.Control = blCWEnd
+      AnchorSideTop.Control = blCWEnd
+      AnchorSideTop.Side = asrBottom
+      Left = 113
+      Height = 34
+      Top = 18
+      Width = 100
+      TabOrder = 1
+      OnEnter = edtBeginEnter
+      OnExit = edtE_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtB_data: TEdit
+      AnchorSideLeft.Control = lblDataBegin
+      AnchorSideTop.Control = lblDataBegin
+      AnchorSideTop.Side = asrBottom
+      Left = 225
+      Height = 34
+      Top = 18
+      Width = 100
+      TabOrder = 2
+      OnEnter = edtBeginEnter
+      OnExit = edtB_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtE_data: TEdit
+      AnchorSideLeft.Control = lblDataEnd
+      AnchorSideTop.Control = lblDataEnd
+      AnchorSideTop.Side = asrBottom
+      Left = 337
+      Height = 34
+      Top = 18
+      Width = 100
+      TabOrder = 3
+      OnEnter = edtBeginEnter
+      OnExit = edtE_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object lblSsbBegin: TLabel
+      AnchorSideLeft.Control = lblCWBegin
+      AnchorSideTop.Control = edtB_cw
+      AnchorSideTop.Side = asrBottom
+      Left = 1
+      Height = 17
+      Top = 58
+      Width = 66
+      BorderSpacing.Top = 6
+      Caption = 'SSB Begin'
+    end
+    object lblSsbEnd: TLabel
+      AnchorSideLeft.Control = blCWEnd
+      AnchorSideTop.Control = lblSsbBegin
+      Left = 113
+      Height = 17
+      Top = 58
+      Width = 53
+      Caption = 'SSB End'
+    end
+    object lblAmBegin: TLabel
+      AnchorSideLeft.Control = lblDataBegin
+      AnchorSideTop.Control = lblSsbBegin
+      Left = 225
+      Height = 17
+      Top = 58
+      Width = 62
+      Caption = 'AM Begin'
+    end
+    object lblAmEnd: TLabel
+      AnchorSideLeft.Control = lblDataEnd
+      AnchorSideTop.Control = lblSsbBegin
+      Left = 337
+      Height = 17
+      Top = 58
+      Width = 49
+      Caption = 'AM End'
+    end
+    object edtB_ssb: TEdit
+      AnchorSideLeft.Control = lblSsbBegin
+      AnchorSideTop.Control = lblSsbBegin
+      AnchorSideTop.Side = asrBottom
+      Left = 1
+      Height = 34
+      Top = 75
+      Width = 100
+      TabOrder = 4
+      OnEnter = edtBeginEnter
+      OnExit = edtB_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtE_ssb: TEdit
+      AnchorSideLeft.Control = lblSsbEnd
+      AnchorSideTop.Control = lblSsbEnd
+      AnchorSideTop.Side = asrBottom
+      Left = 113
+      Height = 34
+      Top = 75
+      Width = 100
+      TabOrder = 5
+      OnEnter = edtBeginEnter
+      OnExit = edtE_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtB_am: TEdit
+      AnchorSideLeft.Control = lblAmBegin
+      AnchorSideTop.Control = lblAmBegin
+      AnchorSideTop.Side = asrBottom
+      Left = 225
+      Height = 34
+      Top = 75
+      Width = 100
+      TabOrder = 6
+      OnEnter = edtBeginEnter
+      OnExit = edtB_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtE_am: TEdit
+      AnchorSideLeft.Control = lblAmEnd
+      AnchorSideTop.Control = lblAmEnd
+      AnchorSideTop.Side = asrBottom
+      Left = 337
+      Height = 34
+      Top = 75
+      Width = 100
+      TabOrder = 7
+      OnEnter = edtBeginEnter
+      OnExit = edtE_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object lblFmBegin: TLabel
+      AnchorSideLeft.Control = lblCWBegin
+      AnchorSideTop.Control = edtB_ssb
+      AnchorSideTop.Side = asrBottom
+      Left = 1
+      Height = 17
+      Top = 115
+      Width = 61
+      BorderSpacing.Top = 6
+      Caption = 'FM Begin'
+    end
+    object lblFmEnd: TLabel
+      AnchorSideLeft.Control = lblSsbEnd
+      AnchorSideTop.Control = lblFmBegin
+      Left = 113
+      Height = 17
+      Top = 115
+      Width = 48
+      Caption = 'FM End'
+    end
+    object edtB_fm: TEdit
+      AnchorSideLeft.Control = lblFmBegin
+      AnchorSideTop.Control = lblFmBegin
+      AnchorSideTop.Side = asrBottom
+      Left = 1
+      Height = 34
+      Top = 132
+      Width = 100
+      TabOrder = 8
+      OnEnter = edtBeginEnter
+      OnExit = edtB_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtE_fm: TEdit
+      AnchorSideLeft.Control = lblFmEnd
+      AnchorSideTop.Control = lblFmEnd
+      AnchorSideTop.Side = asrBottom
+      Left = 113
+      Height = 34
+      Top = 132
+      Width = 100
+      TabOrder = 9
+      OnEnter = edtBeginEnter
+      OnExit = edtE_cwExit
+      OnKeyPress = ChkKeyPress
+    end
+  end
+  object lblBlindAnhor: TLabel
+    AnchorSideLeft.Control = lblBBegin
+    AnchorSideTop.Control = edtBegin
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 1
+    Top = 63
+    Width = 1
+    BorderSpacing.Top = 6
+  end
+  object pnlOldHelp: TPanel
+    AnchorSideLeft.Control = pnlOld
+    AnchorSideTop.Control = pnlOld
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 74
+    Top = 143
+    Width = 539
+    BorderSpacing.Top = 15
+    ClientHeight = 74
+    ClientWidth = 539
+    TabOrder = 5
+    object lblFreqNote1: TLabel
+      AnchorSideLeft.Control = pnlOldHelp
+      Left = 13
+      Height = 17
+      Top = 15
+      Width = 180
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 15
+      Caption = 'CW: f>=Begin AND f<=CW'
+      ParentColor = False
+    end
+    object lblFreqNote2: TLabel
+      AnchorSideLeft.Control = lblFreqNote1
+      AnchorSideTop.Control = lblFreqNote1
+      AnchorSideTop.Side = asrBottom
+      AnchorSideBottom.Side = asrCenter
+      Left = 13
+      Height = 17
+      Top = 38
+      Width = 162
+      BorderSpacing.Top = 6
+      Caption = 'SSB: f>SSB AND f<=End'
+      ParentColor = False
+    end
+    object lblFreqNote3: TLabel
+      AnchorSideLeft.Control = lblFreqNote1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblFreqNote1
+      Left = 241
+      Height = 17
+      Top = 15
+      Width = 175
+      BorderSpacing.Left = 48
+      Caption = 'DATA: f>DATA and f<=SSB'
+      ParentColor = False
+    end
+    object lblFreqNote4: TLabel
+      AnchorSideLeft.Control = lblFreqNote3
+      AnchorSideTop.Control = lblFreqNote2
+      Left = 241
+      Height = 17
+      Top = 38
+      Width = 242
+      Caption = 'SSB=USB: f>10 or f in [5..6] else LSB'
+      ParentColor = False
+    end
+  end
+  object pnlOld: TPanel
+    AnchorSideLeft.Control = lblBBegin
+    AnchorSideTop.Control = lblBlindAnhor
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = edtTXOffset
+    AnchorSideRight.Side = asrBottom
+    Left = 6
+    Height = 64
+    Hint = 'When setting  frequency borders for modes the order is:'#10'.'#10'Begin----<CW  {CW area is from Band Begin to CW value}'#10'Data>----SSB (may be band Begin) {DATA area is from Data value to Ssb value}'#10'SSB>----End   (may be band Begin) {SSB area is from  Ssb value to Band end }'#10' .'#10'NOTE: if CW area is crossing with DATA or SSB areas CW has priority'#10#10#10
+    Top = 64
+    Width = 434
+    Anchors = [akTop, akLeft, akRight]
+    ClientHeight = 64
+    ClientWidth = 434
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 4
+    object edtSSB: TEdit
+      AnchorSideLeft.Control = lblSsb
+      AnchorSideTop.Control = lblSsb
+      AnchorSideTop.Side = asrBottom
+      Left = 225
+      Height = 34
+      Top = 18
+      Width = 100
+      TabOrder = 2
+      OnEnter = edtBeginEnter
+      OnExit = edtCWExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtData: TEdit
+      AnchorSideLeft.Control = lblData
+      AnchorSideTop.Control = lblData
+      AnchorSideTop.Side = asrBottom
+      Left = 113
+      Height = 34
+      Top = 18
+      Width = 100
+      TabOrder = 1
+      OnEnter = edtBeginEnter
+      OnExit = edtCWExit
+      OnKeyPress = ChkKeyPress
+    end
+    object edtCW: TEdit
+      AnchorSideLeft.Control = lblCw
+      AnchorSideTop.Control = lblCw
+      AnchorSideTop.Side = asrBottom
+      Left = 1
+      Height = 34
+      Top = 18
+      Width = 100
+      TabOrder = 0
+      OnEnter = edtBeginEnter
+      OnExit = edtCWExit
+      OnKeyPress = ChkKeyPress
+    end
+    object lblSsb: TLabel
+      AnchorSideLeft.Control = edtData
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblCw
+      Left = 225
+      Height = 17
+      Top = 1
+      Width = 25
+      BorderSpacing.Left = 12
+      Caption = 'SSB'
+      ParentColor = False
+    end
+    object lblData: TLabel
+      AnchorSideLeft.Control = edtCW
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblCw
+      Left = 113
+      Height = 17
+      Top = 1
+      Width = 34
+      BorderSpacing.Left = 12
+      Caption = 'DATA'
+      ParentColor = False
+    end
+    object lblCw: TLabel
+      AnchorSideLeft.Control = pnlOld
+      AnchorSideTop.Control = pnlOld
+      Left = 1
+      Height = 17
+      Top = 1
+      Width = 22
+      Caption = 'CW'
+      ParentColor = False
+    end
+  end
+end

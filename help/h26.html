@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>CQRLOG - CW messages</title>
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top"><img src="img/exc.png"></td>
+        <td bgcolor=#ffffcc valign="top" align="justify"><strong>
+            <font color="red">WARNING!</font></strong>
+            Backup your data often! BACKUP your log directory at the end of EVERY session!
+            All that you need to backup and store in a safe place is the log database directory
+            located in the ~/.config/cqrlog/database folder, or you can enable the autobackup function
+            in Preferences. This autobackup function creates an ADIF file with a backup of your log.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div style="text-align: left;"><strong>CQRLOG for LINUX by OK2CQR &amp; OK1RR</strong></div>
+<p align=center><img src=img/line.png></p>
+<h2><strong>CW messages</strong></h2>
+    <p>Assuming that your CW interface is properly set up and working,
+    you can add and/or edit your CW messages.<br><br>
+    Set up your CW messages via Preferences/CW inteface/CW messages button.
+    <br> You can also access CW messages from the top menu of the New QSO window.
+    Click on the 'File' item and select CW Messages.<br><br>
+    <img src=img/h96b.png>&nbsp;&nbsp;<img src=img/h96.png><br><br>
+    CW messages  will be sent when you press the corresponding <strong>F</strong>-key(s) or click message buttons in <b> Memory keys </b> or <b> CW type </b> windows.
+    You can set up to 10 predefined messages in two sets.<br>
+    Set1 <b>"S&P"</b> is always default. Set2 <b>"Run"</b> is active when contest window is opened and checkbox "S&P" is <b>NOT</b> checked.<br>
+    Use buttons <b>Save</b> and <b>Load</b> for save/load both sets to/from file.<br><br>
+    <img src=img/h97.png><br><br><a name="predef">
+    There are some predefined macros which you can use in your messages:</a><br><br>
+    <table border="0" cellpadding="5" cellspacing="2" width="50%">
+        <tbody>
+        <tr>
+            <td bgcolor=#ffffcc valign="top">
+            <ul>
+		<li>%mc - my callsign</li>
+		<li>%mn - my name</li>
+		<li>%mq - my qth</li>
+		<li>%ml - my locator</li>
+		<li>%r  - rst send</li>
+		<li>%rs - rst send sends N instead of 9<br>(sends also 0 as T, but that does not exist in normal report)</li>
+		<br>
+		<li>%n  - name</li>
+		<li>%c  - callsign</li>
+		<li>%h - greeting GM/GA/GE calculated from the %c station location time</li>
+		<br>
+		<li>%xn  - contest exchange serial number</li>
+		<li>%xns - contest exchenge serial number sends 9->N and 0->T</li>
+		<li>%xnr - contest exchange serial number received</li>
+		<li>%xnrs- contest exchenge serial number received sends 9->N and 0->T</li>
+		<li>%xm  - contest exchange message</li>
+		<li>%xmr - contest exchange message received</li>
+		<li>%xrs - full contest exchange RST+SerialNR+Message sends 9->N and 0->T.<br>
+		(May be used always instead of %rs as if serNR and Message are empty just sends plain report.)</li>
+		</li><li> + or - in macro text will increase/decrease CW speed by 5WPM/one mark. 
+		<br>"TU +++599--- 001" will send 599 with 15WPM higer speed.
+		<br><br>Hamlib keyer has some limitations with this: 
+		<br> 1) Version of Hamlib must be at least Hamlib 4.1~git Last commit 2020-10-20 03:22:59 2020 +0000 SHA=8a769c
+		<br> 2) Do not use space(s) between text and +(or -) rigctld will add them I.E. "TU+++599---001"
+		<br> 3) Speed change works only with BKIN mode (not F-BKIN) and at the moment new Icom rigs (tested only ic7300)
+		<br> 4) Does not work if Hamlib CW buffering is used</li>
+		
+
+	    </ul>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    </p>
+    <p>
+    <img src=img/h96a.png><br>
+    <strong>Send hex bytes to keyer</strong>. Will send hex bytes to Winkeyer or K3NG allowing non charcter bytes to be sent from Cqrlog in case there sudden need to change some of keyer's settings.
+    <br>Consult your keyer's manual to find needed commands.
+    </p>
+    
+   <a name=mk1><br></a> <img src="img/misc8.png" name="8"  width="500" height="85">
+   </img>
+   <p><strong>Memory keys</strong> form has buttons PgUp and PgDn that are not configurable. They alter CW speed in same way as keyboard keys PgUp and PgDn that some, specially laptop computers, may not even have.
+   <br>When using <strong>Memory keys</strong>-form with mouse, or keyboard, you are able to lauch memories by mouse click or by  <strong>F</strong>-key press from keyboard keys. Same with PgUp and PgDn, both are working, keys and mouse click.
+   <br>You can select what happens when <strong>Memory keys</strong>-form is active and <strong>ENTER</strong> (also called Return) key is pressed, <strong>repeat last clicked memory</strong> (send focused button text)
+   , <strong>ignore it</strong> (do nothing) or <strong>save qso</strong>, by selecting that with ENTER section radio buttons in <strong> CW Messages</strong> definition form.</p>
+    <a name=mk2><img src=img/h98.png></a><br>
+    Another form <strong>CW type</strong> is a powerful keyboard keyer with 3 operation modes selected by right mouse click over memory buttons or bottom panel<br></p>
+    <ul>
+        <li><strong>letter mode</strong> - the character of the corresponding keyboard key is sent immediately when pressing the key
+        <li><strong>first word using letter mode, next words using word mode</strong> - 
+            The keyer begins in letter mode to avoid unneccessary delays. After spacebar is pressed it switches to word mode
+        </li>
+        <li><strong>word mode</strong> - when a whole word is typed sending starts when pressing the spacebar
+    </ul>
+    These modes are common on professional keyboard keyers.<br><br>
+    CWTyping area allows paste (copy in editor/paste to CWType) and drop (select in editor and drag with mouse left button pressed and drop on CWType area).<br><br>
+    <strong>NOTE!</strong> CW sending has limited buffer space depending keyer type and rig model. Be aware that pasting a very long text to CWType area may lead to CW keyer buffer overflow. When Hamlib keying is in use it will send words under 10 characters as one command, but if text to be sent is longer it will send all letter by letter (1 chr per one command).
+     This is tested to work with IC7300. Same should happen with Kenwoodother rigs and HamLib keying, but this is not tested and may not work in same way.
+      
+      <br><br> <strong>Same warning  </strong>with manual typing in word mode: If your typing speed is faster than cw sending you may hit send buffer limit sooner or later.
+      <br><br> <strong>Switching radios </strong>while CW sending is going on can cause unexpected results !
+      <br><strong>Always wait</strong> that CW message has finshed before switching radios as it will also switch CW keyers.
+      <br><strong>Always wait</strong> that selected radio shows frequency in TRXControl before sending a CW message or start using CW Type.
+      <br><br>
+
+    The <strong>keying speed</strong> can be changed with PgUp (QRQ) and PgDn (QRS) keys
+    in 2 WPM steps when <strong>NewQSO</strong>-form is active. In the <strong>CW type</strong>-form when cursor is in text typing area same PgUP/PgDN keys work. Speed can also be changed with the small arrow
+    buttons to the right of the speed display. The actual speed is always displayed in the status line of the <strong>New QSO</strong>-form and in <strong>CWType</strong>-forms speed selector.<br><br>
+    The<strong> ESC </strong>key stops running transmit. This may not be supported in all keyers and rigs and is mainly usefull when using word mode or pasted/dropped text.
+    <br>
+    With HamLib keyer ESC sends hex byte 0xFF as message. Icom rigs halt CW with this. An empty message with Kenwood rigs should use this to stop sending.
+    <br>Be aware that this has tested very little.
+    <br><br>
+    <strong>NOTE!</strong> Some special characters like Ä (A with dots) etc. May not be supported in CWType direct from keypress. For example Hamlib keying with Icom rig sends A with dots when typing 3 characters ^AA and you have to find out the way suitable for your setup.<br><br>
+    <img src=img/h99.png><br><br>
+    Setup howtos for both <a href=cwd.html><strong>cwdaemon</strong></a> and
+    <a href=wkusb.html><strong>Winkey USB</strong></a> are available.<br><br>
+    </div>
+    <p align=center><img src=img/line.png></p>
+    <br>
+    <table width="100%" border="0" cellpadding="2" cellspacing="2">
+        <tbody>
+        <tr>
+            <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+</body>
+</html>

@@ -1,0 +1,2063 @@
+object frmFilter: TfrmFilter
+  Left = 198
+  Height = 750
+  Top = 12
+  Width = 827
+  HelpType = htKeyword
+  HelpKeyword = 'help/h23.html#ah22'
+  HorzScrollBar.Page = 806
+  VertScrollBar.Page = 724
+  ActiveControl = edtCallSign
+  AutoScroll = True
+  BorderIcons = [biSystemMenu]
+  Caption = 'Filter'
+  ClientHeight = 750
+  ClientWidth = 827
+  Constraints.MinHeight = 400
+  Constraints.MinWidth = 500
+  Icon.Data = {
+    BE0C00000000010001002020000001001800A80C000016000000280000002000
+    0000400000000100180000000000000C00006400000064000000000000000000
+    0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCCCCCCFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEEEEEEFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFDDDDDDCCCCCCFFFFFFFFFFFFFFFFFFDDDDDDFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFEEEEEEFFFFFFFFFFFFFFFFFFBBBBBBBBBBBBBBBBBBFFFFFFCCCCCCBBBB
+    BBFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFDDDDDDCCCCCCFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBFFFFFFBBBB
+    BBBBBBBBFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFBBBBBBBBBBBBBBBBBBFFFFFFFFFFFFBBBBBBBBBBBBFFFF
+    FFBBBBBBFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8888888888888888888888888888888888
+    88888888888888CCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFF888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    AABBBBBBCCCCCCBBBBBBBBBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    EEEEEEEEEEEEEEEEEECCCCCCAAAAAACCCCCCCCCCCCCCCCCCCCCCCCEEEEEEAAAA
+    AAEEEEEECCCCCCBBBBBBFFFFFFBBBBBBBBBBBBBBBBBBFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888888888
+    AAAAAAAAAAAA888888CCCCCCCCCCCCDDDDDDDDDDDDDDDDDDEEEEEEAAAAAAEEEE
+    EEDDDDDDFFFFFFBBBBBBBBBBBBFFFFFFFFFFFFBBBBBBBBBBBBFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888AAAAAAAAAAAA
+    CCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBEEEEEEDDDD
+    DDFFFFFFBBBBBBFFFFFFBBBBBBFFFFFFFFFFFFFFFFFFCCCCCCDDDDDDFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888AAAAAACCCCCCCCCCCC
+    CCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBFFFFFFDDDDDDDDDD
+    DDBBBBBBFFFFFFFFFFFFBBBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEEEEEEFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888AAAAAACCCCCC6699CC6699CC
+    DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBFFFFFFDDDDDDDDDDDDDDDD
+    DDBBBBBBBBBBBBBBBBBBCCCCCCDDDDDDEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBB7777770033663366993366996699CC
+    6699CCDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBFFFFFFDDDDDDDDDDDDDDDDDDDDDD
+    DDBBBBBBFFFFFFCCCCCCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFF777777555555003366000033336699336699
+    DDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFDDDDDDDDDDDDDDDDDDDDDDDDBBBB
+    BBBBBBBBFFFFFFDDDDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFF000000003366000000003366000000336699DDDDDD
+    DDDDDDDDDDDDDDDDDDBBBBBBEEEEEEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDBBBB
+    BBFFFFFFFFFFFFFFFFFFEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFF000000003366000000003366000000003366336699DDDDDD
+    DDDDDDDDDDDDBBBBBBEEEEEECCCCCCDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBBBBB
+    BBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFF003366000000003366000000003366000000336699DDDDDD
+    EEEEEEBBBBBBEEEEEECCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF003366000000003366000000003366000000003366000000003366
+    6699CCEEEEEE6699CCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF000000003366000000003366000000003366000000003366003366
+    3333336699CC003366BBBBBBDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF003366000000003366000000003366000000003366000000333333
+    000000003366003366DDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000003366000000003366000000333333000000
+    003366000000003366DDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000003366000000333333000000003366
+    000000003366000000FFFFFFBBBBBB336699BBBBBBFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000003366000000333333000000003366000000
+    003366000000003366000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000333333000000003366000000003366
+    003366003366000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000333366000000003366000000003366000000
+    003366000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000003366000000003366000000003366
+    000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000003366000000003366000000003366000000
+    003366FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000003366000000003366000000003366
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000000000003366000000003366000000003366000000FFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF000000000000003366000000000000FFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFDFFFFFFF3FFFBEFE3FFFCEFC7FFEE278FFFF3D31FFFF8CA3FFFFE
+    007FFFF0007FFFC0008FFF000267FE000573FC00237DF800401FF00082FFF001
+    02FFE000077FC00007FFC0000FFF80001FFF80001FFF80003FFF00003FFF0004
+    7FFF0000FFFF0001FFFF0003FFFF0007FFFF001FFFFF003FFFFF00FFFFFF83FF
+    FFFF
+  }
+  KeyPreview = True
+  OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.2.6.0'
+  object lblProf: TLabel
+    AnchorSideTop.Control = cmbProfile
+    AnchorSideRight.Control = cmbProfile
+    Left = 64
+    Height = 17
+    Top = 634
+    Width = 46
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 6
+    Caption = 'Profile:'
+    ParentColor = False
+  end
+  object lblMember: TLabel
+    AnchorSideTop.Control = cmbMembers
+    AnchorSideRight.Control = cmbMembers
+    Left = 25
+    Height = 17
+    Top = 673
+    Width = 85
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 6
+    Caption = 'Membership:'
+    ParentColor = False
+  end
+  object lblGrpBy: TLabel
+    AnchorSideTop.Control = cmbGroupBy
+    AnchorSideRight.Control = lblSortBy
+    AnchorSideRight.Side = asrBottom
+    Left = 48
+    Height = 17
+    Top = 561
+    Width = 62
+    Anchors = [akTop, akRight]
+    Caption = 'Group by:'
+    ParentColor = False
+  end
+  object lblSortBy: TLabel
+    AnchorSideTop.Control = cmbSort
+    AnchorSideRight.Control = cmbSort
+    Left = 61
+    Height = 17
+    Top = 522
+    Width = 49
+    Anchors = [akTop, akRight]
+    BorderSpacing.Right = 6
+    Caption = 'Sort by:'
+    ParentColor = False
+  end
+  object gbCallsign: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 12
+    Height = 114
+    Top = 4
+    Width = 154
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 4
+    Caption = 'Callsign'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 0
+    object edtCallSign: TEdit
+      AnchorSideLeft.Control = gbCallsign
+      AnchorSideTop.Control = gbCallsign
+      Left = 8
+      Height = 34
+      Top = 6
+      Width = 130
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 6
+      CharCase = ecUppercase
+      OnChange = edtCallSignChange
+      TabOrder = 0
+    end
+    object rbExactlyCall: TRadioButton
+      AnchorSideLeft.Control = edtCallSign
+      AnchorSideTop.Control = edtCallSign
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      TabOrder = 1
+    end
+    object rbIncludeCall: TRadioButton
+      AnchorSideLeft.Control = edtCallSign
+      AnchorSideTop.Control = rbExactlyCall
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      Checked = True
+      TabOrder = 2
+      TabStop = True
+    end
+  end
+  object btnOK: TButton
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = btClear
+    AnchorSideRight.Control = gbSatName
+    AnchorSideRight.Side = asrBottom
+    Left = 731
+    Height = 26
+    Top = 634
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.InnerBorder = 4
+    Caption = 'OK'
+    OnClick = btnOKClick
+    TabOrder = 1
+  end
+  object btnCancel: TButton
+    AnchorSideLeft.Control = btnOK
+    AnchorSideTop.Control = btnOK
+    AnchorSideTop.Side = asrBottom
+    Left = 731
+    Height = 26
+    Top = 666
+    Width = 75
+    BorderSpacing.Top = 6
+    BorderSpacing.InnerBorder = 4
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    OnClick = btnCancelClick
+    TabOrder = 2
+  end
+  object gbDxcc: TGroupBox
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 114
+    Top = 252
+    Width = 154
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 10
+    Caption = ' DXCC '
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 3
+    object edtDXCC: TEdit
+      AnchorSideLeft.Control = gbDxcc
+      AnchorSideTop.Control = gbDxcc
+      Left = 8
+      Height = 34
+      Top = 13
+      Width = 95
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 13
+      CharCase = ecUppercase
+      TabOrder = 0
+    end
+    object btnSelectDXCC: TButton
+      AnchorSideLeft.Control = edtDXCC
+      AnchorSideTop.Control = edtDXCC
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 25
+      Top = 48
+      Width = 75
+      BorderSpacing.Top = 1
+      BorderSpacing.InnerBorder = 4
+      Caption = 'Select ...'
+      OnClick = btnSelectDXCCClick
+      TabOrder = 1
+    end
+  end
+  object gbFreq: TGroupBox
+    AnchorSideLeft.Control = gbBand
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbCallsign
+    Left = 332
+    Height = 114
+    Top = 4
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' Freq  X.x MHz'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 4
+    object Label1: TLabel
+      AnchorSideTop.Control = edtFreqFrom
+      AnchorSideRight.Control = edtFreqFrom
+      Left = 10
+      Height = 17
+      Top = 6
+      Width = 35
+      Anchors = [akTop, akRight]
+      BorderSpacing.Left = 5
+      BorderSpacing.Right = 6
+      Caption = 'from:'
+      ParentColor = False
+    end
+    object Label2: TLabel
+      AnchorSideLeft.Control = Label1
+      AnchorSideTop.Control = edtFreqTo
+      Left = 10
+      Height = 17
+      Top = 41
+      Width = 17
+      Caption = 'to:'
+      ParentColor = False
+    end
+    object edtFreqFrom: TEdit
+      AnchorSideTop.Control = gbFreq
+      AnchorSideRight.Control = gbFreq
+      AnchorSideRight.Side = asrBottom
+      Left = 51
+      Height = 34
+      Top = 6
+      Width = 95
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      TabOrder = 0
+    end
+    object edtFreqTo: TEdit
+      AnchorSideLeft.Control = edtFreqFrom
+      AnchorSideTop.Control = edtFreqFrom
+      AnchorSideTop.Side = asrBottom
+      Left = 51
+      Height = 34
+      Top = 41
+      Width = 95
+      BorderSpacing.Top = 1
+      TabOrder = 1
+    end
+  end
+  object gbMode: TGroupBox
+    AnchorSideLeft.Control = gbFreq
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbCallsign
+    Left = 492
+    Height = 56
+    Top = 4
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' Mode '
+    ClientHeight = 38
+    ClientWidth = 152
+    TabOrder = 5
+    object cmbMode: TComboBox
+      AnchorSideLeft.Control = gbMode
+      AnchorSideTop.Control = gbMode
+      Left = 6
+      Height = 32
+      Top = 0
+      Width = 130
+      AutoSize = False
+      BorderSpacing.Left = 6
+      ItemHeight = 0
+      TabOrder = 0
+    end
+  end
+  object gbDate: TGroupBox
+    AnchorSideLeft.Control = gbMode
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbCallsign
+    Left = 652
+    Height = 114
+    Top = 4
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' Date '
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 6
+    object Label3: TLabel
+      AnchorSideLeft.Control = gbDate
+      AnchorSideTop.Control = gbDate
+      Left = 6
+      Height = 17
+      Top = 6
+      Width = 39
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      Caption = 'from:'
+      ParentColor = False
+    end
+    object Label4: TLabel
+      AnchorSideLeft.Control = Label3
+      AnchorSideTop.Control = Label3
+      AnchorSideTop.Side = asrBottom
+      AnchorSideBottom.Side = asrCenter
+      Left = 6
+      Height = 17
+      Top = 48
+      Width = 17
+      BorderSpacing.Top = 25
+      Caption = 'to:'
+      ParentColor = False
+    end
+    object edtDateFrom: TDateEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = Label3
+      AnchorSideRight.Control = gbDate
+      AnchorSideRight.Side = asrBottom
+      Left = 32
+      Height = 34
+      Top = 19
+      Width = 114
+      CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+      DateOrder = doYMd
+      DateFormat = 'YMD'
+      ButtonWidth = 23
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 13
+      BorderSpacing.Right = 6
+      NumGlyphs = 1
+      MaxLength = 10
+      OnButtonClick = edtDateFromButtonClick
+      TabOrder = 0
+      Text = '    .  .  '
+    end
+    object edtDateTo: TDateEdit
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtDateFrom
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = gbDate
+      AnchorSideRight.Side = asrBottom
+      Left = 32
+      Height = 34
+      Top = 59
+      Width = 114
+      CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+      DateOrder = doYMd
+      DateFormat = 'YMD'
+      ButtonWidth = 23
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      NumGlyphs = 1
+      MaxLength = 10
+      OnButtonClick = edtDateToButtonClick
+      TabOrder = 1
+      Text = '    .  .  '
+    end
+  end
+  object gbLoc: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = gbCallsign
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 114
+    Top = 128
+    Width = 154
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 10
+    Caption = ' Locator '
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 7
+    object edtLocator: TEdit
+      AnchorSideLeft.Control = gbLoc
+      AnchorSideTop.Control = gbLoc
+      Left = 8
+      Height = 34
+      Top = 6
+      Width = 95
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 6
+      OnChange = edtLocatorChange
+      TabOrder = 0
+    end
+    object rbIncludeLoc: TRadioButton
+      AnchorSideLeft.Control = edtLocator
+      AnchorSideTop.Control = rbExactlyLoc
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object rbExactlyLoc: TRadioButton
+      AnchorSideLeft.Control = edtLocator
+      AnchorSideTop.Control = edtLocator
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 2
+      TabStop = True
+    end
+  end
+  object gbQth: TGroupBox
+    AnchorSideLeft.Control = gbCounty
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbAward
+    Left = 332
+    Height = 128
+    Top = 376
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'QTH'
+    ClientHeight = 110
+    ClientWidth = 152
+    TabOrder = 8
+    object rbExactlyQth: TRadioButton
+      AnchorSideLeft.Control = edtQTH
+      AnchorSideTop.Control = edtQTH
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+    end
+    object rbIncludeQth: TRadioButton
+      AnchorSideLeft.Control = rbExactlyQth
+      AnchorSideTop.Control = rbExactlyQth
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object edtQTH: TEdit
+      AnchorSideLeft.Control = gbQth
+      AnchorSideTop.Control = gbQth
+      Left = 6
+      Height = 34
+      Top = 6
+      Width = 142
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      TabOrder = 2
+    end
+  end
+  object gbQsl: TGroupBox
+    AnchorSideLeft.Control = gbDxcc
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbDxcc
+    Left = 172
+    Height = 114
+    Top = 252
+    Width = 474
+    BorderSpacing.Left = 6
+    Caption = 'QSL'
+    ClientHeight = 96
+    ClientWidth = 472
+    TabOrder = 9
+    object lblVia: TLabel
+      AnchorSideLeft.Control = edtQSLVia
+      AnchorSideTop.Control = edtQSLVia
+      AnchorSideTop.Side = asrBottom
+      AnchorSideBottom.Side = asrBottom
+      Left = 9
+      Height = 17
+      Top = 47
+      Width = 22
+      BorderSpacing.Left = 1
+      Caption = 'VIA'
+      ParentColor = False
+    end
+    object lblRcvdC: TLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = cmbQSL_R
+      AnchorSideBottom.Side = asrBottom
+      Left = 155
+      Height = 17
+      Top = 61
+      Width = 9
+      Anchors = [akRight, akBottom]
+      BorderSpacing.Top = 1
+      Caption = 'R'
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblLoTW: TLabel
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideRight.Control = cmbLoTW_qsls
+      AnchorSideRight.Side = asrBottom
+      Left = 360
+      Height = 17
+      Top = 45
+      Width = 36
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 70
+      Caption = 'LoTW'
+      ParentColor = False
+    end
+    object edtQSLVia: TEdit
+      AnchorSideLeft.Control = gbQsl
+      AnchorSideTop.Control = gbQsl
+      Left = 8
+      Height = 34
+      Top = 13
+      Width = 120
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 13
+      CharCase = ecUppercase
+      TabOrder = 0
+    end
+    object cmbQSL_S: TComboBox
+      AnchorSideLeft.Control = edtQSLVia
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = edtQSLVia
+      Left = 168
+      Height = 32
+      Top = 13
+      Width = 66
+      AutoSize = False
+      BorderSpacing.Left = 40
+      ItemHeight = 0
+      TabOrder = 1
+    end
+    object cmbQSL_R: TComboBox
+      AnchorSideLeft.Control = cmbQSL_S
+      AnchorSideTop.Control = cmbQSL_S
+      AnchorSideTop.Side = asrBottom
+      Left = 168
+      Height = 32
+      Top = 46
+      Width = 66
+      AutoSize = False
+      BorderSpacing.Top = 1
+      ItemHeight = 0
+      TabOrder = 2
+    end
+    object cmbLoTW_qsls: TComboBox
+      AnchorSideLeft.Control = cmbeQSL_qsls
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbeQSL_qsls
+      Left = 400
+      Height = 32
+      Top = 13
+      Width = 66
+      AutoSize = False
+      BorderSpacing.Left = 50
+      Font.Height = 8
+      ItemHeight = 0
+      ItemIndex = 0
+      Items.Strings = (
+        ''
+        'Y'
+        'N'
+      )
+      ParentFont = False
+      Style = csDropDownList
+      TabOrder = 3
+    end
+    object cmbLoTW_qslr: TComboBox
+      AnchorSideLeft.Control = cmbLoTW_qsls
+      AnchorSideTop.Control = cmbLoTW_qsls
+      AnchorSideTop.Side = asrBottom
+      Left = 400
+      Height = 32
+      Top = 46
+      Width = 66
+      AutoSize = False
+      BorderSpacing.Top = 1
+      ItemHeight = 0
+      ItemIndex = 0
+      Items.Strings = (
+        ''
+        'L'
+        'N'
+      )
+      Style = csDropDownList
+      TabOrder = 4
+    end
+    object cmbeQSL_qsls: TComboBox
+      AnchorSideLeft.Control = cmbQSL_S
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbQSL_S
+      Left = 284
+      Height = 32
+      Top = 13
+      Width = 66
+      AutoSize = False
+      BorderSpacing.Left = 50
+      Font.Height = 8
+      ItemHeight = 0
+      ItemIndex = 0
+      Items.Strings = (
+        ''
+        'Y'
+        'N'
+      )
+      ParentFont = False
+      Style = csDropDownList
+      TabOrder = 5
+    end
+    object cmbeQSL_qslr: TComboBox
+      AnchorSideLeft.Control = cmbeQSL_qsls
+      AnchorSideTop.Control = cmbeQSL_qsls
+      AnchorSideTop.Side = asrBottom
+      Left = 284
+      Height = 32
+      Top = 46
+      Width = 66
+      AutoSize = False
+      BorderSpacing.Top = 1
+      ItemHeight = 0
+      Items.Strings = (
+        ''
+        'E'
+        'N'
+      )
+      Style = csDropDownList
+      TabOrder = 6
+    end
+    object lblEqsl: TLabel
+      AnchorSideRight.Control = cmbeQSL_qsls
+      AnchorSideRight.Side = asrBottom
+      Left = 247
+      Height = 17
+      Top = 45
+      Width = 33
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 70
+      Caption = 'eQSL'
+      ParentColor = False
+    end
+    object lblSentC: TLabel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbQSL_S
+      AnchorSideRight.Side = asrBottom
+      Left = 156
+      Height = 17
+      Top = 14
+      Width = 8
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 1
+      Caption = 'S'
+      ParentBidiMode = False
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblSentE: TLabel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbQSL_S
+      AnchorSideRight.Control = lblEqsl
+      AnchorSideRight.Side = asrBottom
+      Left = 272
+      Height = 17
+      Top = 14
+      Width = 8
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 1
+      Caption = 'S'
+      ParentBidiMode = False
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblSentL: TLabel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbQSL_S
+      AnchorSideRight.Control = lblLoTW
+      AnchorSideRight.Side = asrBottom
+      Left = 388
+      Height = 17
+      Top = 14
+      Width = 8
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 1
+      Caption = 'S'
+      ParentBidiMode = False
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblRcvdE: TLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = lblEqsl
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = cmbQSL_R
+      AnchorSideBottom.Side = asrBottom
+      Left = 271
+      Height = 17
+      Top = 61
+      Width = 9
+      Anchors = [akRight, akBottom]
+      BorderSpacing.Top = 1
+      Caption = 'R'
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblRcvdL: TLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = lblLoTW
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = cmbQSL_R
+      AnchorSideBottom.Side = asrBottom
+      Left = 387
+      Height = 17
+      Top = 61
+      Width = 9
+      Anchors = [akRight, akBottom]
+      BorderSpacing.Top = 1
+      Caption = 'R'
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object gbContinent: TGroupBox
+    AnchorSideLeft.Control = gbContestEx
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbLoc
+    Left = 652
+    Height = 56
+    Top = 128
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' Continent '
+    ClientHeight = 38
+    ClientWidth = 152
+    TabOrder = 10
+    object edtCont: TEdit
+      AnchorSideLeft.Control = gbContinent
+      AnchorSideTop.Control = gbContinent
+      Left = 6
+      Height = 34
+      Top = 0
+      Width = 95
+      BorderSpacing.Left = 6
+      TabOrder = 0
+    end
+  end
+  object gbIota: TGroupBox
+    AnchorSideLeft.Control = gbQth
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbAward
+    Left = 492
+    Height = 128
+    Top = 376
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' IOTA '
+    ClientHeight = 110
+    ClientWidth = 152
+    TabOrder = 11
+    object edtIOTA: TEdit
+      AnchorSideLeft.Control = gbIota
+      AnchorSideTop.Control = gbIota
+      Left = 6
+      Height = 34
+      Top = 6
+      Width = 142
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      CharCase = ecUppercase
+      TabOrder = 0
+    end
+    object rbIncludeIOTA: TRadioButton
+      AnchorSideLeft.Control = rbExactlyIOTA
+      AnchorSideTop.Control = rbExactlyIOTA
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object rbExactlyIOTA: TRadioButton
+      AnchorSideLeft.Control = edtIOTA
+      AnchorSideTop.Control = edtIOTA
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 2
+      TabStop = True
+    end
+    object chkIOTAOnly: TCheckBox
+      AnchorSideLeft.Control = gbIota
+      AnchorSideTop.Control = rbIncludeIOTA
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 87
+      Width = 125
+      BorderSpacing.Left = 6
+      Caption = 'Only IOTA qsos'
+      TabOrder = 3
+    end
+  end
+  object gbRemarks: TGroupBox
+    AnchorSideLeft.Control = gbQsl
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbQsl
+    Left = 652
+    Height = 114
+    Top = 252
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'Comment to QSO'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 12
+    object rbExactlyRem: TRadioButton
+      AnchorSideLeft.Control = edtRemarks
+      AnchorSideTop.Control = edtRemarks
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 23
+      Top = 47
+      Width = 74
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+    end
+    object rbIncludeRem: TRadioButton
+      AnchorSideLeft.Control = edtRemarks
+      AnchorSideTop.Control = rbExactlyRem
+      AnchorSideTop.Side = asrBottom
+      Left = 5
+      Height = 23
+      Top = 70
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object edtRemarks: TEdit
+      AnchorSideLeft.Control = gbRemarks
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = gbRemarks
+      Left = 5
+      Height = 34
+      Top = 13
+      Width = 142
+      BorderSpacing.Top = 13
+      TabOrder = 2
+    end
+  end
+  object gbAward: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = gbDxcc
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 128
+    Top = 376
+    Width = 154
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 10
+    Caption = ' Award '
+    ClientHeight = 110
+    ClientWidth = 152
+    TabOrder = 13
+    object rbExactlyDiplom: TRadioButton
+      AnchorSideLeft.Control = edtDiplom
+      AnchorSideTop.Control = edtDiplom
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+    end
+    object rbIncludeDiplom: TRadioButton
+      AnchorSideLeft.Control = rbExactlyDiplom
+      AnchorSideTop.Control = rbExactlyDiplom
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object edtDiplom: TEdit
+      AnchorSideLeft.Control = gbAward
+      AnchorSideTop.Control = gbAward
+      Left = 6
+      Height = 34
+      Top = 6
+      Width = 142
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      TabOrder = 2
+    end
+  end
+  object gbMyLoc: TGroupBox
+    AnchorSideLeft.Control = gbLoc
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbLoc
+    Left = 172
+    Height = 114
+    Top = 128
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' My locator '
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 14
+    object edtMyLoc: TEdit
+      AnchorSideLeft.Control = gbMyLoc
+      AnchorSideTop.Control = gbMyLoc
+      Left = 8
+      Height = 34
+      Top = 6
+      Width = 95
+      BorderSpacing.Left = 8
+      BorderSpacing.Top = 6
+      OnChange = edtMyLocChange
+      TabOrder = 0
+    end
+    object rbIncludeMyLoc: TRadioButton
+      AnchorSideLeft.Control = edtMyLoc
+      AnchorSideTop.Control = rbExactlyMyLoc
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object rbExactlyMyLoc: TRadioButton
+      AnchorSideLeft.Control = edtMyLoc
+      AnchorSideTop.Control = edtMyLoc
+      AnchorSideTop.Side = asrBottom
+      Left = 8
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 2
+      TabStop = True
+    end
+  end
+  object gbZones: TGroupBox
+    AnchorSideLeft.Control = gbMyLoc
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbLoc
+    Left = 332
+    Height = 114
+    Top = 128
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' Zones '
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 15
+    object Label8: TLabel
+      AnchorSideTop.Control = edtWAZ
+      AnchorSideRight.Control = edtWAZ
+      Left = 12
+      Height = 17
+      Top = 6
+      Width = 31
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 58
+      Caption = 'WAZ'
+      ParentColor = False
+    end
+    object Label9: TLabel
+      AnchorSideLeft.Control = Label8
+      AnchorSideTop.Control = edtITU
+      Left = 12
+      Height = 17
+      Top = 41
+      Width = 27
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'ITU'
+      ParentColor = False
+    end
+    object edtWAZ: TEdit
+      AnchorSideTop.Control = gbZones
+      AnchorSideRight.Control = gbZones
+      AnchorSideRight.Side = asrBottom
+      Left = 101
+      Height = 34
+      Top = 6
+      Width = 45
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      CharCase = ecUppercase
+      TabOrder = 0
+    end
+    object edtITU: TEdit
+      AnchorSideLeft.Control = edtWAZ
+      AnchorSideTop.Control = edtWAZ
+      AnchorSideTop.Side = asrBottom
+      Left = 101
+      Height = 34
+      Top = 41
+      Width = 45
+      BorderSpacing.Top = 1
+      CharCase = ecUppercase
+      TabOrder = 1
+    end
+  end
+  object cmbProfile: TComboBox
+    AnchorSideLeft.Control = cmbGroupBy
+    AnchorSideTop.Control = gbPropMode
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    Left = 116
+    Height = 33
+    Top = 634
+    Width = 360
+    AutoSize = False
+    BorderSpacing.Top = 6
+    ItemHeight = 0
+    TabOrder = 16
+  end
+  object gbCounty: TGroupBox
+    AnchorSideLeft.Control = gbAward
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbAward
+    Left = 172
+    Height = 128
+    Top = 376
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'County'
+    ClientHeight = 110
+    ClientWidth = 152
+    TabOrder = 17
+    object edtCounty: TEdit
+      AnchorSideLeft.Control = gbCounty
+      AnchorSideTop.Control = gbCounty
+      Left = 6
+      Height = 34
+      Top = 6
+      Width = 142
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      TabOrder = 0
+    end
+    object rbExactlyCounty: TRadioButton
+      AnchorSideLeft.Control = edtCounty
+      AnchorSideTop.Control = edtCounty
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 1
+      TabStop = True
+    end
+    object rbIncludeCounty: TRadioButton
+      AnchorSideLeft.Control = rbExactlyCounty
+      AnchorSideTop.Control = rbExactlyCounty
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 2
+    end
+  end
+  object cmbMembers: TComboBox
+    AnchorSideLeft.Control = cmbProfile
+    AnchorSideTop.Control = cmbProfile
+    AnchorSideTop.Side = asrBottom
+    Left = 116
+    Height = 32
+    Top = 673
+    Width = 360
+    AutoSize = False
+    BorderSpacing.Top = 6
+    ItemHeight = 0
+    Style = csDropDownList
+    TabOrder = 18
+  end
+  object btnHelp: TButton
+    AnchorSideLeft.Control = btnOK
+    AnchorSideTop.Control = btnCancel
+    AnchorSideTop.Side = asrBottom
+    Left = 731
+    Height = 26
+    Top = 698
+    Width = 75
+    BorderSpacing.Top = 6
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Help'
+    OnClick = btnHelpClick
+    TabOrder = 19
+  end
+  object cmbGroupBy: TComboBox
+    AnchorSideLeft.Control = cmbSort
+    AnchorSideTop.Control = cmbSort
+    AnchorSideTop.Side = asrBottom
+    Left = 116
+    Height = 33
+    Top = 561
+    Width = 200
+    AutoSize = False
+    BorderSpacing.Top = 6
+    ItemHeight = 0
+    Items.Strings = (
+      ''
+      'dxcc_ref'
+      'remarks'
+      'award'
+      'call'
+      'idcall'
+      'loc'
+      'iota'
+      'waz'
+      'itu'
+      'state'
+      'county'
+      'club1'
+      'club2'
+      'club3'
+      'club4'
+      'club5'
+      'DARC_DOK'
+    )
+    TabOrder = 20
+  end
+  object btnSave: TButton
+    AnchorSideLeft.Control = btClear
+    AnchorSideTop.Control = btClear
+    AnchorSideTop.Side = asrBottom
+    Left = 652
+    Height = 26
+    Top = 665
+    Width = 75
+    BorderSpacing.Top = 6
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Save filter'
+    OnClick = btnSaveClick
+    TabOrder = 21
+  end
+  object btnLoad: TButton
+    AnchorSideLeft.Control = btnSave
+    AnchorSideTop.Control = btnSave
+    AnchorSideTop.Side = asrBottom
+    Left = 652
+    Height = 26
+    Top = 697
+    Width = 75
+    BorderSpacing.Top = 6
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Load filter'
+    OnClick = btnLoadClick
+    TabOrder = 22
+  end
+  object gbState: TGroupBox
+    AnchorSideLeft.Control = gbContestEx
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbContinent
+    AnchorSideTop.Side = asrBottom
+    Left = 652
+    Height = 56
+    Top = 184
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = ' State '
+    ClientHeight = 38
+    ClientWidth = 152
+    TabOrder = 23
+    object edtState: TEdit
+      AnchorSideLeft.Control = gbState
+      AnchorSideTop.Control = gbState
+      AnchorSideRight.Side = asrBottom
+      Left = 6
+      Height = 34
+      Top = 0
+      Width = 95
+      BorderSpacing.Left = 6
+      CharCase = ecUppercase
+      TabOrder = 0
+    end
+  end
+  object cmbSort: TComboBox
+    AnchorSideTop.Control = gbPower
+    AnchorSideRight.Control = gbCounty
+    AnchorSideRight.Side = asrBottom
+    Left = 116
+    Height = 33
+    Top = 522
+    Width = 200
+    Anchors = [akTop, akRight]
+    AutoSize = False
+    BorderSpacing.Top = 8
+    BorderSpacing.Right = 10
+    ItemHeight = 0
+    Items.Strings = (
+      'Date + time'
+      'Call'
+      'Mode'
+      'Freq'
+      'Name'
+      'QTH'
+      'DXCC'
+      'Award'
+      'State'
+      'County'
+      'DXCC'
+      'DXCC+Call'
+      'QSL via+Call+DXCC'
+      'Call+DXCC'
+      'WAZ'
+      'ITU'
+      'Gridsquare'
+      'DARC_DOK'
+    )
+    TabOrder = 24
+  end
+  object gbPower: TGroupBox
+    AnchorSideLeft.Control = gbQth
+    AnchorSideTop.Control = gbAward
+    AnchorSideTop.Side = asrBottom
+    Left = 332
+    Height = 114
+    Top = 514
+    Width = 154
+    BorderSpacing.Top = 10
+    Caption = 'Power'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 25
+    object lblPwrTo: TLabel
+      AnchorSideLeft.Control = lblPwrFrom
+      AnchorSideTop.Control = edtPwrTo
+      Left = 3
+      Height = 17
+      Top = 40
+      Width = 17
+      Caption = 'to:'
+      ParentColor = False
+    end
+    object edtPwrTo: TEdit
+      AnchorSideLeft.Control = edtPwrFrom
+      AnchorSideTop.Control = edtPwrFrom
+      AnchorSideTop.Side = asrBottom
+      Left = 51
+      Height = 34
+      Top = 40
+      Width = 95
+      TabOrder = 0
+    end
+    object edtPwrFrom: TEdit
+      AnchorSideTop.Control = gbPower
+      AnchorSideRight.Control = gbPower
+      AnchorSideRight.Side = asrBottom
+      Left = 51
+      Height = 34
+      Top = 6
+      Width = 95
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      TabOrder = 1
+    end
+    object lblPwrFrom: TLabel
+      AnchorSideTop.Control = edtPwrFrom
+      AnchorSideRight.Control = edtPwrFrom
+      Left = 3
+      Height = 17
+      Top = 6
+      Width = 35
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 13
+      Caption = 'from:'
+      ParentColor = False
+    end
+  end
+  object gbBand: TGroupBox
+    AnchorSideLeft.Control = gbCallsign
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbCallsign
+    Left = 172
+    Height = 114
+    Top = 4
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'Band'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 26
+    object cmbBandSelector: TComboBox
+      AnchorSideLeft.Control = gbBand
+      AnchorSideTop.Control = gbBand
+      Left = 6
+      Height = 34
+      Top = 6
+      Width = 100
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      ItemHeight = 0
+      OnChange = cmbBandSelectorChange
+      TabOrder = 0
+    end
+    object Label20: TLabel
+      AnchorSideLeft.Control = cmbBandSelector
+      AnchorSideTop.Control = cmbBandSelector
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 51
+      Top = 46
+      Width = 134
+      BorderSpacing.Top = 6
+      Caption = 'Select band for Freq'#10'FROM and TO preset'#10'values.'
+      ParentColor = False
+    end
+  end
+  object chkNot: TCheckBox
+    AnchorSideLeft.Control = cmbProfile
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = cmbProfile
+    AnchorSideRight.Side = asrBottom
+    Left = 482
+    Height = 23
+    Top = 634
+    Width = 156
+    BorderSpacing.Left = 6
+    Caption = 'Reverse filter (NOT)'
+    TabOrder = 27
+  end
+  object gbContestEx: TGroupBox
+    AnchorSideLeft.Control = gbZones
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbZones
+    Left = 492
+    Height = 114
+    Top = 128
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'Contest Exchange'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 28
+    object edtSTX: TEdit
+      AnchorSideLeft.Control = gbContestEx
+      AnchorSideTop.Control = gbContestEx
+      Left = 6
+      Height = 34
+      Hint = 'search for contest send serial number'
+      Top = 6
+      Width = 60
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+    end
+    object edtSRX: TEdit
+      AnchorSideLeft.Control = gbContestEx
+      AnchorSideTop.Control = edtSTX
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 34
+      Hint = 'search for contest received serial number'
+      Top = 41
+      Width = 60
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 1
+    end
+    object edtSTXstr: TEdit
+      AnchorSideTop.Control = edtSTX
+      AnchorSideRight.Control = gbContestEx
+      AnchorSideRight.Side = asrBottom
+      Left = 86
+      Height = 34
+      Hint = 'search for contest send message exchange'
+      Top = 6
+      Width = 60
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 6
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 2
+    end
+    object edtSRXstr: TEdit
+      AnchorSideTop.Control = edtSTXstr
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = edtSTXstr
+      AnchorSideRight.Side = asrBottom
+      Left = 86
+      Height = 34
+      Hint = 'search for contest received message exchange'
+      Top = 41
+      Width = 60
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 1
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+    end
+    object lblContExS: TLabel
+      AnchorSideLeft.Control = gbContestEx
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = edtSTX
+      AnchorSideTop.Side = asrCenter
+      Left = 72
+      Height = 17
+      Top = 15
+      Width = 8
+      Alignment = taCenter
+      Caption = 'S'
+      ParentColor = False
+    end
+    object lblContxR: TLabel
+      AnchorSideLeft.Control = gbContestEx
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = edtSRX
+      AnchorSideTop.Side = asrCenter
+      Left = 72
+      Height = 17
+      Top = 50
+      Width = 9
+      Alignment = taCenter
+      Caption = 'R'
+      ParentColor = False
+    end
+    object lblContNR: TLabel
+      AnchorSideLeft.Control = edtSRX
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = edtSRX
+      AnchorSideTop.Side = asrBottom
+      Left = 29
+      Height = 17
+      Top = 75
+      Width = 15
+      Alignment = taCenter
+      Caption = 'Nr'
+      ParentColor = False
+    end
+    object lblContMsg: TLabel
+      AnchorSideLeft.Control = edtSRXstr
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = edtSRXstr
+      AnchorSideTop.Side = asrBottom
+      Left = 103
+      Height = 17
+      Top = 75
+      Width = 27
+      Alignment = taCenter
+      Caption = 'Msg'
+      ParentColor = False
+    end
+  end
+  object gbContName: TGroupBox
+    AnchorSideLeft.Control = gbFreq
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbMode
+    AnchorSideTop.Side = asrBottom
+    Left = 492
+    Height = 56
+    Top = 60
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'Contest name'
+    ClientHeight = 38
+    ClientWidth = 152
+    TabOrder = 29
+    object cmbContestName: TComboBox
+      AnchorSideLeft.Control = gbContName
+      AnchorSideTop.Control = gbContName
+      Left = 6
+      Height = 34
+      Hint = 'contestname, choose ADIF contest_id via combobox or type freestyle max 40 characters'
+      Top = 0
+      Width = 90
+      AutoComplete = True
+      AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+      BorderSpacing.Left = 6
+      ItemHeight = 0
+      Items.Strings = (
+        '070-160M-SPRINT'
+        '070-3-DAY'
+        '070-31-FLAVORS'
+        '070-40M-SPRINT'
+        '070-80M-SPRINT'
+        '070-PSKFEST'
+        '070-ST-PATS-DAY'
+        '070-VALENTINE-SPRINT'
+        '10-RTTY'
+        '1010-OPEN-SEASON'
+        '7QP'
+        'AL-QSO-PARTY'
+        'ALL-ASIAN-DX-CW'
+        'ALL-ASIAN-DX-PHONE'
+        'ANARTS-RTTY'
+        'ANATOLIAN-RTTY'
+        'AP-SPRINT'
+        'AR-QSO-PARTY'
+        'ARI-DX'
+        'ARRL-10'
+        'ARRL-160'
+        'ARRL-222'
+        'ARRL-DX-CW'
+        'ARRL-DX-SSB'
+        'ARRL-EME'
+        'ARRL-FIELD-DAY'
+        'ARRL-RR-CW'
+        'ARRL-RR-RTTY'
+        'ARRL-RR-SSB'
+        'ARRL-RTTY'
+        'ARRL-SCR'
+        'ARRL-SS-CW'
+        'ARRL-SS-SSB'
+        'ARRL-UHF-AUG'
+        'ARRL-VHF-JAN'
+        'ARRL-VHF-JUN'
+        'ARRL-VHF-SEP'
+        'AZ-QSO-PARTY'
+        'BARTG-RTTY'
+        'BARTG-SPRINT'
+        'BC-QSO-PARTY'
+        'CA-QSO-PARTY'
+        'CIS-DX'
+        'CO-QSO-PARTY'
+        'CQ-160-CW'
+        'CQ-160-SSB'
+        'CQ-M'
+        'CQ-VHF'
+        'CQ-WPX-CW'
+        'CQ-WPX-RTTY'
+        'CQ-WPX-SSB'
+        'CQ-WW-CW'
+        'CQ-WW-RTTY'
+        'CQ-WW-SSB'
+        'CT-QSO-PARTY'
+        'CVA-DX-CW'
+        'CVA-DX-SSB'
+        'CWOPS-CW-OPEN'
+        'CWOPS-CWT'
+        'DARC-WAEDC-CW'
+        'DARC-WAEDC-RTTY'
+        'DARC-WAEDC-SSB'
+        'DARC-WAG'
+        'DE-QSO-PARTY'
+        'DL-DX-RTTY'
+        'DMC-RTTY'
+        'EA-CNCW'
+        'EA-DME'
+        'EA-PSK63'
+        'EA-RTTY (import-only)'
+        'EA-SMRE-CW'
+        'EA-SMRE-SSB'
+        'EA-VHF-ATLANTIC'
+        'EA-VHF-COM'
+        'EA-VHF-COSTA-SOL'
+        'EA-VHF-EA'
+        'EA-VHF-EA1RCS'
+        'EA-VHF-QSL'
+        'EA-VHF-SADURNI'
+        'EA-WW-RTTY'
+        'EPC-PSK63'
+        'EU Sprint'
+        'EU-HF'
+        'EU-PSK-DX'
+        'EUCW160M'
+        'FALL SPRINT'
+        'FL-QSO-PARTY'
+        'GA-QSO-PARTY'
+        'HA-DX'
+        'HELVETIA'
+        'HI-QSO-PARTY'
+        'HOLYLAND'
+        'IA-QSO-PARTY'
+        'IARU-FIELD-DAY'
+        'IARU-HF'
+        'ID-QSO-PARTY'
+        'IL QSO Party'
+        'IN-QSO-PARTY'
+        'JARTS-WW-RTTY'
+        'JIDX-CW'
+        'JIDX-SSB'
+        'JT-DX-RTTY'
+        'KS-QSO-PARTY'
+        'KY-QSO-PARTY'
+        'LA-QSO-PARTY'
+        'LDC-RTTY'
+        'LZ DX'
+        'MAR-QSO-PARTY'
+        'MD-QSO-PARTY'
+        'ME-QSO-PARTY'
+        'MI-QSO-PARTY'
+        'MIDATLANTIC-QSO-PARTY'
+        'MN-QSO-PARTY'
+        'MO-QSO-PARTY'
+        'MS-QSO-PARTY'
+        'MT-QSO-PARTY'
+        'NA-SPRINT-CW'
+        'NA-SPRINT-RTTY'
+        'NA-SPRINT-SSB'
+        'NAQP-CW'
+        'NAQP-RTTY'
+        'NAQP-SSB'
+        'NC-QSO-PARTY'
+        'ND-QSO-PARTY'
+        'NE-QSO-PARTY'
+        'NEQP'
+        'NH-QSO-PARTY'
+        'NJ-QSO-PARTY'
+        'NM-QSO-PARTY'
+        'NRAU-BALTIC-CW'
+        'NRAU-BALTIC-SSB'
+        'NV-QSO-PARTY'
+        'NY-QSO-PARTY'
+        'OCEANIA-DX-CW'
+        'OCEANIA-DX-SSB'
+        'OH-QSO-PARTY'
+        'OK-DX-RTTY'
+        'OK-OM-DX'
+        'OK-QSO-PARTY'
+        'OMISS-QSO-PARTY'
+        'ON-QSO-PARTY'
+        'OR-QSO-PARTY'
+        'PA-QSO-PARTY'
+        'PACC'
+        'PSK-DEATHMATCH'
+        'QC-QSO-PARTY'
+        'RAC (import-only)'
+        'RAC-CANADA-DAY'
+        'RAC-CANADA-WINTER'
+        'RDAC'
+        'RDXC'
+        'REF-160M'
+        'REF-CW'
+        'REF-SSB'
+        'REP-PORTUGAL-DAY-HF'
+        'RI-QSO-PARTY'
+        'RSGB-160'
+        'RSGB-21/28-CW'
+        'RSGB-21/28-SSB'
+        'RSGB-80M-CC'
+        'RSGB-AFS-CW'
+        'RSGB-AFS-SSB'
+        'RSGB-CLUB-CALLS'
+        'RSGB-COMMONWEALTH'
+        'RSGB-IOTA'
+        'RSGB-LOW-POWER'
+        'RSGB-NFD'
+        'RSGB-ROPOCO'
+        'RSGB-SSB-FD'
+        'RUSSIAN-RTTY'
+        'SAC-CW'
+        'SAC-SSB'
+        'SARTG-RTTY'
+        'SC-QSO-PARTY'
+        'SCC-RTTY'
+        'SD-QSO-PARTY'
+        'SMP-AUG'
+        'SMP-MAY'
+        'SP-DX-RTTY'
+        'SPAR-WINTER-FD'
+        'SPDXContest'
+        'SPRING SPRINT'
+        'SR-MARATHON'
+        'STEW-PERRY'
+        'SUMMER SPRINT'
+        'TARA-GRID-DIP'
+        'TARA-RTTY'
+        'TARA-RUMBLE'
+        'TARA-SKIRMISH'
+        'TEN-RTTY'
+        'TMC-RTTY'
+        'TN-QSO-PARTY'
+        'TX-QSO-PARTY'
+        'UBA-DX-CW'
+        'UBA-DX-SSB'
+        'UK-DX-BPSK63'
+        'UK-DX-RTTY'
+        'UKR-CHAMP-RTTY'
+        'UKRAINIAN DX'
+        'UKSMG-6M-MARATHON'
+        'UKSMG-SUMMER-ES'
+        'URE-DX (import-only)'
+        'US-COUNTIES-QSO'
+        'UT-QSO-PARTY'
+        'VA-QSO-PARTY'
+        'VENEZ-IND-DAY'
+        'VIRGINIA QSO PARTY (import-only)'
+        'VOLTA-RTTY'
+        'WA-QSO-PARTY'
+        'WI-QSO-PARTY'
+        'WIA-HARRY ANGEL'
+        'WIA-JMMFD'
+        'WIA-OCDX'
+        'WIA-REMEMBRANCE'
+        'WIA-ROSS HULL'
+        'WIA-TRANS TASMAN'
+        'WIA-VHF/UHF FD'
+        'WIA-VK SHIRES'
+        'WINTER SPRINT'
+        'WV-QSO-PARTY'
+        'WY-QSO-PARTY'
+        'XE-INTL-RTTY'
+        'YOHFDX'
+        'YUDXC'
+      )
+      MaxLength = 40
+      OnExit = cmbContestNameExit
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      TabStop = False
+    end
+    object cbIncConName: TCheckBox
+      AnchorSideLeft.Control = cmbContestName
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbContestName
+      AnchorSideTop.Side = asrCenter
+      Left = 97
+      Height = 23
+      Top = 6
+      Width = 45
+      BorderSpacing.Left = 1
+      Caption = 'inc'
+      TabOrder = 1
+    end
+  end
+  object btClear: TButton
+    AnchorSideLeft.Control = gbSatName
+    AnchorSideTop.Control = chkNot
+    Left = 652
+    Height = 25
+    Top = 634
+    Width = 75
+    BorderSpacing.Right = 3
+    Caption = 'Clear filter'
+    OnClick = btClearClick
+    TabOrder = 30
+  end
+  object chkRemember: TCheckBox
+    AnchorSideLeft.Control = cmbProfile
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = cmbMembers
+    Left = 482
+    Height = 23
+    Top = 673
+    Width = 133
+    BorderSpacing.Left = 6
+    Caption = 'Remember filter'
+    OnChange = chkRememberChange
+    TabOrder = 31
+  end
+  object gbDarcDok: TGroupBox
+    AnchorSideLeft.Control = gbIota
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbRemarks
+    AnchorSideTop.Side = asrBottom
+    Left = 652
+    Height = 128
+    Top = 376
+    Width = 154
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 10
+    Caption = 'DARC DOK'
+    ClientHeight = 110
+    ClientWidth = 152
+    TabOrder = 32
+    object edtDarcDok: TEdit
+      AnchorSideLeft.Control = gbDarcDok
+      AnchorSideTop.Control = gbDarcDok
+      Left = 6
+      Height = 34
+      Top = 6
+      Width = 132
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      TabOrder = 0
+    end
+    object rbExactlyDarcDok: TRadioButton
+      AnchorSideLeft.Control = edtDarcDok
+      AnchorSideTop.Control = edtDarcDok
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 41
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 1
+      TabStop = True
+    end
+    object rbIncludeDarcDok: TRadioButton
+      AnchorSideLeft.Control = rbExactlyDarcDok
+      AnchorSideTop.Control = rbExactlyDarcDok
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 64
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 2
+    end
+  end
+  object gbPropMode: TGroupBox
+    AnchorSideLeft.Control = gbPower
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbPower
+    Left = 492
+    Height = 114
+    Top = 514
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'Propagation mode'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 33
+    object rbExactlyPropMode: TRadioButton
+      AnchorSideLeft.Control = cmbPropMode
+      AnchorSideTop.Control = cmbPropMode
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 39
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+    end
+    object rbIncludePropMode: TRadioButton
+      AnchorSideLeft.Control = rbExactlyPropMode
+      AnchorSideTop.Control = rbExactlyPropMode
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 62
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object cmbPropMode: TComboBox
+      AnchorSideLeft.Control = gbPropMode
+      AnchorSideTop.Control = gbPropMode
+      Left = 6
+      Height = 32
+      Top = 6
+      Width = 130
+      AutoSize = False
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      ItemHeight = 0
+      OnExit = cmbPropModeExit
+      TabOrder = 2
+    end
+  end
+  object gbSatName: TGroupBox
+    AnchorSideLeft.Control = gbPropMode
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = gbPower
+    Left = 652
+    Height = 114
+    Top = 514
+    Width = 154
+    BorderSpacing.Left = 6
+    Caption = 'Satellite name'
+    ClientHeight = 96
+    ClientWidth = 152
+    TabOrder = 34
+    object rbExactlySatName: TRadioButton
+      AnchorSideLeft.Control = cmbSatName
+      AnchorSideTop.Control = cmbSatName
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 39
+      Width = 74
+      BorderSpacing.Top = 1
+      Caption = 'Exactly'
+      Checked = True
+      TabOrder = 0
+      TabStop = True
+    end
+    object rbIncludeSatName: TRadioButton
+      AnchorSideLeft.Control = rbExactlySatName
+      AnchorSideTop.Control = rbExactlySatName
+      AnchorSideTop.Side = asrBottom
+      Left = 6
+      Height = 23
+      Top = 62
+      Width = 73
+      Caption = 'Include'
+      TabOrder = 1
+    end
+    object cmbSatName: TComboBox
+      AnchorSideLeft.Control = gbSatName
+      AnchorSideTop.Control = gbSatName
+      Left = 6
+      Height = 32
+      Top = 6
+      Width = 130
+      AutoSize = False
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 6
+      ItemHeight = 0
+      OnExit = cmbSatNameExit
+      TabOrder = 2
+    end
+  end
+  object dlgOpen: TOpenDialog
+    Filter = 'filter *.fil|*.fil'
+    Left = 72
+    Top = 584
+  end
+  object dlgSave: TSaveDialog
+    DefaultExt = '.fil'
+    Filter = 'filter *.fil|*.fil'
+    Options = [ofOverwritePrompt, ofNoTestFileCreate, ofEnableSizing, ofViewDetail]
+    Left = 16
+    Top = 584
+  end
+end

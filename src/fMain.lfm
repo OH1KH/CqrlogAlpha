@@ -1,0 +1,2910 @@
+object frmMain: TfrmMain
+  Left = 209
+  Height = 669
+  Top = 44
+  Width = 986
+  HelpType = htKeyword
+  HelpKeyword = 'help/index.html'
+  HorzScrollBar.Page = 672
+  VertScrollBar.Page = 272
+  ActiveControl = Panel2
+  AutoScroll = True
+  Caption = 'CQRLOG for Linux'
+  ClientHeight = 644
+  ClientWidth = 986
+  Constraints.MinHeight = 148
+  Constraints.MinWidth = 536
+  Icon.Data = {
+    BE1000000000010001002020000001002000A810000016000000280000002000
+    0000400000000100200000000000001000006400000064000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000000000000000000000787F873C000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000000000009CA4AB74000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000000000009DA5AD63A6AAAF000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000087919D00A5ADB4507078870C000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000969EA76700000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000E4FBFD001F7FB000CAF0F8000000
+    0000D7CFBF0000000000BDFFFF01A0AEB90E969EA64E7F859100000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000CCC9C20100000000E1FAFD07DFF9FD06D1F8
+    FE05C8DCDD0FBEE3EB41C2DEE43397A4AD6D00000000E5ECF600D8EDEC000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000000000000000000000000000ADEB
+    F800000000009AB9BD0289AFB805A0C6CF23B4D1D71BCADCE010D7F0F435CDE4
+    E962C7DFE48BC6E2E8C6C9E1E6C7ADC0C6A6C9E3E737BBE5E803000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00000000000097B3BA27A0BCC48EA7C4CBB4B8D4DB9FD0E5E970D6E8EA9DD0E4
+    E7D5C8E1E6F2C4E3EAFCC0D7DCFFC9DFE3EAC7DFE478BDD9DF1B29FFFF00D9E8
+    ED00000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000000000000000000000B4EDF800000000000000
+    000095ABB11DA0B7BC91AFCAD0D2C0DAE0D6CADFE3DED0E2E5D5D2E4E7DCCCE0
+    E3F3CCE3E9FCC3D8DDFFC0D3D7FFCCE2E7F6C3DCE1B9B9D3D945D7E6EF040000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000A7FCFF0195CE
+    DD18A2C3CB9DB6D1D6C7C9DBDFD4D3E4E7E1D9E8ECE4CFE1E4F1CBDDE1F6CEE1
+    E4FDCCE1E6FFC6D8DBFFCBDEE1FFD1E7EBFBBED8DECDB2CED54BBDD4D80AEEF7
+    FC00000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000000000000000000000000000008EFFFF019BBD
+    C765B2CED4B6C6DFE5CFCFE9F0E0D8ECF0E7D3E5E8F1D0E1E4F7D1E2E5FCD1E4
+    E8FECADADEFFDAEAEEFFD8E9EDFED1E7ECFABED8DEE7AEC6CB81A5C4CC03A1D1
+    C400000000000000000000000000000000000000000000000000000000000000
+    00000000000000000000000000000000000000000000A1EDF80199BAC228B3CE
+    D5B5C8DEE4DED5E7ECE2DAECEFE6DBECEEEED6E6E8F6D2E4E7FAD2E6E9FDCEE2
+    E7FFD3E6EAFFD8E9ECFFD8E9ECFDCBE6EAF7BCD5DAE4A9C0C6ADA4C0CB04F7F9
+    FE00000000000000000000000000000000000000000000000000000000000000
+    000000000000000000000000000000000000BDFBFF0197B8C30CAFC5CB91C5DC
+    E1CFD5E9EDDEDCF0F4E7E0F1F4EFDCEBEEF8DAEAEBFACEE1E5FECAE4E9FFCDE4
+    E9FFD5E9EDFFD5E7E9FDD7EAEDF7C8E2E7F6B6D0D5E4A9BFC599A5C0C70DEAEA
+    ED00000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000C3F3F9019ECAD407A9BEC476C0D4D9D0D4E6
+    E9DEDEEDEFE0DFEEF1E7DAEAECF4D7E7E9F8D0E2E7FDC6E0E6FFC5DEE6FFCFE5
+    EAFFD5EAEDFEDAE9ECFBD1E8EDF5C0E0E7EEB3C8CDCFA1BDC474BBD2D8020000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000AFF1FA00E0EEF200B8FFFF01A4B3B944B9C6CBC3D2DFE3D9DEED
+    EFE5E2F1F3F1E4F1F3F5E1EEF0F7D7E5E8FBC7DFE3FEBBD6E0FFCAE3E9FFD5E7
+    EAFEDCEDEEFCDEEBEEF5CCE6ECEFBFDAE0E1ACC4CAC39ABBC424C3FFFF000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000A9F3FD0000000000C5FFFF0196BFCF1DABBEC9B7C6D8E1DAD9EBF0E3E4F1
+    F5E6E8F3F5EBE7F2F4F2DBEAECFACAE1E5FEB7D0DAFFC7E0E5FFD3E6E9FEDCEB
+    EDFDE5F1F2F8E0EDEEF1CDE1E5E6B7D4DADEA8B9BC8D99B7BD0F000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000A5EBF7028FC6D9098B9CB185A8B8C9CFC5D3DFDCD7E4ECE4E0EC
+    F1EBE3F0F3F2DDEBEEFACFE3E6FEB6CDD7FFC2DBE1FFDBEBEDFEDEECEEFCE4F0
+    F1F9E7F2F3F3DCECEEEFC6DBDFDBB0CBD2D49EB2B75700000000ACDFEB000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000000000007388A65290A3BBCAADBFD1DFC1D2E0E8CEDEE8EDDAE8
+    EEF3DBEAEEF9CFE4E7FEB5CDD7FFC5DDE3FFDAEAECFDE2EFF0FCE6F1F1F8E7F4
+    F5F4E0EEF0EBD3E4E8E7BBCED3CEA3BBC1B993BDC61CB0FFFF00000000000000
+    000000000000000000000000000000000000000000000000000000000000344E
+    7F00000000003A445C61516181CB758CACCD97ADC6D8ADC4D7E5BDD5E2F0C2D9
+    E5F5C5DEE7FCB0CBD7FFC0DAE2FFD5E8ECFEE2F0F2F8E6F3F4FAEAF5F6F1E2F3
+    F5EED4E5E7E2C2D5D8D6ABBFC4C294AFB556A2FFFF0200000000000000000000
+    00000000000000000000000000000000000000000000B5ECF900000000001329
+    6B012F48725F3B4F75E4494B5EEE657087E68099B8DB8CA7C3E491AFC7EF93AF
+    C7F99BB5CCFFB0D0DDFEC5E0E9FECFE9EFFBD9EDF2F2E1F2F4F5E1F4F6E9D9EC
+    EFDEC7DCE0DDB1C4C8C49FB2B77B90DDF00BD4FDFD0000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000002D2F
+    43403532428E43373FAC53464EBA59515DD05C6275EA596A85EA566E8FF36C81
+    A2FE90AAC5FEA4C9DBF9B4D8E5F8C4E2EDF6CBE8F1ECD5EBF1F0D0EDF3DFCAE1
+    E5CCB9CED3CCA3BBC18496C1CD0EA4EFFC01B7ECF70000000000000000000000
+    00000000000000000000000000000000000035425E00000000002E37526D3328
+    33EF3D282CFD463135FF4C3439FF4E383CF8443439E035313CF648546FFE6077
+    9AFD7C97B4F88FB0CAE8ABD0DFEFB9D4E2EEB8DCEAEDC8DFE8E4C6E2EBCDBBD2
+    D8A9AEC5CB6299D2E111A9F8FF0200000000ADECF70000000000000000000000
+    0000000000000000000000000000000000002A406E0632374F8D362A32ED3D29
+    2BF6472F32F94C3439F8453135F938272BFB2B1F26FD38425CFF41506EFC4964
+    8DF07290B1EF809CBBDF99BCD1DEA4BED2E0AECCDCE4BACED9D4B8D4DDADACC8
+    CF4F96E6F80BA1EDFC03A9DAEC00B6F5FE000000000000000000000000000000
+    0000000000000000000000000000343B550F34374DB6372A33F03E292DF6422F
+    35FA422F36FA38292EFB2B1E23FC231B20FE313243FF32303FF93A3D4FF94B6B
+    95E66782A7E06F8AAEDD809EBACE86A5BECD98B0C5CFA5B9C7BAA7C7D34998D6
+    E30AB9FCFF010000000000000000000000000000000000000000000000000000
+    000036579200000000002C4B84013047728636384FF13C313DF541343EF74031
+    3AF9372830FB281C20FD272028FF2C2834FE322327FD382930EB403F51FB4765
+    8AE2516E96D855729BD36381A3C26E8CA9BE7B92AA9393A5B54193F5FF0698E5
+    FA00000000000000000000000000000000000000000000000000000000000000
+    00000000000032508125304F80BF2F4570C02D3856B12F3041D2303247EB2E31
+    46FC303448FE30384FFE2D2531FE302227FC3C292CFB3E2E33DD3D3746F93C49
+    62E53B5073D9415F8ABE445E84A45874928E6C8EA611FFFFFF01ABEDF6000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000037558505314F7FBA2D497ADF2B4676E72B4676F42E4773FC2F4A77FF324F
+    7DF2304C77F9353242FB382B33FB392629F93A292EF73C2A2ECB342D39F23232
+    43E52E456EB8304B747E3550732C7DB6C8020000000000000000BAF1F9000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00002E4A770C2D4A7897294372D82B3759EF2D4065F92D4673FB324E7DCB3748
+    6AF53A303BFA3B2B32F8352427F8382528F5322325F934252AB22C2E42EA2A35
+    519B233B67363A5D7C050000000000000000B2F3FB0000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    000000000000294573322D436DBA303046E4303044EB353951AF39313FF93928
+    2EF839262AF7332328F7302023F2322126F22E242DA72F2936E0283D656F243C
+    73040000000000000000A9EEFC00000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    00002B4B7E0000000000294470102743716B2E497891323E5FE7363345ED3729
+    31F4332D3CF02D2A3AEE2E3045E52C3048C72E3855362C3B5B1E000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000023336B000000000027447806304F823133405F4C333C
+    5A512D3D5F462A3D64312948791D000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000000000000000000000000000000000000000000000000000000000000000
+    0000
+  }
+  KeyPreview = True
+  Menu = mnuMain
+  OnActivate = FormActivate
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnKeyUp = FormKeyUp
+  OnShow = FormShow
+  ShowHint = True
+  LCLVersion = '2.2.6.0'
+  object sbMain: TStatusBar
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 19
+    Top = 625
+    Width = 986
+    Panels = <    
+      item
+        Width = 100
+      end    
+      item
+        Width = 150
+      end    
+      item
+        Width = 140
+      end    
+      item
+        Width = 130
+      end    
+      item
+        Alignment = taRightJustify
+        BidiMode = bdRightToLeft
+        Width = 100
+      end>
+    SimplePanel = False
+  end
+  object pnlButtons: TPanel
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 40
+    Top = 579
+    Width = 986
+    Align = alBottom
+    BorderSpacing.Bottom = 6
+    ClientHeight = 40
+    ClientWidth = 986
+    ParentColor = False
+    TabOrder = 0
+    OnClick = pnlButtonsClick
+    object btnNewQSO: TBitBtn
+      AnchorSideLeft.Control = pnlButtons
+      AnchorSideTop.Control = pnlButtons
+      Left = 10
+      Height = 33
+      Top = 5
+      Width = 130
+      Action = acNewQSO
+      AutoSize = True
+      BorderSpacing.Left = 9
+      BorderSpacing.Top = 4
+      Constraints.MinWidth = 130
+      Images = imgMain1
+      ImageIndex = 0
+      TabOrder = 0
+    end
+    object btnViewQSO: TBitBtn
+      AnchorSideLeft.Control = btnNewQSO
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = btnNewQSO
+      AnchorSideTop.Side = asrCenter
+      Left = 150
+      Height = 33
+      Top = 5
+      Width = 130
+      Action = acView
+      AutoSize = True
+      BorderSpacing.Left = 10
+      Constraints.MinWidth = 130
+      Images = imgMain1
+      ImageIndex = 1
+      TabOrder = 1
+    end
+    object btnClose: TBitBtn
+      AnchorSideTop.Control = btnNewQSO
+      AnchorSideRight.Control = pnlButtons
+      AnchorSideRight.Side = asrBottom
+      Left = 846
+      Height = 33
+      Top = 5
+      Width = 130
+      Action = acClose
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 9
+      Constraints.MinWidth = 130
+      Images = imgMain1
+      ImageIndex = 4
+      TabOrder = 2
+    end
+    object btnDeleteQSO: TBitBtn
+      AnchorSideTop.Control = btnNewQSO
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = btnClose
+      Left = 706
+      Height = 33
+      Top = 5
+      Width = 130
+      Action = acDeleteQSO
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 10
+      Constraints.MinWidth = 130
+      Images = imgMain1
+      ImageIndex = 2
+      TabOrder = 3
+    end
+    object btnSort: TBitBtn
+      AnchorSideTop.Control = btnNewQSO
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = btnDeleteQSO
+      Left = 566
+      Height = 33
+      Top = 5
+      Width = 130
+      Action = acSort
+      Anchors = [akTop, akRight]
+      AutoSize = True
+      BorderSpacing.Right = 10
+      Constraints.MinWidth = 130
+      Images = imgMain1
+      ImageIndex = 6
+      TabOrder = 4
+    end
+    object BitBtn5: TBitBtn
+      AnchorSideLeft.Control = btnViewQSO
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = btnNewQSO
+      AnchorSideTop.Side = asrCenter
+      Left = 290
+      Height = 33
+      Top = 5
+      Width = 130
+      Action = acEditQSO
+      AutoSize = True
+      BorderSpacing.Left = 10
+      Constraints.MinWidth = 130
+      Images = imgMain1
+      ImageIndex = 7
+      TabOrder = 5
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 38
+    Top = 31
+    Width = 986
+    Align = alTop
+    AutoSize = True
+    BorderSpacing.Top = 5
+    BorderSpacing.InnerBorder = 5
+    BevelOuter = bvNone
+    ClientHeight = 38
+    ClientWidth = 986
+    TabOrder = 1
+    object lblQSOInLog: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideTop.Control = Panel2
+      AnchorSideTop.Side = asrCenter
+      Left = 10
+      Height = 17
+      Top = 11
+      Width = 72
+      Alignment = taRightJustify
+      BorderSpacing.Left = 10
+      Caption = 'QSO in log:'
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblQSOCount: TLabel
+      AnchorSideLeft.Control = lblQSOInLog
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = lblQSOInLog
+      AnchorSideBottom.Side = asrBottom
+      Left = 92
+      Height = 17
+      Top = 11
+      Width = 45
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 10
+      Caption = '10000'
+      Font.Style = [fsBold]
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+      OnClick = lblQSOCountClick
+    end
+    object lblDXCCWorked: TLabel
+      AnchorSideLeft.Control = Panel2
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = lblQSOInLog
+      Left = 473
+      Height = 17
+      Top = 11
+      Width = 41
+      Caption = 'DXCC:'
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblDXCC: TLabel
+      AnchorSideLeft.Control = lblDXCCWorked
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = lblDXCCWorked
+      AnchorSideBottom.Side = asrBottom
+      Left = 524
+      Height = 17
+      Top = 11
+      Width = 27
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 10
+      Caption = '238'
+      Font.Style = [fsBold]
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblDXCCConfirmed: TLabel
+      AnchorSideTop.Control = lblQSOInLog
+      AnchorSideRight.Control = lblDXCCCmf
+      Left = 839
+      Height = 17
+      Top = 11
+      Width = 74
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 10
+      Caption = 'DXCC CFM:'
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblDXCCCmf: TLabel
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideRight.Control = Panel2
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = lblDXCCConfirmed
+      AnchorSideBottom.Side = asrBottom
+      Left = 923
+      Height = 17
+      Top = 11
+      Width = 53
+      Anchors = [akRight, akBottom]
+      AutoSize = False
+      BorderSpacing.Right = 10
+      Caption = '150'
+      Font.Style = [fsBold]
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+    end
+  end
+  object dbgrdMain: TDBGrid
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 422
+    Top = 69
+    Width = 986
+    Align = alClient
+    Color = clWindow
+    Columns = <>
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgMultiselect]
+    PopupMenu = popWebSearch
+    Scrollbars = ssAutoBoth
+    TabOrder = 2
+    TitleStyle = tsNative
+    OnCellClick = dbgrdMainCellClick
+    OnColumnMoved = dbgrdMainColumnMoved
+    OnColumnSized = dbgrdMainColumnSized
+    OnDrawColumnCell = dbgrdMainDrawColumnCell
+    OnEnter = dbgrdMainEnter
+    OnExit = dbgrdMainExit
+    OnKeyUp = dbgrdMainKeyUp
+  end
+  object toolMain: TToolBar
+    Left = 0
+    Height = 26
+    Top = 0
+    Width = 986
+    BorderWidth = 4
+    EdgeOuter = esRaised
+    Flat = False
+    Images = imgMain1
+    TabOrder = 3
+    object ToolButton18: TToolButton
+      Left = 302
+      Top = 2
+      Action = acSelRecord
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton1: TToolButton
+      Left = 1
+      Top = 2
+      Action = acNewQSO
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton2: TToolButton
+      Left = 24
+      Top = 2
+      Action = acView
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton3: TToolButton
+      Left = 47
+      Top = 2
+      Action = acEditQSO
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton4: TToolButton
+      Left = 70
+      Top = 2
+      Action = acDeleteQSO
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton5: TToolButton
+      Left = 124
+      Top = 2
+      Action = acPreferences
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton7: TToolButton
+      Left = 116
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton7'
+      Style = tbsSeparator
+    end
+    object ToolButton6: TToolButton
+      Left = 147
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton6'
+      Style = tbsSeparator
+    end
+    object ToolButton8: TToolButton
+      Left = 155
+      Top = 2
+      Action = acSort
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton9: TToolButton
+      Left = 178
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton9'
+      Style = tbsSeparator
+    end
+    object ToolButton10: TToolButton
+      Left = 186
+      Top = 2
+      Action = acDXCCCfm
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton11: TToolButton
+      Left = 217
+      Top = 2
+      Action = acCreateFilter
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton12: TToolButton
+      Left = 209
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton12'
+      Style = tbsSeparator
+    end
+    object ToolButton13: TToolButton
+      Left = 248
+      Top = 2
+      Action = acGrayline
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton14: TToolButton
+      Left = 240
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton14'
+      Style = tbsSeparator
+    end
+    object ToolButton15: TToolButton
+      Left = 271
+      Hint = 'TRX control'
+      Top = 2
+      Action = acTRXControl
+      ImageIndex = 11
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton16: TToolButton
+      Left = 294
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton16'
+      Style = tbsSeparator
+    end
+    object ToolButton17: TToolButton
+      Left = 93
+      Top = 2
+      Action = acSearch
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton19: TToolButton
+      Left = 325
+      Top = 2
+      Action = acUnselRecord
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton20: TToolButton
+      Left = 356
+      Top = 2
+      Action = acSelAll
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton21: TToolButton
+      Left = 379
+      Top = 2
+      Action = acUnselAll
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton22: TToolButton
+      Left = 348
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton22'
+      Style = tbsSeparator
+    end
+    object ToolButton23: TToolButton
+      Left = 402
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton23'
+      Style = tbsSeparator
+    end
+    object ToolButton24: TToolButton
+      Left = 410
+      Hint = 'Upload data to LoTW'
+      Top = 2
+      Action = acUploadQSOToLoTWWeb
+      ImageIndex = 23
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton25: TToolButton
+      Left = 433
+      Top = 2
+      Action = acDownloadDataFromLoTW
+      ImageIndex = 24
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton26: TToolButton
+      Left = 564
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton26'
+      Style = tbsSeparator
+    end
+    object ToolButton27: TToolButton
+      Left = 572
+      Hint = 'Refresh data'
+      Top = 2
+      Action = acRefresh
+      ImageIndex = 15
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton28: TToolButton
+      Left = 595
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton28'
+      Style = tbsSeparator
+    end
+    object ToolButton29: TToolButton
+      Left = 603
+      Top = 2
+      Action = acAttach
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton30: TToolButton
+      Left = 626
+      Hint = 'Call has a QSL image'
+      Top = 2
+      Action = acQSLImage
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton31: TToolButton
+      Left = 518
+      Hint = 'Search on qrz.com'
+      Top = 2
+      Action = acQRZ
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton32: TToolButton
+      Left = 456
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton32'
+      Style = tbsSeparator
+    end
+    object ToolButton33: TToolButton
+      Left = 541
+      Hint = 'Search on HamQTH.com'
+      Top = 2
+      Action = acHamQTH
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton34: TToolButton
+      Left = 464
+      Top = 2
+      Action = aceQSLUp
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton35: TToolButton
+      Left = 487
+      Top = 2
+      Action = aceQSLDwn
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object ToolButton36: TToolButton
+      Left = 510
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton36'
+      Style = tbsSeparator
+    end
+    object ToolButton37: TToolButton
+      Left = 649
+      Hint = 'AutoSize column width'
+      Top = 2
+      Action = acAutoSizeColumns
+      ParentShowHint = False
+      ShowHint = True
+      Style = tbsCheck
+    end
+  end
+  object pnlDetails: TPanel
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 88
+    Top = 491
+    Width = 986
+    Align = alBottom
+    BevelOuter = bvNone
+    ClientHeight = 88
+    ClientWidth = 986
+    TabOrder = 5
+    object lblCommentForQSO: TLabel
+      AnchorSideLeft.Control = pnlDetails
+      AnchorSideTop.Control = pnlDetails
+      Left = 10
+      Height = 17
+      Top = 10
+      Width = 122
+      BorderSpacing.Left = 10
+      BorderSpacing.Top = 10
+      Caption = 'Comment for QSO:'
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+    end
+    object lblAward: TLabel
+      AnchorSideLeft.Control = lblCommentForQSO
+      AnchorSideTop.Control = lblCommentForQSO
+      AnchorSideTop.Side = asrBottom
+      Left = 10
+      Height = 17
+      Top = 37
+      Width = 45
+      BorderSpacing.Top = 10
+      Caption = 'Award:'
+      Layout = tlBottom
+      ParentColor = False
+      ParentFont = False
+    end
+    object dbtComment: TDBText
+      AnchorSideLeft.Control = lblCommentForQSO
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = lblCommentForQSO
+      AnchorSideBottom.Side = asrBottom
+      Left = 138
+      Height = 17
+      Top = 10
+      Width = 85
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 6
+      Layout = tlBottom
+      ParentColor = False
+    end
+    object dbtAward: TDBText
+      AnchorSideLeft.Control = lblAward
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideBottom.Control = lblAward
+      AnchorSideBottom.Side = asrBottom
+      Left = 65
+      Height = 17
+      Top = 37
+      Width = 62
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 10
+      Layout = tlBottom
+      ParentColor = False
+    end
+    object Panel1: TPanel
+      Left = 566
+      Height = 62
+      Top = 0
+      Width = 210
+      Align = alRight
+      BevelOuter = bvNone
+      ClientHeight = 62
+      ClientWidth = 210
+      TabOrder = 0
+      object lblQSLSDate: TLabel
+        AnchorSideLeft.Control = Panel1
+        AnchorSideTop.Control = Panel1
+        Left = 0
+        Height = 17
+        Top = 10
+        Width = 70
+        BorderSpacing.Top = 10
+        Caption = 'QS_S date:'
+        Layout = tlBottom
+        ParentColor = False
+        ParentFont = False
+      end
+      object dbtQSLSDate: TDBText
+        AnchorSideLeft.Control = lblQSLSDate
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideBottom.Control = lblQSLSDate
+        AnchorSideBottom.Side = asrBottom
+        Left = 76
+        Height = 17
+        Top = 10
+        Width = 85
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Left = 6
+        Layout = tlBottom
+        ParentColor = False
+      end
+      object dbtQSLRDate: TDBText
+        AnchorSideLeft.Control = lblQSLRDate
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideBottom.Control = lblQSLRDate
+        AnchorSideBottom.Side = asrBottom
+        Left = 77
+        Height = 17
+        Top = 37
+        Width = 86
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Left = 6
+        Layout = tlBottom
+        ParentColor = False
+      end
+      object lblQSLRDate: TLabel
+        AnchorSideLeft.Control = lblQSLSDate
+        AnchorSideTop.Control = lblQSLSDate
+        AnchorSideTop.Side = asrBottom
+        Left = 0
+        Height = 17
+        Top = 37
+        Width = 71
+        BorderSpacing.Top = 10
+        Caption = 'QS_R date:'
+        Layout = tlBottom
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object Panel3: TPanel
+      Left = 776
+      Height = 62
+      Top = 0
+      Width = 210
+      Align = alRight
+      BevelOuter = bvNone
+      ClientHeight = 62
+      ClientWidth = 210
+      TabOrder = 1
+      object lblLoTWQSLSDate: TLabel
+        AnchorSideLeft.Control = Panel3
+        AnchorSideTop.Control = Panel3
+        Left = 0
+        Height = 17
+        Top = 10
+        Width = 110
+        BorderSpacing.Top = 10
+        Caption = 'LoTW QS_S date:'
+        Layout = tlBottom
+        ParentColor = False
+        ParentFont = False
+      end
+      object dbtLoTWQSLS: TDBText
+        AnchorSideLeft.Control = lblLoTWQSLSDate
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideBottom.Control = lblLoTWQSLSDate
+        AnchorSideBottom.Side = asrBottom
+        Left = 116
+        Height = 17
+        Top = 10
+        Width = 90
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Left = 6
+        Layout = tlBottom
+        ParentColor = False
+      end
+      object dbtLoTWQSLR: TDBText
+        AnchorSideLeft.Control = lblLoTWQSLRDate
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Side = asrCenter
+        AnchorSideBottom.Control = lblLoTWQSLRDate
+        AnchorSideBottom.Side = asrBottom
+        Left = 117
+        Height = 17
+        Top = 37
+        Width = 91
+        Anchors = [akLeft, akBottom]
+        BorderSpacing.Left = 6
+        BorderSpacing.Top = 10
+        Layout = tlBottom
+        ParentColor = False
+      end
+      object lblLoTWQSLRDate: TLabel
+        AnchorSideLeft.Control = lblLoTWQSLSDate
+        AnchorSideTop.Control = lblLoTWQSLSDate
+        AnchorSideTop.Side = asrBottom
+        Left = 0
+        Height = 17
+        Top = 37
+        Width = 111
+        BorderSpacing.Top = 10
+        Caption = 'LoTW QS_R date:'
+        Layout = tlBottom
+        ParentColor = False
+        ParentFont = False
+      end
+    end
+    object pnlDistance: TPanel
+      Left = 0
+      Height = 26
+      Top = 62
+      Width = 986
+      Align = alBottom
+      ClientHeight = 26
+      ClientWidth = 986
+      TabOrder = 2
+      Visible = False
+      object lblDistance: TLabel
+        AnchorSideLeft.Control = pnlDistance
+        AnchorSideTop.Control = pnlDistance
+        AnchorSideTop.Side = asrCenter
+        Left = 11
+        Height = 17
+        Top = 5
+        Width = 61
+        BorderSpacing.Left = 10
+        Caption = 'Distance:'
+        ParentColor = False
+        Visible = False
+      end
+      object lblDist: TLabel
+        AnchorSideLeft.Control = lblDistance
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = lblDistance
+        AnchorSideTop.Side = asrCenter
+        AnchorSideBottom.Side = asrBottom
+        Left = 78
+        Height = 17
+        Top = 5
+        Width = 42
+        BorderSpacing.Left = 6
+        Caption = 'lblDist'
+        ParentColor = False
+      end
+      object lblLongest: TLabel
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = lblDistance
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = pnlDistance
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 908
+        Height = 17
+        Top = 5
+        Width = 67
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 10
+        Caption = 'lblLongest'
+        ParentColor = False
+      end
+      object lblLongestDist: TLabel
+        AnchorSideTop.Control = lblDistance
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblLongest
+        Left = 815
+        Height = 17
+        Top = 5
+        Width = 87
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 6
+        Caption = 'Longest QSO:'
+        ParentColor = False
+      end
+      object lblSumDistances: TLabel
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = lblDistance
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = lblSumDist
+        Left = 354
+        Height = 17
+        Top = 5
+        Width = 94
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 6
+        Caption = 'Total distance:'
+        ParentColor = False
+      end
+      object lblSumDist: TLabel
+        AnchorSideLeft.Control = pnlDistance
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = lblDistance
+        AnchorSideTop.Side = asrCenter
+        AnchorSideBottom.Side = asrBottom
+        Left = 454
+        Height = 17
+        Top = 5
+        Width = 79
+        Caption = 'lblSumDist  '
+        ParentColor = False
+      end
+    end
+  end
+  object mnuMain: TMainMenu
+    Images = imgMain1
+    Left = 64
+    Top = 272
+    object mnuFile: TMenuItem
+      Caption = 'File'
+      object MenuItem7: TMenuItem
+        Action = acNewQSO
+        OnClick = acNewQSOExecute
+      end
+      object MenuItem8: TMenuItem
+        Action = acView
+        ShortCut = 114
+        OnClick = acViewExecute
+      end
+      object MenuItem5: TMenuItem
+        Action = acEditQSO
+        ShortCut = 115
+        OnClick = acEditQSOExecute
+      end
+      object MenuItem82: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem81: TMenuItem
+        Action = acEditDetails
+        OnClick = acEditDetailsExecute
+      end
+      object MenuItem65: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem64: TMenuItem
+        Action = acGroupEdit
+        OnClick = acGroupEditExecute
+      end
+      object MenuItem63: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem23: TMenuItem
+        Action = acSearch
+        OnClick = acSearchExecute
+      end
+      object MenuItem9: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem1: TMenuItem
+        Action = acDeleteQSO
+        ShortCut = 119
+        OnClick = acDeleteQSOExecute
+      end
+      object MenuItem50: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem49: TMenuItem
+        Action = acRemoveDupes
+      end
+      object MenuItem6: TMenuItem
+        Caption = '-'
+      end
+      object MenuItemImport: TMenuItem
+        Caption = 'Import'
+        object MenuItem16: TMenuItem
+          Action = acImportADIF
+          OnClick = acImportADIFExecute
+        end
+        object MenuItem33: TMenuItem
+          Caption = '-'
+        end
+        object mnuDXCCData: TMenuItem
+          Caption = 'DXCC data'
+          OnClick = mnuDXCCDataClick
+        end
+        object MenuItem66: TMenuItem
+          Action = acImpQslMgrs
+          OnClick = acImpQslMgrsExecute
+        end
+      end
+      object MenuItem26: TMenuItem
+        Caption = 'Export'
+        object MenuItem27: TMenuItem
+          Action = acExADIF
+          OnClick = acExADIFExecute
+        end
+        object MenuItem28: TMenuItem
+          Action = acExHTML
+          OnClick = acExHTMLExecute
+        end
+        object MenuItem47: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem48: TMenuItem
+          Action = acSOTAExport
+        end
+        object MenuItem89: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem101: TMenuItem
+          Action = acEDIExport
+        end
+        object MenuItem102: TMenuItem
+          Action = acCabrilloExport
+        end
+      end
+      object MenuItem10: TMenuItem
+        Caption = 'Backup whole log (ADIF)'
+        Hint = 'Same as Auto backup on program exit.'#10'Check preferences/Exit & Auto backup settings.'
+        OnClick = MenuItem10Click
+      end
+      object MenuItem15: TMenuItem
+        Caption = 'Backup selected qsos (ADIF)'
+        OnClick = MenuItem15Click
+      end
+      object MenuItem14: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem3: TMenuItem
+        Action = acPreferences
+        Caption = 'Preferences'
+        OnClick = acPreferencesExecute
+      end
+      object MenuItem4: TMenuItem
+        Caption = '-'
+      end
+      object mnuClose: TMenuItem
+        Action = acClose
+        OnClick = acCloseExecute
+      end
+    end
+    object MenuItemView: TMenuItem
+      Caption = 'View'
+      object mnuShowToolBar: TMenuItem
+        Action = acShowToolBar
+        OnClick = acShowToolBarExecute
+      end
+      object mnuShowButtons: TMenuItem
+        Action = acButtons
+        OnClick = acButtonsExecute
+      end
+      object mnuShowDetails: TMenuItem
+        Action = acPnlDetails
+        OnClick = acPnlDetailsExecute
+      end
+    end
+    object MenuItemFilter: TMenuItem
+      Caption = 'Filter'
+      object mnuCreateFilter: TMenuItem
+        Action = acCreateFilter
+        OnClick = acCreateFilterExecute
+      end
+      object mnuLoadFilter: TMenuItem
+        Action = acCreateLoadFilter
+        Caption = 'Load from file'
+      end
+      object mnuCancelFilter: TMenuItem
+        Action = acCancelFilter
+        OnClick = acCancelFilterExecute
+      end
+      object MenuItem104: TMenuItem
+        Caption = '-'
+      end
+      object mnuContestFilter: TMenuItem
+        Action = acCreateContestFilter
+        OnClick = acCreateContestFilterExecute
+      end
+      object MenuItem79: TMenuItem
+        Caption = '-'
+      end
+      object mnuSQLConsole: TMenuItem
+        Action = acSQL
+        OnClick = acSQLExecute
+      end
+    end
+    object mnuQSL: TMenuItem
+      Caption = 'QSL'
+      object mnuQSL_S: TMenuItem
+        Caption = 'QSL sent'
+        Hint = 'Mark QSL send'
+        object mnuBuro: TMenuItem
+          Action = acQSL_S
+          OnClick = acQSL_SExecute
+        end
+        object mnuDirect: TMenuItem
+          Caption = 'Direct (D)'
+          OnClick = mnuDirectClick
+        end
+        object mnuEQSL: TMenuItem
+          Caption = 'eQSL (E)'
+          OnClick = mnuEQSLClick
+        end
+        object mnuManager: TMenuItem
+          Caption = 'Manager (M)'
+          OnClick = mnuManagerClick
+        end
+        object mnuDoNotSend: TMenuItem
+          Caption = 'Do not send (N)'
+          OnClick = mnuDoNotSendClick
+        end
+        object mnuManagerDirect: TMenuItem
+          Caption = 'Manager direct (MD)'
+          OnClick = mnuManagerDirectClick
+        end
+        object mnuMB: TMenuItem
+          Caption = 'Manager buro (MB)'
+          OnClick = mnuMBClick
+        end
+        object mnuCE: TMenuItem
+          Caption = 'Confirmed by email (CE)'
+          OnClick = mnuCEClick
+        end
+        object mnuOR: TMenuItem
+          Caption = 'Online request (OR)'
+          OnClick = mnuORClick
+        end
+        object mnuOQRS: TMenuItem
+          Caption = 'Online QSL request system (OQRS)'
+          OnClick = mnuOQRSClick
+        end
+        object MenuItem17: TMenuItem
+          Caption = '-'
+        end
+        object MenuItemWillSend: TMenuItem
+          Caption = 'Will send'
+          object mnuSB: TMenuItem
+            Caption = 'Buro (SB)'
+            ShortCut = 16471
+            OnClick = mnuSBClick
+          end
+          object mnuSD: TMenuItem
+            Caption = 'Direct (SD)'
+            OnClick = mnuSDClick
+          end
+          object mnuSE: TMenuItem
+            Caption = 'eQSL (SE)'
+            OnClick = mnuSEClick
+          end
+          object mnuSM: TMenuItem
+            Caption = 'Manager (SM)'
+            OnClick = mnuSMClick
+          end
+          object mnuSMD: TMenuItem
+            Caption = 'Manager direct (SMD)'
+            OnClick = mnuSMDClick
+          end
+          object mnuSMB: TMenuItem
+            Caption = 'Manager buro (SMB)'
+            OnClick = mnuSMBClick
+          end
+          object mnuSCE: TMenuItem
+            Caption = 'Confirmed by email (SCE)'
+            OnClick = mnuSCEClick
+          end
+        end
+      end
+      object mnuQSL_R: TMenuItem
+        Action = acQSL_R
+        OnClick = acQSL_RExecute
+      end
+      object MenuItem55: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem56: TMenuItem
+        Caption = 'LoTW'
+        object MenuItem57: TMenuItem
+          Caption = 'Import'
+          object MenuItem58: TMenuItem
+            Action = acImportLoTWADIF
+            OnClick = acImportLoTWADIFExecute
+          end
+          object MenuItem59: TMenuItem
+            Action = acDownloadDataFromLoTW
+            Bitmap.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              200000000000000400006400000064000000000000000000000000000000282A
+              2900818583008B908E008B908E008B908E00B86A37FFC38458FFD38B68FFE18F
+              70FFDC8D6CFFDA8B6DFFD78A6EFFCD8B6CFFAB6D44FFA65F2EFF7B462300B667
+              35FFBB6732FFBA6630FFBA6630FFBA6530FFC68355FFEFCEBAFFDDFFFFFF87EE
+              C7FFA2F4D7FFA2F6D7FF8CEEC7FFE0FFFFFFDDA285FFAB6A3EFFB96732FFF7F1
+              EAFFF7ECDFFFF6EADEFFF6EADCFFF6EADCFFC37F51FFEFB69AFFEAF3E8FF51BF
+              84FF6FC998FF71C999FF54BF84FFE4F4E9FFDD9C7BFFAA693AFFBF7138FFF5EB
+              DFFFFDBF68FFFBBE65FFFCBE64FFFCBE64FFC48154FFEAB697FFF3F3EAFFEDF1
+              E6FFEFF1E6FFEFF0E6FFEDF1E5FFF3F5EDFFD59C79FFB07044FFC1783CFFF7ED
+              E3FFFDC26EFFFFD79EFFFFD69BFFFFD798FFC98B61FFE6B592FFE2A781FFE1A7
+              81FFDEA37DFFDCA17BFFDB9F79FFD99E77FFD49A73FFBB7E57FFC47C40FFF7F0
+              E6FFF8B455FFF7B554FFF8B453FFF8B253FFCA8D65FFEAB899FFDDA57EFFDDA6
+              80FFDBA37CFFD9A07AFFD9A079FFD89F78FFD89E78FFBF845DFFC58245FFF8F2
+              EBFFFEE7D6FFFDE7D6FFFDE7D6FFFDE6D5FFC8885DFFEFBFA1FFFDFCFAFFFEFC
+              FBFFFEFDFDFFFEFDFCFFFDFBFAFFFDFCFBFFDDA885FFC17F53FFC68447FFF9F3
+              ECFFFEE8D6FFFDE7D6FFFDE7D6FFFDE7D5FFC7865BFFEFC09EFFFFFFFFFFCC93
+              6EFFFFFFFFFFFFFFFFFFFFFBF7FFFFF8F1FFE4AF8CFFC78A61FFC68849FFF9F4
+              EDFFFEE8D8FFFEE8D7FFFEE7D6FFFDE5D3FFCC8D65FFF3CDB0FFFFFFFFFFE3C7
+              B3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEABFA1FFC98960FFC6884AFFF9F4
+              EFFFFEE7D7FFFDE7D5FFFDE6D4FFFCE6D2FFD4976EFFD49E7BFFD09871FFD6A4
+              82FFCD8E68FFCD9069FFD09A75FFD19973FFC88B62FF42220D00C6894BFFF9F4
+              F0FFFCE6D3FFFDE7D3FFFCE4D1FFFBE3CDFFFAE0C8FFF8DCC2FFF5D6BBFFF3D4
+              B5FFF1D2B3FFF8F4F0FFC48246FF959B99000202020000000000C6894BFFF9F5
+              F1FFFCE3CFFFFCE4CFFFFCE3CDFFFAE1CAFFF9DDC4FFF6D9BCFFF4E9DFFFF7F2
+              ECFFFBF7F3FFF5EFE9FFC27E45FF6E7371000000000000000000C6894CFFF9F5
+              F1FFFCE3CDFFFBE3CDFFFBE2CBFFF9E0C8FFF8DCC2FFF5D6BAFFFDFBF8FFFCE6
+              CDFFFAE5C9FFE2B684FFBB7F4EFF272827000000000000000000C4874BFFFAF6
+              F2FFFAE0C7FFFBE2C9FFFBE0C8FFF9DFC5FFF8DBC1FFF4D6B8FFFFFBF8FFF6D8
+              B4FFE1B07DFFDB9264FF51504D00000000000000000000000000B97E45FFF7F2
+              EBFFF8F4EEFFF8F3EDFFF8F3EDFFF8F3EDFFF8F2ECFFF7F2ECFFF2E6D7FFE2B2
+              7DFFDB9465FF54524F0000000000000000000000000000000000DF31AC00B38C
+              7AFFBB834AFFC88C4FFFC88C50FFC88D50FFC98C50FFC78B50FFC48A4DFFB577
+              47FF312F2C000000000000000000000000000000000000000000
+            }
+            ImageIndex = 24
+            OnClick = acDownloadDataFromLoTWExecute
+          end
+        end
+        object MenuItem60: TMenuItem
+          Caption = 'Export'
+          object MenuItem61: TMenuItem
+            Action = acExportToLocalFile
+            OnClick = acExportToLocalFileExecute
+          end
+          object MenuItem62: TMenuItem
+            Action = acUploadQSOToLoTWWeb
+            Bitmap.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              200000000000000400006400000064000000000000000000000000052500512C
+              1600BD672CFFB86E3FFFB46430FFB6642EFFBB6932FFB56534FFB4622EFFB562
+              2DFF0F7C23FF037B1EFFAB5E2BFF884921FF772F1200BFEFBF0000000000AE5D
+              2CFFF5F1E8FFF5EADEFFF6EBDEFFF6EADEFFF6EADCFFF6EADCFFFAF3EBFFFAF3
+              EBFF158C3AFF43A15FFF32944AFFECEEEAFFBC6832FF72CAEE0000000000BC6E
+              36FFF5EBDFFFFDBF68FFFCBD67FFFBBE65FF239751FF1D9149FF178F43FF118B
+              3BFF3A9F5EFF80C196FF46A362FF2E9446FFAC612EFF00000000BFEFBF00BB74
+              3CFFF7EDE3FFFDC26EFFFFD8A0FFFFD79EFF299B5BFF90CAA9FF8DC8A5FF8AC6
+              A1FF88C59EFF6AB685FF82C297FF48A566FF1D7A23FF0004010000000000BE78
+              3EFFF7F0E6FFF8B455FFF7B456FFF7B554FF319F63FF94CDADFF6FBA8EFF6BB8
+              89FF66B685FF61B380FF67B582FF83C298FF3CA05CFF027C24FFBDEEC000BF7C
+              42FFF8F1E8FFFEE5D5FFFDE5D3FFFDE5D3FF37A36BFF96CEB0FF94CDADFF91CB
+              AAFF90CBA8FF74BC90FF8AC7A1FF46A568FF0A8735FF0001000078D1EE00BF7E
+              44FFF8F2EBFFFEE7D6FFFDE7D6FFFDE7D6FF3DA56FFF3AA46FFF36A269FF329E
+              63FF55AF7CFF91CBAAFF4FAB74FF1B9148FFBE783DFF5211000000000000C080
+              45FFF9F3ECFFFEE8D6FFFEE8D7FFFDE7D6FFFDE7D6FFFDE7D5FFFDE5D3FFFBE4
+              D0FF41A46BFF5AB381FF289857FFFAF2EAFFC17C40FFC67A3C00F9E5C800C88C
+              4FFFF9F4EDFFFEE8D8FFFEE8D8FFFEE8D7FFFEE7D6FFFDE5D3FFFCE4D1FFFBE1
+              CCFF46A872FF319F65FFF8DCC2FFFAF4EDFFC68548FF021B630025050000C78B
+              4CFFF9F4EFFFFEE7D7FFFDE7D6FFFDE7D5FFFDE6D4FFFCE6D2FFFBE1CCFFFADF
+              C7FFF8DCC2FFF6DABDFFF6D8BBFFFAF4EFFFC18148FF9D66330000000000C085
+              49FFF9F4F0FFFCE6D3FFFCE6D4FFFDE7D3FFFCE4D1FFFBE3CDFFFAE0C8FFF8DC
+              C2FFF5D6BBFFF3D4B5FFF1D2B3FFF8F4F0FFC4854AFF000F4B00C57F4300C48C
+              50FFF9F5F1FFFCE3CFFFFBE4D0FFFCE4CFFFFCE3CDFFFAE1CAFFF9DDC4FFF6D9
+              BCFFF4E9DFFFF7F2ECFFFBF7F3FFF5EFE9FFBF7C44FF0000000000000000BF84
+              49FFF9F5F1FFFCE3CDFFFBE3CEFFFBE3CDFFFBE2CBFFF9E0C8FFF8DCC2FFF5D6
+              BAFFFDFBF8FFFCE6CDFFFAE5C9FFE2B684FF7F5537FF1F0D0600E7CBA800CA92
+              5AFFFAF6F2FFFAE0C7FFFBE1C9FFFBE2C9FFFBE0C8FFF9DFC5FFF8DBC1FFF4D6
+              B8FFFFFBF8FFF6D8B4FFE1B07DFFD38D60FF0503020000000000080000009666
+              38FFE5E0DAFFF5F1EBFFF8F4EDFFF8F3EDFFF8F3EDFFF8F3EDFFF8F2ECFFF7F2
+              ECFFF2E6D7FFE2B27DFFD28E61FF050302000A0100007E4F2500D803EA00D031
+              AC00C86D74FFC88559FFC98C4DFFC28955FFC2884DFFC6894DFFC58954FFC988
+              54FFA4723EFF6F4322FF04020100101DE2000000000000000000
+            }
+            ImageIndex = 23
+            OnClick = acUploadQSOToLoTWWebExecute
+          end
+        end
+        object MenuItem99: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem100: TMenuItem
+          Action = acUploadAllToLoTW
+        end
+      end
+      object MenuItem34: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem90: TMenuItem
+        Caption = 'eQSL'
+        object MenuItem92: TMenuItem
+          Action = aceQSLUp
+        end
+        object MenuItem93: TMenuItem
+          Action = aceQSLDwn
+        end
+        object MenuItem32: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem98: TMenuItem
+          Action = acMarkAlleQSL
+        end
+      end
+      object MenuItem91: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem35: TMenuItem
+        Action = acQSLMgr
+        OnClick = acQSLMgrExecute
+      end
+      object MenuItem42: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem45: TMenuItem
+        Action = acMarkQSL
+        OnClick = acMarkQSLExecute
+      end
+      object MenuItem76: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem77: TMenuItem
+        Action = acAddQSLMgrs
+        OnClick = acAddQSLMgrsExecute
+      end
+      object MenuItem44: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem43: TMenuItem
+        Action = acLabelsExport
+        OnClick = acLabelsExportExecute
+      end
+    end
+    object MenuItem12: TMenuItem
+      Caption = 'Sort'
+      object MenuItem13: TMenuItem
+        Action = acSort
+        OnClick = acSortExecute
+      end
+    end
+    object MenuItemStats: TMenuItem
+      Caption = 'Statistics'
+      object MenuItem11: TMenuItem
+        Caption = 'DXCC statistic'
+        Hint = 'DXCC statistic'
+        ImageIndex = 8
+        object MenuItem46: TMenuItem
+          Action = acDXCCCfm
+          OnClick = acDXCCCfmExecute
+        end
+        object MenuItem83: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem84: TMenuItem
+          Action = acRegenDXCCStat
+        end
+      end
+      object MenuItem24: TMenuItem
+        Caption = '-'
+      end
+      object mnuWAZStat: TMenuItem
+        Action = acWAZCfm
+      end
+      object mnuITUStat: TMenuItem
+        Action = acITUCfm
+      end
+      object MenuItem39: TMenuItem
+        Caption = '-'
+      end
+      object mnuIOTAStat: TMenuItem
+        Caption = 'IOTA statistic'
+        OnClick = mnuIOTAStatClick
+      end
+      object MenuItem22: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem67: TMenuItem
+        Action = acWACCfm
+      end
+      object MenuItem71: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem72: TMenuItem
+        Action = acWASCfm
+      end
+      object MenuItem106: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem105: TMenuItem
+        Action = acDOKCfm
+      end
+      object MenuItem25: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem87: TMenuItem
+        Action = acBigSquares
+      end
+      object MenuItem2: TMenuItem
+        Action = acCounty
+        Caption = 'County'
+      end
+      object MenuItem86: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem36: TMenuItem
+        Caption = 'Membership tracking'
+        object MenuItem85: TMenuItem
+          Action = acRebuildMembStat
+        end
+      end
+      object MenuItem29: TMenuItem
+        Action = acCustomStat
+        Visible = False
+        OnClick = acCustomStatExecute
+      end
+    end
+    object mnuCallBook: TMenuItem
+      Caption = 'Callbook'
+      Hint = 'QRZ.com callbook search'
+      ShortCut = 117
+      object MenuItem21: TMenuItem
+        Action = acCallBook
+        Caption = 'Search'
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          2000000000000004000064000000640000000000000000000000000000000000
+          0000000000000000000000000000000000002A2A2A00424242003D3D3D002020
+          200000731E00037B1E0000020000000000000000000000000000000000000000
+          00000000000012121200060606000101010076767600BDBDBD00B2B2B2005454
+          54000179280043A15F0002651B00000301000000000000000000000000003E39
+          34FF393430FF332F2BFF2C2925FF272421FF201D1BFF1B844400122116FF0B0A
+          09FF070706FF040403FF000000FF000000FF0003010000000000000000004641
+          3BFF857A70FFC3B8AEFF7C7268FF7F756BFF36322DFF8AC0A000394138FF9589
+          7DFFBAAEA2FF7C7268FF7F756BFF010101FF066F220000040100000000004D47
+          41FF83786FFFCCC3BAFF786F65FF7B7167FF2F2E29FF93CCAC0022251FFF9589
+          7DFFC2B8ADFF786F65FF7C7268FF060505FF3CA05C00007C240000000000524B
+          45FF83786FFFCCC3BAFF797066FF71685FFF374638FF96CEB000373E37FF857A
+          70FFC2B8ADFF786F65FF7B7167FF0B0B09FF078534000001000083838300635D
+          58FF9F9286FFCCC3BAFFC0B4AAFFA6988BFF3E5E48FF36A16C002E513BFF9084
+          79FFC2B8ADFFC0B4AAFFA89B8EFF132C1BFF4E4E4E0043434300BBBBBB005F58
+          51FF423D38FF58514AFF3D3833FF332F2BFF23211EFF04040400151412FF1A18
+          16FF252220FF191715FF0F0E0DFF0E0E0EFFD0D0D00060606000C1C1C1009D91
+          85FFB1A396FF7F756BFF7C7268FF776D64FF6C635BFF2E2A26FF564F48FF8076
+          6CFF7C7268FF776D64FF70675EFF010101FFD9D9D9006A6A6A00A1A0A000AEA2
+          97FFBAAEA2FF82776DFF82776DFFAA917BFFBAA794FFB4A28CFFB09781FF9F8D
+          7DFF836D5BFF716357FF95897DFF141413FF7777770069696900060505002623
+          20009B8E82FF9D9185FF867B71FF564F48FF504A44FF80766CFF6E665DFF826C
+          58FFA6917DFF948474FF564F48FF2B2A2A000000000000000000000000006363
+          6300746B62FFA4978AFF95897DFF9F9286FF3E3934FFD6D6D6004C4640FF7E74
+          6AFF857A70FF3E3934FF726E6BFF757575003737370000000000000000006464
+          6400DCDCDC00EDEDED00978D83FFC3B8AEFF655D55FFD6D6D6007C7268FFA89B
+          8EFF9C9186FFCBCBCB00E7E7E700B7B7B7004343430000000000000000000000
+          00007F7F7F00CCCCCC009F9489FFBCB0A4FF9D9185FFDEDEDE00AEA093FF9D91
+          85FF58524BFF9C9C9C00A6A6A600636363000000000000000000000000000000
+          000000000000222222000B0B0B0002020200B7B7B700E5E5E500E4E4E4009E9E
+          9E00010101000A0A0A001C1C1C00000000000000000000000000D003EA00D003
+          EA00D8923900D892390000000000000000004F4F4F0095959500939393004A4A
+          4A00000000000000000000000000000000000000000000000000
+        }
+        ImageIndex = 12
+        OnClick = acCallBookExecute
+      end
+      object MenuItem40: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem41: TMenuItem
+        Action = acDatabaseUpdate
+        OnClick = acDatabaseUpdateExecute
+      end
+    end
+    object MenuItem19: TMenuItem
+      Caption = 'Grayline'
+      Visible = False
+      object MenuItem20: TMenuItem
+        Action = acGrayline
+        Caption = 'Show grayline'
+        OnClick = acGraylineExecute
+      end
+    end
+    object MenuItem31: TMenuItem
+      Caption = 'Data'
+      object MenuItem38: TMenuItem
+        Action = acRefresh
+        Bitmap.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          200000000000000400006400000064000000000000000000000095648E00A4E6
+          DD00011046004F1101007DBA8000000F4F004D0F0000FFFDBC00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00BEFEFF00000F4F00030000006D3A1300000004000000
+          000000000000235328FF2D6B32FF0000000000000000000000005D170100A6E3
+          C300000C41004F0F0000BFEFBF00000F4F0047110100D7E4A400000000000000
+          0000525F2AFF5AA462FF58A15EFF37833EFF347E3AFF317A36FF2E7533FF2768
+          2BFF1D4E20FF102E120039160400E7E59D004C74AF000E1E320054B3E8002652
+          35FF62AC6AFF85C88DFF85C78BFF82C688FF7FC486FF7CC282FF79C180FF71B9
+          78FF5FA865FF49914EFF1A4E35FF341F0900D3DF9700062A7D0041210F006A9B
+          61FF66B06EFF8ACA92FF89CA90FF86C88DFF83C68AFF80C587FF7EC384FF7BC2
+          81FF6DBB74FF76BE7CFF59A05DFF1B4C23FF25180800D592500090DEE400501A
+          37007DC283FF67B16FFF64AD6BFF43944BFF408F47FF3C8A43FF398540FF549D
+          5AFF74BA7AFF79C17FFF77BF7DFF4A914FFF27606C000607110000020F000200
+          000052260C0085AC6AFF6BAF6FFFFBFFFF008EC2E500041B4F00000000004452
+          24FF468D4BFF75BB7BFF70BD77FF63AB69FF1E5021FF9F430F0076AFD9000211
+          3A0000000000060201006E793900F4DFBD00FFFFFF00CDECFF00346CA2000002
+          0F00234C24FF61A867FF7BC282FF76BC7CFF3A7E43FF346CA2004F0F0000C1EF
+          BF00B567670074CDE800000525000000000028060000E9D078006766B500BFEF
+          C10023564AFF64AB6BFF7FC486FF79BE81FF428444FFF4FFFF00000000000000
+          0000000000000000000000000000000000000000000000000000000000002755
+          2CFF3A8142FF81C388FF7DC485FF6EB375FF265B2AFF00000000BFF5E900000F
+          4F005FBA6AFF5CB667FF59B364FF56AE60FF53AA5DFF50A659FF4DA156FF68B1
+          70FF88C890FF8DCC95FF8BCB92FF5DA564FF193A1C0000000000000000000000
+          000062BE6DFFA5DAAEFFA2D8ACFFA1D8AAFF9ED6A7FF9CD5A5FF99D4A2FF97D2
+          9FFF8CCD95FF91CF99FF73B87BFF2D6331FFA3591B00CCE3E800000000000000
+          000064C170FFA6DBB0FFA6DAAFFFA3D9ADFFA2D8ABFF9FD7A8FF9CD5A5FF94D0
+          9DFF83C58CFF6CB474FF316A37FF0F211100000000000000000089DFFF000009
+          320066C472FF64C270FF62BF6EFF60BC6BFF5DB868FF5BB565FF57B062FF4E9E
+          57FF3B7941FF2348270009120A00000000000000000000000000080000000100
+          1E0089061C0090061E008A061E00FFFFFF000000000000000000000000000000
+          0000000000000000000000000000000000004F0F0000FFFFBF001804EA001804
+          EA00B0493D00B0493D00E0832300E075B10000000000A4000000304A3D00E449
+          3D00000000000000000000000000F8493D000000000000000000
+        }
+        ImageIndex = 15
+        OnClick = acRefreshExecute
+      end
+    end
+    object MenuItem51: TMenuItem
+      Caption = 'Online log'
+      object MenuItem52: TMenuItem
+        Caption = 'HamQTH'
+        object MenuItem53: TMenuItem
+          Action = acUploadToHamQTH
+        end
+        object MenuItem54: TMenuItem
+          Action = acMarkAllHamQTH
+        end
+      end
+      object MenuItem68: TMenuItem
+        Caption = 'Clublog'
+        object MenuItem69: TMenuItem
+          Action = acUploadToClubLog
+        end
+        object MenuItem70: TMenuItem
+          Action = acMarkAllClubLog
+        end
+      end
+      object MenuItem73: TMenuItem
+        Caption = 'HRDLog.net'
+        object MenuItem74: TMenuItem
+          Action = acUploadToHrdLog
+        end
+        object MenuItem75: TMenuItem
+          Action = acMarkAllHrdLog
+        end
+      end
+      object MenuItem108: TMenuItem
+        Caption = 'UDP Log'
+        object MenuItem109: TMenuItem
+          Action = acUploadToUDPLog
+        end
+        object MenuItem110: TMenuItem
+          Action = acMarkAllUDPLog
+        end
+      end
+      object MenuItem94: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem95: TMenuItem
+        Action = acMarkAll
+      end
+      object MenuItem97: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem96: TMenuItem
+        Action = acUploadToAll
+      end
+      object MenuItem107: TMenuItem
+        Caption = 'Remove all upload triggers'
+        OnClick = MenuItem107Click
+      end
+    end
+    object mnuHelp: TMenuItem
+      Caption = 'Help'
+      RightJustify = True
+      object mnuHelpIndex: TMenuItem
+        Caption = 'Help index Alt+H'
+        ImageIndex = 14
+        OnClick = mnuHelpIndexClick
+      end
+      object MenuItem37: TMenuItem
+        Caption = '-'
+      end
+      object mnuAbout: TMenuItem
+        Action = acAbout
+        OnClick = acAboutExecute
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Images = imgMain1
+    Left = 168
+    Top = 384
+    object acView: TAction
+      Caption = 'View QSO'
+      Hint = 'View QSO'
+      ImageIndex = 1
+      OnExecute = acViewExecute
+    end
+    object acNewQSO: TAction
+      Caption = 'New QSO'
+      Hint = 'Add new QSO'
+      ImageIndex = 0
+      OnExecute = acNewQSOExecute
+      SecondaryShortCuts.Strings = (
+        'F2'
+      )
+      ShortCut = 113
+    end
+    object acEditQSO: TAction
+      Caption = 'Edit QSO'
+      Hint = 'Edit QSO'
+      ImageIndex = 7
+      OnExecute = acEditQSOExecute
+    end
+    object acSort: TAction
+      Caption = 'Sort'
+      Hint = 'Sort QSO'
+      ImageIndex = 6
+      OnExecute = acSortExecute
+      ShortCut = 118
+    end
+    object acDeleteQSO: TAction
+      Caption = 'Delete QSO'
+      Hint = 'Delete QSO'
+      ImageIndex = 2
+      OnExecute = acDeleteQSOExecute
+    end
+    object acCreateFilter: TAction
+      Caption = 'Create'
+      Hint = 'Create filter'
+      ImageIndex = 9
+      OnExecute = acCreateFilterExecute
+      ShortCut = 123
+    end
+    object acCreateContestFilter: TAction
+      Caption = 'Contest filter'
+      Hint = 'Create contest filter'
+      OnExecute = acCreateContestFilterExecute
+    end
+    object acCancelFilter: TAction
+      Caption = 'Cancel filter'
+      Hint = 'Cancel filter'
+      OnExecute = acCancelFilterExecute
+      ShortCut = 8315
+    end
+    object acClose: TAction
+      Caption = 'Close'
+      Hint = 'Close program'
+      ImageIndex = 4
+      OnExecute = acCloseExecute
+      ShortCut = 16465
+    end
+    object acPreferences: TAction
+      Caption = 'Options'
+      Hint = 'Preferences'
+      ImageIndex = 5
+      OnExecute = acPreferencesExecute
+      ShortCut = 16464
+    end
+    object acQSL_S: TAction
+      Caption = 'Buro (B)'
+      Hint = 'Mark QSL send'
+      OnExecute = acQSL_SExecute
+      ShortCut = 16467
+    end
+    object acQSL_R: TAction
+      Caption = 'QSL received'
+      Hint = 'Mark QSL received'
+      OnExecute = acQSL_RExecute
+      ShortCut = 16466
+    end
+    object acImportADIF: TAction
+      Caption = 'ADIF'
+      OnExecute = acImportADIFExecute
+      ShortCut = 16457
+    end
+    object acGrayline: TAction
+      Caption = 'Grayline'
+      Hint = 'Grayline'
+      ImageIndex = 10
+      OnExecute = acGraylineExecute
+    end
+    object acCallBook: TAction
+      Caption = 'Callbook'
+      Hint = 'QRZ.com callbook search'
+      OnExecute = acCallBookExecute
+      ShortCut = 117
+    end
+    object acTRXControl: TAction
+      Caption = 'TRX control'
+      OnExecute = acTRXControlExecute
+    end
+    object acAbout: TAction
+      Caption = 'About'
+      OnExecute = acAboutExecute
+    end
+    object acSearch: TAction
+      Caption = 'Search'
+      Hint = 'Search'
+      ImageIndex = 12
+      OnExecute = acSearchExecute
+      ShortCut = 16454
+    end
+    object acRegenDXCCStat: TAction
+      Caption = 'Rebuild DXCC statistics'
+      Hint = 'Create new DXCC statistcs from QSO in the LOG'
+      OnExecute = acRegenDXCCStatExecute
+    end
+    object acExADIF: TAction
+      Caption = 'ADIF'
+      OnExecute = acExADIFExecute
+      ShortCut = 16453
+    end
+    object acExHTML: TAction
+      Caption = 'HTML'
+      OnExecute = acExHTMLExecute
+    end
+    object acDXCluster: TAction
+      Caption = 'DXCluster'
+      OnExecute = acDXClusterExecute
+    end
+    object acShowToolBar: TAction
+      Caption = 'Show toolbar'
+      Checked = True
+      OnExecute = acShowToolBarExecute
+    end
+    object acButtons: TAction
+      Caption = 'Show buttons'
+      Checked = True
+      OnExecute = acButtonsExecute
+    end
+    object acRefresh: TAction
+      Caption = 'Refresh data'
+      OnExecute = acRefreshExecute
+    end
+    object acQSLMgr: TAction
+      Caption = 'QSL manager search'
+      OnExecute = acQSLMgrExecute
+    end
+    object acDatabaseUpdate: TAction
+      Caption = 'Database update'
+      OnExecute = acDatabaseUpdateExecute
+    end
+    object acLabelsExport: TAction
+      Caption = 'Export for label printing'
+      OnExecute = acLabelsExportExecute
+    end
+    object acMarkQSL: TAction
+      Caption = ' Auto mark QSL'
+      OnExecute = acMarkQSLExecute
+    end
+    object acDXCCCfm: TAction
+      Caption = 'DXCC'
+      ImageIndex = 8
+      OnExecute = acDXCCCfmExecute
+      ShortCut = 16452
+    end
+    object acWAZCfm: TAction
+      Caption = 'WAZ'
+      OnExecute = acWAZCfmExecute
+    end
+    object acITUCfm: TAction
+      Caption = 'ITU'
+      OnExecute = acITUCfmExecute
+    end
+    object acImportLoTWADIF: TAction
+      Caption = 'Import local LoTW ADIF file'
+      OnExecute = acImportLoTWADIFExecute
+    end
+    object acDownloadDataFromLoTW: TAction
+      Caption = 'Download and process data from LoTW website'
+      Hint = 'Download data from LoTW'
+      OnExecute = acDownloadDataFromLoTWExecute
+    end
+    object acExportToLocalFile: TAction
+      Caption = 'Export QSOs to LoTW adif file'
+      OnExecute = acExportToLocalFileExecute
+    end
+    object acUploadQSOToLoTWWeb: TAction
+      Caption = 'Upload QSOs to LoTW web page'
+      OnExecute = acUploadQSOToLoTWWebExecute
+    end
+    object acGroupEdit: TAction
+      Caption = 'Group edit'
+      OnExecute = acGroupEditExecute
+    end
+    object acSelRecord: TAction
+      Caption = 'Select record'
+      Hint = 'Select current record'
+      ImageIndex = 19
+      OnExecute = acSelRecordExecute
+    end
+    object acUnselRecord: TAction
+      Caption = 'Unselect record'
+      Hint = 'Unselect current record'
+      ImageIndex = 20
+      OnExecute = acUnselRecordExecute
+    end
+    object acSelAll: TAction
+      Caption = 'Select all'
+      Hint = 'Select all records now in buffer (Max 500)'
+      ImageIndex = 21
+      OnExecute = acSelAllExecute
+    end
+    object acUnselAll: TAction
+      Caption = 'Unselect all'
+      Hint = 'Unselect all records'
+      ImageIndex = 22
+      OnExecute = acUnselAllExecute
+    end
+    object acCustomStat: TAction
+      Caption = 'Custom statistic'
+      OnExecute = acCustomStatExecute
+    end
+    object acImpQslMgrs: TAction
+      Caption = 'Import qsl managers database'
+      OnExecute = acImpQslMgrsExecute
+    end
+    object acWACCfm: TAction
+      Caption = 'WAC'
+      OnExecute = acWACCfmExecute
+    end
+    object acWASCfm: TAction
+      Caption = 'WAS'
+      OnExecute = acWASCfmExecute
+    end
+    object acDOKCfm: TAction
+      Caption = 'DOK'
+      OnExecute = acDOKCfmExecute
+    end
+    object acAddQSLMgrs: TAction
+      Caption = 'Auto add QSL managers'
+      OnExecute = acAddQSLMgrsExecute
+    end
+    object acPnlDetails: TAction
+      Caption = 'Show detail panel'
+      Checked = True
+      OnExecute = acPnlDetailsExecute
+    end
+    object acSQL: TAction
+      Caption = 'SQL console'
+      OnExecute = acSQLExecute
+    end
+    object acAttach: TAction
+      Caption = 'Show attachment'
+      Hint = 'Call has an attachment'
+      ImageIndex = 26
+      OnExecute = acAttachExecute
+    end
+    object acEditDetails: TAction
+      Caption = 'Edit details'
+      OnExecute = acEditDetailsExecute
+    end
+    object acQSLImage: TAction
+      ImageIndex = 27
+      OnExecute = acQSLImageExecute
+    end
+    object acQRZ: TAction
+      Caption = 'Search on qrz.com'
+      ImageIndex = 28
+      OnExecute = acQRZExecute
+    end
+    object acRebuildMembStat: TAction
+      Caption = 'Rebuild membership statistics'
+      OnExecute = acRebuildMembStatExecute
+    end
+    object acBigSquares: TAction
+      Caption = 'Big squares'
+      OnExecute = acBigSquaresExecute
+    end
+    object acHamQTH: TAction
+      Caption = 'Search on HamQTH.com'
+      ImageIndex = 30
+      OnExecute = acHamQTHExecute
+    end
+    object aceQSLUp: TAction
+      Caption = 'Upload QSO to eQSL.cc'
+      Hint = 'Upload QSO to eQSL.cc'
+      ImageIndex = 31
+      OnExecute = aceQSLUpExecute
+    end
+    object aceQSLDwn: TAction
+      Caption = 'Download QSO from eQSL.cc'
+      Hint = 'Download QSL from eQSL.cc'
+      ImageIndex = 32
+      OnExecute = aceQSLDwnExecute
+    end
+    object acSOTAExport: TAction
+      Caption = 'CSV for SOTA website'
+      OnExecute = acSOTAExportExecute
+    end
+    object acEDIExport: TAction
+      Caption = 'EDI for contests'
+      OnExecute = acEDIExportExecute
+    end
+    object acCabrilloExport: TAction
+      Caption = 'Cabrillo'
+      OnExecute = acCabrilloExportExecute
+    end
+    object acRemoveDupes: TAction
+      Caption = 'Remove dupes from the log'
+      OnExecute = acRemoveDupesExecute
+    end
+    object acUploadToHamQTH: TAction
+      Category = 'OnlineLog'
+      Caption = 'Upload all changes'
+      OnExecute = acUploadToHamQTHExecute
+    end
+    object acMarkAllHamQTH: TAction
+      Category = 'OnlineLog'
+      Caption = 'Mark all QSO as uploaded'
+      OnExecute = acMarkAllHamQTHExecute
+    end
+    object acUploadToClubLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Upload all changes'
+      OnExecute = acUploadToClubLogExecute
+    end
+    object acMarkAllClubLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Mark all QSO as uploaded'
+      OnExecute = acMarkAllClubLogExecute
+    end
+    object acUploadToHrdLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Upload all changes'
+      OnExecute = acUploadToHrdLogExecute
+    end
+    object acMarkAllHrdLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Mark all QSO as uploaded'
+      OnExecute = acMarkAllHrdLogExecute
+    end
+    object acUploadToUDPLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Upload all changes'
+      OnExecute = acUploadToUDPLogExecute
+    end
+    object acMarkAllUDPLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Mark all QSO as uploaded'
+      OnExecute = acMarkAllUDPLogExecute
+    end
+    object acUploadToAll: TAction
+      Category = 'OnlineLog'
+      Caption = 'Upload changes to all logs'
+      OnExecute = acUploadToAllExecute
+    end
+    object acMarkAll: TAction
+      Category = 'OnlineLog'
+      Caption = 'Mark QSO as uploaded to all logs'
+      OnExecute = acMarkAllExecute
+    end
+    object acMarkAlleQSL: TAction
+      Category = 'eQSL'
+      Caption = 'Mark all qso as uploaded to eQSL'
+      OnExecute = acMarkAlleQSLExecute
+    end
+    object acUploadAllToLoTW: TAction
+      Category = 'LoTW'
+      Caption = 'Mark all QSO as uploded to LoTW'
+      OnExecute = acUploadAllToLoTWExecute
+    end
+    object acAutoSizeColumns: TAction
+      Caption = 'AutoSizeColumns'
+      ImageIndex = 34
+      OnExecute = acAutoSizeColumnsExecute
+    end
+    object acCreateLoadFilter: TAction
+      Caption = 'CreateLoadFilter'
+      OnExecute = acCreateLoadFilterExecute
+    end
+    object acCounty: TAction
+      Caption = 'County Statistics'
+      OnExecute = acCountyExecute
+    end
+  end
+  object tmrTime: TTimer
+    OnTimer = tmrTimeTimer
+    Left = 88
+    Top = 385
+  end
+  object dlgOpen: TOpenDialog
+    DefaultExt = '.adi'
+    Filter = 'ADIF|*.adi|ADIF|*.ADI'
+    FilterIndex = 0
+    Left = 117
+    Top = 110
+  end
+  object imgMain: TImageList
+    Left = 176
+    Top = 168
+    Bitmap = {
+      4C7A0F0000001000000010000000DE1F00000000000078DAC59B09585547B6EF
+      97438C49DAEED89DBC747B6F27DD76DAFB326A9A9BE1AA51348A63888A8943A2
+      A838933880A888440507445426071C704241045171404014194504190401450E
+      F33C1E38CCFFBBAA0EFB70444C4C7FEFFBDE49FEA9DA55F5AB5A55BB6A57EDB5
+      8999991999B1621C27236697F1D37232462C87D18EC68874988808ABA1E88148
+      7A87885EEAD1837AB0C42F62EB7834D494415357C12A87A6564F9C2EF26A0AD2
+      A0BAB811996E0B3175FECBB4FA8D7F91CB89BE34FA623845EE9888A6FA1A343D
+      8946734E2C9A55AC273168CC8E8426F316EA1E5C437BB306F5E981C809E03A5C
+      CC60B9C68AD6ADB726FBADDB28CA61121AD5D568C98D4773EE3D1687AA383472
+      1D9AAC70A81F5C472BF32D05F168CA8F85EA8A3DC2D68F42714929D5D6A9999F
+      D8C127A0392F112D7909B2AEA69C3B687C1481FA8721A82BCE96FD686EA885BA
+      B218E1B663D0A3E73AEAD1B39796AFABE2FA935929682DE430EFBEB4A3496743
+      306A532EA33AE9128F511522B68C85D1B8F134D1643A45ED98C07C25DA0AD398
+      7DC04A452BD7D35290C4E371174DD9D1B28EFA8C501E83603471D928BBB108BE
+      1D4151D131CC8F67BE1C6D45E91D4AE3BAB89EFC0E3B441D3CB68D8F6ECB7A9A
+      B86CD4963140C66C0AEBC1EDDB1BA1B1B68CB90792D5DAD06107D721C6A43957
+      6B475376149A6A4A10B56914AA681DE5913945725D9A9A526D9BFA2A48D5D9D0
+      A2E27B9213A7BDBF0D3588B4190172BA426F05EDA248AE4B535D84B67C6D79C9
+      2892EC3DD65D9E13CCE6C4A0B5A901B7782ED2A24022C7CB146133120D5505D0
+      044E4743E0B768B86CC2F169D05C9C86864B53B5BA3885652CD5D2A846D88A4F
+      41631278F6E6D0AD75C3D0509E8BD6F09FD09E7E0CED6947D1FEE010870738DC
+      C772477BAA1BDA535CD17C6321DB5F87E0C54300A6C1FF0D5BF539D4A5D9680D
+      5B8296D0C5B24CCB0D33AD42E7A33974019A43E6F1B5295A42E6CBB91864F621
+      485440AD14B2F45FDCFF12349465A3BEF431EA4B84B2A49A6A4BB5E2316FE1B9
+      D7A2A9435B5B2BAE9ABED7C143FE7B7DE160042F1A82EB8B06776AA1D0C7085A
+      F89156665A5D9DFF0128FF5DA27F42AEFDE78B2BEEDF977EC7FFF418C8D11EBD
+      A8BBF52F7E3D7BF5A6A6AC30343E0C463DAFD7BAE44054279C47459C2FA8872D
+      E733FFD21FE993517DA8EBFA9F96544D4D9937D0C873A4A9EC311A2B54682C57
+      41539C81AAD45014DEF484C9F46F69C6CC5964B670112D59BA8CF4D77F536628
+      343C3F9A2A72D1C0F3AE9EE74B3DCFB5FADC4434963C4259C265645F7145724A
+      2AA5A53FA44C552EE5171492B2FE1BD282D0C8E32E595E2BEA2777A07E1C03F5
+      A348598F5A9588CC805DA02BFDA9678F9ED49BFBFA52EFDEA4AC7FD1D7C6F21C
+      2D9B1DCB6C34EAB2225097198EBA8C9BD070BD6967B7E12F0306D1FF7DEF7DFA
+      ECF32F68E857634859FF55F7FCD1C8F75E9D2DDA8C62F63673B750FBF0066AD3
+      B86FFC5C49F6FA19A7BC4E93B7CF59BA147899AE5E0B2265FD97C578B3ED69B2
+      7DA5CDDAF4506683E575EDE358C47B6E008D24F2B23D49976F7E4A9FF8FE4856
+      93CC0819165474FB04CA13AF4253F450F65BB20FB46C435E12B2838FE0889B0B
+      46ED4CA0E729E7DA3E14C5FA439D138F065EB70DF9F751FB2806D9D70F23DADB
+      19DBFC5361B8F132BE724CA4E7E9A1FF4E3CF0D92AFB9A786C03E20F5BE184EB
+      4EAC397117BE7145B03A750F83577A775BC7D85D49CFD5B0F51760B63F12476E
+      E561D1C168BCBDF0087EA97C777AFF472F4C770A81C3E547786BEE7E1D6FB43B
+      F9853560BE07FEBEF8085E9FED8ADFC275A7F17B52FE9FE8796BDFCA6A2D7EEB
+      FAEFF3725F1A376E1C222222D0D2D282C8C8486CD8B001A1A1A1D8B56B177E69
+      FD1B2CB0A08404DE7F9B9BD1DEDE8EB2B2329C0F08405474B42EED66442C2E5F
+      0B41D7F5BFC36127D95A5BE2666C2A4A4B8AA1CA51E1C68D1B88E0F60B0B0B51
+      515101B55A8DAAEA1A040587C1DA6A259E5AFF9A460ABB1182E50E9770E66218
+      FC020271CAE73CB77707D177931097988684D42C84472720202802C1C1D7A0BF
+      FE7BBFF4774A7F98899C9C9C17524A6A1AF4D7FF773366925FF03D9C0A4A83D7
+      B5649C62790525E3344B5C9FE1D03B288943D6F507F00B8E87FEFABF13974C6F
+      181FC210FB5A7CBCB1041FD894E0230E47399462346BB06D293EE4B477D796E0
+      4F1675E833EE30FE69F62DED318FA6C78916F4DD48D0A0EFF663DEE976CC3ED2
+      0893838DB896DA8A948276E457B5C33BAE15135C3518EEA8C17F6D6DC7EB13F7
+      236063330DCF5C4D2576CB690932E83FC76DC2B4A3ED98BABF0116BE8D7852D6
+      06F7B026669B7135B905EF6F52E30F2BEBD07B653B5E1EBE050D3DD6519F9ED6
+      3C735651005DA037872EC3E443ED18EF528FA2EA369C8C6906CDADC19F56D721
+      AFB20D1B021A41A635E8F1533BFAFCCB9CF73E50E70FF4FA27DF63907D3B5E5B
+      5E0BDFF8666CBBDA88CFB7AB316C673D02129A31EF4403FA2CAD45AF15CC7F64
+      CADBB62173232843E21D7599B7F299A2167FB7554355D1868CD25654D6B7E176
+      762BFEE55E8FCF3CEAF187F56DE8250B27523FA5753CA0973E4EA6DE3FB5A2F7
+      8F1AF459D9800F1D3418B5BF09667ECDF8EA6813FEFB5023BE3AD38CBF6E6BC7
+      2B931E6BB76E2AA2C57D45B89A6E8DFC1DF55D9081979797E355F352F465BDB6
+      A214FD5697E28DB565F8CF8D65F8DB960ABCB1E2119AD12CE98D10C3B0ADA3AE
+      03F22C42D45B865AF5A3862A3FC5C8CED1EAC8D78FE7B98D41AEEB5728F0980A
+      D5EED1C8B61F82577F4EA7AA58CB677855B9861AD3ADB517AFFE4C0507BE6666
+      247CDBA651F6D6FF4681A7291E6D780FBA76FA2768DB497E4B22091DE96F75D4
+      AB721AA63DC9A081B26D3F42DE8199C8B41C287981BC595A22B9FF5356FAB42D
+      7CB418F94A7FD966CE2E43D966E149733CDEFC3F78BABF6CE66E7420F7E995FE
+      530937F8D9F52D2867F728883695822E677FC0D6E353E4F51B4522F89C0AFF28
+      AF08E3BB8E23519EFB7464AE7D17E042BB4E4DC38EB8BDB08B72C43CCFA9802F
+      91A1F378149C5B87FCB36B51E86385021F4BE49F5E05D5899558CB75887E3E5C
+      F957A42F1F00FB6353B129720702B2AE60CD351B08F68BAD2390CF5CBEB7254A
+      825D507CDD1585810E7872B4730D24E363AD411F83A69C99855557AC713ADD0F
+      4793BD30C4FA335928FFF44AE49E58818A107794F8AC412792AEED8B9F3F7DDB
+      D12FD1EEA1A413704F3C82F7567E8C426655C77F84CA7319CA03B7A3F8F46A3C
+      3B9F5C75ACB059B42BD86DDB2620EFAC0DB20F2F954CC9D9F528F6B6D2C2BD20
+      CFBF3D957A5A9E9DA7F9A75623FBD012A0A350F1690B1479ADC607FAEBBF235E
+      85FEDAEB3F8AEB2A2A38BE14B9673721CBDD4C676FFEFE1FD87E2B390E6E02D5
+      2195323CD751AEF0F812E478AD4796DB7C643ACF43C6DE3948779A8D6C0F7314
+      9F592FC70189CFCE07A28FF89D88DBF15A8347079660982CC479BEE7E4F8E6EE
+      FD8E796BA89C4CE08A3D5AD05180AED47145455E16DCE65C64EDFD019DF5BE44
+      6278F23D96A0C4CF0E796E7338F54D2A7D53A8D380028F79C8DF3F072AB7D9BC
+      9E677199CF48CD7B77EE1E136E731A54BBA640B5F31B9DFE9DF3FF8F8753B0CC
+      23098BF627A0EBFEFFEA6B9C74E5753E27F7A29EBD7BC973B272FE5F79F40104
+      BBF54206663907C1D4350ECAFEBF69D326D8DADAC2C6C606D6D6D658BB762DD6
+      AC5983D5AB5763D5D114AC6076FBC52CF82617C127B10033F65EC3CCDD5150F6
+      FF8D1B37E2E0C183521E1E1E52870E1D925A71241967EF17C29775203A07CEE1
+      8FF1ED9EAB98EAC067EC8EFD5FB429D8A9CE3371D0E3A0E40E1F3E2C65EE9188
+      33F7F2B1E756361C42B3E0C89AE6740513ED43A0ECFFC25ED1E6F09D63307EA7
+      B1E48E1C3922B568DF5D9C88CB95AC5D5006EC59531C2F63B4ED157CE53619A3
+      9C276284D3380C7718831F4E2DC4AC63F330C66E228E1E3D2A65EA128BA3D12A
+      D85DCBC0C6C034D85E4A83B1432086F2B9D670EF04B82579C239D1034EF1FBE0
+      10E702FB18274C393003863663E1E9E98959BB2370E0F613D8306779FE01E644
+      9463E28E4B30B0F0C5978E63B1E7DE416C8CDA8E75B737C3E2A60D2C59EBC337
+      63FC5E6398FCFC1D4C1CC2E016F6086BFC52B0E05A0E26A6B46394E3357CF0D3
+      690CDD3E4AD7E6A6A81DD870DB0E6B6FFD0CA33D9331D472048E1F3F8E49F6D7
+      E1149C899FBCEF63D1E9FB981B980DA3AD17F0EED2E3F86CCB9730B01D8A21EB
+      3FC3476B0C30DEF91B8CDD33095F580C97EC89132730C636103BAE3EC4E29309
+      9877F42E1678DEE5F1B980B7CD0E43D9FF4D4D4D71ECD8310CB732C4A7ABBE90
+      9CD0C99327317C7D00B670DFE73337CB2316730EDDC1E8CDE7F167D30350F6FF
+      EFBFFF5EB637CC62248E712838A153A74EE153CBB3D8783E05B39935718FC68C
+      7D3130DCE48F3F7EEF0665FF9F3163C6536D0A4EC8CBCB0B1FAFF0C23ADF2456
+      322CCEDCC7D263F118F9B33F7E3FD359CEB955AB56C1C4C40453A64C81B1B131
+      264D9A84091326C0C8C80863C68CC1BBFCCEF089A53786DB9C8791FD657CBDF3
+      3ABEB4F5C36BDFEDC16FDDFFFF30CB05BF9BB1976D7791FC8BACFF77B9CE5F3B
+      FFDFB81986983BB12F245156FFFCBF75E70E14F0393D3F3F1F050505C8CDCD95
+      CACBCB93698AC459BEB8B818854585108C72FED7F20578F2E409542A156263B9
+      9D9818A9687E7F50E2292929B20E21C128E77FA57DC18A76052F38450A9F9C9C
+      8CA2A2225DFBCAF95FC4F3D9EE478F1E493B1F3E7C888C8C0C646565C9BA841E
+      3C7820CFFE2525253A5E39FF8B785E7E1E52B98CC817EF41F1F1F152E2B9367B
+      F66C6CDFBE1D999999282F2F67BE48F2CAF95FB15FD8A6F03E3E3EF0F5F54550
+      50907C962E5AB448DA545959A9E3ED1C89468D7D43F2CAB888F115759C3F7F1E
+      4B972E956B6AD9B265F2391C171727DFA58A3A78E5DE2BF627F3F80A3E2D2D0D
+      972F5F86B9B939C4BA54249EEFF7EFDFD7F55FD9FF95FB27DAAFAAAA92F7F1F1
+      E3C7484A4A927D898AE2E7BCBDBD94585F397C9FBAB62FEA146D979696CAFB2C
+      EE95BEC47D14EBDBDFDF1FAA5C2DAFECFF2FC28B7E8B7C710F0B3AE68FB2FF6B
+      F922796FC4F88A5094177DA9AEAE466D6D2D341A0D9A9A9A6458C4F508467FFF
+      FF2DEB2794CB3AE20075B7FF8BDF6750CBF05DB5B8D6EEFF7C4518FEEC79C5AC
+      D3FF4F31BB8C9F969331C57218ED684C910E1329C26A283DC7FF4F7F5EE00745
+      9ADA72D2A9A68C1A58350569A4BAB89132DD165237FE7FC9FBD6B54BBE59154B
+      CD4F62A8313B92DEB07B07BFA40EFFFFD37C6E3C35ABE2A891EB106502720271
+      22FD345C130F626BB423D6866DC4D22B2B31DB7F013AFCFF92F7A9D5F22D7909
+      D4C27534E5DCA1C6471154FF3084EA8AB3653F9A1B6A495D594CE1B66348CFFF
+      2F79CF122DDF5A984C2D79F749D8F13CBB23B68C253DFFBFE49D9F287C2AB516
+      A4504B4192E4CF3C3A0737B67D73E436FC78CD0233FDE609FF3FE9F9FF25BF29
+      45CBB715A5515BE1036ACDEFB023E72E353D89E6BEDC264D563835D59553D496
+      31A4E7FF97FCCA28A57D66A5529FB1BF293B8A9A6A4A286AD328D2F3FF4B7E6E
+      5017BE40CB9F7F721147D34E6277BCABF0FFF318D650A4CD08D2F3FF4BFE6BBF
+      0E5ED8AD88ED6F51DD63DDE539C16C4E0CB53635D02D9E8BC2FFAF3FEF469E68
+      C753F3F0E2349DFD0D17A750C34563A996463585ADF89414FFBF28FBF9E1767C
+      EAD10E8383DA3ADA1F1CA2F6B40392F7CAF411FE7F6A4F71A5E61B0BD9FE3A0A
+      5E3C84F4FCFFB20E8515655A6E9869153A9F9A43175073C83CBE36A59690F9D4
+      DAACA120B30F49CFFF4F9AEA1259477DE963AA2F11CA926AAA2DD58AC7BC85E7
+      5E8BA68EDADA5AE9AAE97BD4C5FF4FC18B86D0F545833BB550E8630A5AF89156
+      665A5D9DFF01E9FBFFC5B35D9C33BDBDBDE59E71EEDC39F8F9F9C9505C8B7471
+      96116762F10CEFBAFEF7EFDF2FFD732F2279C6EEB2FEC5335DE49D593DF91725
+      CA083BBBFAFF846D222F60C3B7B8E56886DB4E8B10B96731A2F62E458CCB72DC
+      71339779A28CD8CFBAFAFFC5794DE16F3B2D6676C953EC1DF79F74FCF1639EE8
+      EAFF17BCF0778AFD55EC7D62DFBA77EF9EDCF7850F343C3C1C61616108C9AFC3
+      0CAF747EFFC9C4D82389BAFD5FD824EA1663BE7BF76EA4A7A7CB73E3CE9D3B65
+      3D16964530B47E8CB5370A119854857C7E4E9D4BAAC4B85DD110EBFF28BF6308
+      5E9C5DC4FE24CE1DE2AC206C117BD781D8746C4A2DC7C5DC4638DE2C847F723D
+      229EB46091673284FFDF83DF77047FE1C205383B3BCB7390B065CF9E3DF04E7A
+      0C9B947244D4B7C2FC513D7EBC538E0527D3F0C3A124DDF700777777C9CBB351
+      C7394ED8E29BFC04EB932B10DDD08AB9596ACC5635C0FA410D461ECC7ECA87EF
+      C26D0A3E3030106E6E6EB20EDB1381581B5728D939CCCECA69C086946A8C754F
+      7FC6FFBF6B97A3E4C5DE2DE415930EABA00708679B176437E0079586EDA8C284
+      83FCFEE5B44FF8FF9FF2ED6FDBB68DEFD12D848484C0F67000ACAFA462EFD5FB
+      981E9B87D9D96AAC4B2CC7A4FD6908088EE073D836E1FF277DFFBF7877B4B7B3
+      C376AE67B4C3593CA9698789473AFE627D03E30F4462B85D30D66F73E5325BE4
+      BBEDEBB35D9FEBD77F7FA11DDCA21BE11CDB08C3ADB1F80FB3B3F82DFEFFD787
+      4FC77FCDDD8EF13B4231CA2904BFE6FF170F90E7F8FF5FF4FB1FBAF8FF292222
+      82783D10CF7DDAB06103858686F23DDAD5EDF73FC1EBF9FFA9B9B999F85E5259
+      59199D0F08E0FD2D5A97763322962E5F0B79EAFB9FE03BFCFF743336954A4B8A
+      4995A3A21B376E5004B7CF7389F82C466AB59AAAAA6B2828388CACAD56EAD6BF
+      E03BFCFFB4DCE1129DB918467E0181D44EFCBC6245DF4DA2B8C4344A48CDA2F0
+      E8040A088AA0E0E06BBAF54F3492FBDF8EF48799C46B4F2785D74F5394929AA6
+      FBFE47345DF242A782D2C8EB5A329D6229BCB83E13944CDE41495C84CB89E744
+      70BCEEFB9F3E3FC4BE963EDE58421FD894E8F8D10EA534D8B6943EE43485EF33
+      EE3029FE7F7D7EDEE9769A7DA4914C0E36EAF8FCAA76F28E6BA509AE1A1DFFFA
+      C4FDA4F8FFF57986A42C7C3B79EFB866BA9ADC42EF6F52EBF897876FA14EFFFF
+      B37C51759B8EFFD3EA3ACAAB6CA30D018D9DF6FFCB5CEF1CFB2CEF1BDFACE387
+      EDACE73809FF7F27FF912929FEFFEEF8BFDBAA757C657D9BE48514FE69FFFFB3
+      7C9F950D3ADECCAFF9195EDFFFDF1DFFAA79A98EEFB7BAF4195EDFFF4FF41FD0
+      D631527CDF054D67FD83309DD384FE41224E1829F8915C663A97FDC73FD0B16E
+      A1E7FFA75CD7AFA8C0632AA9768FA66CFB21CADAC60BF8FF991949C2FF2FFA51
+      E0694A8F36BCD7C9FFBAFF9F14FFBF321699960375FC2FF9FF7563D7AD7447B4
+      E7FAFF5F84FF15FF3F65AE7D973AFCFFBAFAE6794ED5D95F706E1DE59F5D4B85
+      3E5654E06329EFA7EAC44AEAF0FFD3C3957FA5F4E503C8FED854C907645DA135
+      D76C747C3E73F9DE965412EC42C5D75D3BE703A08BFFFF5237FE7FFA62EB081A
+      62FD99CEFEBCB336947D782975F8FF3BEDEFCEFF1F414F7FD863651F5A427AFE
+      7FC93FD7FF2F785947958ECF7237233DFF3FD761451521EEE446D459BE3B75F0
+      99CEF32863EF1C4A779A4DD91EE6547C663D95076E27F9FEFF027C17FF3FF3D6
+      3CE74DA85BFF7F079BE93C97F4E7AF9EFF9F4AFCEC78BDCEE9FEFD9FD9FCFD73
+      48E5365BC777F8FFB9CD69A4DA3585543BBFD1E9DFF4FFD3328F245AB43F817E
+      A3FF5FB25B2F64D02CE72032758D233DFF3FF1BB05D9D8D8D01B7CB6ED73BF02
+      3D92CBD193D5E77E255EE133D8F68B59E49B5C443E89053463EF359AB93B8AF4
+      FCFFC4EF16F41273EB8AEB91D2D88A544D2B92346D7C866C8155513D5E49AA10
+      FE7F720E7F4CDFEEB94A531D6E919EFF9FFADC2FC7C9AA265CA86D8173B906DB
+      4B1BE054D6008F0A0DA2EB5B7098F3845D8EA159348DDF5D27DA87E8BEFFFF2E
+      A91CABB98D5335CDD8C3AC7B45237673E8CAEC3E8E3B713CA0B619E6456AFC25
+      A552F8FF69B4ED15FACA6D328D729E48BD132B70A9AE056EE58D5AA6B211FB59
+      07586E155A897A441D2FF378183B04D2D0F517C870EF04724BF2243156E17C56
+      762AD3B67D886DF5641DAB6EC2510EF7729A657103CED7B5CA719DB8E3121958
+      F8D2978E6369CFBD83920FE53E1E14ED5536E188649B719CFBE3CCD7EB4A1BB1
+      B8A8015E355A7E94E335FAE0A7D33474FB2872887391F6FBD46AC768435923BE
+      2FD460728106E30A9A303CAF119FE7366062BE063B2AB5F61B6DBD40EF2E3D4E
+      9F6DF9920C6C879218D7E53C7E7B2A5B60C86587E569F015B3E30B9B653882AF
+      579635E39B3C357ECFFC18BB0BF4B6D961D2F3FFD3CB7C7F5794703FB9DCD785
+      8D302A6CC2E4A216187338AFA419738B34E8CB65E61CBA43A3379FA73F9B1E20
+      3DFF3F1D3F7E9C7AB31D63556A2C2D698259490B66306752D484A1396A88B965
+      E21E4D33F6C590E1267FFAE3F76EA4E7FF17EFB1527F92F3B712C4E324F43273
+      7F10F3D237992CCEDCA7A5C7E269E4CFFEF4FB99CE72CEAE5AB58A4C4C4C68CA
+      9429646C6C4C93264DA2091326909191118D193386DE5D7C843EB1F4A6E136E7
+      C9C8FE327DBDF33A7D69EB47AF7DB787FE0DFF3FFD6EC65EB6DDA5837FF677E6
+      662D0C665D433FC3CDE837C899E32132ED457E93178780FA396835C0A943CE52
+      22EF977E86B3CE33B71534681FFAF55B8E81038763D02043F4EDBB58A6098932
+      DDB66B7953CB1A78B0CD0E183C78300C0C0C74A2010E324FD431CB32F629363E
+      A3566B633FEEEF8075E867B0EF2956F2C226CE13654459C128BFC54EF19C6629
+      ED1565FBBF6D8341060B74EC80410B649A888B32624C04A3FC064DE67ED3665D
+      F981030DB5E3AEB3DD59A6E9F765D0AC4B3A5E941565F4ED1D38700C068EB7C1
+      DB63B6CAF8D363E12C19E527FB2EC646A41B6C85C1E4C57873F03A6D1A4BC445
+      9AC8D32FFB54FBE2FE0CB0D18EB3881B5C025972DDB344FDBE1D8C83B68C184B
+      BDF6071838EBE6080DD2DEA72FCDD230EF780EE6B9E5C8B82EAFA37DC168E76A
+      060618727BFD3AE799C8373074C2BA75EBA4445C6B9FD2C63E0C98EC245983C5
+      9738CE73C640B1DB43374FF4CBEBD2C5FC32D827192DEBD421EDBCF8FCF359E8
+      DFDF40967B5E7C80C1D14EC66033E9C47CFFFE83F1E69BDA72CF8B3FC574E1B5
+      763BE9F5A19BB81EA3EFFF17DF247E4DCFF3FF8BBCB6B6B66724FE764FA8BEBE
+      5E86A25C77FE7F85177FF727FD3825A5F23B54714931A2A2A2E11BE02FBF3129
+      75BC61F78EF0CD2A7FFFAFE3052BB812E68A8B8B3ABED715C1C3F388FC3623EA
+      1012E567FB2F50FEFE5FC7971497C0C1C1019F1A7C2425E2E29BA4F7591F59C7
+      5E77D7CEB1D0F3FF2BFC8E1D3BE4772FC5DF29E2222D233303C1A121B8753B1C
+      8989894F7DFF13FE7F85176D0A4EF91E27E2224DF8141393EECBEF3FE2FB98FE
+      F73FE1FF7F115EF9AE2ACAC9EF577AFE7F85B7B3B393DF0A15FB972F5F8E152B
+      56C8EF705D797DFFBFC28B7CF19D4E193FF1ED72DBD6CD322EBE67EAF3FAFE7F
+      7D5E5F8211AC5287F0A7EA78ADFF5FEA79BC90F86EA95F878EEFF4FFFF222F74
+      E7CE1DC9EE72DCD1397E7AFEFF5FE3F5A56B5FCFFFFFBCF5F33C75F25AFFFF8B
+      ACDDAE12FE7F61FFD2D986DD6AC9AC91347FFA509A33F58B9E53C67EBCF1EBAF
+      3EF4FB7AF4070153C67EB47ADAB8C1BD9573C6F37821B3EF86D382EF863B9B4E
+      FB9FEDDF4EFCE49599930D7ACD9F3ECC87D39728FCB21F463DABEF479972F8C9
+      F21F468F655D5A32CB90667FF3292D9E3982CC7F18FD03A7B92AFCCAF9465DF5
+      DA8A7946D1AC3FB3AEFE346FEC3BABCCC6D39A4593653EA76D66AD5578CB4593
+      BA6A136B266B19CB41A4592DF9FA25AB25C6AFAE593CE975BEBECE7A4FE1D72F
+      9FA293F5F2297F5BBFEC9BC8F5CBBF799DAFAF72FC658E73DE37D61CFF9AC39F
+      D72DFB66354B774EB35D395DEA676D78D876C5F4111CBAD8AE3099C712697FE1
+      B4DBACF7397E9143125278BB35B3148DD86239EB2287EF7078798BC54C25FD00
+      5F8F649DDD6239D38845420ABF73C33C29870DA67E0ED6A6FFE4F03887C3766E
+      30E574D3117C7D9EC3D11C1EDD613D971429BC8BFD32A1EF9DED96BAB9D82D7D
+      8B1528D25C45BA88DB2DFD9015C9F97F659122853FE464F1D743BB565FF7705C
+      3580C30F0EEDB2B8EAB9772D1D71B2B4F7705CBD89AF17729E258BF4A5F0A7DC
+      6D96B3F6B2487027DD36589F72DF7889C36D27DD6CFEC6F1280E7BB1485F0AEF
+      EFB97D1F6BAD9FE7763A7360139D74DDC0E1CFAFFA1ED94AFEC7761CF53BBAFD
+      1B167595C25F3BEBB69875E4FAB97D147DFD34DDBC749482FD0F5090AFFB744E
+      F7BFEAE342DD49E1C32F1F7BEDF69513A7985D7B37ECDC4BF76EF9F7880DF1FE
+      3AE2EA891BE181C7DEBA15E849DD49E1459BB1213EAFDCBB757E7BE2ED0BE758
+      DE09E10147EE849E7D3B2AE834455DEF5E82D5A8ABA05157EAA9EB75D7BCCEFC
+      863AFDB00AF5958F505F910175E16D34D414A3BEEA091AAAF3385E087571145F
+      67435D9A840675B5643A79AEB3BE0E558956A8C93C80922B1FA03AC50E6561E3
+      5079D71C95714B396EC4695BB8CC5A2E5F2E191D5F5B8CB2D02FA12EB9839AAC
+      C3DC560CD44551A82B0CE7B478A80BC2505F769FF38E72988CB290A16C67A696
+      E7762BE357A238E0F7A87D7C12856709B55947D8868128BB65C479E69CF71A6A
+      1E9F40A10FA1FAA12BE7FD1DE5B78DB91F75D0D495A22E3F1875AA0B32AC4AB2
+      411DB75D19B708D5A98EA87D741C15B1F3392D9CF3AC5197E38FBABCEBACABA8
+      E7B1A9CB0F42915F2F54DEFB119577B89F378D50577003E591D351956C87EACC
+      43288F98CE69C1280B9FC0E9DFA1FAC156667AA326E3006A1EBAA0E4F23BA84E
+      DB81D21B23501CF837AEFB0A87EFA0227AB6B447C445BB2557FF81D2A0F7D8A6
+      632866A6F2DE6AD497DE43ED93B31C26A02EF732C77DD1C0F75184753C6EEAE2
+      3BDA7CBEAFD27696BA3CAD233F9CEFD77E149E23AECB1CA5D7FF9BC7A8076AB3
+      BD781C7BF03D1B8B8ABBCBB4693C7E45FEBD792CFBF118BAA0D0975071CF42B6
+      5F7E7B0A6A1E9DE4F6AF327B9AE751066A793CD51DF7AF4E15C06999DCA637D7
+      739ACB5D4179D44C2E7399EF9F9AC763172AA2BE4575BA13B7D197EBF0E63EBF
+      25C7ABF2DE4F9CF692ACB7E87C5FB66709A759F23C5AC7F7AF96E74F356A73FC
+      5074AE2787E7517C71809C8315317365B9EAB4BD280F1FCF79FE28BEF017D488
+      7A02FEC0E98ECCD768D7427D2DDB7F4ADE77755124F387D9561F9EAF3B39FD18
+      DBE5227931BEF565A9721E8AF5A2BF7E445D550916725E94860CE3BE9D4765C2
+      3A3956E23E97DF9E2EEF4365FC4F5CBE42B77E1A1B6A4989CBFE88FFFF96C744
+      236C1321CF6F8D48E7506947579EF5BF88CBCF9E
+    }
+  end
+  object Timer1: TTimer
+    OnTimer = Timer1Timer
+    Left = 225
+    Top = 116
+  end
+  object dlgSave: TSaveDialog
+    FilterIndex = 0
+    Options = [ofOverwritePrompt, ofNoReadOnlyReturn, ofEnableSizing, ofViewDetail]
+    Left = 117
+    Top = 64
+  end
+  object popWebSearch: TPopupMenu
+    Images = frmNewQSO.imgMain1
+    OnPopup = popWebSearchPopup
+    Left = 314
+    Top = 216
+    object mnuHamQth: TMenuItem
+      Action = acHamQTH
+      ImageIndex = 19
+    end
+    object MenuItem88: TMenuItem
+      Caption = '-'
+    end
+    object mnuQRZ: TMenuItem
+      Action = acQRZ
+      ImageIndex = 20
+      OnClick = acQRZExecute
+    end
+    object mnuIK3AQR: TMenuItem
+      Caption = 'Search on IK3QAR qsl manager page'
+      ImageIndex = 22
+      OnClick = mnuIK3AQRClick
+    end
+    object mnueQSLView: TMenuItem
+      Caption = 'View eQSL'
+      ImageIndex = 21
+      Visible = False
+      OnClick = mnueQSLViewClick
+    end
+  end
+  object imgMain1: TImageList
+    Left = 176
+    Top = 232
+    Bitmap = {
+      4C7A230000001000000010000000773E00000000000078DAEDBD075855C7D63E
+      3ED6F4A2B9B96937BD1B636234B11B7B2FD8BB60A14851101B208A745090A674
+      44918E80D28B08284D44C4DE15A4F70E4A79FF6BE6708E600BE6DEEFF9BEFFEF
+      B93BCF9BD97BF6BC336BD6CC9A59337B38A6F72A65E904E6CA2478CE35624411
+      9E153FF597AFD8257F3376DB578FDDF6D165378FEAB2EB4774D815CF6DECB2C7
+      5676D15D9B65BB6C662E2E2EC83CB8896538A8B378FBAD82C7AF5B81C6AC38C6
+      4EE0EAD5ABB874E912B2B3B371EEDC39A4A7A7E3CC9933080909C1962D5B606D
+      6D8DE3C78F83A73DB57FA3E08B723B90939383BABA3A81DADA5A196A6A6A04AA
+      ABABE1EFEF0F9E3671AF92A47C92178040565696E0369C3B214166081A328250
+      971E80BA145F545555E1C89123E0694F9AAD13FC1B5E3A82DBDAF290A5A5A589
+      F2F2F3F3F1E0C103E4E5E521373717F7EFDFC7BD7BF704DFD5D555F0634D1404
+      9FEB8A3FB7B53D6249494942CE86742A338D97E983BAD35EA84B3C84DA047754
+      5656C2DEDE5EF0A3F6AC167CAE6709BF95C5C5C5097EE732EFDEBD8B3B77EEE0
+      F6EDDBA8A8A8C0BE7DFB043F62D74AC1E76DC49FDBDB5B597878B8D0515DD211
+      D48A325D511BE78CDAD883A8893E80F2F272181B1B0BFE899DCB053FC74D5BC6
+      3F7ADC5BD4B17399B76EDDC2CD9B37E11AE50D79A72D986BAD8419966BA0A923
+      27F8E71C37097E797319D34CD21575E4BC3D7BF6C0C8C84894A7B6773BD604EE
+      C181CBE1882DBC00D5B8FDF879FF12BC3DEA339C75D828F8D7AB6F31EDD49D48
+      BA9722CA34313141444404A2A2A230C56C356C2E1D87DDD5E35C7628C6EF8372
+      FC7E7CA8F23BD2EDD459536B13534EDE0CB3CCFDD871DA00376EDC8085850562
+      62620406EBCD82DBE54874BE0E5C3C818FD4864173E61FECA08F2A5B1BAF0685
+      48556C0CDD8AFDBE7630B336437C7C3C4E9E3C89CF3546636DEC5E28C49A09AE
+      428C99AC7CAE03353535BC08E3D5E4F0C3BE05581F6B25CAE5217FE6F567DDBC
+      3E571C8C8F55FF10327FA834146F8DF85470A7F52E15905B7443407ACD9D3B97
+      1D387080517F633366CC78AEFD77BEBEFAEA2BF6C61B6FB09E3D7B32D23B2B28
+      2860640BCCC3C343D8FFEBAFBFCEFEF5AF7F3D93BB7BF7EE6EDBFFBA75EBBA70
+      D7AF5FCFA8CF74DBFEB96C13274E94F1797EA74F9FEEB6FDEBE8E8B061C38675
+      91415959B9DBF63F75EA5419EFF0E1C32C38389885858575DBFEC92ED88E1D3B
+      D8860D1B587272322B2929E1BAEBB6FDA7A6A6328A63AAAAAA8CFA272339D9C5
+      8B17BB6DFF89898922BD828202E3B2F0B6E37DE545F6CF6DAAACAC0CDB8D76E0
+      43EBC96CCE9C395DDA60A5CAEAE7DABFA9A929AE5DBB865BF9B7B1D06D39A678
+      ABB0574C8632D643C25DB870213B70CCE9B9F66F6969892B57AEE0ECAD4C2CF7
+      558066C46E36DA93C6BF9DDF08FEBCC5F35E68FF7BF7EE4566CE39CCF158089D
+      B8DD98E4300BEF6EF981B1DE1201062D1FC2D6C43DDFFEADACAC60E862848507
+      9742F19806C65A4DC4C0358364F6F457F62F85AABA2A96E92C87BCB602943594
+      5F688F03060C6013264C6063C68C615F7CF10563DA9FB15E7A9F31D6B36BBA6A
+      9AFB39861F1921F05FFBFFAFFDFF4FD8FF1EB76CFCA09082DE13E2D177761006
+      4C37E8B6FD2FD2F4C2E8AD39B08A6842F4D5766CF66BC040F5B3E8F9995CB7EC
+      FFFDD961C46DC46C3BA0DF76E04B53609C65197ACDF44177ECBF0FC91C9CD5DE
+      65FEFF707715D5250EDDB1FFFEB3C3B1CEBD9E38E4A86C6B2654A2974A2E7A8D
+      F5EED6FC3F618D23BE5B9F8E2FB717A28F4E297AACBF833EB3E3D1E3CBA5DDB6
+      FFB795D419AF2F97B9D7186F1957EAFB3EB09F843CBB8928709E875CAB09B86B
+      F42B5EDF758D55A56BB38E84B2BC73CB9B58F3351DC9C3EBBB5881E36CE2FC89
+      80B6F9ECAEF1501478C8E3B6EE8F90E6CDFA9D979473F1034139DF11FF4147BE
+      B9FB464172DBC8EEEAFF8C078E4B7153FB2BC1E794F74B4B04EF9F65A55D6509
+      00FBF3B57EA2CCFB7BC789320B8FA8E18EC108749697DFBE6E850ECA05F65ABF
+      790C2769EC5E0476DF6A3C7899D284B6FE2B61EC29279EFF2186BC61ACB0BF78
+      6298D6550FFCF681C342DCDCF60D4089F67ACD87D9D9FD304CB18482C73C2080
+      B17136D35010B81DF9FEDB50E8B715057EDAC8F7D644EEE14DD84679F07A5EDF
+      F429AEA97E0CA343F3B0FB8C19426E45604B941E3877B8F158E4132FDF571B25
+      B1B67CED83C23073DC735793D5F122064904A22945CE6719CD6F3AF0BE1604F7
+      8B47F1ABCE1F2251BEF726E41DDE888A380794F86DC163CA35495D828EB1451D
+      F5E2E5BAE41C8643B61B7EDC340885C4CDF55447AEC706948799A2D85BEB09FD
+      F2473B1997CBCCCBE55C1393E978E0AF87BBAE2A8253E2BF03C5BE5B25E45E3C
+      68954D49687952BF60F95E5AB8EBA20C74242AF6DE8CA2A35AF8A9533A29A70A
+      FD24CFFDF973152BF054419EFF6EDC7258279337FFE04A927FABD0833DA7CA28
+      95220CEC4857E8A98CFB4777E096FD1ADCB451C08DFDAB706DDF72DC755643B1
+      CF0EA107643FDD1F18FB993DE0E51CDD82DB8ECA182512D1BB8040A1DFBCFD8B
+      89AF835CF2DFED602D215A72A21DEB78624547375399AB716BFF4A3CCEB70FE3
+      EAC97756464990211ED8AFA2D8F759E9FB1C8F0528705640FEC155C8B55F4EF6
+      BC8CD2FCC1EA69A99D67BD80CA9C8FDCBD72C8B5982B039FFB9E0F6EBBAFB237
+      E9BF1E9447BF1EBD580F9C61EAAE97B0C139078A07CFCB2ADFB3576FD6F79557
+      D9EB6F5054C4BBAC27A5EDD9BB17EBD3BB37F969FAF49EB14DEE57C0B9C6A137
+      B0CC261AF2766731E178129B9F53CDE710E8EBEB434F4F8FCFAFD8B66D9B98F3
+      B5B4B4A0E97E091B896B7AFC16022E16C12FBB004BF64761A9550A8C8C4D9899
+      B905DBB973279C9C9C049C9D9D05B8CFC1B1D1ED22FC2F142280E0987A1F3649
+      77B0C83A12F3CC13515B57CF1A9B9A192F9373E7D92C8593B393E0F1B99A43CD
+      391B3E59F9B04EBC0BF3F85BB024CCDF1781194671E84115EBDDE74BC6E5E565
+      8EB6988469167304CFCDCD4D40F140260E9FCD135CC3E81B3022C8598663827E
+      0426DACFC2789B1918BB6F2A469B4FC24AAFF558764801930C67C0DDDD5D40DE
+      361DEEA9B9308CBA819D6157A17FE22AE6988761E48E508CDB3F1DF6391EB0C9
+      76C6BE7307607ED6164669FB20E7B804E3F426837C2F2CB33A0DC7E47BD0239E
+      76F015AC3A5D8E19662730647300C6584E8675961376A698627BB201369FD283
+      3661479201A6ED9F8305BB1663817902EC136E634BD025AC8DBA8F1997DA31DE
+      320A3F697863A4E9785999BB53CCA09B6C886D89BB30C57A16466A8F85A7A727
+      661AC5605FEC4D68F85E80A2F705AC0EBB8B29C6A1F846C5137FEC198321FA23
+      F1EB8E3FF0F396219866331793AD6762F8E6D1824BFE1126E987C12CF23A948E
+      9C87827B26D67A64927E42F1D93AD78EFE07262F2F8F43870E919F300EBF6B0E
+      173C0EEEAF8DDE11823D54F735C45BE69C8E552E199860108C0FE51D71A3C36E
+      56AC5821CA1BB5F94F1CA290F338BCBCBCF0BBB63F76065FC272E22E7048C592
+      036918B7FB18FAAFB0EFB0CF2B6CC992255DCAE43C8EA3478F62D0C6A3D81E90
+      43B888CD3E17A072E81CFEDC750C6F2FB5117D4E5353130B162C809C9C1C685D
+      8499336762FAF4E99832650A264D9A846F94DC3058DB17A3F58231C5281CB32D
+      6230463F086F2CB6A621D2844994E028996B596FD99C0EBCC51AAB82BA8C91EF
+      2CB3C59B4BF693ECB6827F9F7C7F8E0F0F3081675DEAEAEAE4BF7B883ECDFB38
+      7B898B73398FFBC4DCB73B78F0E073F9DC8725FF9F91FFCFC8FF67E4FF336E3F
+      DC8F2E2A2A12BE18F77F9FC727FF9F91FF2E407EB800D72F2F9BAF291C1D1DB9
+      FFCFF83A82FBC17C5DD8994FFEBFE092EF2F416608E3F2725F362525050E0E0E
+      620D12141424D6A36666665DF8E4FF8B32F99A87FC7F46FE1F5F3FE1F2E5CB62
+      2DC3FDC1D8D85890CF2ED6358686865DF8E4FF33F2DF59E1093BDCF2B7809D9D
+      1DF89A82AF8578487E3B689DC2FD6FE1172F5BB6AC4BFDC9FF67F991AE288A71
+      4361A413AEFBEF03F9E9C20FE6FE2C9797FBC50606064F71C55E66E07E1446B9
+      A12A3B1E95E76391174C7C573D989B9BE34AA02D23FF9F51B9CFD47DB4853A71
+      9D89178792445F149FF442797A18EE1DDD834B566BB9FFCFC8FF67E4FFB35E63
+      8EB21E5F2C9171A34CD55018EE84CAAC58949CF24641F841AA833BCA528371F7
+      900ED20C9673FF9F91FFCFC8FF67E4FFB381AA19ACE7A772C455217FC80195E7
+      A25192405CBA2F8C7245E99963B8EBB10317CC9673FF9FB88D8CFC7F46FE3F23
+      FF9F91FFCF7A8D3ACCEE50FE15E7A284BCF9C7C9B78A7441E9E920DC75DB820B
+      A64B799F63E4FF33F2FF3BD91518F9FF54973876CB71132AA89E45D1AEA20EA5
+      A70389AB8D8CDD73797B8BF515F9FF8CFC7FE250736F6B265432F2FF19F9FF2C
+      67EF1AA1A3D2E4409426FAE1B6B316D2746672BF9F4941FE3F23FF9F91FFCFC8
+      FF67E4FF33F2FF99D487CF365E842B46F390A33F13F11A639F691F6FFFB892F5
+      1A7D44C84CFEBF8CFB43EF520183A14B04EE1B7DCDAAAE078B777EFC7FBF2F61
+      E1439774C92BBDD3F32CC9FE3FDF53C76D1F5DDC3CAA8BEB477470C5731B2E7B
+      6CC545776D64BB6CC679674DBEFF8F0C0775C4DB6F45A7FD7FE1D3BE2C4EEDDF
+      888EFD7FFC1D24EE5542C7FE3FFECE75D26C1DE6BE23F6FFC5736BCB4342335A
+      1E36A1A5A91E8F9A6AF1B0A11A4D751568AC2A45435911EA4AF3515B7457A48F
+      355140C7FEBF786E6B7B84D6D647229F96478D68696E10F9B434D6A0B9BE124D
+      B56568AA2E456379B1481FB567353AF6FF3BF8AD84968E7CB82C24C743CAA399
+      F268AA434B432D1ED555A1B9B65CA48FD825F12D791BF1ABBD5DCA978694476B
+      477D64F9D48A7CF87562E77274ECFFCBF85248F81259DADA9AA110AF8E9591CA
+      5812BA06F3FD568AF4A1BA4B9171CB8BEFFF7768B495D7A2533E52FE23AC0857
+      84FB551F385F3A82991E0B44EAA0AD0BE9FFA7D859878D9D5AA5BD238FB62EF2
+      2C0C5C8D83170FC1967CA4058756E072E15504682F10F2A7DBA93FB78D8D53F6
+      6249E01AA8866BC3E6BC232C336DA11AAA8951C613307FFB18B077E6324BB93F
+      70DA5A45F4A704F3F58833598318237984937E43F59793BFB110EB82D4609E61
+      03C3544BCC77598A715B8761E39CF1788DCABF663E84E92594B0B73E9FC87E7A
+      F71576DF6B159BEA95CFDEE9D98FE51D99C406E85F64BF6D1E81451E2B21E7B4
+      18B3B60DC658E7BBC47C4BB24F477DF054D529C665798796B4576CC7B2515697
+      C8E77EBBCBBBEFE407E0CB25DF76191B567DD0437CFBE370DAFCA5C07FF7FFFE
+      E7F6FF8EDF2CC152EFEB30A175CC14F70B7877D8EC6EEFFFF9C547627B4211C2
+      2F56A3A08EFAFFC52ACC24BFBC3BFB7F872EDC83C1954A9C78F0107B138B107C
+      A91167EEB742C93D1B7FB5FF171D1B0CFDCB1538D3D806F53B8DD0385B81755E
+      D7A074E82256AB68BE70FFCF27FB36742E5522ADA90DF2B71BB022AF09BA576B
+      31DA2907B3962BBD70FF6FB5A13DB6671609EE6AE22ECF6D82DEE51A4C3C7005
+      133D77BF70FFDF2D211BDA5197914C32AFBBD7845579CD244735A639DEC4E2A3
+      9B5EB8FFBFC8732F7423AFC0262A078B32F2B1E25E03765CA8C06CE71B98E9A6
+      F497FBFF132D02709F86C8852ED7F1B16E02A63BA5608C513CB63ADA766BFF7F
+      A0A2111CD21EC236E321C69B64E08BF5BE50D8A8D3EDFDFF7747CDC7F7AB4D30
+      DD2C0E13F43C306AF2EC17EEFF0F6FAB15F6CF438EFFC455EAB31DC547B7A0D8
+      73230ADDD590EFAC88BC03ABBBBD6E28F6D4442DD94075AA1FAAC906AA928F20
+      D77A41B7F985AECA82571E698BB2B07DA88C77C53D93A9DDE6E7D9AD44659227
+      4A8F5BA024D80415510EB8B573E433F95B76B48363F3B6766CD46AA3366A45AE
+      D57C54C439A324680F8AFC76A234CC0AD7B70C7C2E3F3AAE1D9131ED088B6C47
+      68583BEE194F467914F9A2DE3B5078441B25C74C7055EDD9DF7A35B5DB101ED5
+      8E3D26EDD8B9A71D4121EDB8A13702A5272C917F68231EB8A9920CFAC859FBF1
+      33F95C5E5EA6CEAE766CD569875F403BC93A00C5C78C90E7A488DC030A28F0DA
+      86EC251F3E358FCF3EBC08EBD63F1265F2FA6B68B5E3C8D1765CDDF0198AC8C7
+      BA4F7ABCB77F31F23D36226BCE3F117B230251578F23EC52308273FC31F9E06C
+      AC58D12CCA54DBD40EC50DEDF0F06C478EC2C72838B20577F72DC01D8BD9C873
+      5642C6E4F71171251496278D6014AD0FDF2C2F8CD93B090BE6358A32D72AB563
+      D59A7638BBB6237BD187546F75DC369D815B469370DF61355247BF87909C4018
+      44E942E784363CD3DDF0BBC168CC98DA20CA5CB1BA1D8B97B5E380633BB266FD
+      13B98EEB70D3603C6EE88FA23A2C45EAEFFDE19745EBF8502D6806AAC2E5CC41
+      0CDA3604E3C7D489320F3AB5C3FE403B6CEDDB9131F17DDCB75F45BC65B867B5
+      08772DE72171503F1CC9F0807BAA339C4E1F8043A22DBED71808B3490630FA73
+      17760FD7C7CE213BA133480FA923DF43EAB0FE3833B8BFE0250E7817A7BE7F07
+      3BE77E0BDD195F62FB94CFB075C227D0FEF323FCBBB62AFDFE9758BA40E0652F
+      F3E5E3D9EDE3562FE5FF9F71D105E7F1EB4E90C9DFF2FF936C36FDAFFBFF1DE7
+      7F2411A7F73C065D4AC737C920AE6CA7C77886FF2F78E4A376E6F33D3D1EB6B7
+      B74B78378EC9F84FFAFF2F2ABFADADEDA9F29FF4FF3B5FBC3C2938B7335A5B5B
+      9FE9FF772E8FF3163A4206CE53BE522D83D4FFEF38FF23E33B52FDA5F2729E76
+      8084CFCBE43CD732C8F8DCFFE77CA9FFDFB97C9EBE73F92D2D2D4F95DF1DFFFF
+      4597FFE67982EFA531E7B9FE3FD7D171BDA508D6598263DB16239064F6A772FD
+      B5E681F3D8FF81EB6FEEFFB30DCE394CF1E079F692FBFF826B1C7A832DB38966
+      F2766759A7FD7FA6AFAFCFF4F4F4D83F722AD1977CAE1E17CBD193D0F742255E
+      CB2EE7FBFF2CE06211F3CB2E604BF647B1A55629ACD3FE3FDFEB637D88B7BDB8
+      01979A5B71B9A91539E43FA636B6606B51035ECBA9E0FBFFCC26E90E5B641DC9
+      E69927B24EFBFFACEF85721CA97A88D0DA16D89437C1B4B411FBCA1AE15CD184
+      D48616B8D23B2E9765FC2D367F5F049B6114C7A4FBFF6FE694438BCAF0AA7904
+      6BE23A5434C38A423BE21EA0FB7D741F52FB086A45F5F8887C6239CB7036413F
+      824DB49FC5C6DBCC60BDB32B70A2AE05F6E5CD124E65330E121C09F61512F07C
+      781EAF903EE69887B1913B42D9B8FDD3997D8E07E3BA4A6A6C25792565BB90AC
+      1E8443D50FE14EE17E8AD32E6E44705DABD0EB0CB3136CC8E60036C67232B3CE
+      7212FC78AAA3132FAFF221DC04F7113CA93E36F4BCBDB4194A458D385A23E18F
+      B78C623F6978B391A6E399F9595B21BF5FAD4447BA65CD5851D88459054D985A
+      F010A31F3463585E2366E437C1AC5222FF14E350F68D8A27FB63CF1836447F24
+      E37A5525FD5957B6601CA51DF5A00913893BADF09108C7D2F3A6B24798FBA01E
+      6F137F926128FB6C9DF4C0AAD8FF67AF50FB6E2CA17A52BAD985CD9852F810B3
+      8A5A308742859247585DD4845729CD2A970C36C120987D28EFC83AEDFF334F4F
+      4FD69BE4989C5B0F9592875857D28225C45B50F41023EFD783F7AD050EA96CC9
+      8134366EF731D67F853DEBB4FF2FD6721CEF89FE5B09467AE2788578EFF07E19
+      70916DF6B9C0540E9D637FEE3AC6DE5E6A23FAACA6A6265BB0600193939313E7
+      A266CE9CC9A64F9FCEA64C99C2264D9AC4BE51726383B57DD968BD6036C5289C
+      CDB6886163F483D81B8BADD9DFD8FF676F2ED94FB2DB0ABE74FD6FE03D46A0F3
+      7A9CEF5547474763FBF6EDDD1A4BFEFCF34FF6FEFBEFB3DE64F37CAF9AD6FF62
+      2D1C181808BE27F0DE7BEFB12143863C93CBD7F5E7CF9F176BFE6FBEF946AC85
+      A5EBC8D0D050F0350CCFC7D7D7F7A97D7BAE43E9F9167EF683EFAF27242480EF
+      27F0BD77CEE77BF6999999E23B023F13A2A4A424E3F3B52BDF67E079F0F4FCFC
+      07CF47CAE7CF7C1F9DF3B97CFC5B216FAF27641069F9BE45464686D8E7E7DF2E
+      F8F7202E0FD707AF132F7BC3860DE8B4E72FE24F9D3A85EBD7AF83EF41F0EF04
+      FC7B26DF6318356A14E3FBEF7CDF9FE7C3DFF36F177C1F7FD7AE5D627F84D6FF
+      42565E2ED7A1B7B737F8B90FD919EDA953D9B8A39A187C4851C8C565E17AE56B
+      4A5E2EDFA7E0F5E3F13C7FDE16BCDF49AFC99327B3919E2A581EB6073F382D11
+      DF1F78FA356BD688EF93FC7C1BFFF6C6F76D781E5C0763BC3761989706861C56
+      C6AFEE6BB12864276C33033037700B3FFF07FEBD8C7FEF9296C1EBC3BFB1705D
+      F07098971A0E9E0F8543D631C1B3C9F4C396781B58A61DE6E7FFF08AD9EF90AE
+      65795FF5F1F11167FC3897B7D3E043EB047753AC35D4A22DA014698235610650
+      8E308451B21368FD0FB65BB21FC6CF52719DF3FEC6F3E1DF657E745D019BB3FE
+      B04AF78665EA6198A7784095F2304C76C4346F25F4DD41DC571F2FA6353434B0
+      69D326AC5FBF1E1F7CF001FBCA711EFE653B03FFDC3F09EFEE1D85918756C320
+      E920A678ADC56BDBBF06EBDBF3291BF8F24B9A47DE7C53EC9FF16F34FCECD089
+      1327C0BF4DF630FC09130FCBA3E7B62F9EC97DF2E2EDC7BF29CE9A350B43870E
+      656CE717A0F53F6878E8725D20DBE7B86E3742E079FB7FDDB95EB4FFD7A3470F
+      F657FB7FFC9BDF21070BC4871E85BBAD096F0F16EC692FEE97CE9FC9ED89B733
+      7BDEFE1FD93F73B432C2E9E86028AE5AC46D82EDDCAC023F576BB8D99AF27EC1
+      C8FED9B3F6FFB6A8ADC551474B1CB0D0C7213B538C1D3154F0674D19875D5B54
+      61A2AB29E2366F54C3D6AD5B65FB7F7DFBF461DF7DFD0573B53614729AEA6961
+      F1DC69909B310906DBD4B15169150CD597C2C7561F0EC65BC4BB9F060C787CFE
+      8FE69CE0238E880D3E02C3ED1A0201B67A88F57540F8917D0875DC834356FA30
+      D25801AD754B847CFFF8C77B624CE6E7FFF837435EEE71AF83D8BD550DBCBEDB
+      35D6437DDD0A0C1AF09D288FCB218DD7545E0D6A0B3EA689F37FFC9BA1FCD279
+      9830663896CE9B8131C38760C82F3FE1EB2F3F031FC7DFFF477F7CFCE13FF1ED
+      575FE0A30FDEC73B6FBF85B7DF7E1B172E5C909DFF5BB76AA9D0D9B9D3B1480C
+      0F808FD35E8C5D3D0D7F1C566783E68D828DB10E92A38F8977BC2DDE1BF8093A
+      9FFF9D3F73328C766C127C1D4D2568A9C863D894E1DCFED9B0B1C384EE397FC7
+      2645E86929E38D375E43E7FDBFD953C7CBF8D234BF0CFA11F6E782D857DF7E2E
+      7426E5733D509BA1F3FEDF94F1A34419BCDFF0F75C8F7FFCF6332C133DD988F1
+      C3059FB78FF41DD75FDF4D5FC9F6FF78BF1831F457A1B7813F7E8BEFBFF9125F
+      7CFA093E319EC4FA7FF94FBCF13AC9FB4A5FD2A738F02441AF1E4FD940FFFEFD
+      59DFBE7D85AD6CDBB64D7C3B24FB17FB9B3D747E6064FFACA7E227EC59DCBF7B
+      FE573AFF4787DD17F8E0978FD978A3E95814A88055F11BB0FA941A9685296292
+      C56C7C32ECF3E7FEFDCF2D5F3D6615A38DF56736C23B370EB1A5E790723F0129
+      37C371F25A287CAE0541FEE406E886A820EAC0962E7FFF531063CBF6246FC7BE
+      EB4790D5508CCB153771BEE212B2EF85E0EADD089A578FE0FC85C33873210066
+      19B6D818AA84185B0DD9DFFF58C56E86D9354F24D6DE455AED555CA9BA820B25
+      D9B872CB07B7EF06E256960DAEA5EF454692354E5E09816E9A2DD4DD24EBCF84
+      C0ED6C7D8A1612EBF21051158E88EA20245544E1F28328DCB8EE869B970E202B
+      420369611A88C83486C33D1784146561AAEB6CFC63D007CC3C66339C48C688B2
+      73385EE58B8C4A7FE49466E04AB6156E64EE4556B812CDE7CA70B9AA05C3BBDA
+      D0BDAD05DB0B5E304F3F8A812A83B1297113C2CA2FC235EF08DC4BADA8EE51B8
+      509A86EC988D38775C0999195BB1ED9632946ECC86E2B5D950BFB40ADA71BBE0
+      7D2B1943F4864331791312AA6F63CF75236CBFA58153052E3877CF1767FD5621
+      F9A43AA26FEE85CF75056CCFF913AA17A66059BC1CD605AAE344FE790CD11F86
+      F5C91A48A8BA03ED1C7DD8E4A823FEBE07D27C57E352E86AA43A2F406AFC4684
+      E4E822FC8C0642FCE5A1E7BF04CBBD9471FCC179FCA23B04AAF16A08255D1B5D
+      B6C1A9DB96389D6988734716E366C84ADC0E59810C979938653A1151C61311E3
+      321F07BDD742D1671B8E5C3F899F36FD0CFDD00DB0BB1602CFBBE1304ED584DF
+      0503A478AFC405DF25B81F40F9F8CC439AD30CC4EC9B8A48D725D8433E8CCE29
+      1BEC4970C3D72BBE45A09B1A5B1CAA8088D24BD810BF051B4F6A21215203195E
+      2B702F7005EEF82D4592DD1CB8FB2FC50ED2E7F283CAF0B99D885F757F43BF9F
+      FAF3F53F333E6D896D895670BE16069D4403C427EF42AABF2AAE1DDF80ABC714
+      11EFBA1A0AC754B1CC51057B929CA1ECAF87E13A4345FFE17FFF7372BF325BE9
+      340F9A51A6082E4E43E2454FA490AF74365C1FE7427620C677070CCE1D80E7CD
+      7828F9E962B0CE10A8C8FDD1C58E7ABDDA9B0D54FA1523CCC7C235C51D61C9EE
+      3899E48684D3EE08BD781CBB125DF08BDE6F18A8FD0B7ABFD1E7B976DF6F407F
+      F6EDCAEF315073107EDEFAABC0808D3FE367ED5FF1DDFA014FA56F26DB57A81E
+      2B7BFE94C607A9958F73FC96AD675F7495939041C34FF1B1C92CDD6904E3DF30
+      8B2B27B23729FC706A1D1BFBD927EC82BA3CCDC7C128CF4A444966180A22BDE0
+      A57C9E0DFDF22E5BDC239F7DD8B7802DEA51C03EEA5BC816F628641FF72D660B
+      7A14B3B533B4D99DA4D37858721B8DC57750577053A0A1E8361AF2AFE266B82B
+      9AC68F60A37AD7B085BDDE61667DDE65F37BBDCB2CFAF463A653A7B1CA8CE368
+      2ABD87CABB17F020C917D7832D702DC81477E2DC5076350D758537901FE982A0
+      718B596BCFA1CCA1F71FACA5E71FECF0E7E1AC3026008D2577507E3D95387B70
+      3BCE058DE50FD0509E87FCF4605CF4D543E1F958D4E45D41E661573CFAB0908D
+      E85D4FE3693DB351CC61F50F2EA3EA7616AEF8EDC205CFEDE2FB7D6B07F87D8E
+      DF1E641FD543E995D328BD9C8CE285EECCBE77146BEF194563A70FD5F306EEC5
+      7920DB732BB23C36A3A1EC01F233C35174E914F11B5140E11927355C0DB745E5
+      FD8B8833DF8C8FFACE237DCE63374E38A296F494E3B30BE7DCB590E6A28E144A
+      9B772E12CD759568AC2CC68D93B40E7150418AAB16AAF3AE22C14605C3F9F7A2
+      E975EC4AB01D6AF36F20C75B1729CE6A38E3A88A330737E051632DEA4A73917C
+      80C688FD8A84F548A4FBAA07579068A58069C4E5ED7FF5B82EAA722FE146C401
+      B255759C3EB00149F6CA3865A32410B7771D622CD721DA722D327D4D517AFB1C
+      FCB566C3B24F7F26D7AB3F0B9C3799E59F8B41E9D514A4396BC9784D35E568AC
+      2E459485BC4084C53AE49D8FA3BAF8E0C8D805ECFB5ECB985D8F656CCC07AB58
+      82910A4AAF67E04116F9200E6A88DDB716D9A10E029C7BC26C0D6E2606203F27
+      119E1BE6E283FE43984DEFDF48FFBF31BBDE4358C9A0F12C66CF32145D398382
+      8BA790E16382686B65445A2A22E5B001EE9F8BC5830B0908519B0CE7EF6DC810
+      A2891F43BE6E3BFBA3370D053DC1D60CFC98C56A4EC1B5382F94DC3C8BF2FB39
+      02C5D7D37129C20DEE6B6621EF9B4859BF19DEBB81F80DC46F644B7B3C60FFEC
+      9BCFD6F63BCF14461D601E0A8B71586512BC9426C06E851C7487DAB09FDF9B41
+      F63287EC458EEC478E49DBFFC3BEF3893F9FF80BD88C9E85EC47BE2F6FDEC042
+      7B94B2593D4B580ED9F89C9EA52CBB57194B64D3D87BFF789F6F1330DEFE1FF6
+      2E15089D3E46809FFFB9BFF5B8B0F5A3845F678C61F9D3C7741D333A3DBFCAB8
+      1BF619B3E8FB2F66D3F733664900FE7A6B939F4DE0E7372CEE51DAD77E634A67
+      36D35CA489B5A7364281E69455D12A5811A18825A16B31C7630946E98CC7D7D3
+      BE67AFF57FFD99F9AD4FD284CF2DF2336E86C0EBC6319A5F0271E89A1FDCAE78
+      C3E1823B8C52F6413D7C0B06AB0EC33B5FF67B8ABF364103DE3783891784C3D7
+      03E071D557709DC9F7E0FBD2FBB20E88F323DAD17AF879DD60782DFB849D7B50
+      CC4E359488F315F2B1AAE2DBD8B2B0F5581CAC800501ABC0CFE2CF3EBC182AC7
+      3569BEB78115CD017B33EDB0CA7B3D3E1AF9AF6EEFD17EBF682046EE99803DA7
+      CDA17FC6041BC3B6E2BB150320D56352D52916A1ACCCB6641533D6E75BC9B9AE
+      BE8C955CD8C1949522D8A9AA24F6F5E219581FA886DD674CA193B007138C27A1
+      9EFF394AC80DD6B3DF48C95AA6670FB6516704ABBF7752F2F7D0E56043D58F50
+      5F7D877D3DEB1BACF153861E3FDF1BBF1323774D84F41D7729E77FF726330952
+      855AC826B410D73AB980F5FE64AE642D3AFF1B4CB19A89AD717AD03CB99DFC8F
+      0DF84CEE4B1C9AF80EB3B99BCFE43E1EC6F4938DA07C9CD6CFC7D430D16126C6
+      ED9F8AD1961331C2641C16BA2FC796585DE824EDC6F653FA98613B17DF2BA8B3
+      BEAFF463E3BF7C87A9BAAE8152E846589EB583C5591B98A65BC128D512062966
+      D875DA9864DE038DB82DD896B013CB3C57E193595FE3DB0F5F6557ECE4D8C2B0
+      62F6DDFCDFB1966437219E49DA5E18A69A0B3DEDA4BAEA2419402B6607E4FD14
+      31DD760E3E9EF33B867EFE1ABB74CF91F51DA02F6BA3F9F203B0FCE85A2C3DBC
+      1AC38CC662E8AE9118ACFB07066D1D82EF557EC2A773BEC0BB83FAB311FFECCD
+      8A0ADCD9AC2D21ECEDCF7E13FB75D2EBEB053FE067B5DF9E3AA3E3F3E034636F
+      8EEF729E676ABF1EEC5AFE517660BD353B5A7887F578770A9B4B71FAB106E2FD
+      6C6E5F6DF15DCE2C7224B443BCE7F3B8C6C8F7D80EB27D8EE6456502DCFEDB3B
+      EC3F91EF8D2C2E6303099DAF719D9EB9FD37E55E6435E941A8483C84B2047794
+      C5BBA024F6208AA2EC51186183FC13FB9017628EFB41C6B8E36F80DBDEFA3869
+      BC06D2BADC3AE12039EBF612C871D392E9A9FC948788E3F6EA74E9B0B0779BF3
+      4E646BF6B45EB0A6F6B410FD4097DA92F7019EF6B2EB2619BFECA4AB88EBEE25
+      CAA739522A7F49AC93882B39EDD32DF0B4E7EDD7CBCA2F8A7290F1F9557CC6BF
+      4B79C569415D9E9B6ACA90B95F5EC62F08DF2FE6EA92D40042104A297D49DA31
+      9464041342055F84E9847311E20C62BAE53299FC0F8EEF237E0D4A293DBF4A29
+      ED8BCAAF29B88554D345E0367F2FCE82E5069BE1517D354A334FA0F45C58579C
+      8F127C015E3EF952D579D771C67421BE7885D65FD60BD8BD00433CACAB1269F9
+      557621AE4B79A5D9B16869AC953D737EBA95BC4CFE3BE473717ED98558C1ED82
+      9C9328CD8AE802CE4FB55C89E00B21ECFB295BD98DA3BAC4AF44D9C50449F9E4
+      6B75299F74D9F912FC7DF2909EDDBB76782B9A6B2B24E7332B0A515F9A873AD2
+      714DFE2D91F6593863B152267FE4CEA5B844FD39E7A00ACEDBAD43A6F56A6458
+      AE409AD9629C369EFF4CEC993FE8A949B6F35831FA0DC62EE7B9D318B54BF67E
+      D780BE345FDD14658EA069948F61D2F5BFDFBF3204BCFC7DD8113F0E6F018FA3
+      47D836DD1DECA79F07B2E7FDFEC78D50EBFFE7CEFFF2342FF5FDFF948AD8AFE5
+      FBFB9DF9DD3DFFFBBCF2BB7BFE9797CFCF4906040474E577F3FCEF73CBEFE6F9
+      5F788C14DF00F8DF8774E6F3F3BF2DE24C7353C7B9E6FA677EFF7F5EF9D233C0
+      9273CD94474BE333BFFFC3FA271C387040FC8D4367FEE373C08F04F8D9E8EE7C
+      FFFFABF6977EFFA7F5FFDFFAFEAF357B98CC7E8DCC4D595945396B473B010278
+      0E2AABAA9881A9B1D823945E3F0CF891ED3131627B6DAC65B0DC6F2560C161BD
+      4FC09CB0CBD080FD38E0C7C7E7FF68EEBFAFDD20C3F09163585159950C69D9D7
+      5F189715758CDD09B37D29FB4F38B8039CC7F9778E99FEBDF33FB69AE0FC7FC7
+      FE793DB8FD373636BE34B8FD731D70FB6F686820D4A39EA3BE5EDCF3EF75CF43
+      7D7D83B07F2E3FD7153F337CD168A90CB5B57522DDF32E7E4699DB3FE7733DD7
+      D454A3A6BA06D5FC9C73B5E4ACF38BF8FC3DB77FCEE76D54555929CEED8A9050
+      595529CEE1525F93841DA892DD5789BECDF5C7ED9FFF2E4079795907E8BEACFC
+      A93AEF0F72C1AA839BC5EFFF4CB7508096CE3CA13F6EFFFCFB65E7FAF3E7CEF2
+      FBA5853DF3F77FB6795BF2DFFF11DF748B09459DD0993F63EFDA67FEFECFE79B
+      46F3DFFF41614181F8565D5050D81116C8E278F8A2DFFF09B3DDFD97F6FF85FA
+      C867FEFECF671B47A33BF6A6E16AFCCCDFFFF97ED14874D756757CADF0CDE671
+      42E6AFB4FEC4F70B4708EEB87EE12C7570103BAAA68253C68B9164360BC9E6B3
+      71C6722ED2ACE7939F45FE86C55C1CDD3C169B267E85DE3D9FFEF6705069380A
+      EEDF4403F9A5CDF51568AEEB049A6F9A08B585D79077421F97F6AF459F5E5D3F
+      4244E84F265E351EDD4F434B6E065AF208F7D3F1F05E0A9A6F25A1FE6A349FC8
+      D0783D1CB9A1FAB86AB3AE4B1EA749DE870D35687D90859607E70914E665E221
+      E5D17C3B190D5763D146FCD6C22C3C2AC8405EA431EC9526E0317F56073F1B2D
+      F917D09A9F2DF27A947B160FEF9C41E38D78D497DC13F5E07369435509124966
+      293FD1643A1E92FCAD85970897D15644617E8E90E3914C8638D45D8E40CDC530
+      51D7845D9320FDFD8F140B92BFBE0AED45D7887B9570056D944F6BE145D2C739
+      3CBA9726F268BC7992741047BE7615CE184D83F4F73FD2F6CE217E05DA8BAF77
+      E01AE545F91474C8C1F320DD3EBC735AE4F388D2A699CC80F4F73FD2A8CD1FD6
+      9513EFAAE04A64E89083F2E03A69792091E3D1BD543CAA2D459AD15448BFFF9D
+      369C4AED5C2629B3330AAFC86468CDA336C9CD94B42FF91149BA7F42FAFDEFD4
+      CE7168AE29467B8124BDE04821B8E709E7A84F1037371D6DE44BC46D1B05E9F7
+      BF24BDF1E41B1562A6B77AB7D04AFE4C9C16CDBF1DDFFF4E6E1B8DA68A07E2DD
+      DA44F31782A7E16BB508E55F21FDFE17ADF107F9FC77BB5D3EF78342E57F92F5
+      9FA32B06A2ACE02E1A4AEFA0B1EC2E1A4B396E0B3CAA2B938074DE4A7D8FFF5D
+      59158DCFCE725FCBF87306FE9359CCF81AC1F28310BE4E8288F5BF2072FDAF02
+      FC394C89A03808C756FF04F3E95F62EA77FD25BF3FC7BFFF93FDDB3B4E41DCFE
+      3964FF7264FF72384348B390C3690A795C88B61C8E4D9123FBDFC07AF7546713
+      FBA8319BBEEAFC2F7C99A3D27C94DECF13FBB57F65FF5768FCB77DCD889FF860
+      BD9829ABA630425F8ED2D674DBFE2F592962DAAB2654BE05AB63162CDD78CE4B
+      DBBFC7BC95B0E96BCDD61052C8165ED6FE93764E26FE142A7F0A4B3799F9D2F6
+      9FB46B0AF167127F26C93FE3A5EDFFF4EE19C43FC5AD87251ACF7E79FBDF351D
+      CD2C99ADEC9BC4520C66BEB4FD27EE9C823EC4AF64494CE4F592F67F4A672C5E
+      79EF33F64AFF4FD929FDF12F6FFFDA23C1B97D09093A7F0AFB6F0E5F84A6F0C5
+      688A5848F70BD07C62019AC2E64B70621E61AE00B7FF188DDFD1B7831FB77594
+      B0FFB6645A4B5CF704AE7900575D2974A2F020E10070C501B86C8F96044589FD
+      2BFE8ABEFD3E657DFAFD8B456F1C26ECBF8DD660AD2795459AD684F5129C5C8B
+      9693EBD012BF869E15D01A4FCF0FC9FE1506827339BC57FD8AB2C27BDDB3FF46
+      B2FFEA6AB82CF801BDDFFD17E390FBFD3B663967008215C8D6C9EE6558274118
+      B77F8EB564FFF23FC362F60F98FEEBD7822BB5FF541D2DA49B2F451ACDF73274
+      CCFF297BE7215077F273E7FF18CB95C236F83AF5AFECFFA2F59AA7E6FFE4BD0B
+      44BDBA6FFF0A5DF248215F85DB6F77C75F6EFF3BE73E1E7F532CE7C8F8DD19FF
+      B9FD9FDA39A92B9F6CBABBE5779EFF05FF6FCCFF89BB3BF36709FBEF6EF9DCFE
+      13774D7CCCE7E31FD97F77EB2FB1FF71323EF745B8FD777BFEE3F6BF63CC63FE
+      9EC92F6FFF9B473CF6DFF427BEF4FC1FA33EF4B1FFC6C78F979DFFC9BEA4FC04
+      EDD16828BBD7FDF249FECEF37F84C6189A3B4BD1547EEF2FEDBFB5B91E4D4D8D
+      5DE67FC5498358A0C664446F188E6895DF245026284910A5345802C5C188501A
+      02FB850365F33FFFDBFF139307B008235DA49ACC42FABEB9043909ACE4904161
+      DA5EEE03CCC02185C178B5F7D3670F934DE774DBFE6F3A28E2F5BE5D0F21A690
+      FFFD32F67FD36E5D973C522D24FE7B77C77F6EFFBE6A8FFF9E2FD562A6E07777
+      FCE7F69FBC6B72573ED97477C77F6EFF670CA73CE69BBFFCFC9F6AD4993F5DD8
+      7F77EBCFED3FD5B093FCC65385FD77B7FEBC2FA61A3C5E3FA5505EDCFEBB3DFF
+      91FDA7ECFCF3319FF27A59FB4FDA36EAF1F84163D1CBCEFFA736FDF1F80CF68E
+      D12F3DFFC771FFBFE33AB579B8B0FFEED69FFBA2D1EB7E96F1E3360CA5FA77DF
+      FEF97EE689553FCAF8160B06B348E5DF1147B61EABF4EB63284A10A3F88B0434
+      6645AF1F44EB8481D83CE653C1356006E040E2E38FF6D2B827F1A2349DDF3D2F
+      8FBFE2777E7E52B6EEF2A5EF3AE7D799FFACB2FE2ACDB3D23FAF7E7F75FFA23A
+      BFA87C69BD3AD7EF7FE84FC2FE9D7C91C812F137F3105C295E328F2EDCBF9907
+      7B82FBD2D7FF36FFEF5CFFB5FFFFDAFFFF03FDFF3F61FFFFD6D8F11F18FFFE13
+      E3EFCB1746DD4865F9B8674279D99F6CCDC2916CD5BCE13DE5260FDA397BE2C0
+      A0D9137E0A919BFCB3D6FCA9BFF4967E937C1E9F63DDE2D16CEDE2D136F2F347
+      982E9A31F8B5A5B386F45AB370941FC52B4BF91B568E7F1A2BC6CB53385875E5
+      84C98413CACBC6B1E5737F674A4BC732B5951356529C9D94BF69CD9427F1C646
+      8529A9840F09911A0A933FD75C378D6D519C25DE539C01619B94AFAD38F349EC
+      262C256C2098F3B8ADCAB3FB6C559EF3FA16A599EFD2730CE147297F87AA9C0C
+      3AAA725FECD830F7CC0ED5B9EFD27324DDBF42F7F46EAE0EDDCFA670D7F60D73
+      B508B26FBAFA9B160AEC9284AEFA1B178EA5D0567FE30205028FFB88E2920903
+      E8FE38858C43CA37DCB24C8AB17BB4971DA7F0730AC3F76C5E2A8D77A4E73F09
+      FE7BB4974E21300E29DF425741C05C573EC85C47FE5B0A3D291C65A12B4FF1F2
+      63E93998C20914BA9BE9AC665248F9B6461B3856D818AAD8DB1AAA7C4008E371
+      763C9EDF1BAA0C249CA1F79F12981452BECBBECD9FBAECD58A71B6D4FC98C29F
+      5CF66E8EF4D8BF8DB9EDD33672B6D4DA4DCFEBE99D3681758694EFE5A0A74AD8
+      4F609C77C45E57C7CB61E7090A4D8ED8EB7D41F72914F622B0CE90F28F79981E
+      206C0BF230653E8EBBD9113B5D0A77BD1EE066CC8E1D32730F72379D4B604F42
+      CA8FF2B75722B8C5041E60A931DEECD40977167BCC914507382CA4F863917EB6
+      EC5990F293C20FBD911C71D88BB8DB321302FB64251EEB911EE73BFB74E4E193
+      4961873E480CF360CF8294CFCB4C8FF37B2D2B31D8343B393490E07B3E29C42D
+      23DEFFB394686F9612F36CE005E70CFED3F03F1B05D3043728065A6043B03DBA
+      CBFBFD77157CF4851CBE7192C3977E4BF09A9F3C5E0FD1C48E3301DDCA63E0C0
+      75F8E7E772F8CA633EBE3EBA106FFAAEC65B915B30F7A40DFC2E25FC651EA346
+      69E2BBC16BF0B5D30A7CE9B60CEFF8AE41BFC8ED78EBB826FE757089E07B1D3D
+      02F58D6AD0D2D6C2262D4D686ED612888D8BC1A4493B3078B42ABE3C2C8F8FBD
+      96E3CD90B5782B4A1B9FC6EFC4A76E4B057FFDFAB5484A4EC28913C77122EC84
+      40E8F110C15FB2C40CB3E6EF867A9C2D34824CA117628145BEDBF009713F725B
+      23F89B376F46406030F4F474C5DFAE1A1AEE11E0FC356BF66395BC95B8E76570
+      38A7F8E0678FC5F8DE579C7D611A1BD5111E1E2D7E5B95FF1DAE9985054CCD2D
+      0567C70E4F6CDFEE29EE172F5D8225CB97A2A5AD9529B9E940CE6DBBE06FDDBE
+      155E5E87E1EEEE06335353ECB534839D95A9E01819F909F07B0F273BB83BD988
+      FBBBA579C8BA7759F0F7EEB5C0BE7D7BC5EF2EEF32D80D553D1B4CDCE08CF12A
+      AE18AFEC2CC3386527FCA9C4EF9D3043DD09C35749FE2D237EE6487F973E2223
+      4E60E336036CB60A41505A013CE36EE348C2DDA7E045389A701B3E49B982EFEF
+      EF872DDBB6E188A71B566DD0C5368738846715C12AF42A1C226F3E1F1137059F
+      FFCDF106B50D88893C0195AD26D8621F07DF33B9D8E59303D3A02B2F84B49F29
+      2A29C2C6CE016BB44DE11D7F0D1EF1776014700916C7AE10AE3E0E8339A47157
+      657C5555655858DB41DBCC03C1A977617DFC9AE09B045E86893F21F0128C0328
+      E4A038631E1F70E5FFC46F90FCBB57526232ECB66FFF5BE07C1EF293AF7F079D
+      F9110107101EE484F01017841EDC8920FDD508DCB90A013B57C277C7521CDDBA
+      104737CBE1A8E62CD845FB3CC5CFBC928973B72F222BEF269263FC116DB303D1
+      B63A88B6D345A4CD76845B6F819F8906DC762AC13AE1C453FCB30921C8480C45
+      7AD2099C8BF64576881BCE7720D26D1F0E59EAC35257135B54D74137FCF853FC
+      480F3B822DC106616ED60875B1428083398EEE3784C98E4D50525809F5F5ABA1
+      A5BC063BC2429FE2ABCE1C0195697F4071CA50AC193708AB467D8F9523BFC3F2
+      11DF61F1881F317FC440C80D1F80397FFC00651787A7F8666BE6C254610E4C14
+      668BD0740D61ED1C98ADE571B360B47A2676AF9E0DBDD573B12BD8F729FEBFDB
+      7E2B57AEFC4B3C99EE7FB2FCEEC8F4EF96DF545F45A8EC84279F9F7CF7F87D63
+      5DE7B00A0D95B7D1507103F585C968AC294643D53D34563FA0FB42D417A7D0F3
+      5DD497E6A0B1BE5A701EF329CF863A54656F45CD4D479444FC84EA4B86284B98
+      8ACA4C35549E55A1FB2914B787D26CA3F4E58223E3D716A32C7E0CEA4B325073
+      CB95CA4A437D510AEA0A9328EE1CEA0B12D0507681DEB953781165712349CE9B
+      123E955B796E138A43DE46ED9D2328F467A8BDE546327C85B2C429F44E8DDEBD
+      819A3B8751E8C7507DDD8EDE7D89F2E439548F3A34D595A22E3F1675B9A122AC
+      CAD1431D955D795611D5972D517BDB1315E96B282E89DEE9A0EEFE31D43D8821
+      44A2817453971F8DA2A05EA8CC52476506D5F3D414D4159C44F99985A8BA6888
+      EA9B2E283FBD90E2625196349DE217A3FA8A31717AA3E686236AAEDBA224FC73
+      545F3543E9C9B1280EFB82F28EA0F07354A42E17F2F07B5E6E49E4D7288DFE91
+      643A8462E2546669A1A1340BB5F7FC293C8FBABC70BA0F4023B5230FEB486FF5
+      C51992F7D4AE4276427DF9D58EF749D45E075118C8282F3594C60C251DF540ED
+      DDA3A4C71ED466935191B9411247FA2B3AD69B74F916E9D01685010C15599B45
+      F9E5C972A8B97D84CA8F24AE37F5A31BA8257DD677B45F5D6E08C5DDA4327D29
+      1F6F4A1781F294A594269CDAAF9EF4B11715298B507D6D1F95F12AE5E14B75FE
+      40E8AB324B83E2FA887C8B825F257994294E9BFAD1766ABF5AEA3FD5A8BD1F84
+      A2C09E1406A3F8F8C7A20F56A4AD16E9AAAFEE4779D2347A770CC5A11FA186E7
+      13F20EC55B12BF46620B0DB524BF9768F7FAA233C4772559FDA8BF5A50FC2192
+      CB56F0B97E1BCA2E8B7EC8EDA5B3FDF0BCAACE6F16FDA2346E14D52D1895E7B7
+      0B5DF1762E4F5E28DAA1F29C06A5AF90D94F73632D93DE8BFA906D709D3471D9
+      7848FDBB89C753282D4796BEAEF205B6DE1D74CDEB695477E0C5699A9A1E119A
+      25F250D8D4DC8E462E6F4D11858D92FB4E75EE024A53F72056F4459E17B7E1AA
+      9C9D22BE96ECA032B3435F3C9F67E4515F7A01C5C7FAA228F42D1AABF228BD12
+      0A0E53DF4C9113F9959D9A44EDF187182F9A1A1A9EE69765535FEE8D029F9E64
+      1B21A20FF1E7E2D03748AE68E25DA3FE6946B65E88C6A696A7F5519D2FFA0E47
+      43F965F15C579C4AF2E78A718DEBA2A12A4F8C1D9599AA127D75D63B8DB3BCEE
+      F505A744C8DFF1BECEEB517A72226AF34E90FD84910DF614A8BE6A4E3A6EED52
+      FFC2A03EC25E4B22BF107165A767A0C0970994A72E11BA2B8DFE46D82CAF577D
+      C979343536C9F845C1BD693C62283AFE3AC97A87FAADBA182B45FAF08F84FC15
+      E9AB25797AF7A0FB151DED5D2DD37F21D91FD75B5D413CAAAE98509E6F11F71F
+      283EF13E8D9171C22ECA1267D198A82BA967477FE1F5E77597828FA90D55F769
+      0CBB41FA2BEDE8A775C23678FB735978BB70BDF0F6E4ED5243B6294063757D71
+      BAE057D318C0E5E0F30D8F6FA8CEA57963B0A83FD723EF1F5C8F9DF557484B6A
+      211FB51FAF0B8FE3752E4BF893642910BAE07AE27A298DFD49F451C1177597E8
+      BBEABCA6E80785C77A8938A1C3884F45BF284B1823D2F0383E67D4179E11FDAB
+      ECD4047A3716A5F1A3A97DF78A7ECCDB90C7714E79F27434D41450DE5BA94F8C
+      A6F463C5BBBAFC04E13F54D94F408DDB02D4B8CE478DE30C3CBA7346B62E68CE
+      0941B5F32CC93B4AC3D3B6D55774593754187C8E32CDBE28D7FB0895865FA3A5
+      E0D263FE391F541AFF20DEF1343C6D6BE9CDA7D61DFC5D43BCE50BD7233C4D5B
+      6DC933D3946B113FCAF0857C9EA6B5E4C6FF497E19E7C799FF5BFCB2CDAFA07C
+      EB5B28DFF26657509C78F717F257EF1F89BA639B50EBAFD2053C8EBFFBCBFAC7
+      98FCFF56FFFF097E63BCC55FF2DB684CEF1C57EB258F2ACBA1641B7D50BEEB0B
+      54590D7FCA3EAAAC8689773C4D95C56F68883490BDAF0B50458D0BF94FAEF324
+      38380D0F6F75FD7E524D362D7BEF3217F527745E6ADD5FE9B20C45DB3F45F196
+      8F50BE7F0AD977F7F70D8AB77F8E2A7F4D59FA86246714AABF8547C54FD4D173
+      3D4AF47F44B5978A2CFF9A0863146EEAFF5459E5FBC6A3D271A12CBED46808AA
+      4374C573634E188AB74B7E2BBBDC610E2A5C963EC5AF8DB592A569BE9BFE5419
+      65B6D3D17C391AA5A623C06578EA3753AEC4A150E36D4979E70204BFC2654917
+      34661D1365737D3DF59BCB246B99B5E4FCDEC3FB992850E9FB4C7D36A61F45C1
+      86579E7A5762300835E18FFB6A85ED0C2A679A787E947B1EF5271D1EFF6DB4DD
+      2C518FA6ECE3E072F3B62C7798FD4C9D541C98870A87B9A80DD9D9E57D7D2AAD
+      61DC5781975BA4F58FBF6AFB17DB00B549E7B67B92DBD1167FEBDB1BE74AF1B2
+      DFFE3A73FF661EEC09EE4B5FFFDBFCFFDAFF7FEDFFDFB1FFEEF4BF17D9FFFF62
+      FFFF4FD8FFBF3576FC07C6BFBF757E00407DD3AD2BF5756713F91F66770B3589
+      61F5CD7977A4CFA88E09427D66F233FFD6B4BDE5111E16E5A3B5FEF1EF37D424
+      45A0363952FA63F32873DE83BACCA467F26B4F47A340E96D2A23F0711C71CB8F
+      58897FEFA9ADB909455B2782E47FFA773A2A4A51A83D16058AB4DE3AB8539425
+      E147A1487716DA1F3E44F3837B94FF5BA8CB38F584E06DA80C7416E5707EA1F6
+      9F5456E3639994DFC3C3825CD4A5C58BF775E9095D7FA3E3E665D49C3C0ED22D
+      BDEF49E9FB89F4827F2646C2A1322B021C25F76927655C5EA7720F73B43535A0
+      A5BA12856A3F8834F5E7247FD35A9B122B9E2B895BB4735E073FFEB17E13C351
+      1D1F22F4FE30FF3E8A74664AD21F7395F053E3C473D1D60994F777E29EC7F1EB
+      517909CA5C0D451E52945A6B8A3425E6CAA49656D4A54AEA5CA84EEB3A4F4B09
+      9F64425B1B2AFC0EE2516951D7BF5796A6D71888D6DA6A5157FE5CEE69217B57
+      1DE9275062B1817476F9711B52FD2B039C449A02C55EA83A7104D571C13299B9
+      4E0B94FB8B387ECFC139325D920EA5F10285B9A47FAEBFDE68CEBD437DA099E6
+      B6A9A24F74EBA23EC4DBAD70D350499FE6FDD7650F4AF669A032C845C85AE1EF
+      487A38800A5F07827D47D8018A2FB1DA8452FBED425FA23D92225143EDC5DBBD
+      8DE4E132B53F7A487824ECE749F0BEC66D4E7A35E7DEA63C22BAFDFB35F5E7F8
+      59F24BB2C727ED9F8AADBF7FBFBDFEDE3D090A0B514FA2FEA5FD373501F1F1ED
+      58BCB80D4386B461E4C8360CFFAD15833E6FC1C68D6DC8CE6E17557E96FDDFF0
+      4F869A5A9BC0F9F3EDA8A79C490E549C8CC1D5D5AA38A6790EB367B7C1DABA1D
+      45E15DEDFF8E961AE67C550B1F9F7621C3F3ECFFD2C5367CF2491B768FBE8B02
+      9D4532FB77187F1EFAFAFCDFB678BEFD67AF33C6BC992D70746C1772C42EF096
+      F4BD3317F15BBF87B89EFCE099F6DF48F61F23E78DC91F35C0D7AB45D43F26B4
+      016BBF2F434DC6699CF4B807F9EFCA519396F8B4FD37362033F52106BFF7107E
+      D362519B992ADEE727E760E0DB0F71C33B1E81CA69D01D72EF99F6CFB9437F6C
+      41F43C5FAA435F99FD57A6246348BF6664AA1E80FFBC9382DFC5FE5D0C71D2E0
+      34860E68414A703E4AACB5BAD87F55EA69C13FAB608570BB7BD8F873216A52E2
+      457F2EF73D88D490420C1BD686ACACF667DA7F694A267E7EE7212E39C7E26EF2
+      2DAACB23DC0F3B8DCAC840384DC9C2AFBF3CE63ECBFED3420A30EBD35A54A524
+      A1B9200FFAC3EFE2A0653D3C761762FEFC36DCBDDBFE5CFBAFBE9D0B95358FE0
+      373D5666FF399BAC30E0AD47983AB50D0505EDCFB59BD616883E26FF7D39EEAA
+      AFEC64FF86885E1A8861835B71D0B00AB73D8251EE735066FFA55E0EB8E01807
+      1DD506CC1FD3840BAA964FD97F757C280AF3DBB06F5FBBB0971D1B9B61BABB19
+      66BB1F4265D5430C233BF2F626BBA86B7BA1FDF3298EEC15274FB60B5BE4484D
+      6D4765E5B3EDFFFF03D35D6D33
+    }
+  end
+  object tmrUploadAll: TTimer
+    Enabled = False
+    Interval = 2000
+    OnTimer = tmrUploadAllTimer
+    Left = 480
+    Top = 116
+  end
+end

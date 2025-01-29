@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>CQRLOG - Filtering</title>
+</head>
+<body>
+<table border="0" cellpadding="5" cellspacing="2" width="100%">
+    <tbody>
+    <tr>
+        <td valign="top"><img src="img/exc.png"></td>
+        <td bgcolor=ffffcc valign="top" align="justify"><strong>
+            <font color="red">WARNING!</font></strong>
+            Backup your data often! BACKUP your log directory at the end of EVERY session!
+            All that you need to backup and store in a safe place is the log database directory
+            located in the ~/.config/cqrlog/database folder, or you can enable the autobackup function
+            in Preferences. This autobackup function creates an ADIF file with a backup of your log.
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+<div style="text-align: left;"><strong>CQRLOG for LINUX by OK2CQR &amp; OK1RR</strong></div>
+<p align=center><img src=img/line.png></p>
+<a name="ah21"><h2><strong>Filtering</strong></h2></a>
+<p>CQRLOG offers a wide variety of filtering options allowing you to select and export records
+(for awards etc.) in ADIF or HTML formats.<br><br>
+<img src="img/h49a.png"><br><br>
+You can <b>Create</b> new filter, save it and use later with <b>Load from file</b>. If loading fails, or is cancelled, you are directed to create a new filter. Or you can set quick filter by <b>Contest</b> name used.
+ <b>SQL console</b> offers many ways to search things from log. More about that in <a href="h27.html">SQL console</a><br><br>To get clean start use button <strong>Clear Filter</strong> before setting your filter values.<br>
+If <strong>Remember filter</strong> checkbox is checked filter remembers last settings (saved in ~/.config/cqrlog/FilterSettings.fil)
+, so there is no need to create filter every time from beginning 
+ after opened again from Qso list/Filter.
+<br>Only filters that you plan to need later in future needs to be saved by <strong>Save filter</strong> button.
+<br>Immediate press of <strong>OK</strong> after button <strong>Clear Filter</strong> is pressed removes all previous filtering if  <strong>Remember filter</strong> checkbox is checked.
+</p><img src="img/h49.png"><br><br>
+
+Most of the fields have an option to select records based on an exact match or on a substring
+contained in the selected field, i.e. if you want to select all WA3 stations, put WA3 into
+the <b>Callsign</b> box and click the <b>Include</b> radio button. Note, please, that if you select
+contacts with members of a particular club or from your own database, you should choose
+the time span (<b>date from-to</b>) to make the <b>Membership</b> option active.
+<br>Selecting <b>Band</b> from bandselector will preset <b>Freq from:</b> and <b>Freq to:</b> as band start and end frequencies (Defined in Preferences/Bands/Frequencies).
+<br><br> Once filter values are selected you can make them reversed by checking chekbox <strong>Reverse filter (NOT)</strong>. I.E. making filter like <strong>mode FT8</strong>
+ will show all FT8 qsos, but if you check <strong>Reverse filter (NOT)</strong> it shows all other mode qsos, but not FT8 ones.
+<br><br>
+Pressing calendar icon is easy way to set date. Double click on selected date closes calendar and sets the date. Pressing ESC closes calendar, but does not set date. Date can also be typed in manually.
+<br><br>
+<img src="img/h101b.png"><br><br>
+The sorting order can be selected from the following options:<br>
+<img src="img/h50.png"><br><br>
+Selected records can be grouped by the following criteria:<br>
+<img src="img/h51.png"><br><br>
+Once your filter is set up, go to the upper menu (item 'File' in QSO list) and choose
+'Export'.<br>
+<img src="img/h45.png"><br><br>
+Choose 'ADIF' or 'HTML'. The usual File Save dialog appears (depending on the desktop
+used). Choose a location and file name.<br><br>
+
+<a name="cfil"><h3>Contest Filter</h3></a>
+Besides the standard filter function there is a separate menu for filtering QSOs based on contests. 
+To use this please select "Contest filter" from the "Filter"-menu.<br><br>
+<img src="img/h45h.png"><br><br>
+The function autmatically loads the names of all contests that QSO where logged in in the QSO database.
+You can then choose based on the name of the contest which QSOs to show and the export accordingly.
+It is recommended to use individual names for the contests e.g. extend by month and year to be able 
+to distinguish.<br><br>
+<img src="img/h45i.png"><br><br>
+
+<p align=center><img src=img/line.png></p>
+<table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">
+    <tbody>
+    <tr>
+        <td width="33%" align="center">[<a href="index.html" target="_top">Menu</a>]</td>
+    </tr>
+    </tbody>
+</table>
+<br>
+</div></body>
+</html>

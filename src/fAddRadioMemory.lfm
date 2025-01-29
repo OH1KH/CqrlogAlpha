@@ -1,0 +1,153 @@
+object frmAddRadioMemory: TfrmAddRadioMemory
+  Left = 32
+  Height = 222
+  Top = 235
+  Width = 308
+  BorderStyle = bsDialog
+  Caption = 'New memory'
+  ClientHeight = 222
+  ClientWidth = 308
+  OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  Position = poOwnerFormCenter
+  LCLVersion = '3.4.0.0'
+  object lblFreq: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 12
+    Height = 17
+    Top = 2
+    Width = 112
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 2
+    Caption = 'Frequency in kHz'
+    ParentColor = False
+  end
+  object edtFreq: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblFreq
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 34
+    Top = 19
+    Width = 192
+    BorderSpacing.Left = 12
+    TabOrder = 0
+    OnKeyDown = FormKeyDown
+    OnKeyPress = edtFreqKeyPress
+  end
+  object lblMode: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = edtFreq
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 17
+    Top = 55
+    Width = 36
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 2
+    Caption = 'Mode'
+    ParentColor = False
+  end
+  object cmbMode: TComboBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblMode
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 34
+    Top = 72
+    Width = 192
+    AutoComplete = True
+    AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+    BorderSpacing.Left = 12
+    CharCase = ecUppercase
+    ItemHeight = 0
+    TabOrder = 1
+    OnKeyDown = FormKeyDown
+  end
+  object lblWidth: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cmbMode
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 17
+    Top = 108
+    Width = 100
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 2
+    Caption = 'Bandwidth (Hz)'
+    ParentColor = False
+  end
+  object edtWidth: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblWidth
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 34
+    Top = 125
+    Width = 112
+    BorderSpacing.Left = 12
+    TabOrder = 2
+    OnChange = edtWidthChange
+    OnKeyDown = FormKeyDown
+  end
+  object Button1: TButton
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 221
+    Height = 25
+    Top = 6
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 12
+    Caption = 'OK'
+    TabOrder = 4
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    AnchorSideTop.Control = Button1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 221
+    Height = 25
+    Top = 37
+    Width = 75
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 12
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 5
+  end
+  object lblInfo: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = edtWidth
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 17
+    Top = 161
+    Width = 25
+    BorderSpacing.Left = 12
+    BorderSpacing.Top = 2
+    Caption = 'Info'
+    ParentColor = False
+  end
+  object edtInfo: TEdit
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = lblInfo
+    AnchorSideTop.Side = asrBottom
+    Left = 12
+    Height = 34
+    Top = 178
+    Width = 284
+    BorderSpacing.Left = 12
+    MaxLength = 25
+    TabOrder = 3
+    OnKeyDown = FormKeyDown
+  end
+end

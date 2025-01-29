@@ -1,0 +1,261 @@
+object frmRadioMemories: TfrmRadioMemories
+  Left = 120
+  Height = 415
+  Top = 125
+  Width = 578
+  Caption = 'Memories'
+  ClientHeight = 415
+  ClientWidth = 578
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnShow = FormShow
+  LCLVersion = '3.4.0.0'
+  object sgrdMem: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    Left = 0
+    Height = 415
+    Top = 0
+    Width = 458
+    Align = alClient
+    ColCount = 4
+    Columns = <    
+      item
+        Title.Caption = 'Freq (kHz)'
+        Width = 81
+      end    
+      item
+        Title.Caption = 'Mode'
+        Width = 74
+      end    
+      item
+        Title.Caption = 'Bandwidth (Hz)'
+        Width = 109
+      end    
+      item
+        Title.Caption = 'Info'
+        Width = 211
+      end>
+    FixedCols = 0
+    RowCount = 1
+    TabOrder = 0
+    OnDblClick = sgrdMemDblClick
+    OnHeaderClick = sgrdMemHeaderClick
+    OnSelectCell = sgrdMemSelectCell
+    ColWidths = (
+      81
+      74
+      109
+      211
+    )
+  end
+  object Panel1: TPanel
+    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = Owner
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = sgrdMem
+    Left = 458
+    Height = 415
+    Top = 0
+    Width = 120
+    Align = alRight
+    Anchors = [akTop, akRight]
+    BevelOuter = bvNone
+    ClientHeight = 415
+    ClientWidth = 120
+    TabOrder = 1
+    object btnCancel: TButton
+      AnchorSideLeft.Control = btnOK
+      AnchorSideTop.Control = btnOK
+      AnchorSideTop.Side = asrBottom
+      Left = 23
+      Height = 25
+      Top = 52
+      Width = 75
+      BorderSpacing.Top = 6
+      Cancel = True
+      Caption = 'Cancel'
+      ModalResult = 2
+      TabOrder = 1
+    end
+    object btnAdd: TButton
+      AnchorSideLeft.Control = btnOK
+      AnchorSideTop.Control = btnCancel
+      AnchorSideTop.Side = asrBottom
+      Left = 23
+      Height = 25
+      Top = 119
+      Width = 75
+      Action = acAdd
+      BorderSpacing.Top = 42
+      TabOrder = 2
+    end
+    object btnEdit: TButton
+      AnchorSideLeft.Control = btnOK
+      AnchorSideTop.Control = btnAdd
+      AnchorSideTop.Side = asrBottom
+      Left = 23
+      Height = 25
+      Top = 150
+      Width = 75
+      Action = acEdit
+      BorderSpacing.Top = 6
+      TabOrder = 3
+    end
+    object btnDelete: TButton
+      AnchorSideLeft.Control = btnOK
+      AnchorSideTop.Control = btnEdit
+      AnchorSideTop.Side = asrBottom
+      Left = 23
+      Height = 25
+      Top = 181
+      Width = 75
+      Action = acDelete
+      BorderSpacing.Top = 6
+      TabOrder = 4
+    end
+    object btnMore: TButton
+      AnchorSideLeft.Control = btnOK
+      AnchorSideTop.Control = btnDelAll
+      AnchorSideTop.Side = asrBottom
+      Left = 23
+      Height = 25
+      Top = 267
+      Width = 75
+      BorderSpacing.Top = 30
+      Caption = 'More...'
+      TabOrder = 6
+      OnClick = btnMoreClick
+    end
+    object btnOK: TButton
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Control = Panel1
+      Left = 23
+      Height = 25
+      Top = 21
+      Width = 75
+      BorderSpacing.Top = 21
+      Caption = 'OK'
+      ModalResult = 1
+      TabOrder = 0
+    end
+    object btnDelAll: TButton
+      AnchorSideLeft.Control = btnOK
+      AnchorSideTop.Control = btnDelete
+      AnchorSideTop.Side = asrBottom
+      Left = 23
+      Height = 25
+      Top = 212
+      Width = 75
+      BorderSpacing.Top = 6
+      Caption = 'Delete All'
+      TabOrder = 5
+      OnClick = btnDelAllClick
+    end
+    object lblLines: TLabel
+      AnchorSideLeft.Control = lblSlash
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Side = asrCenter
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 64
+      Height = 1
+      Top = 396
+      Width = 1
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Left = 6
+      BorderSpacing.Bottom = 18
+      ParentColor = False
+    end
+    object lblSelected: TLabel
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = lblSlash
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 55
+      Height = 1
+      Top = 396
+      Width = 1
+      Anchors = [akRight, akBottom]
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 18
+      ParentColor = False
+    end
+    object lblSlash: TLabel
+      AnchorSideLeft.Control = Panel1
+      AnchorSideLeft.Side = asrCenter
+      AnchorSideTop.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 58
+      Height = 17
+      Top = 380
+      Width = 4
+      Anchors = [akLeft, akBottom]
+      BorderSpacing.Bottom = 18
+      Caption = '/'
+      ParentColor = False
+    end
+  end
+  object acMem: TActionList
+    Left = 24
+    Top = 48
+    object acAdd: TAction
+      Caption = 'Add'
+      OnExecute = acAddExecute
+    end
+    object acEdit: TAction
+      Caption = 'Edit'
+      OnExecute = acEditExecute
+    end
+    object acDelete: TAction
+      Caption = 'Delete'
+      OnExecute = acDeleteExecute
+    end
+    object acUp: TAction
+      Caption = 'Move up'
+    end
+    object acDown: TAction
+      Caption = 'Move down'
+    end
+    object acImport: TAction
+      Caption = 'Import from CSV'
+      OnExecute = acImportExecute
+    end
+    object acExport: TAction
+      Caption = 'Export to CSV'
+      OnExecute = acExportExecute
+    end
+    object acSortByFreq: TAction
+      Caption = 'Sort by freq'
+    end
+  end
+  object popMem: TPopupMenu
+    Left = 96
+    Top = 48
+    object MenuItem1: TMenuItem
+      Action = acImport
+    end
+    object MenuItem2: TMenuItem
+      Action = acExport
+    end
+    object MenuItem3: TMenuItem
+      Caption = '-'
+    end
+  end
+  object dlgOpen: TOpenDialog
+    DefaultExt = '.csv'
+    Filter = 'CSV files|*.csv'
+    Left = 176
+    Top = 48
+  end
+  object dlgSave: TSaveDialog
+    DefaultExt = '.csv'
+    Filter = 'CSV files|*.csv'
+    Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
+    Left = 264
+    Top = 48
+  end
+end

@@ -1,0 +1,560 @@
+object frmAdifImport: TfrmAdifImport
+  Left = 560
+  Height = 442
+  Top = 186
+  Width = 458
+  BorderIcons = [biSystemMenu]
+  Caption = 'Importing ADIF file'
+  ClientHeight = 442
+  ClientWidth = 458
+  Icon.Data = {
+    BE0C00000000010001002020000001001800A80C000016000000280000002000
+    0000400000000100180000000000000C00006400000064000000000000000000
+    0000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCCCCCCFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEEEEEEFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFDDDDDDCCCCCCFFFFFFFFFFFFFFFFFFDDDDDDFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFEEEEEEFFFFFFFFFFFFFFFFFFBBBBBBBBBBBBBBBBBBFFFFFFCCCCCCBBBB
+    BBFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFDDDDDDCCCCCCFFFFFFFFFFFFFFFFFFFFFFFFBBBBBBFFFFFFBBBB
+    BBBBBBBBFFFFFFFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFBBBBBBBBBBBBBBBBBBFFFFFFFFFFFFBBBBBBBBBBBBFFFF
+    FFBBBBBBFFFFFFBBBBBBCCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFF8888888888888888888888888888888888
+    88888888888888CCCCCCEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFF888888888888888888AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+    AABBBBBBCCCCCCBBBBBBBBBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    EEEEEEEEEEEEEEEEEECCCCCCAAAAAACCCCCCCCCCCCCCCCCCCCCCCCEEEEEEAAAA
+    AAEEEEEECCCCCCBBBBBBFFFFFFBBBBBBBBBBBBBBBBBBFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888888888
+    AAAAAAAAAAAA888888CCCCCCCCCCCCDDDDDDDDDDDDDDDDDDEEEEEEAAAAAAEEEE
+    EEDDDDDDFFFFFFBBBBBBBBBBBBFFFFFFFFFFFFBBBBBBBBBBBBFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888AAAAAAAAAAAA
+    CCCCCCCCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBEEEEEEDDDD
+    DDFFFFFFBBBBBBFFFFFFBBBBBBFFFFFFFFFFFFFFFFFFCCCCCCDDDDDDFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888AAAAAACCCCCCCCCCCC
+    CCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBFFFFFFDDDDDDDDDD
+    DDBBBBBBFFFFFFFFFFFFBBBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEEEEEEFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF888888AAAAAACCCCCC6699CC6699CC
+    DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBFFFFFFDDDDDDDDDDDDDDDD
+    DDBBBBBBBBBBBBBBBBBBCCCCCCDDDDDDEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFBBBBBB7777770033663366993366996699CC
+    6699CCDDDDDDDDDDDDDDDDDDEEEEEEBBBBBBFFFFFFDDDDDDDDDDDDDDDDDDDDDD
+    DDBBBBBBFFFFFFCCCCCCFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFF777777555555003366000033336699336699
+    DDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFDDDDDDDDDDDDDDDDDDDDDDDDBBBB
+    BBBBBBBBFFFFFFDDDDDDFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFF000000003366000000003366000000336699DDDDDD
+    DDDDDDDDDDDDDDDDDDBBBBBBEEEEEEDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDBBBB
+    BBFFFFFFFFFFFFFFFFFFEEEEEEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFF000000003366000000003366000000003366336699DDDDDD
+    DDDDDDDDDDDDBBBBBBEEEEEECCCCCCDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBBBBB
+    BBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFF003366000000003366000000003366000000336699DDDDDD
+    EEEEEEBBBBBBEEEEEECCCCCCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF003366000000003366000000003366000000003366000000003366
+    6699CCEEEEEE6699CCDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF000000003366000000003366000000003366000000003366003366
+    3333336699CC003366BBBBBBDDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF003366000000003366000000003366000000003366000000333333
+    000000003366003366DDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000003366000000003366000000333333000000
+    003366000000003366DDDDDDDDDDDDDDDDDDDDDDDDBBBBBBFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000003366000000333333000000003366
+    000000003366000000FFFFFFBBBBBB336699BBBBBBFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000003366000000333333000000003366000000
+    003366000000003366000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000333333000000003366000000003366
+    003366003366000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000333366000000003366000000003366000000
+    003366000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000003366000000003366000000003366
+    000000003366000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF003366000000003366000000003366000000003366000000003366000000
+    003366FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000003366000000003366000000003366000000003366000000003366
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFF000000000000003366000000003366000000003366000000FFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFF000000000000003366000000000000FFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+    FFFFFFFFFFFDFFFFFFF3FFFBEFE3FFFCEFC7FFEE278FFFF3D31FFFF8CA3FFFFE
+    007FFFF0007FFFC0008FFF000267FE000573FC00237DF800401FF00082FFF001
+    02FFE000077FC00007FFC0000FFF80001FFF80001FFF80003FFF00003FFF0004
+    7FFF0000FFFF0001FFFF0003FFFF0007FFFF001FFFFF003FFFFF00FFFFFF83FF
+    FFFF
+  }
+  OnCreate = FormCreate
+  OnShow = FormShow
+  Position = poMainFormCenter
+  LCLVersion = '2.2.6.0'
+  object pnlFilterDateRange: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = pnlAll
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 45
+    Top = 376
+    Width = 458
+    Alignment = taLeftJustify
+    Anchors = [akTop, akLeft, akRight]
+    BevelOuter = bvNone
+    ClientHeight = 45
+    ClientWidth = 458
+    Enabled = False
+    TabOrder = 0
+    object lblDateTo: TLabel
+      AnchorSideLeft.Control = edtDateFrom
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlFilterDateRange
+      AnchorSideTop.Side = asrCenter
+      Left = 161
+      Height = 17
+      Top = 14
+      Width = 13
+      BorderSpacing.Left = 12
+      Caption = 'to'
+      ParentColor = False
+    end
+    object edtDateFrom: TDateEdit
+      AnchorSideLeft.Control = lblDateFrom
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlFilterDateRange
+      AnchorSideTop.Side = asrCenter
+      Left = 46
+      Height = 34
+      Top = 5
+      Width = 103
+      CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+      DateOrder = doYMd
+      ButtonWidth = 23
+      BorderSpacing.Left = 12
+      NumGlyphs = 1
+      MaxLength = 10
+      TabOrder = 0
+      Text = '    .  .  '
+    end
+    object edtDateTo: TDateEdit
+      AnchorSideLeft.Control = lblDateTo
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlFilterDateRange
+      AnchorSideTop.Side = asrCenter
+      Left = 186
+      Height = 34
+      Top = 5
+      Width = 103
+      CalendarDisplaySettings = [dsShowHeadings, dsShowDayNames]
+      DateOrder = doYMd
+      ButtonWidth = 23
+      BorderSpacing.Left = 12
+      NumGlyphs = 1
+      MaxLength = 10
+      TabOrder = 1
+      Text = '    .  .  '
+    end
+    object lblDateFrom: TLabel
+      AnchorSideLeft.Control = pnlFilterDateRange
+      AnchorSideTop.Control = pnlFilterDateRange
+      AnchorSideTop.Side = asrCenter
+      Left = 3
+      Height = 17
+      Top = 14
+      Width = 31
+      BorderSpacing.Left = 3
+      Caption = 'from'
+      ParentColor = False
+    end
+  end
+  object pnlAll: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    Left = 0
+    Height = 376
+    Top = 0
+    Width = 458
+    Anchors = [akTop, akLeft, akRight]
+    ClientHeight = 376
+    ClientWidth = 458
+    TabOrder = 1
+    object lbFile: TLabel
+      AnchorSideLeft.Control = pnlAll
+      AnchorSideTop.Control = pnlAll
+      Left = 4
+      Height = 17
+      Top = 13
+      Width = 26
+      BorderSpacing.Left = 3
+      BorderSpacing.Top = 12
+      Caption = 'File:'
+      ParentColor = False
+    end
+    object lblFileName: TLabel
+      AnchorSideLeft.Control = lbFile
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lbFile
+      AnchorSideTop.Side = asrCenter
+      Left = 36
+      Height = 17
+      Top = 13
+      Width = 77
+      BorderSpacing.Left = 6
+      Caption = 'lblFileName'
+      ParentColor = False
+    end
+    object lblError: TLabel
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = lbFile
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 17
+      Top = 36
+      Width = 42
+      BorderSpacing.Top = 6
+      Caption = 'Errors:'
+      ParentColor = False
+    end
+    object lblImport: TLabel
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = lblError
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 17
+      Top = 59
+      Width = 67
+      BorderSpacing.Top = 6
+      Caption = 'Importing:'
+      ParentColor = False
+    end
+    object lblErrors: TLabel
+      AnchorSideLeft.Control = lblError
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblError
+      AnchorSideTop.Side = asrCenter
+      Left = 52
+      Height = 17
+      Top = 36
+      Width = 54
+      Alignment = taRightJustify
+      BorderSpacing.Left = 6
+      Caption = 'lblErrors'
+      ParentColor = False
+    end
+    object lblCount: TLabel
+      AnchorSideLeft.Control = lblImport
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblImport
+      AnchorSideTop.Side = asrCenter
+      Left = 77
+      Height = 17
+      Top = 59
+      Width = 54
+      BorderSpacing.Left = 6
+      Caption = 'lblCount'
+      ParentColor = False
+    end
+    object lblRemaks: TLabel
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = chkLotOfQSO
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 17
+      Top = 183
+      Width = 134
+      BorderSpacing.Top = 6
+      Caption = 'Comment to QSO(s):'
+      ParentColor = False
+    end
+    object lblComplete: TLabel
+      AnchorSideTop.Control = btnClose
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = pnlAll
+      AnchorSideRight.Side = asrBottom
+      Left = 383
+      Height = 17
+      Top = 144
+      Width = 68
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      Caption = 'Complete!'
+      Font.Color = clGreen
+      ParentColor = False
+      ParentFont = False
+      Visible = False
+    end
+    object lblQthProfile: TLabel
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = edtRemarks
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 17
+      Top = 240
+      Width = 74
+      BorderSpacing.Top = 6
+      Caption = 'QTH Profile'
+      ParentColor = False
+    end
+    object lblErrorLog: TLabel
+      AnchorSideLeft.Control = lblErrors
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblError
+      Left = 112
+      Height = 1
+      Top = 36
+      Width = 1
+      BorderSpacing.Left = 6
+      Font.Color = clRed
+      ParentColor = False
+      ParentFont = False
+      Visible = False
+      OnClick = lblErrorLogClick
+      OnMouseEnter = lblErrorLogMouseEnter
+    end
+    object btnImport: TButton
+      AnchorSideTop.Control = lblFilteredOutCount
+      AnchorSideRight.Control = pnlAll
+      AnchorSideRight.Side = asrBottom
+      Left = 376
+      Height = 25
+      Top = 82
+      Width = 75
+      Anchors = [akTop, akRight]
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
+      BorderSpacing.InnerBorder = 4
+      Caption = 'Import'
+      OnClick = btnImportClick
+      TabOrder = 0
+    end
+    object edtRemarks: TEdit
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = lblRemaks
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 34
+      Top = 200
+      Width = 334
+      AutoSize = False
+      TabOrder = 1
+    end
+    object btnClose: TButton
+      AnchorSideTop.Control = btnImport
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = pnlAll
+      AnchorSideRight.Side = asrBottom
+      Left = 376
+      Height = 25
+      Top = 113
+      Width = 75
+      Anchors = [akTop, akRight]
+      BorderSpacing.Top = 6
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
+      Caption = 'Close'
+      ModalResult = 2
+      OnClick = btnCloseClick
+      TabOrder = 2
+    end
+    object chkFilterDateRange: TCheckBox
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = chkOverrideLocator
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 23
+      Top = 326
+      Width = 215
+      BorderSpacing.Top = 6
+      Caption = 'Filter: only import date range'
+      OnChange = chkFilterDateRangeChange
+      TabOrder = 3
+    end
+    object lblFilteredOut: TLabel
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = lblImport
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 17
+      Top = 82
+      Width = 77
+      BorderSpacing.Top = 6
+      Caption = 'Filtered out:'
+      ParentColor = False
+    end
+    object cmbProfiles: TComboBox
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = lblQthProfile
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 34
+      Top = 257
+      Width = 334
+      ItemHeight = 0
+      TabOrder = 4
+    end
+    object chkLotOfQSO: TCheckBox
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = chkNoCheckOnDuplicates
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 23
+      Top = 154
+      Width = 292
+      Caption = 'ADIF file contains more than 10 000 QSO'
+      TabOrder = 5
+    end
+    object lblFilteredOutCount: TLabel
+      AnchorSideLeft.Control = lblFilteredOut
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblFilteredOut
+      AnchorSideTop.Side = asrCenter
+      Left = 87
+      Height = 17
+      Top = 82
+      Width = 125
+      BorderSpacing.Left = 6
+      Caption = 'lblFilteredOutCount'
+      ParentColor = False
+    end
+    object chkNoCheckOnDuplicates: TCheckBox
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = chkRemember
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 23
+      Top = 131
+      Width = 284
+      Caption = 'No Check For Duplicates (faster Import)'
+      TabOrder = 6
+    end
+    object chkRemember: TCheckBox
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = lblImport
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 23
+      Top = 108
+      Width = 302
+      BorderSpacing.Top = 32
+      Caption = 'Case of duplicates; Remember my answer'
+      TabOrder = 7
+    end
+    object chkOverrideLocator: TCheckBox
+      AnchorSideLeft.Control = lbFile
+      AnchorSideTop.Control = cmbProfiles
+      AnchorSideTop.Side = asrBottom
+      Left = 4
+      Height = 23
+      Top = 297
+      Width = 254
+      BorderSpacing.Top = 6
+      Caption = 'Override locator grid from ADIF log'
+      TabOrder = 8
+    end
+  end
+  object sb: TStatusBar
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideBottom.Control = Owner
+    Left = 0
+    Height = 25
+    Top = 417
+    Width = 458
+    AutoSize = False
+    BorderSpacing.InnerBorder = 3
+    Panels = <    
+      item
+        Width = 200
+      end>
+    SimplePanel = False
+  end
+  object tr: TSQLTransaction
+    Active = False
+    Action = caNone
+    Left = 152
+    Top = 200
+  end
+  object Q1: TSQLQuery
+    FieldDefs = <>
+    Transaction = tr
+    Params = <>
+    Macros = <>
+    Left = 184
+    Top = 200
+  end
+  object Q2: TSQLQuery
+    FieldDefs = <>
+    Transaction = tr
+    Params = <>
+    Macros = <>
+    Left = 216
+    Top = 200
+  end
+  object Q3: TSQLQuery
+    FieldDefs = <>
+    Transaction = tr
+    Params = <>
+    Macros = <>
+    Left = 248
+    Top = 200
+  end
+  object Q4: TSQLQuery
+    FieldDefs = <>
+    Transaction = tr
+    Params = <>
+    Macros = <>
+    Left = 280
+    Top = 200
+  end
+  object popErrFile: TPopupMenu
+    Left = 312
+    Top = 200
+    object mnuedit: TMenuItem
+      Caption = 'Open file with text editor'
+      OnClick = mnueditClick
+    end
+    object mnuImport: TMenuItem
+      Caption = 'Adif import fixed error file'
+      OnClick = mnuImportClick
+    end
+    object mnuDelImport: TMenuItem
+      Caption = 'Delete imported file'
+      Visible = False
+    end
+    object mnuDelete: TMenuItem
+      Caption = 'Delete error file'
+      OnClick = mnuDelImportClick
+    end
+  end
+end

@@ -1,0 +1,1360 @@
+object frmContest: TfrmContest
+  Left = 461
+  Height = 620
+  Top = 139
+  Width = 770
+  HelpType = htKeyword
+  HelpKeyword = 'help/contest.html'
+  HorzScrollBar.Page = 760
+  VertScrollBar.Page = 474
+  AutoScroll = True
+  Caption = 'Contest'
+  ClientHeight = 620
+  ClientWidth = 770
+  Constraints.MinHeight = 225
+  Constraints.MinWidth = 620
+  OnClose = FormClose
+  OnCreate = FormCreate
+  OnHide = FormHide
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
+  LCLVersion = '3.6.0.0'
+  object edtCall: TEdit
+    AnchorSideLeft.Control = lblContestName
+    AnchorSideTop.Control = lblCall
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 34
+    Top = 127
+    Width = 140
+    AutoSelect = False
+    CharCase = ecUppercase
+    MaxLength = 20
+    TabOrder = 1
+    OnChange = edtCallChange
+    OnExit = edtCallExit
+    OnKeyDown = edtCallKeyDown
+    OnKeyPress = edtCallKeyPress
+  end
+  object edtRSTs: TEdit
+    AnchorSideLeft.Control = edtCall
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtCall
+    Left = 146
+    Height = 34
+    Top = 127
+    Width = 50
+    MaxLength = 20
+    TabOrder = 8
+    OnEnter = edtRSTsEnter
+    OnKeyDown = edtCallKeyDown
+  end
+  object edtSTX: TEdit
+    AnchorSideLeft.Control = edtRSTs
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtRSTs
+    Left = 196
+    Height = 34
+    Hint = 'Contest serial number sent, max 6 characters'
+    Top = 127
+    Width = 50
+    MaxLength = 6
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 15
+    OnExit = edtSTXExit
+    OnKeyDown = edtCallKeyDown
+    OnKeyPress = edtSTXKeyPress
+  end
+  object edtSTXStr: TEdit
+    AnchorSideLeft.Control = edtSTX
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtSTX
+    Left = 246
+    Height = 34
+    Hint = 'Contest exchange message sent, max 50 characters'
+    Top = 127
+    Width = 100
+    MaxLength = 50
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 14
+    OnChange = edtSTXStrChange
+    OnEnter = edtSTXStrEnter
+    OnExit = edtSTXStrExit
+    OnKeyDown = edtSTXStrKeyDown
+  end
+  object edtRSTr: TEdit
+    AnchorSideLeft.Control = edtSTXStr
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtSTXStr
+    Left = 362
+    Height = 34
+    Top = 127
+    Width = 50
+    BorderSpacing.Left = 16
+    MaxLength = 20
+    TabOrder = 2
+    OnEnter = edtRSTrEnter
+    OnKeyDown = edtCallKeyDown
+  end
+  object edtSRX: TEdit
+    AnchorSideLeft.Control = edtRSTr
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtRSTr
+    Left = 412
+    Height = 34
+    Hint = 'Contest serial number received, max 6 characters'
+    Top = 127
+    Width = 50
+    MaxLength = 6
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 3
+    OnChange = edtSRXChange
+    OnEnter = edtRSTrEnter
+    OnExit = edtSRXExit
+    OnKeyDown = edtCallKeyDown
+    OnKeyPress = edtSTXKeyPress
+  end
+  object btSave: TButton
+    AnchorSideLeft.Control = lblRate60
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = btClearQso
+    Left = 680
+    Height = 30
+    Top = 41
+    Width = 80
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Left = 6
+    BorderSpacing.Bottom = 3
+    Caption = 'Save QSO'
+    TabOrder = 5
+    OnClick = btSaveClick
+  end
+  object edtSRXStr: TEdit
+    AnchorSideLeft.Control = edtSRX
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = edtRSTr
+    Left = 462
+    Height = 34
+    Hint = 'Contest exchange message sent, max 50 characters'
+    Top = 127
+    Width = 100
+    MaxLength = 50
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 4
+    OnChange = edtSRXStrChange
+    OnEnter = edtRSTrEnter
+    OnKeyDown = edtSRXStrKeyDown
+    OnKeyPress = edtSRXStrKeyPress
+  end
+  object lblCall: TLabel
+    AnchorSideLeft.Control = lblContestName
+    AnchorSideTop.Control = CQpanel
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 17
+    Top = 110
+    Width = 25
+    BorderSpacing.Top = 6
+    Caption = 'Call'
+    ParentColor = False
+  end
+  object lblRSTs: TLabel
+    AnchorSideLeft.Control = edtRSTs
+    AnchorSideTop.Control = lblCall
+    Left = 146
+    Height = 17
+    Top = 110
+    Width = 36
+    Caption = 'RST s'
+    ParentColor = False
+  end
+  object lblMSGs: TLabel
+    AnchorSideLeft.Control = edtSTXStr
+    AnchorSideTop.Control = lblNRs
+    Left = 246
+    Height = 17
+    Top = 110
+    Width = 41
+    Caption = 'MSG s'
+    ParentColor = False
+  end
+  object lblRSTr: TLabel
+    AnchorSideLeft.Control = edtRSTr
+    AnchorSideTop.Control = lblMSGs
+    Left = 362
+    Height = 17
+    Top = 110
+    Width = 34
+    Caption = 'RST r'
+    ParentColor = False
+  end
+  object lblNRr: TLabel
+    AnchorSideLeft.Control = edtSRX
+    AnchorSideTop.Control = lblRSTr
+    Left = 412
+    Height = 17
+    Top = 110
+    Width = 28
+    Caption = 'NR r'
+    ParentColor = False
+  end
+  object lblMSGr: TLabel
+    AnchorSideLeft.Control = edtSRXStr
+    AnchorSideTop.Control = lblNRr
+    Left = 462
+    Height = 17
+    Top = 110
+    Width = 39
+    Caption = 'MSG r'
+    ParentColor = False
+  end
+  object chkNRInc: TCheckBox
+    AnchorSideLeft.Control = edtSTX
+    AnchorSideTop.Control = chkTrueRST
+    Left = 196
+    Height = 23
+    Hint = 'When cheked STX number is created from 001.'#10'Number can be edited in case of wrong entry and counting'#10'increases from number shown when QSO is saved.'
+    Top = 161
+    Width = 45
+    Caption = 'Inc'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+    TabStop = False
+    OnChange = chkNRIncChange
+    OnClick = chkNRIncClick
+  end
+  object lblNRs: TLabel
+    AnchorSideLeft.Control = edtSTX
+    AnchorSideTop.Control = lblRSTs
+    Left = 196
+    Height = 17
+    Top = 110
+    Width = 30
+    Caption = 'NR s'
+    ParentColor = False
+  end
+  object chkLoc: TCheckBox
+    AnchorSideLeft.Control = edtSRXStr
+    AnchorSideTop.Control = chkNoNr
+    Left = 462
+    Height = 23
+    Hint = 'Several options to choose with right mouse click.'#10'When one of them checked saving QSO will copy '#10'received message to that column of log'#10'.'#10'If you select option, remember also check the chkbox!'#10'.'#10'Received message is, of course, always saved to SRX_String'#10'column too.'
+    Top = 161
+    Width = 102
+    Caption = 'MSG is Grid'
+    ParentShowHint = False
+    PopupMenu = popSetMsg
+    ShowHint = True
+    TabOrder = 10
+    TabStop = False
+  end
+  object chkSpace: TCheckBox
+    AnchorSideLeft.Control = lblContestName
+    AnchorSideTop.Control = edtCall
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 23
+    Hint = 'When checked spacebar works like Tab key.'#10'NOTE: prevents space(s) in MSG received'
+    Top = 161
+    Width = 113
+    Caption = 'SPACE is TAB'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 18
+    TabStop = False
+    OnChange = chkSpaceChange
+  end
+  object chkNoNr: TCheckBox
+    AnchorSideLeft.Control = edtSRX
+    AnchorSideTop.Control = chkNRInc
+    Left = 412
+    Height = 23
+    Hint = 'When checked Tab skips this column (contest has no serial Nr)'
+    Top = 161
+    Width = 44
+    Caption = 'No'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 12
+    TabStop = False
+    OnChange = chkNoNrChange
+  end
+  object chkTrueRST: TCheckBox
+    AnchorSideLeft.Control = edtRSTs
+    AnchorSideTop.Control = chkSpace
+    Left = 146
+    Height = 23
+    Hint = 'When checked Tab stops to RST(s) allowing entering of true reports'
+    Top = 161
+    Width = 46
+    Caption = 'Tru'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 13
+    TabStop = False
+    OnChange = chkTrueRSTChange
+  end
+  object btClearQso: TButton
+    AnchorSideLeft.Control = btSave
+    AnchorSideTop.Side = asrBottom
+    AnchorSideBottom.Control = CQpanel
+    AnchorSideBottom.Side = asrBottom
+    Left = 680
+    Height = 30
+    Top = 74
+    Width = 80
+    Anchors = [akLeft, akBottom]
+    BorderSpacing.Top = 2
+    Caption = 'Clear QSO'
+    TabOrder = 7
+    OnClick = btClearQsoClick
+  end
+  object btnHelp: TSpeedButton
+    AnchorSideTop.Side = asrCenter
+    AnchorSideRight.Control = btSave
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = btSave
+    Left = 735
+    Height = 25
+    Hint = 'Help'
+    Top = 13
+    Width = 25
+    Anchors = [akRight, akBottom]
+    BorderSpacing.Bottom = 3
+    Glyph.Data = {
+      F6030000424DF6030000000000003600000028000000100000000F0000000100
+      200000000000C003000064000000640000000000000000000000FFFFFF00FFFF
+      FF0095564AFB89463BFF8A4437FF8B4437FF8C4538FF8D4639FF8E4739FF8F48
+      3AFF90493BFF914A3CFF924B3DFF985346F8FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00784641F5DBDCDCFFD4DCDCFFD4DCDCFFD4DCDCFFD3DCDCFFD3DCDCFFD3DC
+      DCFFD3DCDCFFD3DCDCFFD6DCDCFFB0928B8BFFFFFF00FFFFFF00FFFFFF00FFFF
+      FF0096574BF589463BFF8A4437FF8B4437FF8C4538FF8D4639FF8E4739FF8F48
+      3AFF90493BFF914A3CFF924B3DFF9A5547F0FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00AF7467F5AD7568FFB0705EFFB27160FFB47462FFB36E5CFFB56F5DFFBB78
+      66FFBD7B68FFBF7D6BFFC17F6BFFB87563F7FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00B4776AF5AE7568FFB37362FFB57462FFB4705DFFDDBEB4FFE7D1CCFFBB79
+      66FFBF7D69FFC17F6CFFC3816DFFBA7664F7FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00DAB2AAFAAF7668FFB97865FFBB7967FFB76F5AFFFDFAFAFFFFFFFFFFC485
+      73FFC3826EFFC68470FFC88672FFBD7966E1FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00AD7062F5B87D70FFBE7D69FFC07E6BFFBF7A66FFDFBCB1FFD9B5ACFFC67F
+      68FFCA8873FFCC8A75FFCE8C76FFBF7D69E2FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00B17668F5BC8373FFC3826FFFC5836FFFC27A64FFFDFBFAFFFFFFFFFFC07B
+      68FFCF8B73FFD18F79FFD3917BFFC37F6CE2FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00B27769F5C08676FFCA8773FFC88470FFCA846EFFE7C7BCFFFFFFFFFFFBF8
+      F7FFCF9888FFD69178FFD8967FFFC6846FE2FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00B2796AF5C58A7BFFCC866FFFE0B8ABFFC8856FFFCF876FFFE3B7A8FFFEFB
+      FAFFFFFFFFFFD19A89FFDE9A81FFCB8772E2FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00B07465F5C88C7AFFDFAC9CFFFFFFFFFFF8F2F0FFD28970FFD6896DFFEBC2
+      B6FFFFFFFFFFEED8D1FFE19B82FFCE8B76E2FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00DDB6AFFACB8E7BFFD58B73FFFBF4F1FFFFFFFFFFF9F5F3FFF9EAE5FFFFFF
+      FFFFFFFFFFFFE8B8A4FFEAA48AFFCE8A74E7FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00B27667F5D29784FFDE9B82FFDD9981FFEFCABBFFFBF1EEFFFBEFEBFFF9E9
+      E3FFEDB6A2FFEAA589FFEFAC91FFCE8B75E7FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00B67A6CF5D79B88FFE5A088FFE5A288FFE6A086FFE79F84FFE8A185FFEAA4
+      88FFEEAA8EFFF0AE93FFF4B297FFCE8C76E7FFFFFF00FFFFFF00FFFFFF00FFFF
+      FF00E2A289A4D0927FD7D49078DAD39079DAD5927BDAD7947CDAD8947DDADB96
+      7FDADB9880DADC9A81DAE19F86DBD4937CAEFFFFFF00FFFFFF00
+    }
+    OnClick = btnHelpClick
+  end
+  object lblContestName: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cmbContestName
+    Left = 6
+    Height = 17
+    Top = 6
+    Width = 91
+    BorderSpacing.Left = 6
+    Caption = 'Contest name'
+    ParentColor = False
+  end
+  object cmbContestName: TComboBox
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = edtSRXStr
+    AnchorSideRight.Side = asrBottom
+    Left = 130
+    Height = 34
+    Hint = 'Contestname, choose ADIF contest_id via combobox '#10'or type free text max 40 characters.'#10'Recommended to add contest year(week/month/day) if several'#10'contests are kept in same log. Helps Contest filter usage'#10'.'#10'If contest name combo box has any name "Status" view is updated by '#10'CommonStatus rules. User can adjust rules by click of "Settings" below "Status".'#10'There are also predefined strings (nw MWC,OK1WC,NAC) that cause contest specific '#10'Status displayed if they appear in contest name.'
+    Top = 6
+    Width = 432
+    Anchors = [akTop, akRight]
+    BorderSpacing.Top = 6
+    ItemHeight = 0
+    Items.Strings = (
+      '070-160M-SPRINT'
+      '070-3-DAY'
+      '070-31-FLAVORS'
+      '070-40M-SPRINT'
+      '070-80M-SPRINT'
+      '070-PSKFEST'
+      '070-ST-PATS-DAY'
+      '070-VALENTINE-SPRINT'
+      '10-RTTY'
+      '1010-OPEN-SEASON'
+      '7QP'
+      'AL-QSO-PARTY'
+      'ALL-ASIAN-DX-CW'
+      'ALL-ASIAN-DX-PHONE'
+      'ANARTS-RTTY'
+      'ANATOLIAN-RTTY'
+      'AP-SPRINT'
+      'AR-QSO-PARTY'
+      'ARI-DX'
+      'ARRL-10'
+      'ARRL-160'
+      'ARRL-222'
+      'ARRL-DX-CW'
+      'ARRL-DX-SSB'
+      'ARRL-EME'
+      'ARRL-FIELD-DAY'
+      'ARRL-RR-CW'
+      'ARRL-RR-RTTY'
+      'ARRL-RR-SSB'
+      'ARRL-RTTY'
+      'ARRL-SCR'
+      'ARRL-SS-CW'
+      'ARRL-SS-SSB'
+      'ARRL-UHF-AUG'
+      'ARRL-VHF-JAN'
+      'ARRL-VHF-JUN'
+      'ARRL-VHF-SEP'
+      'AZ-QSO-PARTY'
+      'BARTG-RTTY'
+      'BARTG-SPRINT'
+      'BC-QSO-PARTY'
+      'CA-QSO-PARTY'
+      'CIS-DX'
+      'CO-QSO-PARTY'
+      'CQ-160-CW'
+      'CQ-160-SSB'
+      'CQ-M'
+      'CQ-VHF'
+      'CQ-WPX-CW'
+      'CQ-WPX-RTTY'
+      'CQ-WPX-SSB'
+      'CQ-WW-CW'
+      'CQ-WW-RTTY'
+      'CQ-WW-SSB'
+      'CT-QSO-PARTY'
+      'CVA-DX-CW'
+      'CVA-DX-SSB'
+      'CWOPS-CW-OPEN'
+      'CWOPS-CWT'
+      'DARC-WAEDC-CW'
+      'DARC-WAEDC-RTTY'
+      'DARC-WAEDC-SSB'
+      'DARC-WAG'
+      'DE-QSO-PARTY'
+      'DL-DX-RTTY'
+      'DMC-RTTY'
+      'EA-CNCW'
+      'EA-DME'
+      'EA-PSK63'
+      'EA-RTTY (import-only)'
+      'EA-SMRE-CW'
+      'EA-SMRE-SSB'
+      'EA-VHF-ATLANTIC'
+      'EA-VHF-COM'
+      'EA-VHF-COSTA-SOL'
+      'EA-VHF-EA'
+      'EA-VHF-EA1RCS'
+      'EA-VHF-QSL'
+      'EA-VHF-SADURNI'
+      'EA-WW-RTTY'
+      'EPC-PSK63'
+      'EU Sprint'
+      'EU-HF'
+      'EU-PSK-DX'
+      'EUCW160M'
+      'FALL SPRINT'
+      'FL-QSO-PARTY'
+      'GA-QSO-PARTY'
+      'HA-DX'
+      'HELVETIA'
+      'HI-QSO-PARTY'
+      'HOLYLAND'
+      'IA-QSO-PARTY'
+      'IARU-FIELD-DAY'
+      'IARU-HF'
+      'ID-QSO-PARTY'
+      'IL QSO Party'
+      'IN-QSO-PARTY'
+      'JARTS-WW-RTTY'
+      'JIDX-CW'
+      'JIDX-SSB'
+      'JT-DX-RTTY'
+      'KS-QSO-PARTY'
+      'KY-QSO-PARTY'
+      'LA-QSO-PARTY'
+      'LDC-RTTY'
+      'LZ DX'
+      'MAR-QSO-PARTY'
+      'MD-QSO-PARTY'
+      'ME-QSO-PARTY'
+      'MI-QSO-PARTY'
+      'MIDATLANTIC-QSO-PARTY'
+      'MN-QSO-PARTY'
+      'MO-QSO-PARTY'
+      'MS-QSO-PARTY'
+      'MT-QSO-PARTY'
+      'NA-SPRINT-CW'
+      'NA-SPRINT-RTTY'
+      'NA-SPRINT-SSB'
+      'NAQP-CW'
+      'NAQP-RTTY'
+      'NAQP-SSB'
+      'NC-QSO-PARTY'
+      'ND-QSO-PARTY'
+      'NE-QSO-PARTY'
+      'NEQP'
+      'NH-QSO-PARTY'
+      'NJ-QSO-PARTY'
+      'NM-QSO-PARTY'
+      'NRAU-BALTIC-CW'
+      'NRAU-BALTIC-SSB'
+      'NV-QSO-PARTY'
+      'NY-QSO-PARTY'
+      'OCEANIA-DX-CW'
+      'OCEANIA-DX-SSB'
+      'OH-QSO-PARTY'
+      'OK-DX-RTTY'
+      'OK-OM-DX'
+      'OK-QSO-PARTY'
+      'OMISS-QSO-PARTY'
+      'ON-QSO-PARTY'
+      'OR-QSO-PARTY'
+      'PA-QSO-PARTY'
+      'PACC'
+      'PSK-DEATHMATCH'
+      'QC-QSO-PARTY'
+      'RAC (import-only)'
+      'RAC-CANADA-DAY'
+      'RAC-CANADA-WINTER'
+      'RDAC'
+      'RDXC'
+      'REF-160M'
+      'REF-CW'
+      'REF-SSB'
+      'REP-PORTUGAL-DAY-HF'
+      'RI-QSO-PARTY'
+      'RSGB-160'
+      'RSGB-21/28-CW'
+      'RSGB-21/28-SSB'
+      'RSGB-80M-CC'
+      'RSGB-AFS-CW'
+      'RSGB-AFS-SSB'
+      'RSGB-CLUB-CALLS'
+      'RSGB-COMMONWEALTH'
+      'RSGB-IOTA'
+      'RSGB-LOW-POWER'
+      'RSGB-NFD'
+      'RSGB-ROPOCO'
+      'RSGB-SSB-FD'
+      'RUSSIAN-RTTY'
+      'SAC-CW'
+      'SAC-SSB'
+      'SARTG-RTTY'
+      'SC-QSO-PARTY'
+      'SCC-RTTY'
+      'SD-QSO-PARTY'
+      'SMP-AUG'
+      'SMP-MAY'
+      'SP-DX-RTTY'
+      'SPAR-WINTER-FD'
+      'SPDXContest'
+      'SPRING SPRINT'
+      'SR-MARATHON'
+      'STEW-PERRY'
+      'SUMMER SPRINT'
+      'TARA-GRID-DIP'
+      'TARA-RTTY'
+      'TARA-RUMBLE'
+      'TARA-SKIRMISH'
+      'TEN-RTTY'
+      'TMC-RTTY'
+      'TN-QSO-PARTY'
+      'TX-QSO-PARTY'
+      'UBA-DX-CW'
+      'UBA-DX-SSB'
+      'UK-DX-BPSK63'
+      'UK-DX-RTTY'
+      'UKR-CHAMP-RTTY'
+      'UKRAINIAN DX'
+      'UKSMG-6M-MARATHON'
+      'UKSMG-SUMMER-ES'
+      'URE-DX (import-only)'
+      'US-COUNTIES-QSO'
+      'UT-QSO-PARTY'
+      'VA-QSO-PARTY'
+      'VENEZ-IND-DAY'
+      'VIRGINIA QSO PARTY (import-only)'
+      'VOLTA-RTTY'
+      'WA-QSO-PARTY'
+      'WI-QSO-PARTY'
+      'WIA-HARRY ANGEL'
+      'WIA-JMMFD'
+      'WIA-OCDX'
+      'WIA-REMEMBRANCE'
+      'WIA-ROSS HULL'
+      'WIA-TRANS TASMAN'
+      'WIA-VHF/UHF FD'
+      'WIA-VK SHIRES'
+      'WINTER SPRINT'
+      'WV-QSO-PARTY'
+      'WY-QSO-PARTY'
+      'XE-INTL-RTTY'
+      'YOHFDX'
+      'YUDXC'
+    )
+    MaxLength = 40
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 11
+    TabStop = False
+    OnChange = cmbContestNameChange
+    OnEnter = cmbContestNameEnter
+    OnExit = cmbContestNameExit
+  end
+  object chkQsp: TCheckBox
+    AnchorSideLeft.Control = edtSTXStr
+    AnchorSideTop.Control = chkNRInc
+    Left = 246
+    Height = 23
+    Hint = 'When checked allows circulating STX_String.'#10'I.E. set MSG_s at start, after 1st QSO is saved your MSG_s'#10'changes to MSG_r received from last logged QSO.'
+    Top = 161
+    Width = 51
+    Caption = 'Qsp'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 16
+    TabStop = False
+    OnChange = chkQspChange
+  end
+  object chkTabAll: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = chkSetFilter
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 23
+    Hint = 'When checked TAB will move through all columns in order'
+    Top = 66
+    Width = 106
+    BorderSpacing.Left = 6
+    Caption = 'TAB in order'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 17
+    TabStop = False
+    OnChange = chkTabAllChange
+  end
+  object sbContest: TStatusBar
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Side = asrBottom
+    Left = 0
+    Height = 20
+    Top = 600
+    Width = 770
+    Constraints.MinHeight = 20
+    Panels = <    
+      item
+        Text = '0'
+        Width = 150
+      end    
+      item
+        Text = '1'
+        Width = 50
+      end    
+      item
+        Text = '2'
+        Width = 50
+      end    
+      item
+        Text = '3'
+        Width = 50
+      end    
+      item
+        Text = '4'
+        Width = 50
+      end>
+    SimplePanel = False
+  end
+  object lblSpeed: TLabel
+    AnchorSideLeft.Control = cmbContestName
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = cmbContestName
+    AnchorSideTop.Side = asrCenter
+    Left = 571
+    Height = 17
+    Top = 15
+    Width = 33
+    BorderSpacing.Left = 9
+    Caption = 'WPM'
+    ParentColor = False
+  end
+  object rbDupeCheck: TRadioButton
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = chkSpace
+    AnchorSideTop.Side = asrBottom
+    Left = 17
+    Height = 23
+    Hint = 'Dupe = station already worked in this band.'#10'When selected, with date, duplicate cheking starts from set date.'#10'Date is needed if you have several contests in same log'#10'.'#10'With own log for every contest date is not needed to be set'#10'.'#10'Turns call column text to bold red. If QSO is how ever logged '#10'adds "/D" to RSTsend if "Mark dupe" is cheked.'#10' '
+    Top = 192
+    Width = 141
+    BorderSpacing.Left = 17
+    BorderSpacing.Top = 8
+    Caption = 'Dupe check from:'
+    Checked = True
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 22
+    TabStop = True
+  end
+  object rbNoMode4Dupe: TRadioButton
+    AnchorSideLeft.Control = btDupChkStart
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = rbDupeCheck
+    Left = 252
+    Height = 23
+    Hint = 'This selection allows same station to be worked in same band'#10' if QSO mode is different.'#10#10'Otherwise like "Dupe check" selction.'
+    Top = 192
+    Width = 122
+    BorderSpacing.Left = 3
+    Caption = 'NoMode4Dupe'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 20
+  end
+  object rbIgnoreDupes: TRadioButton
+    AnchorSideLeft.Control = rbNoMode4Dupe
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = rbDupeCheck
+    Left = 377
+    Height = 23
+    Hint = 'No duplicate cheking'
+    Top = 192
+    Width = 110
+    BorderSpacing.Left = 3
+    Caption = 'Ignore dupes'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 21
+    OnChange = rbIgnoreDupesChange
+  end
+  object btClearAll: TButton
+    AnchorSideLeft.Control = btSave
+    AnchorSideTop.Control = rbDupeCheck
+    AnchorSideTop.Side = asrCenter
+    Left = 680
+    Height = 30
+    Top = 188
+    Width = 80
+    Caption = 'Clear All'
+    TabOrder = 6
+    TabStop = False
+    OnClick = btClearAllClick
+  end
+  object btDupChkStart: TButton
+    AnchorSideLeft.Control = rbDupeCheck
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = rbDupeCheck
+    AnchorSideTop.Side = asrCenter
+    Left = 159
+    Height = 33
+    Hint = 'When using common log for all contests set date of '#10'dupe check begin (I.E. contest start date)'
+    Top = 187
+    Width = 90
+    AutoSize = True
+    BorderSpacing.Left = 1
+    Caption = '1900-01-01'
+    Constraints.MaxHeight = 35
+    Constraints.MaxWidth = 180
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 23
+    TabStop = False
+    OnClick = btDupChkStartClick
+  end
+  object chkSP: TCheckBox
+    AnchorSideLeft.Control = edtSTXStr
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = chkQsp
+    AnchorSideTop.Side = asrCenter
+    Left = 346
+    Height = 23
+    Hint = 'When cheked form is in Search and Pounce mode where operator'#10'needs to launch all memory contents using function keys (F1-F9)'#10'With CW Messages this means "S&P(default)" set of memories.'#10'.'#10'When NOT checked S&P, message F2 is launched when cursor enters to'#10'one of RSTr, NRr or MSGr (F2 must be defined by operator)'#10'In case of duplicate call is found message F3 is launced instead'#10'of F2 when cursor leaves CALL column (F3 must be defined by operator)'#10'When QSO is saved  message F4 is lauched. (F4 must be defined by operator)'#10'With CW Messages this means "Run" set of memory texts.'#10'.'#10'When S&P checkbox changes state also CW message sets are switched.'#10'.'#10'CW messages can be stopped with one 1xESC key as usual.'#10#10'Suggestions for CW "Run" set message macros (NewQSO/File/CW messages):'#10'F1 = cq %mc test    (%mc is station call)'#10'F2 = %c %xrs          (%c call  %xrs sends CALL+ RST+STX+STXStr in short form.)'#10'F3 = %c QSO'#10'F4 = tu %mc test'
+    Top = 161
+    Width = 52
+    Caption = 'S&&P'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 24
+    TabStop = False
+    OnClick = chkSPClick
+  end
+  object gbStatus: TGroupBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = rbDupeCheck
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = sbContest
+    Left = 0
+    Height = 379
+    Top = 221
+    Width = 767
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Top = 6
+    BorderSpacing.Right = 3
+    Caption = 'Status'
+    ClientHeight = 361
+    ClientWidth = 765
+    TabOrder = 25
+    object mStatus: TMemo
+      AnchorSideLeft.Control = gbStatus
+      AnchorSideRight.Control = gbStatus
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = gbStatus
+      AnchorSideBottom.Side = asrBottom
+      Left = 0
+      Height = 150
+      Hint = 'Shows status of contest.'#10'If contest has any name Common Status counting is used. That'#10'includes QSO counts for all, dx and own continent with lists of'#10'DX and own continent prefixes. There is also band based counting'#10'in grid that user can adjust. '#10'Also received messages are counted and listed allowing msg'#10'multiplier count.'#10'Use can control these with left click of mouse pointing "Settings"'#10'text of "Status" display area'#10'.'#10'Currently if there are contest names that include "mwc"or "ok1wc"'#10'and "nac" those statuses are counted by MWC or NAC rules'#10'.'#10'Update is done by timer on every 3 seconds.'
+      Top = 211
+      Width = 765
+      Anchors = [akLeft, akRight, akBottom]
+      Constraints.MinHeight = 50
+      ParentShowHint = False
+      ReadOnly = True
+      ScrollBars = ssAutoBoth
+      ShowHint = True
+      TabOrder = 0
+      TabStop = False
+    end
+    object sgStatus: TStringGrid
+      AnchorSideLeft.Control = gbStatus
+      AnchorSideTop.Control = gbStatus
+      AnchorSideRight.Control = gbStatus
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = mStatus
+      Left = 0
+      Height = 211
+      Top = 0
+      Width = 765
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ColCount = 13
+      Columns = <      
+        item
+          Title.Caption = 'All'
+          Width = 64
+        end      
+        item
+          Title.Caption = '160'
+        end      
+        item
+          Title.Caption = '80'
+        end      
+        item
+          Title.Caption = '40'
+        end      
+        item
+          Title.Caption = '20'
+        end      
+        item
+          Title.Caption = '15'
+        end      
+        item
+          Title.Caption = '10'
+        end      
+        item
+          Title.Caption = '6'
+        end      
+        item
+          Title.Caption = '4'
+        end      
+        item
+          Title.Caption = '2'
+        end      
+        item
+          Title.Caption = '070'
+        end      
+        item
+          Title.Caption = '023'
+        end>
+      Constraints.MinHeight = 65
+      RowCount = 8
+      TabOrder = 1
+      OnMouseUp = sgStatusMouseUp
+      OnPrepareCanvas = sgStatusPrepareCanvas
+    end
+  end
+  object chkMarkDupe: TCheckBox
+    AnchorSideLeft.Control = rbIgnoreDupes
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = rbDupeCheck
+    Left = 490
+    Height = 23
+    Hint = 'If duplicate QSO is logged  adds "/D" to RSTsend when cheked.'
+    Top = 192
+    Width = 95
+    BorderSpacing.Left = 3
+    Caption = 'Mark dupe'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 26
+    TabStop = False
+  end
+  object chkHint: TCheckBox
+    AnchorSideLeft.Control = chkMarkDupe
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = chkMarkDupe
+    AnchorSideTop.Side = asrCenter
+    Left = 588
+    Height = 23
+    Hint = 'Turn hint help texts showing ON/OFF '
+    Top = 192
+    Width = 90
+    BorderSpacing.Left = 3
+    Caption = 'Show hint'
+    Checked = True
+    ParentShowHint = False
+    ShowHint = True
+    State = cbChecked
+    TabOrder = 27
+    TabStop = False
+    OnChange = chkHintChange
+  end
+  object CQpanel: TPanel
+    AnchorSideLeft.Control = cmbContestName
+    AnchorSideTop.Control = cmbContestName
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = cmbContestName
+    AnchorSideRight.Side = asrBottom
+    Left = 130
+    Height = 61
+    Top = 43
+    Width = 432
+    Anchors = [akTop, akLeft, akRight]
+    BorderSpacing.Top = 3
+    ClientHeight = 61
+    ClientWidth = 432
+    TabOrder = 0
+    object spCQperiod: TSpinEdit
+      AnchorSideLeft.Control = lblCQperiod
+      AnchorSideTop.Control = lblCQperiod
+      AnchorSideTop.Side = asrBottom
+      AnchorSideBottom.Side = asrBottom
+      Left = 7
+      Height = 34
+      Hint = 'Timer repeat period for sending F1 (CQ).'#10'Value is milliseconds 5000 -50000 (5 -50 sec)'#10'As there is no indication how long F1 sending'#10'takes value should be adjusted manually.'#10' Set repeats=1, press CQ start and check that'#10' F1 has time to complete+listening time.'#10'CW sending and timer will stop when ESC is '#10'pressed or someting is written to Call column. '
+      Top = 19
+      Width = 90
+      BorderSpacing.Right = 6
+      Increment = 250
+      MaxValue = 30000
+      MinValue = 5000
+      OnChange = spCQperiodChange
+      ParentShowHint = False
+      ShowHint = True
+      TabStop = False
+      TabOrder = 1
+      Value = 5000
+    end
+    object spCQrepeat: TSpinEdit
+      AnchorSideLeft.Control = spCQperiod
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = spCQperiod
+      Left = 103
+      Height = 34
+      Hint = 'Dead operator counter.'#10'How many times CQ (F1) is repeated before repeat stops.'#10'Value 1 - 20 times.'
+      Top = 19
+      Width = 90
+      BorderSpacing.Right = 6
+      MaxValue = 30
+      MinValue = 1
+      ParentShowHint = False
+      ShowHint = True
+      TabStop = False
+      TabOrder = 2
+      Value = 1
+    end
+    object lblCQperiod: TLabel
+      AnchorSideLeft.Control = CQpanel
+      AnchorSideTop.Control = CQpanel
+      Left = 7
+      Height = 17
+      Top = 2
+      Width = 64
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 1
+      Caption = 'CQ period'
+      ParentColor = False
+    end
+    object lblCQrepeat: TLabel
+      AnchorSideLeft.Control = spCQperiod
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = lblCQperiod
+      Left = 109
+      Height = 17
+      Top = 2
+      Width = 72
+      BorderSpacing.Left = 12
+      Caption = 'CQ repeats'
+      ParentColor = False
+    end
+    object btnCQstart: TButton
+      AnchorSideLeft.Control = spCQrepeat
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = spCQrepeat
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Side = asrBottom
+      Left = 205
+      Height = 30
+      Hint = 'Start CQ (F1) timer.'#10'Shorcut key: Shift+F1'#10'Stop with same key, 1xESC or'#10'write to call column.'
+      Top = 21
+      Width = 80
+      BorderSpacing.Left = 12
+      Caption = 'CQ start'
+      Font.Color = clGreen
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      TabStop = False
+      OnClick = btnCQstartClick
+    end
+    object lblCqFreq: TLabel
+      AnchorSideTop.Control = btnCQstart
+      AnchorSideTop.Side = asrCenter
+      Left = 297
+      Height = 1
+      Hint = 'Shows Frequency last used for CQ calling (F1 memory).'#10'Double click on Frequency or Ctrl+L sets rig to that frequency and mode.'
+      Top = 36
+      Width = 1
+      BorderSpacing.Left = 12
+      Color = clYellow
+      ParentColor = False
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      Transparent = False
+      OnClick = lblCqFreqClick
+    end
+    object lblCQLbl: TLabel
+      AnchorSideLeft.Control = lblCqFreq
+      AnchorSideTop.Control = lblCQrepeat
+      Left = 297
+      Height = 17
+      Top = 2
+      Width = 82
+      Caption = 'Last CQ Freq'
+      ParentColor = False
+    end
+    object lblCqMode: TLabel
+      AnchorSideLeft.Control = lblCqFreq
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = btnCQstart
+      AnchorSideTop.Side = asrCenter
+      Left = 304
+      Height = 1
+      Hint = 'Shows Mode last used for CQ calling (F1 memory).'#10'Double click on mode or Ctrl+L sets rig to that frequency and mode.'
+      Top = 36
+      Width = 1
+      BorderSpacing.Left = 6
+      Color = clYellow
+      ParentColor = False
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      Transparent = False
+      OnClick = lblCqFreqClick
+    end
+  end
+  object lblQSOSince: TLabel
+    AnchorSideLeft.Control = lblSpeed
+    AnchorSideTop.Control = lblRate10
+    AnchorSideTop.Side = asrBottom
+    Left = 571
+    Height = 17
+    Hint = 'Shows time (MM:SS) since last logged Qso'
+    Top = 66
+    Width = 22
+    BorderSpacing.Top = 6
+    Caption = 'QS:'
+    ParentColor = False
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object lblRate10: TLabel
+    AnchorSideLeft.Control = lblQSOSince
+    AnchorSideTop.Control = CQpanel
+    Left = 571
+    Height = 17
+    Hint = 'Total QSO rate / 10 minutes'
+    Top = 43
+    Width = 50
+    AutoSize = False
+    Caption = 'q/10'
+    ParentColor = False
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object lblRate60: TLabel
+    AnchorSideLeft.Control = lblRate10
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblRate10
+    Left = 624
+    Height = 17
+    Hint = 'Total QSO rate / 1 hour'
+    Top = 43
+    Width = 50
+    AutoSize = False
+    BorderSpacing.Left = 3
+    Caption = 'q/60'
+    ParentColor = False
+    ParentShowHint = False
+    ShowHint = True
+  end
+  object chkSetFilter: TCheckBox
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = cmbContestName
+    AnchorSideTop.Side = asrBottom
+    Left = 6
+    Height = 23
+    Hint = 'Set "QsoList/FIlter/Contest filter" by contest name'#10'used in "Contest name".'#10'Then using right click you can jump directly to log exports.'
+    Top = 43
+    Width = 100
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 3
+    Caption = 'Filter && Exp'
+    TabOrder = 28
+    OnClick = chkSetFilterClick
+    OnMouseUp = chkSetFilterMouseUp
+  end
+  object tmrESC2: TTimer
+    Enabled = False
+    OnTimer = tmrESC2Timer
+    Left = 408
+    Top = 320
+  end
+  object cdDupeDate: TCalendarDialog
+    Title = 'Set start date'
+    DialogPosition = poScreenCenter
+    Date = 44563
+    OKCaption = 'OK'
+    CancelCaption = 'Cancel'
+    Left = 488
+    Top = 264
+  end
+  object popSetMsg: TPopupMenu
+    Left = 448
+    Top = 264
+    object mnuName: TMenuItem
+      Caption = 'MSG is Name'
+      OnClick = mnuNameClick
+    end
+    object mnuGrid: TMenuItem
+      Caption = 'MSG is Grid'
+      OnClick = mnuGridClick
+    end
+    object mnyIOTA: TMenuItem
+      Caption = 'MSG is IOTA'
+      OnClick = mnyIOTAClick
+    end
+    object mnuState: TMenuItem
+      Caption = 'Msg is State'
+      OnClick = mnuStateClick
+    end
+    object mnuCounty: TMenuItem
+      Caption = 'MSG is County'
+      OnClick = mnuCountyClick
+    end
+    object mnuAward: TMenuItem
+      Caption = 'MSG is Award'
+      OnClick = mnuAwardClick
+    end
+    object mnuQSLvia: TMenuItem
+      Caption = 'MSG is QSl via'
+      OnClick = mnuQSLviaClick
+    end
+    object mnuComment: TMenuItem
+      Caption = 'MSG is Comment'
+      OnClick = mnuCommentClick
+    end
+  end
+  object popCommonStatus: TPopupMenu
+    Left = 408
+    Top = 264
+    object mnuQSOcount: TMenuItem
+      Caption = 'QSO/DUPE count'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuDXQSOCount: TMenuItem
+      Caption = 'DX QSO count'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuCountyrCountAll: TMenuItem
+      Caption = 'Country count all'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuDXCountryCount: TMenuItem
+      Caption = 'DX country count'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuDXCountryList: TMenuItem
+      Caption = 'DX country list'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuOwnCountryCount: TMenuItem
+      Caption = 'Own country count'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuOwnCountryList: TMenuItem
+      Caption = 'Own country list'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuMsgMultipCount: TMenuItem
+      Caption = 'Msg multip count'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object mnuMsgMultipList: TMenuItem
+      Caption = 'Msg multip list'
+      Checked = True
+      OnClick = mnuQSOcountClick
+    end
+    object Separator1: TMenuItem
+      Caption = '-'
+      Checked = True
+    end
+    object Band_160: TMenuItem
+      Caption = 'Band_160'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_80: TMenuItem
+      Caption = 'Band_80'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_40: TMenuItem
+      Caption = 'Band_40'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_20: TMenuItem
+      Caption = 'Band_20'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_15: TMenuItem
+      Caption = 'Band_15'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_10: TMenuItem
+      Caption = 'Band_10'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_6: TMenuItem
+      Caption = 'Band_6'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_4: TMenuItem
+      Caption = 'Band_4'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_2: TMenuItem
+      Caption = 'Band_2'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_070: TMenuItem
+      Caption = 'Band_070'
+      OnClick = mnuQSOcountClick
+    end
+    object Band_023: TMenuItem
+      Caption = 'Band_023'
+      OnClick = mnuQSOcountClick
+    end
+    object Separator2: TMenuItem
+      Caption = '-'
+    end
+    object mnuModeRelated: TMenuItem
+      Caption = 'Mode related count'
+      OnClick = mnuQSOcountClick
+    end
+    object mnuReSetAllCounters: TMenuItem
+      Caption = 'Re/Set All counters'
+      OnClick = mnuReSetAllCountersClick
+    end
+    object mnuReSetAllHF: TMenuItem
+      Caption = 'Re/Set all HF'
+      OnClick = mnuReSetAllHFClick
+    end
+    object mnuReSetAllVHF: TMenuItem
+      Caption = 'Re/Set all VHF'
+      OnClick = mnuReSetAllVHFClick
+    end
+    object Save: TMenuItem
+      Caption = 'Save'
+      OnClick = SaveClick
+    end
+    object Load: TMenuItem
+      Caption = 'Load'
+      OnClick = LoadClick
+    end
+    object mnuExit: TMenuItem
+      Caption = 'Exit  (Esc key)'
+    end
+  end
+  object tmrCQ: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = tmrCQTimer
+    Left = 488
+    Top = 320
+  end
+  object tmrScore: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = tmrScoreTimer
+    Left = 568
+    Top = 320
+  end
+  object OpenDialog1: TOpenDialog
+    Title = 'Open Contest settings file'
+    DefaultExt = '.ctst'
+    Filter = 'Contest settings|*.ctst|All files|*'
+    Options = [ofPathMustExist, ofFileMustExist, ofEnableSizing, ofForceShowHidden, ofViewDetail]
+    Left = 568
+    Top = 264
+  end
+  object SaveDialog1: TSaveDialog
+    Title = 'Save Contest settings as'
+    DefaultExt = '.ctst'
+    Filter = 'Contest settings|*.ctst|All files|*'
+    Options = [ofOverwritePrompt, ofPathMustExist, ofEnableSizing, ofViewDetail]
+    Left = 656
+    Top = 264
+  end
+  object popQuickExport: TPopupMenu
+    Left = 320
+    Top = 264
+    object AdifExp: TMenuItem
+      Action = frmMain.acExADIF
+    end
+    object CabrilloExp: TMenuItem
+      Action = frmMain.acCabrilloExport
+    end
+    object EdiExp: TMenuItem
+      Action = frmMain.acEDIExport
+    end
+  end
+end

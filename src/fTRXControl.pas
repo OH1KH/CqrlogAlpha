@@ -65,10 +65,11 @@ type
     gbInfo : TGroupBox;
     gbVfo : TGroupBox;
     GroupBox4 : TGroupBox;
-    lblMode: TLabel;
+    lblHidAnch: TLabel;
+    lblPwrBar: TLabel;
     lblFreq : TLabel;
     lblInitRig: TLabel;
-    mnuShowFreqBar: TMenuItem;
+    mnuShowPwrBar: TMenuItem;
     mnuShowUsr : TMenuItem;
     mnuShowInfo : TMenuItem;
     mnuShowVfo : TMenuItem;
@@ -78,17 +79,18 @@ type
     mnuShowPwr : TMenuItem;
     mnuProgPref : TMenuItem;
     mnuMem : TMainMenu;
-    pbBand: TProgressBar;
-    pnlFreqBar: TPanel;
+    pnlPwrBar: TPanel;
     pnlRig: TPanel;
     pnlUsr : TPanel;
     pnlMain : TPanel;
     pnlPower : TPanel;
     Separator1: TMenuItem;
     Separator2: TMenuItem;
+    Separator3: TMenuItem;
     tmrChokeWheel: TTimer;
     tmrSetRigTime: TTimer;
     tmrRadio : TTimer;
+    tbPwr: TTrackBar;
     procedure acAddModMemExecute(Sender : TObject);
     procedure btnMemWriClick(Sender : TObject);
     procedure btnMemDwnClick(Sender : TObject);
@@ -133,12 +135,20 @@ type
     procedure btnDATAClick(Sender : TObject);
     procedure btnSSBClick(Sender : TObject);
     procedure gbFreqClick(Sender : TObject);
-    procedure mnuShowFreqBarClick(Sender: TObject);
+    procedure mnuShowPwrBarClick(Sender: TObject);
     procedure mnuShowInfoClick(Sender : TObject);
     procedure mnuShowPwrClick(Sender : TObject);
     procedure mnuProgPrefClick(Sender : TObject);
     procedure mnuShowUsrClick(Sender : TObject);
     procedure mnuShowVfoClick(Sender : TObject);
+    procedure tbPwrMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure tbPwrMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer
+      );
+    procedure tbPwrMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure tbPwrMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure tmrChokeWheelTimer(Sender: TObject);
     procedure tmrRadioTimer(Sender : TObject);
     procedure tmrSetRigTimeTimer(Sender: TObject);
@@ -168,12 +178,14 @@ type
     procedure UpdateModeButtons(mode : String);
 
     procedure UserButton(r, b : Char);
+
   public
     AutoMode : Boolean;
     infosetstage : Integer;
     infosetfreq : String;
     RigInUse    : String;  //rig in use. Number as string
     IsNewHamlib : Boolean;
+    StopPwrUpdate: integer;
 
     procedure SynTRX;
 
@@ -189,6 +201,7 @@ type
     function GetRawMode : String;
     function GetActualMode : String;
     function GetModeNumber(mode : String) : Cardinal;
+    function GetRigPower(var pwr:string): boolean;
 
     procedure SetMode(mode : String; bandwidth : Integer);
     procedure SetModeFreq(mode, freq : String);
@@ -208,7 +221,7 @@ type
     procedure HLTune(start : Boolean);
     procedure SendVoice(mem : String);
     procedure StopVoice;
-    procedure UpdateFreqBar;
+    procedure UpdatePwrBar;
   end;
 
 var
@@ -225,26 +238,48 @@ implementation
 { TfrmTRXControl }
 uses dUtils, dData, fNewQSO, fBandMap, uMyIni, fGrayline, fRadioMemories;
 
+
 procedure TfrmTRXControl.HLTune(start : Boolean);
 begin
   if Assigned(radio) then
   begin
-    if start then
-    begin
-      if not Tuning then
-      begin
-        ModeWas := GetActualMode;
-        BwWas := GetBandWidthForMode(ModeWas);
-        SetMode('AM', 0);
-        radio.PttOn;
-        Tuning := True;
-      end;
-    end
-    else begin
-      radio.PttOff;
-      if Tuning then SetMode(ModeWas, BwWas);
-      Tuning := False;
-    end;
+    if pos('TUNER',radio.SupFuncs)>0 then //tune with rigctld cmds
+     Begin
+         if start then
+          Begin
+           if not Tuning then
+                  Begin
+                       radio.ReSetTuner;   //this reset tuner settings (at least with IC7300)
+                       sleep(300);
+                       radio.SetTuner;     //this initiates tuner that completes by itself no need to stop (at least with IC7300)
+                  end;
+           Tuning := True;
+          end
+         else
+          begin
+           Tuning := False;
+          end;
+     end
+    else  //tune with AM
+     begin
+        if start then
+        begin
+          if not Tuning then
+          begin
+            ModeWas := GetActualMode;
+            BwWas := GetBandWidthForMode(ModeWas);
+            SetMode('AM', 0);
+            radio.PttOn;
+            Tuning := True;
+          end;
+        end
+        else begin
+          radio.PttOff;
+          sleep(500);
+          if Tuning then SetMode(ModeWas, BwWas);
+          Tuning := False;
+        end;
+     end;
   end;
 end;
 
@@ -260,6 +295,15 @@ var
 begin
   if Assigned(radio) then
   begin
+    if (radio.ResponseTimeout ) then
+         Begin
+          FreeAndNil(radio);
+          ShowMessage('Radio did not respond within timeout.'+lineEnding+
+                      'Check cables and that Radio power is ON'+lineEnding+
+                      'After that try NewQSO/File/Refresh TRX/ROT control');
+          exit;
+         end;
+
     f := radio.GetFreqMHz;
     if  cqrini.ReadBool('NewQSO', 'UseSplitTX', False) then fs:= radio.GetSplitTXFreqMHz;
     m := radio.GetModeOnly;
@@ -277,14 +321,15 @@ begin
           frmNewQSO.edtRXFreq.Text := FloatToStr((f + rxlo));
     end;
      if  cqrini.ReadBool('NewQSO', 'UseSplitTX', False) and radio.RigSplitActive then
-         f:=fs
+         f:=fs;
+
+    UpdatePwrBar;
   end
   else
     f := 0;
 
   f := f + txlo;
   lblFreq.Caption := FormatFloat(empty_freq, f);
-  UpdateFreqBar;
 
   UpdateModeButtons(m);
   ClearBandButtonsColor;
@@ -328,7 +373,8 @@ begin
     exit;
   end;
 
-  m := radio.GetRawMode;
+  if Assigned(radio) then
+     m := radio.GetRawMode;
 
   //user changed settings
   if MemRelated <> cqrini.ReadBool('TRX', 'MemModeRelated', False) then
@@ -391,6 +437,7 @@ begin
   frmBandMap.CurrentBand := b;
   frmBandMap.CurrentFreq := f * 1000;
   frmBandMap.CurrentMode := m;
+
   if Assigned(radio) then
      begin
           btPon.Enabled:=radio.Power;
@@ -451,7 +498,7 @@ begin
   old_mode := '';
   MemRelated := cqrini.ReadBool('TRX', 'MemModeRelated', False);
   gbInfo.Visible := cqrini.ReadBool('TRX', 'MemShowInfo', False);
-  pnlFreqBar.Visible:=cqrini.ReadBool('TRX','ShowFreqBar', False);
+  mnuShowPwrBar.Checked:= cqrini.ReadBool('TRX', 'ShowPwrBar', false);
   mnuShowInfo.Checked := gbInfo.Visible;
   gbVfo.Visible := cqrini.ReadBool('TRX', 'ShowVfo', False);
   pnlUsr.Visible := cqrini.ReadBool('TRX', 'ShowUsr', False);
@@ -459,7 +506,6 @@ begin
   mnuShowUsr.Checked := pnlUsr.Visible;
   MouseWheelUsed := False;
 end;
-
 procedure TfrmTRXControl.btn10mClick(Sender : TObject);
 var
   freq : String = '';
@@ -666,10 +712,11 @@ begin
 
 end;
 
-procedure TfrmTRXControl.mnuShowFreqBarClick(Sender: TObject);
+procedure TfrmTRXControl.mnuShowPwrBarClick(Sender: TObject);
 begin
-  pnlFreqBar.Visible:= not pnlFreqBar.Visible;
-  cqrini.WriteBool('TRX', 'ShowFreqBar', pnlFreqBar.Visible);
+   mnuShowPwrBar.Checked  := not mnuShowPwrBar.Checked;
+   cqrini.WriteBool('TRX', 'ShowPwrBar', mnuShowPwrBar.Checked);
+   pnlPwrBar.Visible:= mnuShowPwrBar.Checked;
 end;
 
 procedure TfrmTRXControl.mnuShowInfoClick(Sender : TObject);
@@ -731,6 +778,34 @@ begin
   gbVfo.Visible := not gbVfo.Visible;
   mnuShowVfo.Checked := gbVfo.Visible;
   cqrini.WriteBool('TRX', 'ShowVfo', gbVfo.Visible);
+end;
+
+procedure TfrmTRXControl.tbPwrMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  StopPwrUpdate:=1;   //true
+end;
+
+procedure TfrmTRXControl.tbPwrMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  lblPwrBar.Font.Height:=8;
+  lblPwrBar.Repaint;
+  lblPwrBar.Caption:=IntToStr(tbPwr.Position)+'%';
+end;
+
+procedure TfrmTRXControl.tbPwrMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if assigned(radio) then
+     radio.SetPowerPercent(tbPwr.Position);
+  StopPwrUpdate:=-1; //negative -1 => wait 2 poll rounds before release
+end;
+
+procedure TfrmTRXControl.tbPwrMouseWheel(Sender: TObject; Shift: TShiftState;
+  WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
+begin
+   Handled:=true;
 end;
 
 procedure TfrmTRXControl.tmrChokeWheelTimer(Sender: TObject);
@@ -914,6 +989,7 @@ var
   c : String;
 begin
   c := trim(cqrini.ReadString('TRX' + r, 'usr' + b, ''));
+  if (c='') then exit;
   if pos('RUN', uppercase(c)) = 1 then
   begin
     c := trim(copy(c, 4, length(c)));
@@ -940,6 +1016,9 @@ begin
   InitializeRig;
   lblInitRig.Visible:=False;
   cmbRig.Visible:=True;
+  lblPwrBar.Font.Height:=8;
+  lblPwrBar.Repaint;
+  lblPwrBar.Caption:='  ';
 end;
 
 procedure TfrmTRXControl.cmbRigCloseUp(Sender: TObject);
@@ -1122,8 +1201,11 @@ var
   KeyerType : Integer;
 begin
   tmrRadio.Enabled := False;
+  pnlPwrBar.Visible:=false;
+  StopPwrUpdate := 1;  //true
 
-  if Assigned(radio) then FreeAndNil(radio);
+  if Assigned(radio) then
+                         FreeAndNil(radio);
 
   Application.ProcessMessages;
   Sleep(500);
@@ -1133,6 +1215,7 @@ begin
    Begin
     cmbRig.Items[cmbRig.ItemIndex]:= RigInUse + ' Is not Set';
     lblFreq.Caption:=empty_freq;  //empty_freq is String Const in dUtils
+    lblFreq.Font.Height := 30;
     ClearBandButtonsColor;
     ClearModeButtonsColor;
     exit;
@@ -1186,10 +1269,38 @@ begin
 
   if not radio.Connected then
       begin
+        ShowMessage(radio.LastError+LineEnding+
+                    'Start cqrlog from command console as:'+LineEnding+LineEnding+
+                    'cqrlog debug=1'+LineEnding+LineEnding+
+                    'to see more debug information.');
         FreeAndNil(radio);
+        Exit;
       end
   else  //radio changed, restart CW interface
     begin
+      While (not radio.ResponseTimeout) and (not radio.InitDone) do
+            begin
+              sleep(5);
+               Application.ProcessMessages;
+            end;
+
+    if radio.ResponseTimeout then
+         Begin
+          FreeAndNil(radio);
+          ShowMessage('Radio did not respond within timeout.'+lineEnding+
+                      'Check cables and that Radio power is ON'+lineEnding+
+                      'After that try NewQSO/File/Refresh TRX/ROT control');
+          exit;
+         end;
+
+    if radio.InitDone then
+                      Begin
+                        btPon.Font.Color := clRed;
+                        btPstby.Font.Color := clDefault;
+                        btPoff.Font.Color := clDefault;
+                      end;
+
+
       IsNewHamlib:=radio.IsNewHamlib;
       //we check this again although preferences prevent false setting
       if ( cqrini.ReadBool('CW', 'NoReset', False) //is set: user does not want reset
@@ -1214,6 +1325,19 @@ begin
               if ((dmData.DebugLevel >= 1) or ((abs(dmData.DebugLevel) and 8) = 8)) then
                  Writeln('Set UTC to radio' + RigInUse + ' on next full minute');
              end;
+
+     if (radio.GetRFPower and radio.SetRFPower ) then
+            Begin
+              StopPwrUpdate := 0; //false
+              mnuShowPwrBar.Enabled:=true;
+              pnlPwrBar.Visible:= mnuShowPwrBar.Checked
+            end
+           else
+            Begin
+             mnuShowPwrBar.Enabled:=false;
+             pnlPwrBar.Visible:=false;
+           end;
+
     end;
 end;
 
@@ -1431,7 +1555,7 @@ var
   bandwidth : Integer = 0;
   f : Double = 0;
 begin
-  if (lblFreq.Caption = empty_freq) then  //no rig freq received
+  if (lblFreq.Caption = empty_freq) or (not Assigned(radio)) then  //no rig freq received
     exit;
   if mode='' then        //if mode is empty change freq using existing mode
      mode:=GetActualMode;
@@ -1500,15 +1624,15 @@ function TfrmTRXControl.GetModeBand(var mode, band : String) : Boolean;
 var
   freq : String;
 begin
+  Result := False;
   mode := '';
   band := '';
-  Result := True;
   freq := lblFreq.Caption;
-  mode := GetActualMode;
   if (freq = empty_freq) or (freq = '') or (not Assigned(radio)) then
-    Result := False
-  else
-    band := dmUtils.GetBandFromFreq(freq);
+                                                                     exit;
+  mode := GetActualMode;
+  band := dmUtils.GetBandFromFreq(freq);
+  Result := True
 end;
 
 procedure TfrmTRXControl.CloseRigs;
@@ -1570,19 +1694,19 @@ procedure TfrmTRXControl.Split(Up : Integer);
 begin
   //we do split with XIT, no need to play with 2 VFOs
   if Assigned(radio) then
-  begin
-    radio.SetSplit(up);
-  end;
+         radio.SetSplit(up);
 end;
 
 procedure TfrmTRXControl.DisableSplit;
 begin
-  if Assigned(radio) then  radio.DisableSplit;
+  if Assigned(radio) then
+        radio.DisableSplit;
 end;
 
 procedure TfrmTRXControl.SetSplitTXRead(b:boolean);
 begin
-  if Assigned(radio) then  radio.GetSplitTX:=b;
+  if Assigned(radio) then
+       radio.GetSplitTX:=b;
 end;
 
 function TfrmTRXControl.GetFreqHz : Double;
@@ -1619,7 +1743,7 @@ end;
 
 procedure TfrmTRXControl.ClearRIT;
 begin
-  if (lblFreq.Caption = empty_freq) then
+  if (lblFreq.Caption = empty_freq) or (not Assigned(radio)) then
     exit;
   radio.ClearRit;
   radio.ClearXit;   //this clears Xit too
@@ -1703,36 +1827,48 @@ begin
     radio.StopVoice;
 end;
 
-procedure  TfrmTRXControl.UpdateFreqBar;
+procedure  TfrmTRXControl.UpdatePwrBar;
 var
- b,m:string;
- f,l: integer;
+ f: double;
+ tmp: String;
 Begin
-  if not GetModeBand(m,b) then
-                              exit;
-  if b<>'' then
+ if assigned(radio) then
   begin
-    l:=length( dmUtils.BandFreq);
-    lblMode.Caption:= m;
-    for f:=0 to  l - 1 do
-      if (dmUtils.BandFreq[f].band = b ) then
+     if  (StopPwrUpdate < 0) Then   //if negative should wait abs(n)+1 rounds
        Begin
-            pbBand.Min:=round(dmUtils.BandFreq[f].b_begin*1000);  //kHz
-            pbBand.Max:=round(dmUtils.BandFreq[f].b_end*1000);
-            Break;
+        inc(StopPwrUpdate);
+        exit;
        end;
-    pbBand.Smooth:=True;
-    pbBand.Step:=1;
-    pbBand.Enabled:=True;
 
-    pbBand.Position:=round(StrToFloat(lblFreq.Caption)*1000);
-  end
-  else
-  begin
-     pbBand.Min:=0;
-     pbBand.Max:= 1;
-     pbBand.Position:=0;
-     lblMode.Caption:='NotHamBand';
+     if (mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled and radio.GetRFPower and (StopPwrUpdate=0)) then
+      begin
+           tmp:=radio.PwrPcnt;
+           if tryStrToFloat(tmp,f) then
+            begin
+             tbPwr.Min:=0;
+             tbPwr.Max:=100;
+             tbPwr.Enabled:=True;
+             tbPwr.Position:=round(f*100);
+             lblPwrBar.Font.Height:=8;
+             tmp:=radio.PwrmW;
+             if tryStrToFloat(tmp,f) then
+                lblPwrBar.Caption:=IntToStr(Round(f/ 1000))+'W';
+             pnlPwrBar.Visible:=true;
+            end
+        else
+         pnlPwrBar.Visible:=false;
+      end;
   end;
 end;
+
+function TfrmTRXControl.GetRigPower(var pwr:string): boolean;
+Begin
+ if assigned(radio) then
+  Begin
+   Result:=radio.GetRFPower;
+   if radio.GetRFPower then
+      pwr:=radio.PwrmW;
+  end;
+end;
+
 end.

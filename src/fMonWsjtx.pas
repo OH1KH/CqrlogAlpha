@@ -14,10 +14,13 @@ type
   { TfrmMonWsjtx }
 
   TfrmMonWsjtx = class(TForm)
-    chkSort: TCheckBox;
+    chkFFlt: TCheckBox;
+    chkCbCQ: TCheckBox;
+    chkdB: TCheckBox;
     chkFlt: TCheckBox;
-    edtFltMap: TEdit;
+    chkSort: TCheckBox;
     cmMapCq: TMenuItem;
+    edtFltMap: TEdit;
     mnuSort1: TMenuItem;
     mnuSort2: TMenuItem;
     mnuSort3: TMenuItem;
@@ -25,13 +28,12 @@ type
     mnuSort5: TMenuItem;
     mnuSort6: TMenuItem;
     mnuSort7: TMenuItem;
+    pnlMap: TPanel;
     popSort: TPopupMenu;
     ShAll: TMenuItem;
     btFtxtName: TButton;
     cbflw: TCheckBox;
     chkDx: TCheckBox;
-    chkCbCQ: TCheckBox;
-    chkdB: TCheckBox;
     chkMap: TCheckBox;
     chknoHistory: TCheckBox;
     chknoTxt: TCheckBox;
@@ -77,7 +79,11 @@ type
     tmrFollow: TTimer;
     tmrCqPeriod: TTimer;
     procedure btFtxtNameClick(Sender: TObject);
+    procedure chkFFltChange(Sender: TObject);
+    procedure chkFFltClick(Sender: TObject);
+    procedure chkFltChange(Sender: TObject);
     procedure chkFltClick(Sender: TObject);
+    procedure chkMapClick(Sender: TObject);
     procedure chkSortClick(Sender: TObject);
     procedure chkSortMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -88,9 +94,10 @@ type
     procedure chkDxMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure chknoHistoryChange(Sender: TObject);
-    procedure chkMapChange(Sender: TObject);
     procedure chkStopTxChange(Sender: TObject);
-    procedure chkUStateChange(Sender: TObject);
+    procedure chkUStateClick(Sender: TObject);
+    procedure chkUStateMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure cmAnyClick(Sender: TObject);
     procedure cmBandClick(Sender: TObject);
     procedure cmCqDxClick(Sender: TObject);
@@ -105,7 +112,6 @@ type
     procedure edtFollowCallKeyDown(Sender: TObject; var Key: word;
       Shift: TShiftState);
     procedure edtFollowDblClick(Sender: TObject);
-    procedure edtFltMapChange(Sender: TObject);
     procedure edtFltMapEnter(Sender: TObject);
     procedure edtFltMapExit(Sender: TObject);
     procedure edtFltMapKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -143,6 +149,7 @@ type
     tfIn      : TextFile;
     C_MYZIP   : String;
     CqState   : string;  //use in map mode to join state and Cqdir
+    FileFilter  : TStringList;
     procedure AddColorStr(s: string; const col: TColor = clBlack; c:integer =0;r:integer =-1);
     procedure RunVA(Afile: string);
     procedure scrollSgMonitor;
@@ -463,6 +470,7 @@ end;
 
 procedure TfrmMonWsjtx.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  FileFilter.Free;
   LockMap := True;
   if chkMap.Checked then
     SaveFormPos('Map')
@@ -696,11 +704,6 @@ begin
   SendQsoInit(RepFlw);
 end;
 
-procedure TfrmMonWsjtx.edtFltMapChange(Sender: TObject);
-begin
-
-end;
-
 procedure TfrmMonWsjtx.edtFltMapEnter(Sender: TObject);
 begin
   edtFltMap.Text:='';
@@ -802,29 +805,25 @@ begin
   end;
 end;
 
-procedure TfrmMonWsjtx.chkMapChange(Sender: TObject);
+procedure TfrmMonWsjtx.chkMapClick(Sender: TObject);
 begin
   sgMonitor.Visible:= not(chknoTxt.Checked and not chkMap.Checked);
   lblInfo.Visible := not sgMonitor.Visible;
-  chkCbCQ.Visible := chkMap.Checked;
-  chkdB.Visible := chkMap.Checked;
-  chkSort.Visible:=chkMap.Checked;
-  chkFlt.Visible:=chkMap.Checked;
-  edtFltMap.Visible:=chkMap.Checked;
-  if not chkMap.Checked then chkCbCQ.Checked:=false;
 
   if not LockMap then    //do not run automaticly on init or leave form
   begin
     cqrini.WriteBool('MonWsjtx', 'MapMode', chkMap.Checked);
+
     if chkMap.Checked then
     begin   //Map
       //write width/height CQ read width Map
-      if Sender <> frmMonWsjtx then  SaveFormPos('Cq');  //no save from init
+      if not Sender.ClassNameIs('TfrmMonWsjtx') then  SaveFormPos('Cq');  //no save from init
       LoadFormPos('Map');
       LockFlw := True;
       cbflw.Checked := False;
       //drops panel size reservation. Map drops "follow" it does not return ON  when back to monitor mode
       LockFlw := False;
+      pnlMap.Visible := chkMap.Checked;
       frmMonWsjtx.Caption := 'Wsjt-x map';
       pnlFollow.Visible := False;
       pnlAlert.Visible := False;
@@ -833,9 +832,10 @@ begin
       chknoTxt.Checked := False;
       chknoHistory.Checked := True;
       chkCbCQ.Checked := cqrini.ReadBool('MonWsjtx', 'ColorBacCQkMap', False);
-      chkdB.Checked := cqrini.ReadBool('MonWsjtx', 'ShowdB', False);
-      chkFlt.Checked:= cqrini.ReadBool('MonWsjtx', 'MapFilter', False);
-      edtFltMap.Text:= cqrini.ReadString('MonWsjtx', 'MapFilterString', '');
+      chkdB.Checked   := cqrini.ReadBool('MonWsjtx', 'ShowdB', False);
+      chkFlt.Checked  := cqrini.ReadBool('MonWsjtx', 'MapFilter', False);
+      chkFFlt.Checked := cqrini.ReadBool('MonWsjtx', 'FileFilter', False);
+      edtFltMap.Text  := cqrini.ReadString('MonWsjtx', 'MapFilterString', '');
       //map mode allows text printing. Printing stays on when return to monitor mode.
       chknoHistory.Visible := False;
       sgMonitor.Columns.Items[0].Visible:= false;
@@ -847,11 +847,12 @@ begin
     else
     begin   //Cq
       //write width/height Map read width CQ
-      if Sender <> frmMonWsjtx then  SaveFormPos('Map');   //no save from init
+      if  not Sender.ClassNameIs('TfrmMonWsjtx')  then  SaveFormPos('Map');   //no save from init
       LoadFormPos('Cq');
       cbflw.Checked := cqrini.ReadBool('MonWsjtx', 'FollowShow', False);
       tbFollow.Checked := cqrini.ReadBool('MonWsjtx', 'Follow', False);
       frmMonWsjtx.Caption := 'Wsjt-x CQ-monitor';
+      pnlMap.Visible := False;
       pnlAlert.Visible := True;
       cbflw.Visible := True;
       chknoTxt.Visible := True;
@@ -876,27 +877,42 @@ begin
     end;
 end;
 
-procedure TfrmMonWsjtx.chkUStateChange(Sender: TObject);
+procedure TfrmMonWsjtx.chkUStateClick(Sender: TObject);
 
 var
   SourceFile,
   msg ,
   call,
+  tmp,
   HasState        : String;
   StateSourceIn    : Textfile;
   BuildFile        : TIniFile;
-  i,c                :integer;
+  i                : integer;
+  c                : integer=0;
 begin
   cqrini.WriteBool('MonWsjtx', 'UStates', chkUState.Checked);
-  if chkUState.Checked  then
+  if (Sender.ClassNameIs('TfrmMonWsjtx')) then   //user init
+                                          c:= -1;
+  if (chkUState.Checked or (c=-1)) then
     Begin
       if LocalDbg then  Writeln('State check activated');
       SourceFile :=  dmData.HomeDir+C_STATE_SOURCE;
-      if (not FileExists(SourceFile)) or ((DaysBetween(now,FileDateTodateTime(FileAge(SourceFile)))) > 90) then
-            Begin //over 3 month old or missing
-             msg := 'Source file '+SourceFile+' is over 90 days old or missing.'
-                    +#13+#13+'(More info: Help/Digital modes: wjstx/Checking "USt”)'
-                    +#13+#13+'Should it be updated?' ;
+      if (c=0) then
+       if (FileExists(SourceFile)) then   //no user init, check age
+                                c:= DaysBetween(now,FileDateTodateTime(FileAge(SourceFile)))
+                               else
+                                c:=-2; //no file found
+      if ((c > 90) or (c<0)) then
+            Begin //over 3 month old, missing or manual
+             case c of
+              -2  : tmp:='File is missing!';
+              -1  : tmp:='You did manual update request.';
+              else
+                tmp:= 'File is over 90 days old!';
+              end;
+             msg := 'Source file '+SourceFile+LineEnding
+                    +#13+#13+tmp+#13+'Do you want to update data?'
+                    +#13+#13+'(More info: Help/Digital modes: wjstx/Checking "USt”)' ;
               if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
                 Begin
                  if FileExists(SourceFile) then DeleteFile(SourceFile);
@@ -909,33 +925,45 @@ begin
                   else //populate database
                    BuildUSDBState;
                 end
-               else chkUState.Checked := false;
-
-            end
-        else //we have proper file, check if database has contents
-         Begin
-            if dmData.trQstate.Active then dmData.trQstate.Rollback;
-            dmData.trQstate.StartTransaction;
-            dmData.Qstate.SQL.Text := 'select count(callsign) as c from cqrlog_common.states';
-            if LocalDbg then  Writeln(dmData.Qstate.SQL.Text);
-            dmData.Qstate.open;
-            c:= dmData.Qstate.FieldByName('c').AsInteger;
-            dmData.trQstate.Rollback;
-            dmData.Qstate.Close;
-            if LocalDbg then  Writeln(c,' calls in table');
-            if c<1400000 then
-             begin
-              msg := 'Looks like states database does not have proper contents.'+#13+
-                     'Found '+IntToStr(c)+' callsigns. Should be abt 1,5M'+#13+ 'Rebuild?';
-              if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
-                  BuildUSDBState
                else
-                  chkUState.Checked := false;
-             end;
-         end;
+                   if (c=-2) then
+                          begin
+                            chkUState.Checked := false;
+                            exit;
+                          end
+
+            end;
+
+      if dmData.trQstate.Active then dmData.trQstate.Rollback;
+      dmData.trQstate.StartTransaction;
+      dmData.Qstate.SQL.Text := 'select count(callsign) as c from cqrlog_common.states';
+      if LocalDbg then  Writeln(dmData.Qstate.SQL.Text);
+      dmData.Qstate.open;
+      c:= dmData.Qstate.FieldByName('c').AsInteger;
+      dmData.trQstate.Rollback;
+      dmData.Qstate.Close;
+      sgMonitor.InsertRowWithValues(sgMonitor.rowcount , ['']);
+      AddColorStr(IntToStr(c),clBlack,3,sgMonitor.rowcount-1);
+      AddColorStr('ca',clBlack,4,sgMonitor.rowcount-1);
+      AddColorStr('ll',clBlack,5,sgMonitor.rowcount-1);
+      AddColorStr('in',clBlack,6,sgMonitor.rowcount-1);
+      AddColorStr('DB',clBlack,7,sgMonitor.rowcount-1);
+      if c<500000 then
+       begin
+        msg := 'Could it be that database does not have all US callsigns?'+#13+
+               'Found '+IntToStr(c)+' callsigns. '+#13+ 'Rebuild? (NO = use as is)';
+        if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
+            BuildUSDBState;
+       end;
     end;
 end;
 
+procedure TfrmMonWsjtx.chkUStateMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+    If (Button = mbRight) and (Shift=[ssShift]) then        //asks update DB by user event
+            chkUStateClick(Self);
+end;
 procedure TfrmMonWsjtx.cbflwChange(Sender: TObject);
 begin
   if not LockFlw then
@@ -1024,6 +1052,44 @@ begin
   end;
 end;
 
+procedure TfrmMonWsjtx.chkFFltChange(Sender: TObject);
+var
+  s:String;
+  f:integer;
+begin
+  if chkFFlt.Checked then
+  chkFlt.Checked := false;
+   Begin
+      FileFilter.Clear;
+      s:= FileSearch('filefilter.txt',dmData.HomeDir + 'ctyfiles' + PathDelim,[]);
+
+      if (s <> '') then
+                     Begin
+                      FileFilter.LoadFromFile(s);
+                      for f:=0 to FileFilter.Count-1 do
+                         FileFilter[f]:=UpperCase(FileFilter[f]);
+                     end
+                 else
+                     Begin
+                      cqrini.WriteBool('MonWsjtx', 'FileFilter',false);
+                      ShowMessage(dmData.HomeDir + 'ctyfiles' + PathDelim+'filefilter.txt'+
+                      LineEnding+'Not found!');
+                      chkFFlt.Checked:=False;
+                     end;
+   end;
+end;
+
+procedure TfrmMonWsjtx.chkFFltClick(Sender: TObject);
+begin
+  cqrini.WriteBool('MonWsjtx', 'FileFilter', chkFFlt.Checked);
+end;
+
+procedure TfrmMonWsjtx.chkFltChange(Sender: TObject);
+begin
+  if chkFlt.Checked then
+                         chkFFlt.Checked:=false;
+end;
+
 procedure TfrmMonWsjtx.chkFltClick(Sender: TObject);
 begin
   cqrini.WriteBool('MonWsjtx', 'MapFilter', chkFlt.Checked);
@@ -1074,7 +1140,6 @@ begin
   pnlSelects.Visible:=False;
   sgMonitor.BorderSpacing.Top:= 3;
 end;
-
 
 procedure TfrmMonWsjtx.pnlTrigPopMouseEnter(Sender: TObject);
 begin
@@ -1326,6 +1391,7 @@ begin
   cmCqDX.Bitmap := TBitmap.Create;
   CanCloseUSDBProcess := True;  //there is no process yet
   UsedBkgCqCol :=clWhite;
+  FileFilter:= TStringList.Create;
 
   //DL7OAP
   setDefaultColorSgMonitorAttributes;
@@ -1392,7 +1458,7 @@ begin
     tbFollow.Checked := False; //should not happen, chk it here
   LockFlw := False;
   LockMap := False; //last thing to do
-  chkMapChange(frmMonWsjtx);
+  chkMapClick(frmMonWsjtx);
   btFtxtName.Visible := False;
   //DL7OAP
   SetsgMonitorColumnHW;
@@ -1569,6 +1635,7 @@ begin
           if (chkDx.Checked) and (not dmUtils.IsHeDX(msgCall)) then exit;
           //print filter callsign drops here
           if chkFlt.Checked and (pos(edtFltMap.Text,msgCall)=0) then exit;
+          if cqrini.ReadBool('MonWsjtx', 'FileFilter', False) and (FileFilter.IndexOf(msgCall)=-1) then exit;
 
           if (not frmWorkedGrids.GridOK(msgLocator)) or (msgLocator = 'RR73') then //disble false used "RR73" being a loc
                   msgLocator := '';
@@ -2233,11 +2300,15 @@ begin
          exit;
        end;
     //print filter callsign drops here
-    if chkFlt.Checked and chkMap.Checked and (pos(edtFltMap.Text,msgCall)=0) then
-       Begin
-         UsedBkgCqCol :=clWhite;
-         exit;
-       end;
+    if chkMap.Checked then
+     Begin
+       if ( (chkFlt.Checked and (pos(edtFltMap.Text,msgCall)=0))
+        or (cqrini.ReadBool('MonWsjtx', 'FileFilter', False) and (FileFilter.IndexOf(msgCall)=-1)) ) then
+           Begin
+             UsedBkgCqCol :=clWhite;
+             exit;
+           end;
+     end;
 
     if LocalDbg then
       Writeln('LOCATOR IS:', msgLocator);
@@ -2727,22 +2798,35 @@ var
 
     //wget -qN ftp://ftp.w1nr.net/usdbraw.gz                              -> needed programs: wget and gunzip
     //You can still use also FCC's l_amat.zip (lot bigger download)       -> needed programs: wget, unzip and awk
-     ///  ftp://wirelessftp.fcc.gov/pub/uls/complete/l_amat.zip
+     ///  https://data.fcc.gov/download/pub/uls/complete/l_amat.zip
 
-     if InputQuery('Download address check','Using Address (change if needed):'+
-                   LineEnding+'ftp://ftp.w1nr.net/usdbraw.gz (9M, fast to download)'+
-                   LineEnding+'ftp://wirelessftp.fcc.gov/pub/uls/complete/l_amat.zip (160M, may be more up to date)', USDB_Address) then
-      begin
-        cqrini.WriteString('MonWsjtx', 'USDB_Addr',USDB_Address);
-        if LocalDbg then Writeln('Saved USDB_Address:',USDB_Address);
-      end
-      else
-       begin
-        USDBProcessFailed;
-        exit;
-       end;
+    //NOTE: Fedora 40 uses wget symlink to wget2 program. wget2 does not allow prefix "ftp://" on url.
+    //      Fortunately "old" wget works also without it,  so we just drop prefix. 2024-12-09 OH1KH
 
-    if LocalDbg then Writeln('USDBdownLoadInit start');
+     case QuestionDlg ('Caption','Use download address:'+
+                   LineEnding+'ftp.w1nr.net/usdbraw.gz'+ LineEnding
+                   +'  (~9M, fast to download)'+ LineEnding
+                   +'https://data.fcc.gov/download/pub/uls/complete/l_amat.zip' + LineEnding
+                   +'  (~160M, may be more up to date)'
+                   ,mtCustom,[20,'w1nr.net', 21, 'fcc.gov',22,'Manual input','IsDefault'],'') of
+      20: USDB_Address:= 'ftp.w1nr.net/usdbraw.gz';
+      21: USDB_Address:= 'https://data.fcc.gov/download/pub/uls/complete/l_amat.zip';
+      22: if not InputQuery('Download address check','Address suggestions:'+
+                   LineEnding+'ftp.w1nr.net/usdbraw.gz (~9M, fast to download)'+
+                   LineEnding+'https://data.fcc.gov/download/pub/uls/complete/l_amat.zip (~160M, may be more up to date)', USDB_Address) then
+                      begin
+                       USDBProcessFailed;
+                       exit;
+                     end;
+     end;
+
+
+    cqrini.WriteString('MonWsjtx', 'USDB_Addr',USDB_Address);
+    if LocalDbg then
+                begin
+                 Writeln('Saved USDB_Address:',USDB_Address);
+                 Writeln('USDBdownLoadInit start');
+                end;
     frmProgress.Show;
     if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
                   begin
@@ -2769,20 +2853,32 @@ var
       if LocalDbg then Writeln('Next DProcess run wget');
       DProcess.Executable  := 'wget';
       DProcess.Parameters.Add('-qN');
+      DProcess.Parameters.Add('--connect-timeout=10');
+      DProcess.Parameters.Add('--dns-timeout=10');
+      DProcess.Parameters.Add('--read-timeout=60');
+      DProcess.Parameters.Add('--tries=1');
       DProcess.Parameters.Add('-O');
       DProcess.Parameters.Add(dmData.HomeDir+C_MYZIP);
       DProcess.Parameters.Add(trim(USDB_Address));
       if LocalDbg then Writeln('DProcess.Executable: ',DProcess.Executable,' Parameters: ',DProcess.Parameters.Text);
       DProcess.Execute;
       while DProcess.Running do
+         Begin
             Application.ProcessMessages;
-     finally
-      FreeAndNil(Dprocess);
-     end;
+            sleep(1000);
+         end;
     except
     on E :EExternal do
-     writeln('Error Details: ', E.Message);
+     begin
+      ShowMessage('Error Details: '+E.Message);
+      USDBProcessFailed;
+      exit;
+     end;
     end;
+   finally
+    FreeAndNil(Dprocess);
+   end;
+
 
     if not FileExists(dmData.HomeDir+C_MYZIP) then //download failed
       Begin
@@ -2892,6 +2988,6 @@ begin
   sgMonitor.Repaint;
 end;
 
-initialization
+//initialization
 
 end.

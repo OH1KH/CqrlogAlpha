@@ -20,6 +20,8 @@ type
     btDupChkStart: TButton;
     btnCQstart: TButton;
     cdDupeDate: TCalendarDialog;
+    chkNRstr: TCheckBox;
+    chkNRString: TCheckBox;
     chkSetFilter: TCheckBox;
     chkHint: TCheckBox;
     chkMarkDupe: TCheckBox;
@@ -124,6 +126,7 @@ type
     procedure chkNoNrChange(Sender: TObject);
     procedure chkNRIncChange(Sender: TObject);
     procedure chkNRIncClick(Sender : TObject);
+    procedure chkNRStringChange(Sender: TObject);
     procedure chkQspChange(Sender: TObject);
     procedure chkSetFilterClick(Sender: TObject);
     procedure chkSetFilterMouseUp(Sender: TObject; Button: TMouseButton;
@@ -137,8 +140,6 @@ type
     procedure cmbContestNameExit(Sender: TObject);
     procedure edtRSTrEnter(Sender: TObject);
     procedure edtRSTsEnter(Sender: TObject);
-    procedure edtSRXStrKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure edtSRXStrKeyPress(Sender: TObject; var Key: char);
     procedure edtSTXStrChange(Sender: TObject);
     procedure edtSTXStrKeyDown(Sender: TObject; var Key: Word;
@@ -192,6 +193,7 @@ type
       AllCountries,
       QsoRate10,
       QsoRate60    : integer;
+      CQcount : integer;
 
     procedure SetActualReportForModeFromRadio;
     procedure InitInput;
@@ -240,7 +242,8 @@ var
 
   FmemorySent: Boolean;  //for semiAuto sending
 
-  CQcount   : integer;
+  C
+  : integer;
   ContestBandPtr  : array[0..10] of byte =
    // contest bands 160M to 23cm  Points to dUtils.cBands [0..30]
    // 160M  80M  40M  20M  15M  10M   6M    4M    2M    0,7M   0,23M
@@ -644,16 +647,29 @@ end;
 
 procedure TfrmContest.chkNRIncChange(Sender: TObject);
 begin
+  if chkNRInc.Checked then
+          chkNRString.Checked := False;
   SetTabOrders;
 end;
 
 procedure TfrmContest.chkNRIncClick(Sender : TObject);
 begin
   if chkNRInc.Checked and (edtSTX.Text = '') then
-  begin
-    edtSTX.Text := '001';
-    edtCall.SetFocus
-  end
+    begin
+      edtSTX.Text := '001';
+      edtCall.SetFocus
+    end
+end;
+
+procedure TfrmContest.chkNRStringChange(Sender: TObject);
+begin
+  if chkNRString.Checked then
+               Begin
+                   chkNRInc.Checked:=false;
+                   edtSTX.Text:='';
+                   edtSRX.Text:='';
+               end;
+
 end;
 
 procedure TfrmContest.chkQspChange(Sender: TObject);
@@ -797,6 +813,7 @@ begin
            rbDupeCheck.Checked:=true;
            chkMarkDupe.Checked:=true;
            chkHint.Checked:=false;
+           chkNRString.Checked:=false;
            WasContestNameChange :=cmbContestName.Text
          end;
         UseStatus:=1; //OK1WC memorial contest
@@ -823,6 +840,7 @@ begin
            rbDupeCheck.Checked:=true;
            chkMarkDupe.Checked:=true;
            chkHint.Checked:=false;
+           chkNRString.Checked:=false;
            WasContestNameChange :=cmbContestName.Text
          end;
         UseStatus:=2; //Nordic V,U,SHF activity contest
@@ -850,6 +868,7 @@ begin
            rbDupeCheck.Checked:=true;
            chkMarkDupe.Checked:=true;
            chkHint.Checked:=false;
+           chkNRString.Checked:=false;
            WasContestNameChange :=cmbContestName.Text
          end;
         UseStatus:=3; //SRAL FT8 contest for OH stations
@@ -896,16 +915,6 @@ begin
           edtRSTs.Text:='';
           edtRSTr.Text:='';
      end;
-end;
-
-procedure TfrmContest.edtSRXStrKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-   if ((Key = VK_SPACE) and (chkSpace.Checked)) then
-  begin
-    Key := 0;
-    SelectNext(Sender as TWinControl, True, True);
-  end;
 end;
 
 procedure TfrmContest.edtSRXStrKeyPress(Sender: TObject; var Key: char);
@@ -1024,9 +1033,18 @@ end;
 
 procedure TfrmContest.edtSTXKeyPress(Sender: TObject; var Key: char);
 begin
-  if not (key in ['0'..'9', chr(VK_SPACE), chr(VK_DELETE), chr(VK_BACK),
+  if chkNRString.Checked then
+   begin
+    if not (key in ['0'..'9','A'..'Z','a'..'z', chr(VK_SPACE), chr(VK_DELETE), chr(VK_BACK),
     chr(VK_RIGHT), chr(VK_LEFT)]) then
-    key := #0;
+                                  key := #0;
+   end
+  else
+   begin
+    if not (key in ['0'..'9', chr(VK_SPACE), chr(VK_DELETE), chr(VK_BACK),
+    chr(VK_RIGHT), chr(VK_LEFT)]) then
+                                  key := #0;
+   end;
 end;
 
 procedure TfrmContest.FormCreate(Sender: TObject);
@@ -1068,6 +1086,7 @@ begin
   cqrini.WriteBool('frmContest', 'SpaceIsTab', chkSpace.Checked);
   cqrini.WriteBool('frmContest', 'TrueRST', chkTrueRST.Checked);
   cqrini.WriteBool('frmContest', 'NRInc', chkNRInc.Checked);
+  cqrini.WriteBool('frmContest', 'NRString', chkNRString.Checked);
   cqrini.WriteBool('frmContest', 'QSP', chkQsp.Checked);
   cqrini.WriteBool('frmContest', 'NoNR', chkNoNr.Checked);
   cqrini.WriteBool('frmContest', 'Loc', chkLoc.Checked);
@@ -1142,10 +1161,10 @@ begin
   rbIgnoreDupes.Checked     := cqrini.ReadBool('frmContest', 'IgnoreDupes', False);
   DupeFromDate              := cqrini.ReadString('frmContest', 'DupeFrom', FormatDateTime( 'yyyy-mm-dd',now() ));
   chkMarkDupe.Checked       := cqrini.ReadBool('frmContest', 'MarkDupe', True);
-
   chkSpace.Checked          := cqrini.ReadBool('frmContest', 'SpaceIsTab', False);
   chkTrueRST.Checked        := cqrini.ReadBool('frmContest', 'TrueRST', False);
   chkNRInc.Checked          := cqrini.ReadBool('frmContest', 'NRInc', False);
+  chkNRString.Checked        := cqrini.ReadBool('frmContest', 'NRString', False);
   chkQsp.Checked            := cqrini.ReadBool('frmContest', 'QSP', False);
   chkNoNr.Checked           := cqrini.ReadBool('frmContest', 'NoNR', False);
   chkLoc.Checked            := cqrini.ReadBool('frmContest', 'Loc', False);
@@ -1313,6 +1332,8 @@ begin
       CTST.WriteBool('frmContest', 'SpaceIsTab', chkSpace.Checked);
       CTST.WriteBool('frmContest', 'TrueRST', chkTrueRST.Checked);
       CTST.WriteBool('frmContest', 'NRInc', chkNRInc.Checked);
+      CTST.WriteBool('frmContest', 'NString', chkNRString.Checked);
+
       CTST.WriteBool('frmContest', 'QSP', chkQsp.Checked);
       CTST.WriteBool('frmContest', 'NoNR', chkNoNr.Checked);
       CTST.WriteBool('frmContest', 'Loc', chkLoc.Checked);
@@ -1321,7 +1342,6 @@ begin
 
       CTST.WriteString('frmContest', 'STX', edtSTX.Text);
       CTST.WriteString('frmContest', 'STXStr', edtSTXStr.Text);
-      CTST.WriteString('frmContest', 'ContestName', cmbContestName.Text);
       CTST.WriteBool('frmContest', 'SP', chkSP.Checked);
 
       CTST.WriteBool('frmContest', 'mnuQSOcount',mnuQSOcount.Checked);
@@ -1409,7 +1429,34 @@ begin
  begin
    CTST := TIniFile.Create(OpenDialog1.FileName);
    try
-      mnuQSOcount.Checked       := CTST.ReadBool('frmContest', 'mnuQSOcount',True);
+      cmbContestName.Text       := CTST.ReadString('frmContest', 'ContestName', '');
+      chkSetFilter.Checked      := CTST.ReadBool('frmContest', 'SetFilter',False);
+      chkTabAll.Checked         := CTST.ReadBool('frmContest', 'TabAll', False);
+
+      chkHint.Checked           := CTST.ReadBool('frmContest', 'ShowHint', True);
+      spCQperiod.Value          := CTST.ReadInteger('frmContest','CQperiod',5000);
+      spCQrepeat.Value          := CTST.ReadInteger('frmContest','CQrepeat',1);
+      rbDupeCheck.Checked       := CTST.ReadBool('frmContest', 'DupeCheck', True);
+      rbNoMode4Dupe.Checked     := CTST.ReadBool('frmContest', 'NoMode4Dupe', False);
+      rbIgnoreDupes.Checked     := CTST.ReadBool('frmContest', 'IgnoreDupes', False);
+      DupeFromDate              := CTST.ReadString('frmContest', 'DupeFrom', FormatDateTime( 'yyyy-mm-dd',now() ));
+      chkMarkDupe.Checked       := CTST.ReadBool('frmContest', 'MarkDupe', True);
+      chkSpace.Checked          := CTST.ReadBool('frmContest', 'SpaceIsTab', False);
+      chkTrueRST.Checked        := CTST.ReadBool('frmContest', 'TrueRST', False);
+      chkNRInc.Checked          := CTST.ReadBool('frmContest', 'NRInc', False);
+      chkNRString.Checked       := CTST.ReadBool('frmContest', 'NRString', False);
+      chkQsp.Checked            := CTST.ReadBool('frmContest', 'QSP', False);
+      chkNoNr.Checked           := CTST.ReadBool('frmContest', 'NoNR', False);
+      chkLoc.Checked            := CTST.ReadBool('frmContest', 'Loc', False);
+      chkLoc.Caption            := CTST.ReadString('frmContest','MsgIsStr','MSG is Grid');
+      MsgIs                     := CTST.ReadInteger('frmContest','MsgIs',1); //defaults to MSG is Grid
+      chkSP.Checked             := CTST.ReadBool('frmContest', 'SP', False);
+      edtSTX.Text               := CTST.ReadString('frmContest', 'STX', '');
+      ResetStx                  := edtSTX.Text;
+      edtSTXStr.Text            := CTST.ReadString('frmContest', 'STXStr', '');
+      ResetStxStr               := edtSTXStr.Text;
+
+      mnuQSOcount.Checked       :=CTST.ReadBool('frmContest', 'mnuQSOcount',True);
       mnuDXQSOCount.Checked     :=CTST.ReadBool('frmContest', 'mnuDXQSOCount',True);
       mnuCountyrCountAll.Checked:=CTST.ReadBool('frmContest', 'mnuCountyrCountAll',True);
       mnuDXCountryCount.Checked :=CTST.ReadBool('frmContest', 'mnuDXCountryCount',True);
@@ -1755,12 +1802,13 @@ Begin
         //total qso count
         if dmData.trCQ.Active then dmData.trCQ.Rollback;
           dmData.CQ.SQL.Text :=
-               'SELECT COUNT(callsign) AS Qcount FROM cqrlog_main WHERE contestname='+
+               'SELECT COUNT(callsign) AS QSOCount FROM cqrlog_main WHERE contestname='+
                QuotedStr(cmbContestName.Text)+' AND band='+QuotedStr(bands[band])+' AND mode='+QuotedStr('CW');
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         QSOc[band]:= dmData.CQ.FieldByName('Qcount').AsInteger;
+         if (dmData.CQ.FieldCount > 0) then
+               QSOc[band]:= dmData.CQ.FieldByName('QSOCount').AsInteger;
          //duplicate count
          dmData.CQ.Close;
          if dmData.trCQ.Active then dmData.trCQ.Rollback;
@@ -1771,7 +1819,8 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         DUPEc[band]:= dmData.CQ.FieldByName('Dcount').AsInteger;
+         if (dmData.CQ.FieldCount > 0) then
+               DUPEc[band]:= dmData.CQ.FieldByName('Dcount').AsInteger;
 
          //multipliers
           Mlist[band]:='....................................' ; //A-Z0-9
@@ -1861,24 +1910,26 @@ Begin
     dmData.CQ.Close;
     if dmData.trCQ.Active then dmData.trCQ.Rollback;
     dmData.CQ.SQL.Text :=
-        'SELECT  COUNT(callsign) AS Qcount FROM cqrlog_main WHERE contestname='+ QuotedStr(cmbContestName.Text)+
+        'SELECT  COUNT(callsign) AS QSOCount FROM cqrlog_main WHERE contestname='+ QuotedStr(cmbContestName.Text)+
          ' AND freq > 27.99999';
     if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
     dmData.CQ.Open();
-    QSOs:= dmData.CQ.FieldByName('Qcount').AsInteger;
+    if (dmData.CQ.FieldCount > 0) then
+               QSOs:= dmData.CQ.FieldByName('QSOCount').AsInteger;
 
     //Dupe count  (28MHz and up)
     //--------------------------------------------------------------
     dmData.CQ.Close;
     if dmData.trCQ.Active then dmData.trCQ.Rollback;
     dmData.CQ.SQL.Text :=
-        'SELECT  COUNT(callsign) AS Qcount FROM cqrlog_main WHERE contestname='+ QuotedStr(cmbContestName.Text)+
+        'SELECT  COUNT(callsign) AS QSOCount FROM cqrlog_main WHERE contestname='+ QuotedStr(cmbContestName.Text)+
          ' AND freq > 27.99999 AND rst_s LIKE '+ QuotedStr('%Dupe%');
     if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
     dmData.CQ.Open();
-    DUPEs:= dmData.CQ.FieldByName('Qcount').AsInteger;
+    if (dmData.CQ.FieldCount > 0) then
+               DUPEs:= dmData.CQ.FieldByName('QSOCount').AsInteger;
 
 
     //Points count  (up to 47GHz)
@@ -1985,12 +2036,13 @@ Begin
         //total qso count
         if dmData.trCQ.Active then dmData.trCQ.Rollback;
           dmData.CQ.SQL.Text :=
-               'SELECT COUNT(callsign) AS Qcount FROM cqrlog_main WHERE contestname='+
+               'SELECT COUNT(callsign) AS QSOCount FROM cqrlog_main WHERE contestname='+
                QuotedStr(cmbContestName.Text)+' AND band='+QuotedStr(bands[band])+' AND mode='+QuotedStr('FT8');
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         QSOc[band]:= dmData.CQ.FieldByName('Qcount').AsInteger;
+         if (dmData.CQ.FieldCount > 0) then
+               QSOc[band]:= dmData.CQ.FieldByName('QSOCount').AsInteger;
          //duplicate count
          dmData.CQ.Close;
          if dmData.trCQ.Active then dmData.trCQ.Rollback;
@@ -2001,7 +2053,8 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         DUPEc[band]:= dmData.CQ.FieldByName('Dcount').AsInteger;
+         if (dmData.CQ.FieldCount > 0) then
+               DUPEc[band]:= dmData.CQ.FieldByName('Dcount').AsInteger;
 
 
          //list of different 4chr locators (locator multipliers) in srx_string
@@ -2071,7 +2124,8 @@ var
               if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
               dmData.CQ.Open();
-              sgStatus.Cells[f+2,UseRow]:=dmData.CQ.FieldByName(SqlColumn).AsString;
+              if (dmData.CQ.FieldCount > 0) then
+               sgStatus.Cells[f+2,UseRow]:=dmData.CQ.FieldByName(SqlColumn).AsString;
            end;
         end;
   end;
@@ -2098,7 +2152,8 @@ var
              if dmData.DebugLevel >=1 then
                                          Writeln(dmData.CQ.SQL.Text);
              dmData.CQ.Open();
-             AllQsos:= dmData.CQ.FieldByName('QSOs').AsInteger;
+             if (dmData.CQ.FieldCount > 0) then
+               AllQsos:= dmData.CQ.FieldByName('QSOs').AsInteger;
              sgStatus.Cells[1,1]:=dmData.CQ.FieldByName('QSOs').AsString;
              ByBandsStatus(1,dmData.CQ.SQL.Text,'QSOs');
 
@@ -2111,7 +2166,8 @@ var
              if dmData.DebugLevel >=1 then
                                          Writeln(dmData.CQ.SQL.Text);
              dmData.CQ.Open();
-             sgStatus.Cells[1,7]:=dmData.CQ.FieldByName('DUPEs').AsString;
+             if (dmData.CQ.FieldCount > 0) then
+               sgStatus.Cells[1,7]:=dmData.CQ.FieldByName('DUPEs').AsString;
              ByBandsStatus(7,dmData.CQ.SQL.Text,'DUPEs');
            end;
 
@@ -2126,7 +2182,8 @@ var
             if dmData.DebugLevel >=1 then
                                          Writeln(dmData.CQ.SQL.Text);
              dmData.CQ.Open();
-             sgStatus.Cells[1,3]:=dmData.CQ.FieldByName('Countries').AsString;
+             if (dmData.CQ.FieldCount > 0) then
+               sgStatus.Cells[1,3]:=dmData.CQ.FieldByName('Countries').AsString;
              ByBandsStatus(3,dmData.CQ.SQL.Text,'Countries');
             end
       end;
@@ -2143,7 +2200,8 @@ var
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      sgStatus.Cells[1,2]:=dmData.CQ.FieldByName('DXs').AsString;
+      if (dmData.CQ.FieldCount > 0) then
+               sgStatus.Cells[1,2]:=dmData.CQ.FieldByName('DXs').AsString;
       ByBandsStatus(2,dmData.CQ.SQL.Text,'DXs');
     end;
 
@@ -2159,7 +2217,8 @@ var
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      sgStatus.Cells[1,4]:=dmData.CQ.FieldByName('DXCntrs').AsString;
+      if (dmData.CQ.FieldCount > 0) then
+               sgStatus.Cells[1,4]:=dmData.CQ.FieldByName('DXCntrs').AsString;
       ByBandsStatus(4,dmData.CQ.SQL.Text,'DXCntrs');
     end;
 
@@ -2202,7 +2261,8 @@ var
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
       sgStatus.Cells[0,5]:= mycont+'Ctrys';
-      sgStatus.Cells[1,5]:= dmData.CQ.FieldByName('MYCntrs').AsString;
+      if (dmData.CQ.FieldCount > 0) then
+               sgStatus.Cells[1,5]:= dmData.CQ.FieldByName('MYCntrs').AsString;
       ByBandsStatus(5,dmData.CQ.SQL.Text,'MYCntrs');
     end;
 
@@ -2237,20 +2297,19 @@ var
     if popCommonStatus.Items[7].Checked then
      begin
       SRXSList:='';
-        begin
-            dmData.CQ.Close;
-              if dmData.trCQ.Active then dmData.trCQ.Rollback;
-              dmData.CQ.SQL.Text :=
-                 'SELECT COUNT(DISTINCT(UPPER(srx_string))) AS Msgs FROM cqrlog_main WHERE contestname='+
-                   QuotedStr(cmbContestName.Text)+' AND srx_string<>""';
+      dmData.CQ.Close;
+        if dmData.trCQ.Active then dmData.trCQ.Rollback;
+        dmData.CQ.SQL.Text :=
+           'SELECT COUNT(DISTINCT(UPPER(srx_string))) AS Msgs FROM cqrlog_main WHERE contestname='+
+             QuotedStr(cmbContestName.Text)+' AND srx_string<>""';
 
-              if dmData.DebugLevel >=1 then
-                                           Writeln(dmData.CQ.SQL.Text);
-            dmData.CQ.Open();
-           end;
-         sgStatus.Cells[1,6]:=dmData.CQ.FieldByName('Msgs').AsString;
-         ByBandsStatus(6,dmData.CQ.SQL.Text,'Msgs');
-        end;
+        if dmData.DebugLevel >=1 then
+                                     Writeln(dmData.CQ.SQL.Text);
+      dmData.CQ.Open();
+      if (dmData.CQ.FieldCount > 0) then
+               sgStatus.Cells[1,6]:=dmData.CQ.FieldByName('Msgs').AsString;
+      ByBandsStatus(6,dmData.CQ.SQL.Text,'Msgs');
+     end;
 
     //list of different srx_strings (msg multipliers)
     //--------------------------------------------------------------
@@ -2289,6 +2348,7 @@ procedure  TfrmContest.Rates;
 Begin
   if AllQsos>0 then
     Begin
+      try
     //last qso since
     //--------------------------------------------------------------
       dmData.CQ.Close;
@@ -2298,7 +2358,8 @@ Begin
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      lblQsoSince.Caption:='QS:'+dmData.CQ.FieldByName('last').AsString;
+      if (dmData.CQ.FieldCount > 0) then
+               lblQsoSince.Caption:='QS:'+dmData.CQ.FieldByName('last').AsString;
 
     //qso rate 10min
     //--------------------------------------------------------------
@@ -2309,7 +2370,8 @@ Begin
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      lblRate10.Caption:=dmData.CQ.FieldByName('rate').AsString+'/10';
+      if (dmData.CQ.FieldCount > 0) then
+               lblRate10.Caption:=dmData.CQ.FieldByName('rate').AsString+'/10';
 
     //qso rate 1h
     //--------------------------------------------------------------
@@ -2320,10 +2382,15 @@ Begin
     if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
     dmData.CQ.Open();
-    lblRate60.Caption:=dmData.CQ.FieldByName('rate').AsString+'/60';
+    if (dmData.CQ.FieldCount > 0) then
+               lblRate60.Caption:=dmData.CQ.FieldByName('rate').AsString+'/60';
 
+
+    finally
+      dmData.CQ.Close;
+    end;
     end;   // AllQsos>0
-    dmData.CQ.Close;
+
 end;
 
 end.

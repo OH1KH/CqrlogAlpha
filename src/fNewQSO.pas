@@ -99,26 +99,26 @@ type
     cmbPropagation : TComboBox;
     cmbSatellite : TComboBox;
     dbgrdQSOBefore: TDBGrid;
+    edtContestExchangeMessageReceived: TEdit;
+    edtContestExchangeMessageSent: TEdit;
+    edtContestName: TEdit;
+    edtContestSerialReceived: TEdit;
+    edtContestSerialSent: TEdit;
     edtDOK: TEdit;
     edtTXLO: TEdit;
     edtRXLO: TEdit;
-    edtContestExchangeMessageReceived: TEdit;
-    edtContestExchangeMessageSent: TEdit;
-    edtContestSerialReceived: TEdit;
-    edtContestSerialSent: TEdit;
-    edtContestName: TEdit;
     edtRXFreq : TEdit;
     gbContest: TGroupBox;
+    lblContestExchangeMessageReceived: TLabel;
+    lblContestExchangeMessageSent: TLabel;
+    lblContestName: TLabel;
+    lblContestSerialReceived: TLabel;
+    lblContestSerialSent: TLabel;
     lblStimeFormat: TLabel;
     lblEtimeFormat: TLabel;
     lblDateformat: TLabel;
     Label38: TLabel;
     Label37: TLabel;
-    lblContestExchangeMessageReceived: TLabel;
-    lblContestExchangeMessageSent: TLabel;
-    lblContestSerialReceived: TLabel;
-    lblContestSerialSent: TLabel;
-    lblContestName: TLabel;
     lblCallbookInformation : TLabel;
     lblPropagation : TLabel;
     lblDOK: TLabel;
@@ -1465,6 +1465,15 @@ begin
   dmUtils.HamClockSetNewDX('','',CurrentMyloc);   //a way to clear SP/LP line (but draws vertical line instead)
   DetailsCMBColorDone:='';
 
+  btnCancel.Hint:='';
+  btnCancel.ShowHint:=False;
+
+  btnCancel.Caption:='Quit [CTRL+Q]';
+  btnCancel.Font.Color:=clDefault;
+  btnCancel.Font.Style:=[];
+  btnCancel.Repaint;
+  Application.ProcessMessages;
+
 end;
 
 procedure TfrmNewQSO.LoadSettings;
@@ -1847,10 +1856,11 @@ begin
     ini.Free
   end;
 
-  if changelog then
+ if changelog then
   begin
     with TfrmChangelog.Create(Application) do
     try
+      ViewChangelog;
       ShowModal
     finally
       Free
@@ -3515,7 +3525,25 @@ end;
 
 procedure TfrmNewQSO.btnCancelClick(Sender: TObject);
 begin
-  acClose.Execute
+  if edtCall.Text<>'' then
+   Begin
+    btnCancel.Caption:='Clear Call!';
+    btnCancel.Hint:='Do you have unsaved qso?';
+    btnCancel.ShowHint:=True;
+    btnCancel.Font.Color:=clFuchsia;
+    btnCancel.Font.Style:=[fsBold];
+    btnCancel.Repaint;
+    Application.ProcessMessages;
+   end
+  else
+   Begin
+    btnCancel.Caption:=' Closing... ';
+    btnCancel.Font.Color:=clRed;
+    btnCancel.Font.Style:=[fsBold];
+    btnCancel.Repaint;
+    Application.ProcessMessages;
+    acClose.Execute
+   end;
 end;
 
 procedure TfrmNewQSO.edtCallKeyDown(Sender: TObject; var Key: Word;
@@ -3544,10 +3572,10 @@ begin
     key := 0;
     exit
   end;
-  if key = 13 then
+  if key = 13 then  //enter
   begin
     key := 0;
-    if TryStrToFloat(edtCall.Text,tmp) then
+    if TryStrToFloat(edtCall.Text,tmp) then   //if call is number then set frequency
     begin
       mode := dmUtils.GetModeFromFreq(FloatToStr(tmp/1000));
       frmTRXControl.SetModeFreq(mode,FloatToStr(tmp));
@@ -4101,6 +4129,7 @@ begin
     else
       CreateAutoBackup()
   end;
+  frmTRXControl.StopPwrUpdate:=-254; //prevent rig power polling while Cqrlog is closing
   RunST('stop.sh'); //run "when cqrlog is closing" -script
   sleep(1000); //give scirpt time to use rigctld if that is needed
   if  AnyRemoteOn then DisableRemoteMode;
@@ -4460,7 +4489,7 @@ begin
         f := StrToFloat(cmbFreq.Text);
   dmUtils.GetRealCoordinate(lblLat.Caption,lblLong.Caption,lat,lng);
   frmBandMap.AddToBandMap(f*1000,edtCall.Text,cmbMode.Text,dmUtils.GetBandFromFreq(cmbFreq.Text),'',lat,
-                          lng,clBlack,clWhite,True,sbtnLoTW.Visible,sbtneQSL.Visible)
+                          lng,cqrini.ReadInteger('BandMap', 'NewQSOColor', clBlack),clWhite,True,sbtnLoTW.Visible,sbtneQSL.Visible)
 end;
 
 procedure TfrmNewQSO.acCWMessagesExecute(Sender: TObject);
@@ -4706,8 +4735,14 @@ begin
   if Assigned(CWint) then
   begin
     CWint.TuneStart;
-    ShowMessage('Tuning started .... '+LineEnding+LineEnding+'OK to abort');
+    dmUtils.ShowTheMessage('Message','Tuning started... '+LineEnding+LineEnding+'OK to abort',10000);
     CWint.TuneStop
+  end
+  else
+   begin
+    frmTRXControl.HLTune(true);
+    dmUtils.ShowTheMessage('Message','Tuning started... '+LineEnding+LineEnding+'OK to abort',10000);
+    frmTRXControl.HLTune(false);
   end
 end;
 
@@ -5513,6 +5548,8 @@ var
   SearchQRZ  : Boolean = False;
   qsl_via    : String = '';
   i          : integer;
+  tmp        : string;
+  p          : double;
 begin
   mode := '';
   freq := '';
@@ -5623,6 +5660,12 @@ begin
     ShowDXCCInfo(adif)
   else
     ShowDXCCInfo();
+
+  if ((cqrini.ReadBool('NewQSO', 'UseRigPwr', False)) and (frmTRXControl.GetRigPower(tmp)) and (not (fViewQSO or fEditQSO))) then
+    Begin
+     if tryStrToFloat(tmp,p) then
+            edtPWR.Text:=IntToStr(Round(p/1000)*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1));
+    end;
 
   ShowCountryInfo;
   ChangeReports;
@@ -5920,9 +5963,9 @@ begin
         acPreferences.Execute;
         key := 0;
       end;
-      if (key = VK_Q) then //why all this didnt work directly in    //VK_Q
-      begin                                            //action
-        acClose.Execute;
+      if (key = VK_Q) then                                          //VK_Q
+      begin
+        btnCancelClick(nil);
         key := 0;
         exit
       end;
@@ -6148,6 +6191,13 @@ begin
     Begin
      ReturnToNewQSO;
      key := 0
+    end;
+  if (key = VK_RETURN) then
+    Begin
+     mComment.Text:=mComment.Text+LineEnding;
+     mComment.SelStart:=length(mComment.Text);
+     mComment.SelLength:=0;
+     key:=0;
     end;
 end;
 
@@ -7967,27 +8017,23 @@ begin
 end;
 procedure TfrmNewQSO.CheckForAlphaVersion;
 var
-  p,VerNr,
+  VerNr,
   VerAvailNr : integer;
   data:string;
 Begin
   if not cqrini.ReadBool('Program', 'CheckAlpha', True) then exit;
-  p:=pos('(',cVersionBase)+1;
-  if not (TryStrToInt(ExtractSubstr(cVersionBase,p,[')']),VerNr)) then exit;
+  if not (TryStrToInt(ExtractWord(2,cVersionBase,['(',')']),VerNr)) then exit;
   VerAvailNr:=0;
-   if dmUtils.GetDataFromHttp('https://raw.githubusercontent.com/OH1KH/cqrlog/refs/heads/loc_testing/compiled/version.txt', data) then
+   if dmUtils.GetDataFromHttp('https://raw.githubusercontent.com/OH1KH/CqrlogAlpha/refs/heads/main/compiled/version.txt', data) then
   begin
     if (pos('NOT FOUND',upcase(data))<>0) then exit;
-    p:=pos('(',data)+1;
-    if not (TryStrToInt(ExtractSubstr(data,p,[')']),VerAvailNr)) then exit;
+    if not (TryStrToInt(ExtractWord(2,data,['(',')']),VerAvailNr)) then exit;
     if VerNr < VerAvailNr then
     begin
       try
         frmAbout:= TfrmAbout.Create(Application);
         frmAbout.PageControl1.ActivePage := frmAbout.tabUpgrade;
         frmAbout.lblVerze1.Caption := cVERSION + '  ' + cBUILD_DATE;
-        frmAbout.tabAbout.TabVisible:=false;
-        frmAbout.tabUpgrade.TabVisible:=True;
         frmAbout.Label8.Caption:='There is CqrlogAlpha version '+IntToStr(VerAvailNr)+' available!';
         frmAbout.ShowModal
       finally
@@ -8025,42 +8071,14 @@ Begin
 end;
 
 procedure TfrmNewQSO.NewLogSplash;
-var
-  message : String;
 Begin
-  message := 'It seems that you have not set Station CALLSIGN for this log.'+LineEnding
-    +LineEnding
-    +'CQRLOG has own settings for every log. You can copy settings'+LineEnding
-    +'between logs using window:'+LineEnding
-    +'Database Connect/Utils/settings/import<->export.'+LineEnding
-    +LineEnding
-    +'For this new log check now from top menu File/Preferences'+LineEnding
-    +'at least following Tabs:'+LineEnding
-    +LineEnding
-    +'PROGRAM:'+LineEnding
-    +'         Basic settings how CQRLOG works with this log'+LineEnding
-    +'STATION:'+LineEnding
-    +'         Your station information for this log'+LineEnding
-    +'BANDS:'+LineEnding
-    +'         By default CQRLOG uses Region1 band settings.'+LineEnding
-    +'         If you are in other region please check bands/frequencies'+LineEnding
-    +'         to set correct band start and end frequencies.'+LineEnding
-    +'         This will affect to CQRLOG operations.'+LineEnding
-    +'TRX CONTROL:'+LineEnding
-    +'         Settings if you want CQRLOG to communicate with'+LineEnding
-    +'         your rig using CAT control.'+LineEnding
-    +'EXTERNAL VIEWERS:'+LineEnding
-    +'         Programs that CQRLOG uses for viewing various'+LineEnding
-    +'         documents'+LineEnding
-    +LineEnding
-    +'For other Tabs set their values by your needs.'+LineEnding
-    +LineEnding
-    +'PLEASE use top menu HELP/HELP INDEX for more help for'+LineEnding
-    +'settings and operation. Help opens to your web browser.'+LineEnding
-    +LineEnding
-    +'73, gl DX!';
-
-  ShowMessage(message);
+   with TfrmChangelog.Create(Application) do
+    try
+      ViewEmptylog;
+      ShowModal
+    finally
+      Free
+    end
 end;
 function TfrmNewQSO.RigCmd2DataMode(mode:String):String;
 var

@@ -10,7 +10,7 @@ uses
   RegExpr;
 
 const
-  C_MAX_ROWS = 1000; //max lines in the list of RBN spots
+  C_MAX_ROWS = 500; //max lines in the list of RBN spots
 
 
 type
@@ -93,25 +93,26 @@ type
     acScrollDown : TAction;
     acHelp : TAction;
     acClear: TAction;
-    btnEatFocus : TButton;
+    btnEatFocus: TButton;
     dlgFont: TFontDialog;
     imgRbnMonitor: TImageList;
+    pnlTools: TPanel;
     sbRbn: TStatusBar;
     sgRbn: TStringGrid;
-    tmrUnfocus: TTimer;
-    ToolBar1: TToolBar;
+    tbtnClear: TToolButton;
     tbtnConnect: TToolButton;
-    ToolButton1 : TToolButton;
-    tbtnHelp: TToolButton;
-    ToolButton11: TToolButton;
-    ToolButton2: TToolButton;
-    tbtnServer: TToolButton;
-    ToolButton4: TToolButton;
     tbtnFilter: TToolButton;
     tbtnFont: TToolButton;
+    tbtnHelp: TToolButton;
+    tbtnLastLine: TToolButton;
+    tbtnServer: TToolButton;
+    tmrUnfocus: TTimer;
+    ToolBar1: TToolBar;
+    ToolButton1: TToolButton;
+    ToolButton11: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton4: TToolButton;
     ToolButton7: TToolButton;
-    tbtnLastLine : TToolButton;
-    tbtnClear: TToolButton;
     procedure acClearExecute(Sender: TObject);
     procedure acConnectExecute(Sender: TObject);
     procedure acDisconnectExecute(Sender: TObject);
@@ -150,6 +151,7 @@ type
     csRbnMonitor : TRTLCriticalSection;
     slRbnSpots   : TStringList;
     DeleteCount  : Integer;
+    MayAddSpot   : boolean;
     procedure SynRbnMonitor(RbnSpot : TRbnSpot);
     procedure LoadConfigToThread;
   end;
@@ -164,10 +166,16 @@ uses dUtils, uMyIni, dData, fRbnServer, dDXCluster, fRbnFilter, fNewQSO, fGrayli
 
 { TfrmRbnMonitor }
 
+
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
 procedure TRBNThread.ShowSpot;
 begin
   if Assigned(OnShowSpot) then
   begin
+    while not frmRbnMonitor.MayAddSpot do
+      sleep(1);
+
     FOnShowSpot(fRbnSpot)
   end;
 end;
@@ -341,39 +349,6 @@ begin
 end;
 
 procedure TRBNThread.Execute;
-//-------------------------------------------------------------------
-  procedure ParseSpot(spot : String; var spotter, dxstn, freq, mode, stren : String);
-  var
-    i : Integer;
-    y : Integer;
-    b : Array of String[50];
-    p : Integer=0;
-  begin
-    SetLength(b,1);
-    for i:=1 to Length(spot) do
-    begin
-      if spot[i]<>' ' then
-        b[p] := b[p]+spot[i]
-      else begin
-        if (b[p]<>'') then
-        begin
-          inc(p);
-          SetLength(b,p+1)
-        end
-      end
-    end;
-
-    spotter := b[2];
-    i := pos('-', spotter);
-    if i > 0 then
-      spotter := copy(spotter, 1, i-1);
-    dxstn := b[4];
-    freq  := b[3];
-    mode  := b[5];
-    stren := b[6]
-  end;
-//-------------------------------------------------------------------
-
 var
   spot    : String;
   spotter : String;
@@ -392,13 +367,45 @@ var
   cLon    : Currency;
   sColor  : integer;
   dFreq   : Double;
+//-----------------------------------------------------------------------
+  procedure ParseSpot(spot : String; var spotter, dxstn, freq, mode, stren : String);
+   var
+     i : Integer;
+     y : Integer;
+     b : Array of String[50];
+     p : Integer=0;
+   begin
+     SetLength(b,1);
+     for i:=1 to Length(spot) do
+     begin
+       if spot[i]<>' ' then
+         b[p] := b[p]+spot[i]
+       else begin
+         if (b[p]<>'') then
+         begin
+           inc(p);
+           SetLength(b,p+1)
+         end
+       end
+     end;
+
+     spotter := b[2];
+     i := pos('-', spotter);
+     if i > 0 then
+       spotter := copy(spotter, 1, i-1);
+     dxstn := b[4];
+     freq  := b[3];
+     mode  := b[5];
+     stren := b[6]
+   end;
+  //-----------------------------------------------------------------------
 begin
   reg := TRegExpr.Create;
   try try
     while not Terminated do
     begin
 
-      EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
+      EnterCriticalsection(frmRbnMonitor.csRbnMonitor); //this stops operation while new filter values are loaded
       try
         if WantToLoad then
         begin
@@ -409,7 +416,7 @@ begin
           MayLoad:=false;
         end
       finally
-        LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
+       LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
       end;
 
       EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
@@ -504,13 +511,13 @@ end;
 procedure TfrmRbnMonitor.lConnect(aSocket: TLSocket);
 begin
   tbtnConnect.Action   := acDisconnect;
-  sbRbn.Panels[0].Text := 'Connected to RBN'
+  sbRbn.Panels[0].Text := 'Connected to RBN';
 end;
 
 procedure TfrmRbnMonitor.lDisconnect(aSocket: TLSocket);
 begin
   tbtnConnect.Action := acConnect;
-  sbRbn.Panels[0].Text := 'Disconected'
+  sbRbn.Panels[0].Text := 'Disconected';
 end;
 
 procedure TfrmRbnMonitor.lReceive(aSocket: TLSocket);
@@ -677,7 +684,7 @@ begin
   InitCriticalSection(csRbnMonitor);
 
   DeleteCount := 0;
-
+  MayAddSpot:=false;
   sgRbn.RowCount := 1;
 
   slRbnSpots := TStringList.Create;
@@ -731,8 +738,10 @@ begin
 
   if ((not(TRbnThread = nil)) and ( cqrini.ReadBool('RBN','AutoConnectM',False) )) then
      acConnectExecute(nil);
-
+  MayAddSpot:=true;
 end;
+//-------------------------------------------------------------------
+//-------------------------------------------------------------------
 
 procedure TfrmRbnMonitor.sgRbnDblClick(Sender: TObject);
 var i:real;
@@ -808,7 +817,8 @@ begin
   begin
     RbnMonThread.WantToLoad:=true;
     repeat
-      sleep(1);
+      sleep(2);
+      Application.ProcessMessages;
       dec(timeout);
       if timeout < 1 then
                          begin
@@ -867,12 +877,38 @@ end;
 procedure TfrmRbnMonitor.SynRbnMonitor(RbnSpot : TRbnSpot);
 var
   i : Integer;
-
+  ex : boolean;
+  //-------------------------------------------------------------------
   procedure AddRow;
+  var
+     f : integer;
+     s : string;
+   c,d : currency;
+
   begin
-    i := sgRbn.RowCount+1;
-    sgRbn.RowCount := i;
-    dec(i);
+
+    ex:=false;  //find duplicate from grid
+    try
+    for f:=0 to sgRbn.RowCount-1 do
+      Begin
+        if (sgRbn.Cells[2,f] = RbnSpot.dxstn) and (sgRbn.Cells[3,f] = RbnSpot.mode) then
+          Begin
+           if pos('.', RbnSpot.freq)>0 then
+               s:=copy(RbnSpot.freq,1,pos('.', RbnSpot.freq)-1)
+             else
+               s:=RbnSpot.freq;
+           ex:= (pos(s,sgRbn.Cells[1,f])> 0);
+           if dmData.DebugLevel>=1 then
+               Writeln('RBN grid exist: ',RbnSpot.dxstn,' ',s,' ',RbnSpot.mode,' ',ex,'   ->   Grid[',f,'] ',sgRbn.Cells[2,f],' ',sgRbn.Cells[1,f]);
+           if ex then break;
+          end;
+      end;
+     finally
+     end;
+    if ex then exit;
+
+    i := sgRbn.RowCount;
+    sgRbn.RowCount := i+1;
 
     sgRbn.Cells[0,i] := RbnSpot.spotter;
     sgRbn.Cells[1,i] := RbnSpot.freq;
@@ -882,14 +918,18 @@ var
     sgRbn.Cells[5,i] := RbnSpot.qsl;
     sgRbn.Cells[6,i] := RbnSpot.dxinfo
   end;
+  //-------------------------------------------------------------------
+
 
 begin
-  if sgRbn.Focused then
+ MayAddSpot:=false;
+ if sgRbn.Focused then
   begin
     inc(DeleteCount);
     AddRow
   end
-  else begin
+ else
+  begin
     AddRow;
     if DeleteCount>0 then
     begin
@@ -900,13 +940,15 @@ begin
       end;
       DeleteCount := 0
     end
-    else begin
+    else
+    begin
       if sgRbn.RowCount>C_MAX_ROWS then
         sgRbn.DeleteRow(0)
     end;
 
     sgRbn.Row := sgRbn.RowCount
-  end
+  end;
+  MayAddSpot:=True;
 end;
 
 end.

@@ -216,10 +216,14 @@ var
       if LocalDbg then Write('Main loc query: ');
       dmData.W.Open;
       i := 1;
+      dmData.W.First;
       while not dmData.W.Eof do
                 begin
-                 if LocalDbg then writeln(dmData.W.FieldByName('sumMG').AsInteger);
-                 if (dmData.W.FieldByName('sumMG').AsInteger > 0 ) and (WkdMainGrid = 0) then WkdMainGrid := i;
+                 if (dmData.W.FieldCount>0) then
+                    Begin
+                       if (dmData.W.FieldByName('sumMG').AsInteger > 0 ) and (WkdMainGrid = 0) then WkdMainGrid := i;
+                       if LocalDbg then writeln(dmData.W.FieldByName('sumMG').AsInteger);
+                    end;
                  inc(i);
                  dmData.W.Next;
                 end;
@@ -284,10 +288,14 @@ begin
     if LocalDbg then Write('loc query: ');
     dmData.W.Open;
     i := 1;
+    dmData.W.First;
     while not dmData.W.Eof do
               begin
-               if LocalDbg then writeln(dmData.W.FieldByName('sumG').AsInteger);
-               if (dmData.W.FieldByName('sumG').AsInteger > 0 ) and (WkdGrid = 0) then WkdGrid := i;
+               if (dmData.W.FieldCount>0) then
+                  Begin
+                    if (dmData.W.FieldByName('sumG').AsInteger > 0 ) and (WkdGrid = 0) then WkdGrid := i;
+                    if LocalDbg then writeln(dmData.W.FieldByName('sumG').AsInteger);
+                  end;
                inc(i);
                dmData.W.Next;
               end;
@@ -340,10 +348,14 @@ begin
     if LocalDbg then Write('call query: ');
     dmData.W.Open;
     i := 1;
+    dmData.W.First;
     while not dmData.W.Eof do
               begin
-               if LocalDbg then writeln(dmData.W.FieldByName('sumCA').AsInteger);
-               if (dmData.W.FieldByName('sumCA').AsInteger > 0 ) and (WkdCall = 0) then WkdCall := i;
+               if (dmData.W.FieldCount>0) then
+                    Begin
+                         if (dmData.W.FieldByName('sumCA').AsInteger > 0 ) and (WkdCall = 0) then WkdCall := i;
+                         if LocalDbg then writeln(dmData.W.FieldByName('sumCA').AsInteger);
+                    end;
                inc(i);
                dmData.W.Next;
               end;
@@ -388,10 +400,14 @@ begin
     if LocalDbg then Write('state query: ');
     dmData.W.Open;
     i := 1;
+    dmData.W.First;
     while not dmData.W.Eof do
               begin
-               if LocalDbg then writeln(dmData.W.FieldByName('sumST').AsInteger);
-               if (dmData.W.FieldByName('sumST').AsInteger > 0 ) and (WkdState = 0) then WkdState := i;
+               if (dmData.W.FieldCount>0) then
+                    Begin
+                         if (dmData.W.FieldByName('sumST').AsInteger > 0 ) and (WkdState = 0) then WkdState := i;
+                         if LocalDbg then writeln(dmData.W.FieldByName('sumST').AsInteger);
+                    end;
                inc(i);
                dmData.W.Next;
               end;
@@ -867,9 +883,11 @@ begin
         dmData.W.SQL.Text := SQLCfm[0] + SQLCfm[c]+daylimit;
         if LocalDbg then writeln(  dmData.W.SQL.Text);
         dmData.W.Open;
+        dmData.W.First;
         while not dmData.W.EOF do
         begin
-          Grid := dmData.W.FieldByName('lo').AsString;
+          if (dmData.W.FieldCount>0) then
+                    Grid := dmData.W.FieldByName('lo').AsString;
           MarkGrid(Grid, c = 2, BmpTmp.canvas, ZooMap.Visible);
           dmData.W.Next;
         end;

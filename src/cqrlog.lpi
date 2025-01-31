@@ -10,6 +10,7 @@
       <SessionStorage Value="InProjectDir"/>
       <AutoCreateForms Value="False"/>
       <Title Value="cqrlog"/>
+      <Scaled Value="True"/>
       <Icon Value="0"/>
       <Resources Count="1">
         <Resource_0 FileName="../images/world_borders.png" Type="RCDATA" ResourceName="WORLD_BORDERS"/>
@@ -19,7 +20,7 @@
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="3"/>
       <RevisionNr Value="1"/>
-      <BuildNr Value="2202"/>
+      <BuildNr Value="2203"/>
       <StringTable ProductVersion="0.3.1.2026"/>
     </VersionInfo>
     <MacroValues Count="1">

@@ -1834,10 +1834,11 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
           dmData.CQ.Open();
-
+          dmData.CQ.First;
           while not dmData.CQ.EOF do
           Begin
-            f:= dmData.CQ.FieldByName('SuffixEnd').AsInteger;
+            if (dmData.CQ.FieldCount > 0) then
+               f:= dmData.CQ.FieldByName('SuffixEnd').AsInteger;
             if f>0 then
              Begin
                case f of
@@ -1945,7 +1946,8 @@ Begin
     dmData.CQ.First;
     while not dmData.CQ.EOF do
       begin
-         distance:=frmMain.CalcQrb(dmData.CQ.FieldByName('my_loc').AsString,dmData.CQ.FieldByName('loc').AsString,False);
+         if (dmData.CQ.FieldCount > 0) then
+          distance:=frmMain.CalcQrb(dmData.CQ.FieldByName('my_loc').AsString,dmData.CQ.FieldByName('loc').AsString,False);
          if distance<>'' then
           Begin
             QRB:=StrToInt(distance);
@@ -1984,12 +1986,13 @@ Begin
      dmData.CQ.First;
      while not dmData.CQ.EOF do
       begin
-       if dmData.CQ.FieldByName('MainLoc').AsString<>'' then
-        Begin
-         LocList:= LocList+dmData.CQ.FieldByName('Mainloc').AsString+',';
-         LocPoints:= LocPoints + 500;
-         inc(LOCs);
-        end;
+       if (dmData.CQ.FieldCount > 0) then
+         if dmData.CQ.FieldByName('MainLoc').AsString<>'' then
+          Begin
+           LocList:= LocList+dmData.CQ.FieldByName('Mainloc').AsString+',';
+           LocPoints:= LocPoints + 500;
+           inc(LOCs);
+          end;
         dmData.CQ.Next;
       end;
      dmData.CQ.Close;
@@ -2072,11 +2075,12 @@ Begin
           dmData.CQ.First;
           while not dmData.CQ.EOF do
            begin
-            if dmData.CQ.FieldByName('MainLoc').AsString<>'' then
-             Begin
-              MList[band]:= MList[band]+dmData.CQ.FieldByName('Mainloc').AsString+',';
-              MULc[band]:= MULc[band]+1;
-             end;
+            if (dmData.CQ.FieldCount > 0) then
+              if dmData.CQ.FieldByName('MainLoc').AsString<>'' then
+               Begin
+                MList[band]:= MList[band]+dmData.CQ.FieldByName('Mainloc').AsString+',';
+                MULc[band]:= MULc[band]+1;
+               end;
              dmData.CQ.Next;
            end;
          finally
@@ -2239,10 +2243,11 @@ var
        dmData.CQ.First;
        while not dmData.CQ.EOF do
         begin
-         if dmData.CQ.FieldByName('pref').AsString<>'' then
-           DXList:= DXList+dmData.CQ.FieldByName('pref').AsString+','
-          else
-           DXList:= DXList+'?,';
+         if (dmData.CQ.FieldCount > 0) then
+           if dmData.CQ.FieldByName('pref').AsString<>'' then
+             DXList:= DXList+dmData.CQ.FieldByName('pref').AsString+','
+            else
+             DXList:= DXList+'?,';
           dmData.CQ.Next;
         end;
         mStatus.Lines.Add('DX Country list : '+DXList);
@@ -2283,10 +2288,11 @@ var
         dmData.CQ.First;
         while not dmData.CQ.EOF do
          begin
-          if dmData.CQ.FieldByName('pref').AsString<>'' then
-            MyCountList:= MyCountList+dmData.CQ.FieldByName('pref').AsString+','
-           else
-            MyCountList:= MyCountList+'?,';
+          if (dmData.CQ.FieldCount > 0) then
+            if dmData.CQ.FieldByName('pref').AsString<>'' then
+              MyCountList:= MyCountList+dmData.CQ.FieldByName('pref').AsString+','
+             else
+              MyCountList:= MyCountList+'?,';
            dmData.CQ.Next;
          end;
       mStatus.Lines.Add(mycont+' Country list : '+MyCountList);
@@ -2331,8 +2337,9 @@ var
            SRXSList:='';
            while not dmData.CQ.EOF do
             begin
-             if dmData.CQ.FieldByName('srx_msg').AsString<>'' then
-               SRXSList:= SRXSList+dmData.CQ.FieldByName('srx_msg').AsString+',';
+             if (dmData.CQ.FieldCount > 0) then
+               if dmData.CQ.FieldByName('srx_msg').AsString<>'' then
+                SRXSList:= SRXSList+dmData.CQ.FieldByName('srx_msg').AsString+',';
               dmData.CQ.Next;
             end;
             if SRXSList<>'' then

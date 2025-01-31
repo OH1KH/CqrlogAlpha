@@ -61,8 +61,12 @@ begin
   end;
   //writeln(c);
 
+
+
   // Fix default BidiMode (this might be ok already in laz 3.x but leaving here makes no harm)
   // see http://bugs.freepascal.org/view.php?id=22044
+
+  Application.Scaled:=True;
   Application.BidiMode:= bdLeftToRight;
 
   Application.CaseSensitiveOptions:=False;

@@ -244,7 +244,7 @@ begin
     exit
   end;
 
-  if dmData.IsCallInLog(dmData.qRbnMon,dmData.trRbnMon,dxstn,Band,mode,LastDate,LastTime) then
+  if dmData.IsCallInLog('RBNMonitor',dxstn,Band,mode,LastDate,LastTime) then
   begin
     if DebugThis then Writeln('RBNMonitor: ','Station already exist in the log - ',dxstn);
     exit

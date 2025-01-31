@@ -67,6 +67,7 @@ type
     Qstate: TSQLQuery;
     qFreqMemGrid: TSQLQuery;
     qFreqs: TSQLQuery;
+    QCallInLog: TSQLQuery;
     trFreqMemGrid: TSQLTransaction;
     trFreqs: TSQLTransaction;
     trQ2: TSQLTransaction;
@@ -99,6 +100,7 @@ type
     trQDXCCStat: TSQLTransaction;
     trQStatNewQSO: TSQLTransaction;
     trQstate: TSQLTransaction;
+    trQCallInLog: TSQLTransaction;
     trW: TSQLTransaction;
     trWorkedContests: TSQLTransaction;
     W1: TSQLQuery;
@@ -172,7 +174,6 @@ type
     aProf : Array of TExpProfile;
     aSCP  : Array of String[20];
     MySQLProcess : TProcess;
-    csPreviousQSO : TRTLCriticalSection;
     fMySQLVersion : Currency;
     FreqMemCount  : integer;
 
@@ -281,7 +282,7 @@ type
     function  TriggersExistsOnCqrlog_main : Boolean;
     function  GetLastAllertCallId(const callsign,band,mode : String) : Integer;
     function  RbnMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean;  var index : integer) : String;
-    function  IsCallInLog(AQue:TSQLQuery;ATra:TSQLTransaction;callsign,band,mode,LastDate,LastTime : String) : Boolean;
+    function  IsCallInLog(Caller,callsign,band,mode,LastDate,LastTime : String) : Boolean;
     function  CallNoteExists(Callsign : String) : Boolean;
     function  GetNewLogNumber : Integer;
     function  getNewMySQLConnectionObject : TMySQL57Connection;
@@ -1105,7 +1106,6 @@ var
   AStringList: TStringList;
 
 begin
-  InitCriticalSection(csPreviousQSO);
   cqrini       := nil;
   IsSFilter    := False;
   fDLLSSLName  := '';
@@ -1221,7 +1221,6 @@ begin
   DeleteFile(dmData.HomeDir + 'xplanet'+PathDelim+'marker');
   BandMapCon.Connected := False;
   MainCon.Connected := False;
-  DoneCriticalsection(csPreviousQSO);
   KillMySQL(False)
 end;
 
@@ -3966,32 +3965,30 @@ begin
   end
 end;
 
-function TdmData.IsCallInLog(AQue:TSQLQuery;ATra:TSQLTransaction;callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog
+function TdmData.IsCallInLog(Caller,callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog
 var
   sql : String;
 begin
- EnterCriticalsection(csPreviousQSO);
   try
     Result := False;
-    if ATra.Active then ATra.Rollback;
-    AQue.Close;
+    if trQCallInLog.Active then trQCallInLog.Rollback;
+    QCallInLog.Close;
 
     //this ugly query is because I made a stupid mistake when stored qsodate and time_on as Varchar(), now it's probably
     //too late to rewrite it (Petr, OK2CQR)
     sql := 'select id_cqrlog_main from cqrlog_main where (callsign= '+QuotedStr(callsign)+') and (band = '+QuotedStr(band)+') '+
            'and (mode = '+QuotedStr(mode)+') and (str_to_date(concat(qsodate,'+QuotedStr(' ')+',time_on), '+
            QuotedStr('%Y-%m-%d %H:%i')+')) > str_to_date('+QuotedStr(LastDate+' '+LastTime)+', '+QuotedStr('%Y-%m-%d %H:%i')+')';
-    AQue.SQL.Text := sql;
+    QCallInLog.SQL.Text := sql;
     if fDebugLevel>=1 then
-                      Writeln(AQue.SQL.Text);
-    AQue.Open;
-    Result := AQue.RecordCount > 0 ;
+                      Writeln(QCallInLog.SQL.Text);
+    QCallInLog.Open;
+    Result := QCallInLog.RecordCount > 0 ;
     if fDebugLevel>=1 then
-                      writeln ('IsInLog from:',AQue.name,' call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
+                      writeln ('IsInLog from:',Caller,' call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
   finally
-    AQue.Close;
-    ATra.RollBack;
-    LeaveCriticalsection(csPreviousQSO)
+    QCallInLog.Close;
+    trQCallInLog.RollBack;
   end;
 end;
 procedure TdmData.StoreFreqMemories(grid : TStringGrid);

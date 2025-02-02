@@ -50,6 +50,7 @@ object frmRbnMonitor: TfrmRbnMonitor
     ColCount = 7
     FixedCols = 0
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goSmoothScroll, goScrollKeepVisible]
+    ParentShowHint = False
     TabOrder = 1
     OnDblClick = sgRbnDblClick
     OnDrawCell = sgRbnDrawCell
@@ -187,6 +188,7 @@ object frmRbnMonitor: TfrmRbnMonitor
       end
       object tbtnLastLine: TToolButton
         Left = 113
+        Hint = 'Show last line'
         Top = 2
         Action = acScrollDown
       end
@@ -197,6 +199,7 @@ object frmRbnMonitor: TfrmRbnMonitor
       end
       object tbtnHelp: TToolButton
         Left = 164
+        Hint = 'Open help'
         Top = 2
         Action = acHelp
       end
@@ -215,6 +218,21 @@ object frmRbnMonitor: TfrmRbnMonitor
         Caption = 'btnEatFocus'
         TabOrder = 0
       end
+    end
+    object lblRate: TLabel
+      AnchorSideLeft.Control = ToolBar1
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlTools
+      AnchorSideTop.Side = asrCenter
+      Left = 207
+      Height = 17
+      Top = 6
+      Width = 68
+      BorderSpacing.Left = 6
+      Caption = 'counting...'
+      Layout = tlCenter
+      ParentShowHint = False
+      ShowHint = True
     end
   end
   object acRbnMonitor: TActionList
@@ -360,6 +378,12 @@ object frmRbnMonitor: TfrmRbnMonitor
     Interval = 60
     OnTimer = tmrUnfocusTimer
     Left = 104
+    Top = 208
+  end
+  object tmrSpotRate: TTimer
+    Interval = 60000
+    OnTimer = tmrSpotRateTimer
+    Left = 184
     Top = 208
   end
 end

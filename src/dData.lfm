@@ -2,7 +2,7 @@ object dmData: TdmData
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   OldCreateOrder = False
-  Height = 858
+  Height = 850
   HorizontalOffset = 49
   VerticalOffset = 0
   Width = 1238
@@ -1130,20 +1130,36 @@ object dmData: TdmData
     Left = 1160
     Top = 264
   end
-  object QCallInLog: TSQLQuery
+  object QCallInLogB: TSQLQuery
     FieldDefs = <>
     BeforeOpen = QBeforeOpen
-    Transaction = trQCallInLog
+    Transaction = trQCallInLogB
     Params = <>
     Macros = <>
     ParseSQL = False
     Left = 1160
     Top = 32
   end
-  object trQCallInLog: TSQLTransaction
+  object trQCallInLogB: TSQLTransaction
     Active = False
     Action = caNone
     Left = 1160
     Top = 96
+  end
+  object QCallInLogR: TSQLQuery
+    FieldDefs = <>
+    BeforeOpen = QBeforeOpen
+    Transaction = trQCallInLogR
+    Params = <>
+    Macros = <>
+    ParseSQL = False
+    Left = 312
+    Top = 192
+  end
+  object trQCallInLogR: TSQLTransaction
+    Active = False
+    Action = caNone
+    Left = 312
+    Top = 264
   end
 end

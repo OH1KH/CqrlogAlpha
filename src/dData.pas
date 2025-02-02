@@ -62,12 +62,13 @@ type
     mQ: TSQLQuery;
     Q2: TSQLQuery;
     CQ: TSQLQuery;
+    QCallInLogR: TSQLQuery;
     QDXCCStat: TSQLQuery;
     QStatNewQSO: TSQLQuery;
     Qstate: TSQLQuery;
     qFreqMemGrid: TSQLQuery;
     qFreqs: TSQLQuery;
-    QCallInLog: TSQLQuery;
+    QCallInLogB: TSQLQuery;
     trFreqMemGrid: TSQLTransaction;
     trFreqs: TSQLTransaction;
     trQ2: TSQLTransaction;
@@ -97,10 +98,11 @@ type
     qRbnMon: TSQLQuery;
     qFreqMem: TSQLQuery;
     trCQ: TSQLTransaction;
+    trQCallInLogR: TSQLTransaction;
     trQDXCCStat: TSQLTransaction;
     trQStatNewQSO: TSQLTransaction;
     trQstate: TSQLTransaction;
-    trQCallInLog: TSQLTransaction;
+    trQCallInLogB: TSQLTransaction;
     trW: TSQLTransaction;
     trWorkedContests: TSQLTransaction;
     W1: TSQLQuery;
@@ -282,7 +284,8 @@ type
     function  TriggersExistsOnCqrlog_main : Boolean;
     function  GetLastAllertCallId(const callsign,band,mode : String) : Integer;
     function  RbnMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean;  var index : integer) : String;
-    function  IsCallInLog(Caller,callsign,band,mode,LastDate,LastTime : String) : Boolean;
+    function  IsCallInLogB(callsign,band,mode,LastDate,LastTime : String) : Boolean;
+    function  IsCallInLogR(callsign,band,mode,LastDate,LastTime : String) : Boolean;
     function  CallNoteExists(Callsign : String) : Boolean;
     function  GetNewLogNumber : Integer;
     function  getNewMySQLConnectionObject : TMySQL57Connection;
@@ -878,7 +881,7 @@ end;
 
 procedure TdmData.KillMySQL(const OnStart : Boolean = True);
 var
-  res       : Byte;
+  res       : Longint;
   SearchRec : TSearchRec;
   f         : TextFile;
   pid       : String = '';
@@ -3965,31 +3968,51 @@ begin
   end
 end;
 
-function TdmData.IsCallInLog(Caller,callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog
+function TdmData.IsCallInLogB(callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog Bandmap
 var
   sql : String;
 begin
-  try
     Result := False;
-    if trQCallInLog.Active then trQCallInLog.Rollback;
-    QCallInLog.Close;
+    if trQCallInLogB.Active then trQCallInLogB.Rollback;
+    QCallInLogB.Close;
 
     //this ugly query is because I made a stupid mistake when stored qsodate and time_on as Varchar(), now it's probably
     //too late to rewrite it (Petr, OK2CQR)
     sql := 'select id_cqrlog_main from cqrlog_main where (callsign= '+QuotedStr(callsign)+') and (band = '+QuotedStr(band)+') '+
            'and (mode = '+QuotedStr(mode)+') and (str_to_date(concat(qsodate,'+QuotedStr(' ')+',time_on), '+
            QuotedStr('%Y-%m-%d %H:%i')+')) > str_to_date('+QuotedStr(LastDate+' '+LastTime)+', '+QuotedStr('%Y-%m-%d %H:%i')+')';
-    QCallInLog.SQL.Text := sql;
+    QCallInLogB.SQL.Text := sql;
     if fDebugLevel>=1 then
-                      Writeln(QCallInLog.SQL.Text);
-    QCallInLog.Open;
-    Result := QCallInLog.RecordCount > 0 ;
+                      Writeln(QCallInLogB.SQL.Text);
+    QCallInLogB.Open;
+    Result := QCallInLogB.RecordCount > 0 ;
     if fDebugLevel>=1 then
-                      writeln ('IsInLog from:',Caller,' call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
-  finally
-    QCallInLog.Close;
-    trQCallInLog.RollBack;
-  end;
+                      writeln ('IsInLog from BandMap call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
+    QCallInLogB.Close;
+    trQCallInLogB.RollBack;
+end;
+function TdmData.IsCallInLogR(callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog RBNmonitor
+var
+  sql : String;
+begin
+    Result := False;
+    if trQCallInLogR.Active then trQCallInLogR.Rollback;
+    QCallInLogR.Close;
+
+    //this ugly query is because I made a stupid mistake when stored qsodate and time_on as Varchar(), now it's probably
+    //too late to rewrite it (Petr, OK2CQR)
+    sql := 'select id_cqrlog_main from cqrlog_main where (callsign= '+QuotedStr(callsign)+') and (band = '+QuotedStr(band)+') '+
+           'and (mode = '+QuotedStr(mode)+') and (str_to_date(concat(qsodate,'+QuotedStr(' ')+',time_on), '+
+           QuotedStr('%Y-%m-%d %H:%i')+')) > str_to_date('+QuotedStr(LastDate+' '+LastTime)+', '+QuotedStr('%Y-%m-%d %H:%i')+')';
+    QCallInLogR.SQL.Text := sql;
+    if fDebugLevel>=1 then
+                      Writeln(QCallInLogR.SQL.Text);
+    QCallInLogR.Open;
+    Result := QCallInLogR.RecordCount > 0 ;
+    if fDebugLevel>=1 then
+                      writeln ('IsInLog from RBNmonitor call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
+    QCallInLogR.Close;
+    trQCallInLogR.RollBack;
 end;
 procedure TdmData.StoreFreqMemories(grid : TStringGrid);
 const

@@ -219,7 +219,7 @@ var
       dmData.W.First;
       while not dmData.W.Eof do
                 begin
-                 if (dmData.W.FieldCount>0) then
+                 if (dmData.W.Fields.FindField('sumMG')<> nil) then
                     Begin
                        if (dmData.W.FieldByName('sumMG').AsInteger > 0 ) and (WkdMainGrid = 0) then WkdMainGrid := i;
                        if LocalDbg then writeln(dmData.W.FieldByName('sumMG').AsInteger);

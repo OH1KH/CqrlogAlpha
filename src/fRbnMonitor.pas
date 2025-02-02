@@ -10,8 +10,15 @@ uses
   RegExpr;
 
 const
-  C_MAX_ROWS = 500; //max lines in the list of RBN spots
+  C_MAX_ROWS = 1000; //max lines in the list of RBN spots
 
+type
+    TCounter = record
+    total    : longint;
+    spot     : integer;
+    dupe     : integer;
+    pass     : integer;
+    end;
 
 type
   TRbnSpot = record
@@ -73,9 +80,13 @@ type
     fil_gcfgBckColor          : TColor;
     fil_gcfgeBckColor         : TColor;
     fil_gcfgUseDXCColors      : Boolean;
-
+    fil_PassCount             : integer;
+    fil_ToBandMapCount        : integer;
 
     property OnShowSpot : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;
+    property PassCount  : integer read fil_PassCount write  fil_PassCount;
+    property ToBandMapCount  : integer read fil_ToBandMapCount write  fil_ToBandMapCount;
+
 end;
 
 
@@ -96,6 +107,7 @@ type
     btnEatFocus: TButton;
     dlgFont: TFontDialog;
     imgRbnMonitor: TImageList;
+    lblRate: TLabel;
     pnlTools: TPanel;
     sbRbn: TStatusBar;
     sgRbn: TStringGrid;
@@ -106,6 +118,7 @@ type
     tbtnHelp: TToolButton;
     tbtnLastLine: TToolButton;
     tbtnServer: TToolButton;
+    tmrSpotRate: TTimer;
     tmrUnfocus: TTimer;
     ToolBar1: TToolBar;
     ToolButton1: TToolButton;
@@ -135,17 +148,21 @@ type
     procedure sgRbnExit(Sender: TObject);
     procedure sgRbnHeaderSized(Sender: TObject; IsColumn: Boolean;
       Index: Integer);
+    procedure tmrSpotRateTimer(Sender: TObject);
     procedure tmrUnfocusTimer(Sender: TObject);
   private
     RbnMonThread : TRbnThread;
     lTelnet      : TLTelnetClientComponent;
     aRbnArchive  : Array of TRbnSpot;
     SrcCalls : TStringlist;
+    SpotCount: TCounter;
 
     procedure lConnect(aSocket: TLSocket);
     procedure lDisconnect(aSocket: TLSocket);
     procedure lReceive(aSocket: TLSocket);
     procedure AddSpotToThread(spot : String);
+    procedure ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
+
 
   public
     csRbnMonitor : TRTLCriticalSection;
@@ -167,337 +184,8 @@ uses dUtils, uMyIni, dData, fRbnServer, dDXCluster, fRbnFilter, fNewQSO, fGrayli
 { TfrmRbnMonitor }
 
 
-//-------------------------------------------------------------------
-//-------------------------------------------------------------------
-procedure TRBNThread.ShowSpot;
-begin
-  if Assigned(OnShowSpot) then
-  begin
-    while not frmRbnMonitor.MayAddSpot do
-      sleep(1);
-
-    FOnShowSpot(fRbnSpot)
-  end;
-end;
-
-function TRBNThread.AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
-var
-  SrcCont  : String;
-  DestCont : String;
-  Country  : String;
-  waz,itu  : String;
-  pfx      : String;
-  LastDate : String;
-  LastTime : String;
-  Band     : String;
-  tmp      : String;
-  adif     : Word;
-  index    : Integer;
-  f        : Double;
-  i        : integer;
-  SpotterOk: Boolean;
-  DebugThis: Boolean;
-
-begin
-  Result := False;
-  DebugThis:=dmData.DebugLevel>=2;
-
-  if (fil_SrcCalls.Count>0) then
-   Begin
-     SpotterOK:=false;
-     for i:=0 to fil_SrcCalls.Count-1 do
-      Begin
-        if (pos(fil_SrcCalls.Strings[i], spotter)=1) then  //begins with definition
-                                   begin
-                                     SpotterOk := True;
-                                     Break;
-                                   end;
-      end;
-     if Not SpotterOK then
-        Begin
-          if DebugThis then
-                                  Writeln('RBNMonitor: ','Wrong source callsign - ',Spotter);
-          Exit
-        end;
-    end;
-
-  dmDXCluster.id_country(spotter,now,pfx,Country,waz,itu,SrcCont);
-  if (Pos(SrcCont+',',fil_SrcCont+',') = 0) and (fil_SrcCont<>'') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','Wrong source continent - ',SrcCont);
-    exit
-  end;
-
-  if fil_IgnWkdHour then
-  begin
-    dmUtils.DateHoursAgo(fil_IgnHourValue,LastDate,LastTime);
-  end
-  else begin
-    LastDate := fil_IgnDateValue;
-    LastTime := fil_IgnTimeValue
-  end;
-
-  Band := dmDXCluster.GetBandFromFreq(freq,True);
-  if (Band='') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','Wrong band - ',Band);
-    exit
-  end;
-
-  if dmData.IsCallInLog('RBNMonitor',dxstn,Band,mode,LastDate,LastTime) then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','Station already exist in the log - ',dxstn);
-    exit
-  end;
-
-  if fil_AllowOnlyCall then
-  begin
-    if Pos(dxstn+',',fil_AllowOnlyCallValue+',') = 0 then
-    begin
-      if DebugThis then Writeln('RBNMonitor: ','Station is not between allowed callsigns - ',dxstn);
-      exit
-    end
-  end;
-
-  if fil_AllowOnlyCallReg then
-   begin
-   if (trim(fil_AllowOnlyCallRegValue)='') or (trim(dxstn)='') then
-    begin    // do not allow empty regexp
-      if DebugThis then Writeln('RBNMonitor: ','Station or allowed callsigns - empty ');
-      exit
-    end;
-    reg.Expression  := fil_AllowOnlyCallRegValue;
-    reg.InputString := dxstn;
-    if not reg.Exec(1) then
-    begin
-      if DebugThis then Writeln('RBNMonitor: ','Station is not between allowed callsigns - ',dxstn);
-      exit
-    end
-  end;
-
-  tmp:=fil_AllowBands;
-  if DebugThis then Writeln(band,'->',tmp);
-  If (pos('RIG',UpperCase(tmp))>0) then
-           tmp:=StringReplace(tmp,'RIG', dmDXCluster.GetBandFromFreq(FloatToStr(frmTRXControl.GetFreqkHz),True),[rfReplaceAll,rfIgnoreCase]);
-  if DebugThis then Writeln(band,'->',tmp);
-  if (Pos(','+band+',',','+tmp+',')=0) and (tmp<>'') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','This band is NOT allowed - ',band);
-    exit
-  end;
-
-  tmp:= fil_AllowModes;
-  if DebugThis then Writeln(mode,'->',tmp);
-  If (pos('RIG',UpperCase(tmp))>0) then
-           tmp:=StringReplace(tmp,'RIG',frmTRXControl.GetActualMode,[rfReplaceAll,rfIgnoreCase]);
-  if DebugThis then Writeln(mode,'->',tmp);
-  if (Pos(','+mode+',',','+tmp+',')=0) and (tmp<>'') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','This mode is NOT allowed - ',mode);
-    exit
-  end;
-
-  adif := dmDXCluster.id_country(dxstn,now,Pfx,Country,waz,itu,DestCont);
-
-  if (Pos(DestCont+',',fil_AllowCont+',') = 0) and (fil_AllowCont<>'') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','Wrong continent - ',DestCont);
-    exit
-  end;
-
-  if ((fil_NotCnty<>'') and (Pos(pfx+',',fil_NotCnty+',')>0)) then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','This country is not allowed - ',pfx);
-    exit
-  end;
-
-  if ((fil_AllowCnty<>'') and (Pos(pfx+',',fil_AllowCnty+',')=0)) then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','This country is not allowed - ',pfx);
-    exit
-  end;
-
-  if fil_LoTWOnly and (LoTW<>'L') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','This station is not LoTW user - ',dxstn);
-    exit
-  end;
-
-  if fil_eQSLOnly and (eQSL<>'E') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','This station is not eQSL user - ',dxstn);
-    exit
-  end;
-
-  dmData.RbnMonDXCCInfo(adif,band,mode,DxccWithLoTW,index);
-  case index of
-    1 : dxinfo := 'N';
-    2 : dxinfo := 'B';
-    3 : dxinfo := 'M';
-    else
-     Begin
-      dxinfo := '';
-      if fil_NewDXCOnly then
-                        Begin
-                          if DebugThis then Writeln('RBNMonitor: ','Not new one, band or mode - ',dxstn);
-                          exit;
-                        end;
-     end;
-  end; //case
-
-  Result := True
-end;
-
-procedure TRBNThread.Execute;
-var
-  spot    : String;
-  spotter : String;
-  freq,
-  Mfreq   : String;
-  stren   : String;
-  mode    : String;
-  dxstn   : String;
-  LoTW    : String;
-  eQSL    : String;
-  dxinfo  : String;
-  RbnSpot : TRbnSpot;
-  index   : Integer;
-  band    : String;
-  cLat,
-  cLon    : Currency;
-  sColor  : integer;
-  dFreq   : Double;
-//-----------------------------------------------------------------------
-  procedure ParseSpot(spot : String; var spotter, dxstn, freq, mode, stren : String);
-   var
-     i : Integer;
-     y : Integer;
-     b : Array of String[50];
-     p : Integer=0;
-   begin
-     SetLength(b,1);
-     for i:=1 to Length(spot) do
-     begin
-       if spot[i]<>' ' then
-         b[p] := b[p]+spot[i]
-       else begin
-         if (b[p]<>'') then
-         begin
-           inc(p);
-           SetLength(b,p+1)
-         end
-       end
-     end;
-
-     spotter := b[2];
-     i := pos('-', spotter);
-     if i > 0 then
-       spotter := copy(spotter, 1, i-1);
-     dxstn := b[4];
-     freq  := b[3];
-     mode  := b[5];
-     stren := b[6]
-   end;
-  //-----------------------------------------------------------------------
-begin
-  reg := TRegExpr.Create;
-  try try
-    while not Terminated do
-    begin
-
-      EnterCriticalsection(frmRbnMonitor.csRbnMonitor); //this stops operation while new filter values are loaded
-      try
-        if WantToLoad then
-        begin
-          MayLoad:=true;
-          repeat
-            sleep(1);
-          until not WantToLoad;
-          MayLoad:=false;
-        end
-      finally
-       LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
-      end;
-
-      EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
-      try
-        if frmRbnMonitor.slRbnSpots.Count>0 then
-        begin
-          spot := frmRbnMonitor.slRbnSpots.Strings[0];
-          frmRbnMonitor.slRbnSpots.Delete(0)
-        end
-        else
-          spot := ''
-      finally
-        LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
-      end;
-
-
-      if (spot='') then
-      begin
-        sleep(fil_SpotDelay);
-        Continue
-      end;
-
-      ParseSpot(spot, spotter, dxstn, freq, mode, stren);
-      if dmData.UsesLotw(dxstn) then
-        LoTW := 'L'
-      else
-        LoTW := '';
-      if dmDXCluster.UseseQSL(dxstn) then
-        eQSL := 'E'
-      else
-        eQSL := '';
-      if AllowedSpot(spotter,dxstn,freq,mode,LoTW,eQSL,dxinfo) then
-      begin
-        fRbnSpot.spotter := spotter;
-        fRbnSpot.dxstn   := dxstn;
-        fRbnSpot.freq    := freq;
-        fRbnSpot.mode    := mode;
-        fRbnSpot.qsl     := LoTW+eQSL;
-        fRbnSpot.dxinfo  := dxinfo;
-        fRbnSpot.signal  := stren;
-
-        if fil_ToBandMap and frmBandMap.Showing and (dxinfo<>'') then
-          begin
-            dFreq:=0.0; MFreq:='0.0';
-            //dmDXCluster.GetRealCoordinate(lat,long,cLat,cLng);
-            dmUtils.GetCoordinate(dmUtils.GetPfx(dxstn),cLat,cLon);
-            if TryStrToFloat(freq,dFreq) then
-               Mfreq:=FloatToStr( dFreq/1000);
-            fil_ThBckColor := clWindow;
-            sColor     := clDefault;
-            if fil_gcfgUseDXCColors then
-             Begin
-               case dxinfo of
-                'N': sColor:=fil_gcfgNewCountryColor;
-                'B': sColor:=fil_gcfgNewBandColor;
-                'M': sColor:=fil_gcfgNewModeColor;
-               end;
-              if fil_gcfgeUseBackColor and (eQSL='E') then
-                fil_ThBckColor := fil_gcfgeBckColor;
-              if fil_gcfgUseBackColor and (LoTW='L') then
-                fil_ThBckColor := fil_gcfgBckColor;
-              end;
-              frmBandMap.AddToBandMap(dFreq,dxstn,mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
-                                      sColor,fil_ThBckColor, False,(LoTW='L'),(eQSL='E') )
-          end;
-        Synchronize(@ShowSpot);
-        Sleep(fil_SpotDelay);
-      end;
-    end;
-  except
-    on E: Exception do
-      Writeln('*********',E.Message)
-  end
-  finally
-    FreeAndNil(reg)
-  end
-end;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
 procedure TfrmRbnMonitor.AddSpotToThread(spot : String);
+
 begin
   EnterCriticalsection(csRbnMonitor);
   try
@@ -512,13 +200,52 @@ procedure TfrmRbnMonitor.lConnect(aSocket: TLSocket);
 begin
   tbtnConnect.Action   := acDisconnect;
   sbRbn.Panels[0].Text := 'Connected to RBN';
+  SpotCount.total:=0;
+  SpotCount.dupe:=0;
+  SpotCount.pass:=0;
+  SpotCount.spot:=0;
+  RbnMonThread.PassCount:=0;
+  RbnMonThread.ToBandMapCount:=0;
+  tmrSpotRate.Enabled:=True;
 end;
 
 procedure TfrmRbnMonitor.lDisconnect(aSocket: TLSocket);
 begin
   tbtnConnect.Action := acConnect;
   sbRbn.Panels[0].Text := 'Disconected';
+  tmrSpotRate.Enabled:=False;
 end;
+
+procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
+  var
+    i : Integer;
+    y : Integer;
+    b : Array of String[50];
+    p : Integer=0;
+  begin
+    SetLength(b,1);
+    for i:=1 to Length(spot) do
+    begin
+      if spot[i]<>' ' then
+        b[p] := b[p]+spot[i]
+      else begin
+        if (b[p]<>'') then
+        begin
+          inc(p);
+          SetLength(b,p+1)
+        end
+      end
+    end;
+
+    spotter := b[2];
+    i := pos('-', spotter);
+    if i > 0 then
+      spotter := copy(spotter, 1, i-1);
+    dxstn := b[4];
+    freq  := b[3];
+    mode  := b[5];
+    stren := b[6]
+  end;
 
 procedure TfrmRbnMonitor.lReceive(aSocket: TLSocket);
 const
@@ -529,9 +256,18 @@ var
   tmp : String;
   buffer : String;
   UserName : String;
+  s,
+  spotter,
+  dxstn,
+  freq,
+  mode,
+  stren : String;
+  EX    : boolean;
+  f     : integer;
 begin
   if lTelnet.GetMessage(buffer) = 0 then
     exit;
+
   sStart := 1;
   sStop := Pos(CR, Buffer);
   if sStop = 0 then
@@ -544,7 +280,35 @@ begin
 
     if (Pos('DX DE',UpperCase(tmp))>0)  then
     begin
-      AddSpotToThread(tmp)
+      ex:=false;
+      inc(SpotCount.spot);
+      ParseSpots(tmp, spotter, dxstn, freq, mode, stren);
+      try
+      for f:=0 to sgRbn.RowCount-1 do
+        Begin
+          if (sgRbn.Cells[2,f] = dxstn) and (sgRbn.Cells[3,f] = mode) then
+            Begin
+             if pos('.', freq)>0 then
+                 s:=copy(freq,1,pos('.',freq)-1)
+               else
+                 s:=freq;
+             if (pos(s,sgRbn.Cells[1,f])> 0) then
+               Begin
+                ex:=true;
+                inc(SpotCount.dupe);
+                if dmData.DebugLevel>=1 then
+                       Writeln('RBN grid exist: ',dxstn,' ',s,' ',mode,' ',ex,'   ->   Grid[',f,'] ',sgRbn.Cells[2,f],' ',sgRbn.Cells[1,f],' ',sgRbn.Cells[3,f] );
+                Break;
+               end;
+            end;
+        end;
+       finally
+       end;
+       if not ex then
+              Begin
+                    inc(SpotCount.pass);
+                    AddSpotToThread(tmp);
+              end;
     end
     else begin
       UserName := cqrini.ReadString('RBNMonitor','UserName',cqrini.ReadString('Station', 'Call', ''));
@@ -573,10 +337,12 @@ var
   user   : String;
 begin
   RbnMonThread := TRBNThread.Create(True);
-  RbnMonThread.FreeOnTerminate :=  False;// True; I think this causes abrt in terminate (TfrmRbnMonitor.acDisconnectExecute) because procedure has freeAndNil (does free twice)
+  RbnMonThread.FreeOnTerminate := False;  //there is freeandNil at disconnect
   RbnMonThread.OnShowSpot := @SynRbnMonitor; //shows up when RBN traffic is high like IARU HF contest and connect is tried to close or filter adjusted
   RbnMonThread.WantToLoad:=false;
   RbnMonThread.MayLoad:=false;
+  RbnMonThread.PassCount:=0;
+  RbnMonThread.ToBandMapCount:=0;
   RbnMonThread.Start;
 
   LoadConfigToThread;
@@ -686,6 +452,7 @@ begin
   DeleteCount := 0;
   MayAddSpot:=false;
   sgRbn.RowCount := 1;
+  tmrSpotRate.Enabled:=False;
 
   slRbnSpots := TStringList.Create;
   SrcCalls:= TStringList.Create;
@@ -736,6 +503,11 @@ begin
   sgRbn.Cells[5,0] := 'Qsl';
   sgRbn.Cells[6,0] := 'DXCC';
 
+  lblRate.Hint:='Spot rate in minute:'+LineEnding+
+                 ' Please wait. Counting...'+LineEnding+
+                 '.'+LineEnding+
+                 'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
+
   if ((not(TRbnThread = nil)) and ( cqrini.ReadBool('RBN','AutoConnectM',False) )) then
      acConnectExecute(nil);
   MayAddSpot:=true;
@@ -784,6 +556,30 @@ procedure TfrmRbnMonitor.sgRbnHeaderSized(Sender: TObject; IsColumn: Boolean;
   Index: Integer);
 begin
   btnEatFocus.SetFocus
+end;
+
+procedure TfrmRbnMonitor.tmrSpotRateTimer(Sender: TObject);
+begin
+  tmrSpotRate.Enabled:=False;
+  SpotCount.total:=SpotCount.total+SpotCount.spot;
+
+  lblRate.Caption:=IntToStr(SpotCount.spot)+'/'+IntToStr(RbnMonThread.PassCount)+'/min';
+  lblRate.Hint:='Spot rate during last minute:'+LineEnding+
+                 ' Total received: '+IntToStr(SpotCount.spot)+LineEnding+
+                 ' Duplicates from total: '+IntToStr(SpotCount.dupe)+LineEnding+
+                 ' Sent to RBNmonitor: '+IntToStr(SpotCount.pass)+LineEnding+
+                 ' Passed by RBN filter settings: '+IntToStr(RbnMonThread.PassCount)+LineEnding+
+                 ' From RBNmonitor to BandMap: '+IntToStr(RbnMonThread.ToBandMapCount)+LineEnding+
+                 '---Total spots since connected: '+IntToStr(SpotCount.total)+LineEnding+
+                 '.'+LineEnding+
+                 'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
+
+  SpotCount.dupe:=0;
+  SpotCount.pass:=0;
+  SpotCount.spot:=0;
+  RbnMonThread.PassCount:=0;
+  RbnMonThread.ToBandMapCount:=0;
+  tmrSpotRate.Enabled:=True
 end;
 
 procedure TfrmRbnMonitor.FormDeactivate(Sender: TObject);
@@ -877,35 +673,15 @@ end;
 procedure TfrmRbnMonitor.SynRbnMonitor(RbnSpot : TRbnSpot);
 var
   i : Integer;
-  ex : boolean;
+
   //-------------------------------------------------------------------
   procedure AddRow;
   var
      f : integer;
      s : string;
    c,d : currency;
-
+    ex : boolean;
   begin
-
-    ex:=false;  //find duplicate from grid
-    try
-    for f:=0 to sgRbn.RowCount-1 do
-      Begin
-        if (sgRbn.Cells[2,f] = RbnSpot.dxstn) and (sgRbn.Cells[3,f] = RbnSpot.mode) then
-          Begin
-           if pos('.', RbnSpot.freq)>0 then
-               s:=copy(RbnSpot.freq,1,pos('.', RbnSpot.freq)-1)
-             else
-               s:=RbnSpot.freq;
-           ex:= (pos(s,sgRbn.Cells[1,f])> 0);
-           if dmData.DebugLevel>=1 then
-               Writeln('RBN grid exist: ',RbnSpot.dxstn,' ',s,' ',RbnSpot.mode,' ',ex,'   ->   Grid[',f,'] ',sgRbn.Cells[2,f],' ',sgRbn.Cells[1,f]);
-           if ex then break;
-          end;
-      end;
-     finally
-     end;
-    if ex then exit;
 
     i := sgRbn.RowCount;
     sgRbn.RowCount := i+1;
@@ -950,6 +726,324 @@ begin
   end;
   MayAddSpot:=True;
 end;
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+procedure TRBNThread.ShowSpot;
+begin
+  if Assigned(OnShowSpot) then
+  begin
+    while not frmRbnMonitor.MayAddSpot do
+     begin
+      sleep(1);
+     end;
+    FOnShowSpot(fRbnSpot)
+  end;
+end;
+
+function TRBNThread.AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
+var
+  SrcCont  : String;
+  DestCont : String;
+  Country  : String;
+  waz,itu  : String;
+  pfx      : String;
+  LastDate : String;
+  LastTime : String;
+  Band     : String;
+  tmp      : String;
+  adif     : Word;
+  index    : Integer;
+  f        : Double;
+  i        : integer;
+  SpotterOk: Boolean;
+  DebugThis: Boolean;
+
+begin
+  Result := False;
+  DebugThis:=dmData.DebugLevel>=2;
+
+  if (fil_SrcCalls.Count>0) then
+   Begin
+     SpotterOK:=false;
+     for i:=0 to fil_SrcCalls.Count-1 do
+      Begin
+        if (pos(fil_SrcCalls.Strings[i], spotter)=1) then  //begins with definition
+                                   begin
+                                     SpotterOk := True;
+                                     Break;
+                                   end;
+      end;
+     if Not SpotterOK then
+        Begin
+          if DebugThis then
+                                  Writeln('RBNMonitor: ','Wrong source callsign - ',Spotter);
+          Exit
+        end;
+    end;
+
+  dmDXCluster.id_country(spotter,now,pfx,Country,waz,itu,SrcCont);
+  if (Pos(SrcCont+',',fil_SrcCont+',') = 0) and (fil_SrcCont<>'') then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','Wrong source continent - ',SrcCont);
+    exit
+  end;
+  if fil_IgnWkdHour then
+  begin
+    dmUtils.DateHoursAgo(fil_IgnHourValue,LastDate,LastTime);
+  end
+  else begin
+    LastDate := fil_IgnDateValue;
+    LastTime := fil_IgnTimeValue
+  end;
+
+  Band := dmDXCluster.GetBandFromFreq(freq,True);
+  if (Band='') then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','Wrong band - ',Band);
+    exit
+  end;
+  if dmData.IsCallInLogR(dxstn,Band,mode,LastDate,LastTime) then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','Station already exist in the log - ',dxstn);
+    exit
+  end;
+  if fil_AllowOnlyCall then
+  begin
+    if Pos(dxstn+',',fil_AllowOnlyCallValue+',') = 0 then
+    begin
+      if DebugThis then Writeln('RBNMonitor: ','Station is not between allowed callsigns - ',dxstn);
+      exit
+    end
+  end;
+  if fil_AllowOnlyCallReg then
+   begin
+   if (trim(fil_AllowOnlyCallRegValue)='') or (trim(dxstn)='') then
+    begin    // do not allow empty regexp
+      if DebugThis then Writeln('RBNMonitor: ','Station or allowed callsigns - empty ');
+      exit
+    end;
+    reg.Expression  := fil_AllowOnlyCallRegValue;
+    reg.InputString := dxstn;
+    if not reg.Exec(1) then
+    begin
+      if DebugThis then Writeln('RBNMonitor: ','Station is not between allowed callsigns - ',dxstn);
+      exit
+    end
+  end;
+  tmp:=fil_AllowBands;
+  if DebugThis then Writeln(band,'->',tmp);
+  If (pos('RIG',UpperCase(tmp))>0) then
+           tmp:=StringReplace(tmp,'RIG', dmDXCluster.GetBandFromFreq(FloatToStr(frmTRXControl.GetFreqkHz),True),[rfReplaceAll,rfIgnoreCase]);
+  if DebugThis then Writeln(band,'->',tmp);
+  if (Pos(','+band+',',','+tmp+',')=0) and (tmp<>'') then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','This band is NOT allowed - ',band);
+    exit
+  end;
+  tmp:= fil_AllowModes;
+  if DebugThis then Writeln(mode,'->',tmp);
+  If (pos('RIG',UpperCase(tmp))>0) then
+           tmp:=StringReplace(tmp,'RIG',frmTRXControl.GetActualMode,[rfReplaceAll,rfIgnoreCase]);
+  if DebugThis then Writeln(mode,'->',tmp);
+  if (Pos(','+mode+',',','+tmp+',')=0) and (tmp<>'') then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','This mode is NOT allowed - ',mode);
+    exit
+  end;
+  adif := dmDXCluster.id_country(dxstn,now,Pfx,Country,waz,itu,DestCont);
+
+  if (Pos(DestCont+',',fil_AllowCont+',') = 0) and (fil_AllowCont<>'') then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','Wrong continent - ',DestCont);
+    exit
+  end;
+  if ((fil_NotCnty<>'') and (Pos(pfx+',',fil_NotCnty+',')>0)) then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','This country is not allowed - ',pfx);
+    exit
+  end;
+
+  if ((fil_AllowCnty<>'') and (Pos(pfx+',',fil_AllowCnty+',')=0)) then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','This country is not allowed - ',pfx);
+    exit
+  end;
+  if fil_LoTWOnly and (LoTW<>'L') then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','This station is not LoTW user - ',dxstn);
+    exit
+  end;
+  if fil_eQSLOnly and (eQSL<>'E') then
+  begin
+    if DebugThis then Writeln('RBNMonitor: ','This station is not eQSL user - ',dxstn);
+    exit
+  end;
+  dmData.RbnMonDXCCInfo(adif,band,mode,DxccWithLoTW,index);
+  case index of
+    1 : dxinfo := 'N';
+    2 : dxinfo := 'B';
+    3 : dxinfo := 'M';
+    else
+     Begin
+      dxinfo := '';
+      if fil_NewDXCOnly then
+                        Begin
+                          if DebugThis then Writeln('RBNMonitor: ','Not new one, band or mode - ',dxstn);
+                          exit;
+                        end;
+     end;
+  end; //case
+  Result := True
+end;
+
+procedure TRBNThread.Execute;
+var
+  spot    : String;
+  spotter : String;
+  freq,
+  Mfreq   : String;
+  stren   : String;
+  mode    : String;
+  dxstn   : String;
+  LoTW    : String;
+  eQSL    : String;
+  dxinfo  : String;
+  RbnSpot : TRbnSpot;
+  index   : Integer;
+  band    : String;
+  cLat,
+  cLon    : Currency;
+  sColor  : integer;
+  dFreq   : Double;
+//-----------------------------------------------------------------------
+  procedure ParseSpot(spot : String; var spotter, dxstn, freq, mode, stren : String);
+   var
+     i : Integer;
+     y : Integer;
+     b : Array of String[50];
+     p : Integer=0;
+   begin
+     SetLength(b,1);
+     for i:=1 to Length(spot) do
+     begin
+       if spot[i]<>' ' then
+         b[p] := b[p]+spot[i]
+       else begin
+         if (b[p]<>'') then
+         begin
+           inc(p);
+           SetLength(b,p+1)
+         end
+       end
+     end;
+
+     spotter := b[2];
+     i := pos('-', spotter);
+     if i > 0 then
+       spotter := copy(spotter, 1, i-1);
+     dxstn := b[4];
+     freq  := b[3];
+     mode  := b[5];
+     stren := b[6]
+   end;
+  //-----------------------------------------------------------------------
+begin
+  reg := TRegExpr.Create;
+  try try
+    while not Terminated do
+    begin
+      EnterCriticalsection(frmRbnMonitor.csRbnMonitor); //this stops operation while new filter values are loaded
+      try
+        if WantToLoad then
+        begin
+          MayLoad:=true;
+          repeat
+            sleep(1);
+          until not WantToLoad;
+          MayLoad:=false;
+        end
+      finally
+       LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
+      end;
+
+      EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
+      try
+        if frmRbnMonitor.slRbnSpots.Count>0 then
+        begin
+          spot := frmRbnMonitor.slRbnSpots.Strings[0];
+          frmRbnMonitor.slRbnSpots.Delete(0)
+        end
+        else
+          spot := ''
+      finally
+        LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
+      end;
+
+      if (spot='') then
+      begin
+        sleep(fil_SpotDelay);
+        Continue
+      end;
+
+      ParseSpot(spot, spotter, dxstn, freq, mode, stren);
+      if dmData.UsesLotw(dxstn) then
+        LoTW := 'L'
+      else
+        LoTW := '';
+      if dmDXCluster.UseseQSL(dxstn) then
+        eQSL := 'E'
+      else
+        eQSL := '';
+      if AllowedSpot(spotter,dxstn,freq,mode,LoTW,eQSL,dxinfo) then
+      begin
+        inc(fil_PassCount);
+        fRbnSpot.spotter := spotter;
+        fRbnSpot.dxstn   := dxstn;
+        fRbnSpot.freq    := freq;
+        fRbnSpot.mode    := mode;
+        fRbnSpot.qsl     := LoTW+eQSL;
+        fRbnSpot.dxinfo  := dxinfo;
+        fRbnSpot.signal  := stren;
+
+        if fil_ToBandMap and frmBandMap.Showing and (dxinfo<>'') then
+          begin
+            dFreq:=0.0; MFreq:='0.0';
+            //dmDXCluster.GetRealCoordinate(lat,long,cLat,cLng);
+            dmUtils.GetCoordinate(dmUtils.GetPfx(dxstn),cLat,cLon);
+            if TryStrToFloat(freq,dFreq) then
+               Mfreq:=FloatToStr( dFreq/1000);
+            fil_ThBckColor := clWindow;
+            sColor     := clDefault;
+            if fil_gcfgUseDXCColors then
+             Begin
+               case dxinfo of
+                'N': sColor:=fil_gcfgNewCountryColor;
+                'B': sColor:=fil_gcfgNewBandColor;
+                'M': sColor:=fil_gcfgNewModeColor;
+               end;
+              if fil_gcfgeUseBackColor and (eQSL='E') then
+                fil_ThBckColor := fil_gcfgeBckColor;
+              if fil_gcfgUseBackColor and (LoTW='L') then
+                fil_ThBckColor := fil_gcfgBckColor;
+              end;
+              inc(fil_ToBandMapCount);
+              frmBandMap.AddToBandMap(dFreq,dxstn,mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
+                                      sColor,fil_ThBckColor, False,(LoTW='L'),(eQSL='E') );
+          end;
+        Synchronize(@ShowSpot);
+        Sleep(fil_SpotDelay);
+      end;
+    end;
+  except
+    on E: Exception do
+      Writeln('RBNthread: ',E.Message)
+  end
+  finally
+    FreeAndNil(reg)
+  end
+end;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 end.
 

@@ -799,6 +799,7 @@ begin
     iter := 1;
     while not Terminated do
     begin
+     NewAdded:=false;
       try
         When := now;
         EnterCriticalSection(frmBandMap.BandMapCrit);
@@ -824,58 +825,58 @@ begin
       end;
 
       for y:=0 to Length(AddArray)-1 do
-      begin
-        p := ItemExists(AddArray[y].call,AddArray[y].band,AddArray[y].mode);
-        if dmData.DebugLevel>=1 then Writeln('Deleted data on position:',p);
-        if p>0 then
-        begin
-          DeleteFromArray(p)
-        end;
+          begin
+              p := ItemExists(AddArray[y].call,AddArray[y].band,AddArray[y].mode);
+              if p>0 then
+              begin
+                DeleteFromArray(p);
+                if dmData.DebugLevel>=1 then
+                                      Writeln('Deleted data on position:',p);
+              end;
 
-        skip := False;
+              skip := False;
 
-        if not (frmBandMap.FDateFilterType = dftShowAll) then
-          skip := dmData.IsCallInLog('BandMap',AddArray[y].Call,AddArray[y].Band,AddArray[y].Mode,LastDate,LastTime);
+              if not (frmBandMap.FDateFilterType = dftShowAll) then
+                skip := dmData.IsCallInLogB(AddArray[y].Call,AddArray[y].Band,AddArray[y].Mode,LastDate,LastTime);
 
-        if frmBandMap.FOnlyLoTW and frmBandMap.FOnlyEQSL then
-        begin
-           if not (AddArray[y].isLoTW or AddArray[y].isEQSL) then
-             skip := True
-        end
-        else begin
-          if ((not AddArray[y].isLoTW) and frmBandMap.FOnlyLoTW) then
-            skip := True
-          else begin
-           if ((not AddArray[y].isEQSL) and frmBandMap.FOnlyEQSL) then
-            skip := True
-          end
-        end;
+              if frmBandMap.FOnlyLoTW and frmBandMap.FOnlyEQSL then
+              begin
+                 if not (AddArray[y].isLoTW or AddArray[y].isEQSL) then
+                   skip := True
+              end
+              else begin
+                if ((not AddArray[y].isLoTW) and frmBandMap.FOnlyLoTW) then
+                  skip := True
+                else begin
+                 if ((not AddArray[y].isEQSL) and frmBandMap.FOnlyEQSL) then
+                  skip := True
+                end
+              end;
 
-        if skip then
-          Continue;
+              if skip then
+                Continue;
 
-
-        i := FindFirstemptyPos;
-        if (i>0) then
-        begin
-          frmBandMap.BandMapItems[i].frmNewQSO := AddArray[y].frmNewQSO;
-          frmBandMap.BandMapItems[i].Freq      := AddArray[y].Freq+Random(100)*0.000000001;
-          frmBandMap.BandMapItems[i].Call      := AddArray[y].Call;
-          frmBandMap.BandMapItems[i].Mode      := AddArray[y].Mode;
-          frmBandMap.BandMapItems[i].Band      := AddArray[y].Band;
-          frmBandMap.BandMapItems[i].SplitInfo := AddArray[y].SplitInfo;
-          frmBandMap.BandMapItems[i].Lat       := AddArray[y].Lat;
-          frmBandMap.BandMapItems[i].Long      := AddArray[y].Long;
-          frmBandMap.BandMapItems[i].Color     := AddArray[y].Color;
-          frmBandMap.BandMapItems[i].BgColor   := AddArray[y].BgColor;
-          frmBandMap.BandMapItems[i].TimeStamp := AddArray[y].TimeStamp;
-          frmBandMap.BandMapItems[i].TextValue := AddArray[y].TextValue;
-          frmBandMap.BandMapItems[i].isLoTW    := AddArray[y].isLoTW;
-          frmBandMap.BandMapItems[i].isEQSL    := AddArray[y].isEQSL;
-          frmBandMap.BandMapItems[i].Position  := i
-        end;
-        NewAdded := True
-      end;
+              i := FindFirstemptyPos;
+              if (i>0) then
+              begin
+                frmBandMap.BandMapItems[i].frmNewQSO := AddArray[y].frmNewQSO;
+                frmBandMap.BandMapItems[i].Freq      := AddArray[y].Freq+Random(100)*0.000000001;
+                frmBandMap.BandMapItems[i].Call      := AddArray[y].Call;
+                frmBandMap.BandMapItems[i].Mode      := AddArray[y].Mode;
+                frmBandMap.BandMapItems[i].Band      := AddArray[y].Band;
+                frmBandMap.BandMapItems[i].SplitInfo := AddArray[y].SplitInfo;
+                frmBandMap.BandMapItems[i].Lat       := AddArray[y].Lat;
+                frmBandMap.BandMapItems[i].Long      := AddArray[y].Long;
+                frmBandMap.BandMapItems[i].Color     := AddArray[y].Color;
+                frmBandMap.BandMapItems[i].BgColor   := AddArray[y].BgColor;
+                frmBandMap.BandMapItems[i].TimeStamp := AddArray[y].TimeStamp;
+                frmBandMap.BandMapItems[i].TextValue := AddArray[y].TextValue;
+                frmBandMap.BandMapItems[i].isLoTW    := AddArray[y].isLoTW;
+                frmBandMap.BandMapItems[i].isEQSL    := AddArray[y].isEQSL;
+                frmBandMap.BandMapItems[i].Position  := i;
+                NewAdded := True
+              end;
+          end;
 
       for i:=1 to MAX_ITEMS do
       begin
@@ -910,12 +911,14 @@ begin
           Changed := True
         end
       end;
+
       if NewAdded then
       begin
         frmBandMap.SortBandMapArray(1,MAX_ITEMS,cqrini.ReadBool('BandMap', 'ReverseOrder', False) );
         NewAdded := False;
         Changed  := True
       end;
+
       if Changed or (iter>3) then
       begin
         Synchronize(@frmBandMap.SyncBandMap);
@@ -926,7 +929,7 @@ begin
       Sleep(500)
     end
   except
-     on E : Exception do Writeln(E.Message)
+     on E : Exception do Writeln('Bandmap thread: ',E.Message)
   end
 end;
 

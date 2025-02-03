@@ -1807,7 +1807,7 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         if (dmData.W.Fields.FindField('QSOCount')<> nil) then
+         if (dmData.CQ.Fields.FindField('QSOCount')<> nil) then
                QSOc[band]:= dmData.CQ.FieldByName('QSOCount').AsInteger;
          //duplicate count
          dmData.CQ.Close;
@@ -1819,7 +1819,7 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         if (dmData.W.Fields.FindField('Dcount')<> nil) then
+         if (dmData.CQ.Fields.FindField('Dcount')<> nil) then
                DUPEc[band]:= dmData.CQ.FieldByName('Dcount').AsInteger;
 
          //multipliers
@@ -1837,7 +1837,7 @@ Begin
           dmData.CQ.First;
           while not dmData.CQ.EOF do
           Begin
-            if (dmData.W.Fields.FindField('SuffixEnd')<> nil) then
+            if (dmData.CQ.Fields.FindField('SuffixEnd')<> nil) then
                f:= dmData.CQ.FieldByName('SuffixEnd').AsInteger;
             if f>0 then
              Begin
@@ -1916,7 +1916,7 @@ Begin
     if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
     dmData.CQ.Open();
-    if (dmData.W.Fields.FindField('QSOCount')<> nil) then
+    if (dmData.CQ.Fields.FindField('QSOCount')<> nil) then
                QSOs:= dmData.CQ.FieldByName('QSOCount').AsInteger;
 
     //Dupe count  (28MHz and up)
@@ -1929,7 +1929,7 @@ Begin
     if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
     dmData.CQ.Open();
-    if (dmData.W.Fields.FindField('QSOCount')<> nil) then
+    if (dmData.CQ.Fields.FindField('QSOCount')<> nil) then
                DUPEs:= dmData.CQ.FieldByName('QSOCount').AsInteger;
 
 
@@ -2044,7 +2044,7 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         if (dmData.W.Fields.FindField('QSOCount')<> nil) then
+         if (dmData.CQ.Fields.FindField('QSOCount')<> nil) then
                QSOc[band]:= dmData.CQ.FieldByName('QSOCount').AsInteger;
          //duplicate count
          dmData.CQ.Close;
@@ -2056,7 +2056,7 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
-         if (dmData.W.Fields.FindField('Dcount')<> nil) then
+         if (dmData.CQ.Fields.FindField('Dcount')<> nil) then
                DUPEc[band]:= dmData.CQ.FieldByName('Dcount').AsInteger;
 
 

@@ -291,7 +291,7 @@ begin
     dmData.W.First;
     while not dmData.W.Eof do
               begin
-               if (dmData.W.FieldCount>0) then
+                if (dmData.W.Fields.FindField('sumG')<> nil) then
                   Begin
                     if (dmData.W.FieldByName('sumG').AsInteger > 0 ) and (WkdGrid = 0) then WkdGrid := i;
                     if LocalDbg then writeln(dmData.W.FieldByName('sumG').AsInteger);
@@ -351,7 +351,7 @@ begin
     dmData.W.First;
     while not dmData.W.Eof do
               begin
-               if (dmData.W.FieldCount>0) then
+               if (dmData.W.Fields.FindField('sumCA')<> nil) then
                     Begin
                          if (dmData.W.FieldByName('sumCA').AsInteger > 0 ) and (WkdCall = 0) then WkdCall := i;
                          if LocalDbg then writeln(dmData.W.FieldByName('sumCA').AsInteger);
@@ -403,7 +403,7 @@ begin
     dmData.W.First;
     while not dmData.W.Eof do
               begin
-               if (dmData.W.FieldCount>0) then
+               if (dmData.W.Fields.FindField('sumST')<> nil) then
                     Begin
                          if (dmData.W.FieldByName('sumST').AsInteger > 0 ) and (WkdState = 0) then WkdState := i;
                          if LocalDbg then writeln(dmData.W.FieldByName('sumST').AsInteger);

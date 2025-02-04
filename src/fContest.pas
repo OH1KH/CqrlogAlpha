@@ -1807,6 +1807,17 @@ Begin
           if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
          dmData.CQ.Open();
+
+         {
+         //different ways to check that sql query is not "Empty set"
+         Writeln('-------------');
+         Writeln('Is EOF:',dmData.CQ.EOF);
+         Writeln('Is empty:',dmData.CQ.IsEmpty);
+         Writeln('FindField:', dmData.CQ.Fields.FindField('QSOCount')<> nil);
+         Writeln('Fieds.Count:',dmData.CQ.Fields.Count);
+         }
+
+
          if (dmData.CQ.Fields.FindField('QSOCount')<> nil) then
                QSOc[band]:= dmData.CQ.FieldByName('QSOCount').AsInteger;
          //duplicate count
@@ -1946,8 +1957,9 @@ Begin
     dmData.CQ.First;
     while not dmData.CQ.EOF do
       begin
-         if (dmData.CQ.FieldCount > 0) then
-          distance:=frmMain.CalcQrb(dmData.CQ.FieldByName('my_loc').AsString,dmData.CQ.FieldByName('loc').AsString,False);
+         if (dmData.CQ.Fields.FindField('my_loc')<> nil)
+          and (dmData.CQ.Fields.FindField('loc')<> nil) then
+             distance:=frmMain.CalcQrb(dmData.CQ.FieldByName('my_loc').AsString,dmData.CQ.FieldByName('loc').AsString,False);
          if distance<>'' then
           Begin
             QRB:=StrToInt(distance);
@@ -1955,16 +1967,17 @@ Begin
                      QSOPoints := 10
                else
                      QSOPoints := QRB;
-
-            case dmData.CQ.FieldByName('band').AsString of
-              '13CM'    :  QSOPoints:=QSOPoints*2;
-              '9CM'     :  QSOPoints:=QSOPoints*3;
-              '6CM'     :  QSOPoints:=QSOPoints*4;
-              '3CM'     :  QSOPoints:=QSOPoints*5;
-              '1.25CM'  :  QSOPoints:=QSOPoints*6;
-              '6MM'     :  QSOPoints:=QSOPoints*7;
-             end;
-
+            if (dmData.CQ.Fields.FindField('band')<> nil) then
+            begin
+              case dmData.CQ.FieldByName('band').AsString of
+                '13CM'    :  QSOPoints:=QSOPoints*2;
+                '9CM'     :  QSOPoints:=QSOPoints*3;
+                '6CM'     :  QSOPoints:=QSOPoints*4;
+                '3CM'     :  QSOPoints:=QSOPoints*5;
+                '1.25CM'  :  QSOPoints:=QSOPoints*6;
+                '6MM'     :  QSOPoints:=QSOPoints*7;
+               end;
+            end;
             if QRB > MaxQRB then
                      MaxQRB :=  QRB;
 
@@ -1986,7 +1999,7 @@ Begin
      dmData.CQ.First;
      while not dmData.CQ.EOF do
       begin
-       if (dmData.CQ.FieldCount > 0) then
+        if (dmData.CQ.Fields.FindField('MainLoc')<> nil) then
          if dmData.CQ.FieldByName('MainLoc').AsString<>'' then
           Begin
            LocList:= LocList+dmData.CQ.FieldByName('Mainloc').AsString+',';
@@ -1996,6 +2009,7 @@ Begin
         dmData.CQ.Next;
       end;
      dmData.CQ.Close;
+     dmData.trCQ.Rollback;
 
      mStatus.Lines.Add('QSO count: '+IntToStr(QSOs));
      mStatus.Lines.Add('DUPE count: '+IntToStr(Dupes));
@@ -2075,7 +2089,7 @@ Begin
           dmData.CQ.First;
           while not dmData.CQ.EOF do
            begin
-            if (dmData.CQ.FieldCount > 0) then
+            if (dmData.CQ.Fields.FindField('MainLoc')<> nil) then
               if dmData.CQ.FieldByName('MainLoc').AsString<>'' then
                Begin
                 MList[band]:= MList[band]+dmData.CQ.FieldByName('Mainloc').AsString+',';
@@ -2128,10 +2142,11 @@ var
               if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
               dmData.CQ.Open();
-              if (dmData.CQ.FieldCount > 0) then
+              if (dmData.CQ.Fields.FindField(SqlColumn)<> nil) then
                sgStatus.Cells[f+2,UseRow]:=dmData.CQ.FieldByName(SqlColumn).AsString;
            end;
         end;
+      dmData.trCQ.Rollback;
   end;
 
 //--------------------------------------------------------------------------
@@ -2156,7 +2171,7 @@ var
              if dmData.DebugLevel >=1 then
                                          Writeln(dmData.CQ.SQL.Text);
              dmData.CQ.Open();
-             if (dmData.CQ.FieldCount > 0) then
+             if (dmData.CQ.Fields.FindField('QSOs')<> nil) then
                AllQsos:= dmData.CQ.FieldByName('QSOs').AsInteger;
              sgStatus.Cells[1,1]:=dmData.CQ.FieldByName('QSOs').AsString;
              ByBandsStatus(1,dmData.CQ.SQL.Text,'QSOs');
@@ -2170,7 +2185,7 @@ var
              if dmData.DebugLevel >=1 then
                                          Writeln(dmData.CQ.SQL.Text);
              dmData.CQ.Open();
-             if (dmData.CQ.FieldCount > 0) then
+             if (dmData.CQ.Fields.FindField('DUPEs')<> nil) then
                sgStatus.Cells[1,7]:=dmData.CQ.FieldByName('DUPEs').AsString;
              ByBandsStatus(7,dmData.CQ.SQL.Text,'DUPEs');
            end;
@@ -2186,7 +2201,7 @@ var
             if dmData.DebugLevel >=1 then
                                          Writeln(dmData.CQ.SQL.Text);
              dmData.CQ.Open();
-             if (dmData.CQ.FieldCount > 0) then
+             if (dmData.CQ.Fields.FindField('Countries')<> nil) then
                sgStatus.Cells[1,3]:=dmData.CQ.FieldByName('Countries').AsString;
              ByBandsStatus(3,dmData.CQ.SQL.Text,'Countries');
             end
@@ -2204,7 +2219,7 @@ var
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      if (dmData.CQ.FieldCount > 0) then
+      if (dmData.CQ.Fields.FindField('DXs')<> nil) then
                sgStatus.Cells[1,2]:=dmData.CQ.FieldByName('DXs').AsString;
       ByBandsStatus(2,dmData.CQ.SQL.Text,'DXs');
     end;
@@ -2221,7 +2236,7 @@ var
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      if (dmData.CQ.FieldCount > 0) then
+      if (dmData.CQ.Fields.FindField('DXCntrs')<> nil) then
                sgStatus.Cells[1,4]:=dmData.CQ.FieldByName('DXCntrs').AsString;
       ByBandsStatus(4,dmData.CQ.SQL.Text,'DXCntrs');
     end;
@@ -2243,7 +2258,7 @@ var
        dmData.CQ.First;
        while not dmData.CQ.EOF do
         begin
-         if (dmData.CQ.FieldCount > 0) then
+         if (dmData.CQ.Fields.FindField('pref')<> nil) then
            if dmData.CQ.FieldByName('pref').AsString<>'' then
              DXList:= DXList+dmData.CQ.FieldByName('pref').AsString+','
             else
@@ -2266,7 +2281,7 @@ var
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
       sgStatus.Cells[0,5]:= mycont+'Ctrys';
-      if (dmData.CQ.FieldCount > 0) then
+      if (dmData.CQ.Fields.FindField('MYCntrs')<> nil) then
                sgStatus.Cells[1,5]:= dmData.CQ.FieldByName('MYCntrs').AsString;
       ByBandsStatus(5,dmData.CQ.SQL.Text,'MYCntrs');
     end;
@@ -2288,7 +2303,7 @@ var
         dmData.CQ.First;
         while not dmData.CQ.EOF do
          begin
-          if (dmData.CQ.FieldCount > 0) then
+          if (dmData.CQ.Fields.FindField('pref')<> nil) then
             if dmData.CQ.FieldByName('pref').AsString<>'' then
               MyCountList:= MyCountList+dmData.CQ.FieldByName('pref').AsString+','
              else
@@ -2312,7 +2327,7 @@ var
         if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      if (dmData.CQ.FieldCount > 0) then
+      if (dmData.CQ.Fields.FindField('Msgs')<> nil) then
                sgStatus.Cells[1,6]:=dmData.CQ.FieldByName('Msgs').AsString;
       ByBandsStatus(6,dmData.CQ.SQL.Text,'Msgs');
      end;
@@ -2337,7 +2352,7 @@ var
            SRXSList:='';
            while not dmData.CQ.EOF do
             begin
-             if (dmData.CQ.FieldCount > 0) then
+             if (dmData.CQ.Fields.FindField('srx_msg')<> nil) then
                if dmData.CQ.FieldByName('srx_msg').AsString<>'' then
                 SRXSList:= SRXSList+dmData.CQ.FieldByName('srx_msg').AsString+',';
               dmData.CQ.Next;
@@ -2348,6 +2363,7 @@ var
      end;
 
     dmData.CQ.Close;
+    dmData.trCQ.Rollback;
    Rates;
 end;
 
@@ -2365,7 +2381,7 @@ Begin
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      if (dmData.CQ.FieldCount > 0) then
+      if (dmData.CQ.Fields.FindField('last')<> nil) then
                lblQsoSince.Caption:='QS:'+dmData.CQ.FieldByName('last').AsString;
 
     //qso rate 10min
@@ -2377,7 +2393,7 @@ Begin
       if dmData.DebugLevel >=1 then
                                        Writeln(dmData.CQ.SQL.Text);
       dmData.CQ.Open();
-      if (dmData.CQ.FieldCount > 0) then
+      if (dmData.CQ.Fields.FindField('rate')<> nil) then
                lblRate10.Caption:=dmData.CQ.FieldByName('rate').AsString+'/10';
 
     //qso rate 1h
@@ -2389,12 +2405,13 @@ Begin
     if dmData.DebugLevel >=1 then
                                      Writeln(dmData.CQ.SQL.Text);
     dmData.CQ.Open();
-    if (dmData.CQ.FieldCount > 0) then
+    if (dmData.CQ.Fields.FindField('rate')<> nil) then
                lblRate60.Caption:=dmData.CQ.FieldByName('rate').AsString+'/60';
 
 
     finally
       dmData.CQ.Close;
+      dmData.trCQ.Rollback;
     end;
     end;   // AllQsos>0
 

@@ -931,7 +931,7 @@ var
 begin
   InitCriticalSection(csDX);
 
-  dmData.dbDXC.KeepConnection := True;
+  dmData.dbDXC.KeepConnection := True;    //OH1KH 2025-01 that is set at connection creation already -> TdmData.getNewMySQLConnectionObject!!
   for i:=0 to ComponentCount-1 do
   begin
     if Components[i] is TSQLQuery then

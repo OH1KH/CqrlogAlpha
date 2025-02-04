@@ -1792,7 +1792,7 @@ begin
   if frmContest.Showing then
     begin
       cqrini.WriteBool('Window','Contest',True);
-      frmRBNMonitor.Close
+      frmContest.Close
     end
     else
       cqrini.WriteBool('Window','Contest',False)

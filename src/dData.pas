@@ -1153,14 +1153,19 @@ begin
 
   CreateDBConnections;
 
-  MainCon.KeepConnection := True;
+  MainCon.KeepConnection := True;  //OH1KH 2025-01 that is set at connection creation already -> TdmData.getNewMySQLConnectionObject!!
   MainCon.Transaction := trmQ;
+
   for i:=0 to ComponentCount-1 do
   begin
     if Components[i] is TSQLQuery then
+     Begin
       (Components[i] as TSQLQuery).DataBase := MainCon;
+     end;
     if Components[i] is TSQLTransaction then
-      (Components[i] as TSQLTransaction).DataBase := MainCon
+     begin
+      (Components[i] as TSQLTransaction).DataBase := MainCon;
+     end;
   end;
 
   //special connection for band map thread
@@ -1168,11 +1173,16 @@ begin
   qBandMapFil.Transaction   := trBandMapFil;
   qBandMapFil.DataBase      := BandMapCon;
   trBandMapFil.DataBase     := BandMapCon;
+  QCallInLogB.DataBase      := BandMapCon;
+  trQCallInLogB.DataBase    := BandMapCon;
 
   RbnMonCon.Transaction    := trRbnMon;
   qRbnMon.Transaction      := trRbnMon;
   qRbnMon.DataBase         := RbnMonCon;
   trRbnMon.DataBase        := RbnMonCon;
+  QCallInLogR.DataBase     := RbnMonCon;
+  trQCallInLogR.DataBase   := RbnMonCon;
+
 
   FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
 
@@ -1222,6 +1232,8 @@ begin
   qCQRLOG.Close;
   reg.Free;
   DeleteFile(dmData.HomeDir + 'xplanet'+PathDelim+'marker');
+  LogUploadCon.Connected:=False;
+  RbnMonCon.Connected:=False;
   BandMapCon.Connected := False;
   MainCon.Connected := False;
   KillMySQL(False)
@@ -1296,42 +1308,13 @@ begin
 end;
 
 procedure TdmData.tmrDBPingTimer(Sender: TObject);
-{
-var
-  pq : TSQLQuery;
-  tq : TSQLTransaction;
-}
+
 begin
-{
-  pq := TSQLQuery.Create(nil);
-  tq := TSQLTransaction.Create(nil);
-  try
-    if (MainCon.Connected) and (fDBName<>'') then
-    begin
-      pq.DataBase := MainCon;
-      tq.DataBase := MainCon;
-      pq.Transaction := tq;
-      pq.SQL.Text := 'select * from '+fDBName+'.db_version';
-      tq.StartTransaction;
-      if fDebugLevel>=1 then Writeln('DBPing - ',pq.SQL.Text);
-      pq.Open;
-      pq.Close;
-      tq.Rollback;
-      pq.DataBase := dmDXCluster.dbDXC;
-      tq.DataBase := dmDXCluster.dbDXC;
-      pq.Transaction := tq;
-      pq.SQL.Text := 'select * from '+fDBName+'.db_version';
-      tq.StartTransaction;
-      if fDebugLevel>=1 then Writeln('DBPing - ',pq.SQL.Text);
-      pq.Open;
-      pq.Close;
-      tq.Rollback
-    end
-  finally
-    pq.Free;
-    tq.Free
-  end
-}
+  mysql_ping(MainCon.Handle);
+  mysql_ping(BandMapCon.Handle);
+  mysql_ping(RbnMonCon.Handle);
+  mysql_ping(LogUploadCon.Handle);
+  mysql_ping(dbDXC.Handle);
 end;
 
 
@@ -4378,7 +4361,7 @@ begin
   Connection := TMySQL57Connection.Create(self);
   Connection.SkipLibraryVersionCheck := True;
   Connection.KeepConnection := True;
-
+//  mysql_options(Connection.Handle, MYSQL_OPT_RECONNECT, 'true');
   result := Connection
 end;
 

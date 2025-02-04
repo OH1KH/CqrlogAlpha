@@ -441,7 +441,7 @@ var
 begin
   for i:=0 to sgRbn.ColCount-1 do
     cqrini.WriteInteger('WindowSize','RbnCol'+IntToStr(i),sgRbn.ColWidths[i]);
-  lTelnet.Disconnect();
+  acDisconnectExecute(nil);
   dmUtils.SaveWindowPos(self);
 end;
 
@@ -944,14 +944,14 @@ var
      dxstn := b[4];
      freq  := b[3];
      mode  := b[5];
-     stren := b[6]
+     stren := b[6];
    end;
   //-----------------------------------------------------------------------
 begin
-  reg := TRegExpr.Create;
-  try try
+ try
     while not Terminated do
     begin
+    // writeln('settings');
       EnterCriticalsection(frmRbnMonitor.csRbnMonitor); //this stops operation while new filter values are loaded
       try
         if WantToLoad then
@@ -965,7 +965,7 @@ begin
       finally
        LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
       end;
-
+      //writeln('spot');
       EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
       try
         if frmRbnMonitor.slRbnSpots.Count>0 then
@@ -981,11 +981,13 @@ begin
 
       if (spot='') then
       begin
+        //writeln('spot empty');
         sleep(fil_SpotDelay);
         Continue
       end;
-
+     // writeln('parse');
       ParseSpot(spot, spotter, dxstn, freq, mode, stren);
+     //  writeln('lotw eqsl');
       if dmData.UsesLotw(dxstn) then
         LoTW := 'L'
       else
@@ -994,6 +996,8 @@ begin
         eQSL := 'E'
       else
         eQSL := '';
+
+     // writeln('allow filter');
       if AllowedSpot(spotter,dxstn,freq,mode,LoTW,eQSL,dxinfo) then
       begin
         inc(fil_PassCount);
@@ -1004,7 +1008,7 @@ begin
         fRbnSpot.qsl     := LoTW+eQSL;
         fRbnSpot.dxinfo  := dxinfo;
         fRbnSpot.signal  := stren;
-
+      // writeln('to bandmap');
         if fil_ToBandMap and frmBandMap.Showing and (dxinfo<>'') then
           begin
             dFreq:=0.0; MFreq:='0.0';
@@ -1030,6 +1034,7 @@ begin
               frmBandMap.AddToBandMap(dFreq,dxstn,mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
                                       sColor,fil_ThBckColor, False,(LoTW='L'),(eQSL='E') );
           end;
+        //writeln('sync');
         Synchronize(@ShowSpot);
         Sleep(fil_SpotDelay);
       end;
@@ -1037,10 +1042,7 @@ begin
   except
     on E: Exception do
       Writeln('RBNthread: ',E.Message)
-  end
-  finally
-    FreeAndNil(reg)
-  end
+  end;
 end;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////

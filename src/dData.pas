@@ -348,6 +348,11 @@ type
     procedure GetRXTXOffset(Freq : Currency; var RXOffset,TXOffset : Currency);
     procedure LoadQSODateColorSettings;
     procedure PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery;lTr : TSQLTransaction);
+
+  protected
+   // This procedure will receive the events that are logged by the connection:
+   procedure GetLogEvent(Sender: TSQLConnection; EventType: TDBEventType; Const Msg : String);
+
   end;
 
 var
@@ -558,12 +563,18 @@ begin
   MainCon.Password     := pass;
   MainCon.DatabaseName := 'information_schema';
 
+  //MainCon.LogEvents:=LogAllEvents;
+  // MainCon.OnLog:=@GetLogEvent;
+
   BandMapCon.CharSet:='UTF8';
   BandMapCon.HostName     := host;
   BandMapCon.Params.Text  := 'Port='+port;
   BandMapCon.UserName     := user;
   BandMapCon.Password     := pass;
   BandMapCon.DatabaseName := 'information_schema';
+
+  //BandMapCon.LogEvents:=LogAllEvents;
+  // BandMapCon.OnLog:=@GetLogEvent;
 
   RbnMonCon.CharSet:='UTF8';
   RbnMonCon.HostName     := host;
@@ -572,6 +583,9 @@ begin
   RbnMonCon.Password     := pass;
   RbnMonCon.DatabaseName := 'information_schema';
 
+  // RbnMonCon.LogEvents:=LogAllEvents;
+  // RbnMonCon.OnLog:=@GetLogEvent;
+
   dbDXC.CharSet:='UTF8';
   dbDXC.HostName     := host;
   dbDXC.Params.Text  := 'Port='+port;
@@ -579,12 +593,18 @@ begin
   dbDXC.Password     := pass;
   dbDXC.DatabaseName := 'information_schema';
 
+  // dbDXC.LogEvents:=LogAllEvents;
+  // dbDXC.OnLog:=@GetLogEvent;
+
   LogUploadCon.CharSet:='UTF8';
   LogUploadCon.HostName     := host;
   LogUploadCon.Params.Text  := 'Port='+port;
   LogUploadCon.UserName     := user;
   LogUploadCon.Password     := pass;
   LogUploadCon.DatabaseName := 'information_schema';
+
+  //LogUploadCon.LogEvents:=LogAllEvents;
+  //LogUploadCon.OnLog:=@GetLogEvent;
 
   try
     MainCon.Connected      := True;
@@ -600,6 +620,8 @@ begin
     LogUploadCon.ExecuteDirect(sql);
     BandMapCon.ExecuteDirect(sql);
     RbnMonCon.ExecuteDirect(sql)
+
+
   except
     on E : Exception do
     begin
@@ -4361,9 +4383,27 @@ begin
   Connection := TMySQL57Connection.Create(self);
   Connection.SkipLibraryVersionCheck := True;
   Connection.KeepConnection := True;
-//  mysql_options(Connection.Handle, MYSQL_OPT_RECONNECT, 'true');
+//  mysql_options(Connection.Handle, MYSQL_OPT_RECONNECT, 'true');   //compiles, but causes crash at start. Why?
   result := Connection
 end;
+
+procedure TdmData.GetLogEvent(Sender: TSQLConnection;
+   EventType: TDBEventType; const Msg: String);
+ var
+   Source: string;
+ begin
+   case EventType of
+     detCustom:   Source:='Custom:  ';
+     detPrepare:  Source:='Prepare: ';
+     detExecute:  Source:='Execute: ';
+     detFetch:    Source:='Fetch:   ';
+     detCommit:   Source:='Commit:  ';
+     detRollBack: Source:='Rollback:';
+     else Source:='Unknown event. Please fix program code.';
+   end;
+      Writeln(Source + ' ' + Msg);
+ end;
+
 
 end.
 

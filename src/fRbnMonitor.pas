@@ -82,9 +82,11 @@ type
     fil_gcfgUseDXCColors      : Boolean;
     fil_PassCount             : integer;
     fil_ToBandMapCount        : integer;
+    fil_RcvdCount             : integer;
 
     property OnShowSpot : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;
     property PassCount  : integer read fil_PassCount write  fil_PassCount;
+    property RcvdCount  : integer read fil_RcvdCount write  fil_RcvdCount;
     property ToBandMapCount  : integer read fil_ToBandMapCount write  fil_ToBandMapCount;
 
 end;
@@ -204,6 +206,7 @@ begin
   SpotCount.dupe:=0;
   SpotCount.pass:=0;
   SpotCount.spot:=0;
+  RbnMonThread.RcvdCount:=0;
   RbnMonThread.PassCount:=0;
   RbnMonThread.ToBandMapCount:=0;
   tmrSpotRate.Enabled:=True;
@@ -341,6 +344,7 @@ begin
   RbnMonThread.OnShowSpot := @SynRbnMonitor; //shows up when RBN traffic is high like IARU HF contest and connect is tried to close or filter adjusted
   RbnMonThread.WantToLoad:=false;
   RbnMonThread.MayLoad:=false;
+  RbnMonThread.RcvdCount:=0;
   RbnMonThread.PassCount:=0;
   RbnMonThread.ToBandMapCount:=0;
   RbnMonThread.Start;
@@ -567,7 +571,8 @@ begin
   lblRate.Hint:='Spot rate during last minute:'+LineEnding+
                  ' Total received: '+IntToStr(SpotCount.spot)+LineEnding+
                  ' Duplicates from total: '+IntToStr(SpotCount.dupe)+LineEnding+
-                 ' Sent to RBNmonitor: '+IntToStr(SpotCount.pass)+LineEnding+
+                 ' Sent to RBNmonitorTh: '+IntToStr(SpotCount.pass)+LineEnding+
+                 ' Received by RBNmonitorTh: '+IntToStr(RbnMonThread.RcvdCount)+LineEnding+
                  ' Passed by RBN filter settings: '+IntToStr(RbnMonThread.PassCount)+LineEnding+
                  ' From RBNmonitor to BandMap: '+IntToStr(RbnMonThread.ToBandMapCount)+LineEnding+
                  '---Total spots since connected: '+IntToStr(SpotCount.total)+LineEnding+
@@ -915,6 +920,7 @@ var
   cLon    : Currency;
   sColor  : integer;
   dFreq   : Double;
+  DEbugThis: boolean;
 //-----------------------------------------------------------------------
   procedure ParseSpot(spot : String; var spotter, dxstn, freq, mode, stren : String);
    var
@@ -948,28 +954,32 @@ var
    end;
   //-----------------------------------------------------------------------
 begin
+  DebugThis:=false;
  try
     while not Terminated do
     begin
-    // writeln('settings');
-      EnterCriticalsection(frmRbnMonitor.csRbnMonitor); //this stops operation while new filter values are loaded
-      try
-        if WantToLoad then
-        begin
+
+     if WantToLoad then
+      begin
+        if DebugThis then writeln('settings');
+        EnterCriticalsection(frmRbnMonitor.csRbnMonitor); //this stops operation while new filter values are loaded
+        try
           MayLoad:=true;
           repeat
             sleep(1);
           until not WantToLoad;
           MayLoad:=false;
-        end
-      finally
-       LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
+        finally
+         LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
+        end;
       end;
-      //writeln('spot');
+
+
       EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
       try
         if frmRbnMonitor.slRbnSpots.Count>0 then
         begin
+          //if DebugThis then writeln('spot');
           spot := frmRbnMonitor.slRbnSpots.Strings[0];
           frmRbnMonitor.slRbnSpots.Delete(0)
         end
@@ -980,14 +990,16 @@ begin
       end;
 
       if (spot='') then
-      begin
-        //writeln('spot empty');
-        sleep(fil_SpotDelay);
-        Continue
-      end;
-     // writeln('parse');
+                      begin
+                        //if DebugThis then writeln('spot empty');
+                        sleep(fil_SpotDelay);
+                        Continue
+                      end;
+
+       inc(fil_RcvdCount);
+      if DebugThis then writeln('parse');
       ParseSpot(spot, spotter, dxstn, freq, mode, stren);
-     //  writeln('lotw eqsl');
+      if DebugThis then writeln('lotw eqsl');
       if dmData.UsesLotw(dxstn) then
         LoTW := 'L'
       else
@@ -997,7 +1009,7 @@ begin
       else
         eQSL := '';
 
-     // writeln('allow filter');
+      if DebugThis then  writeln('allow filter');
       if AllowedSpot(spotter,dxstn,freq,mode,LoTW,eQSL,dxinfo) then
       begin
         inc(fil_PassCount);
@@ -1008,12 +1020,12 @@ begin
         fRbnSpot.qsl     := LoTW+eQSL;
         fRbnSpot.dxinfo  := dxinfo;
         fRbnSpot.signal  := stren;
-      // writeln('to bandmap');
+
+
         if fil_ToBandMap and frmBandMap.Showing and (dxinfo<>'') then
           begin
+            if DebugThis then writeln('to bandmap');
             dFreq:=0.0; MFreq:='0.0';
-            //dmDXCluster.GetRealCoordinate(lat,long,cLat,cLng);
-            dmUtils.GetCoordinate(dmUtils.GetPfx(dxstn),cLat,cLon);
             if TryStrToFloat(freq,dFreq) then
                Mfreq:=FloatToStr( dFreq/1000);
             fil_ThBckColor := clWindow;
@@ -1031,10 +1043,16 @@ begin
                 fil_ThBckColor := fil_gcfgBckColor;
               end;
               inc(fil_ToBandMapCount);
+              cLat:=0;
+              cLon:=0;
+              EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
+              dmUtils.GetCoordinate(dmUtils.GetPfx(dxstn),cLat,cLon);   //do we really need coordinates here? Well, if xplanet in use...
               frmBandMap.AddToBandMap(dFreq,dxstn,mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
                                       sColor,fil_ThBckColor, False,(LoTW='L'),(eQSL='E') );
+              LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
+              if DebugThis then writeln(cLat,' ',cLon);
           end;
-        //writeln('sync');
+        if DebugThis then writeln('sync');
         Synchronize(@ShowSpot);
         Sleep(fil_SpotDelay);
       end;

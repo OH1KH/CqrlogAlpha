@@ -1256,13 +1256,18 @@ procedure TdmUtils.GetCoordinate(pfx: string; var latitude, longitude: currency)
 var
   s, d: string;
 begin
-  //dmDXCC.trDXCCRef.StartTransaction;
+  s:='';
+  d:='';
   dmDXCC.qDXCCRef.Close;
-  dmDXCC.qDXCCRef.SQL.Text := 'SELECT * FROM cqrlog_common.dxcc_ref WHERE pref=' +
-    QuotedStr(pfx);
+  if dmDXCC.trDXCCRef.Active then dmDXCC.trDXCCRef.Rollback;
+  dmDXCC.qDXCCRef.SQL.Text := 'SELECT * FROM cqrlog_common.dxcc_ref WHERE pref=' + QuotedStr(pfx);
   dmDXCC.qDXCCRef.Open;
-  s := dmDXCC.qDXCCRef.Fields[4].AsString;
-  d := dmDXCC.qDXCCRef.Fields[5].AsString;
+  if (dmDXCC.qDXCCRef.Fields.FindField('lat')<> nil) then
+       s := dmDXCC.qDXCCRef.FieldByName('lat').AsString;
+  if (dmDXCC.qDXCCRef.Fields.FindField('longit')<> nil) then
+       d := dmDXCC.qDXCCRef.FieldByName('longit').AsString;
+
+  dmDXCC.qDXCCRef.Close;
 
   if ((Length(s) = 0) or (Length(d) = 0)) then
   begin
@@ -1331,8 +1336,8 @@ begin
   Result := '';
   tmp := '';
   dmDXCC.qDXCCRef.Close;
-  dmDXCC.qDXCCRef.SQL.Text := 'SELECT utc FROM cqrlog_common.dxcc_ref WHERE pref = ' +
-    QuotedStr(pfx);
+  if dmDXCC.trDXCCRef.Active then dmDXCC.trDXCCRef.Rollback;
+  dmDXCC.qDXCCRef.SQL.Text := 'SELECT utc FROM cqrlog_common.dxcc_ref WHERE pref = ' + QuotedStr(pfx);
   dmDXCC.qDXCCRef.Open;
   if dmDXCC.qDXCCRef.RecordCount > 0 then
   begin
@@ -1343,6 +1348,7 @@ begin
     dmUtils.DateInRightFormat(date, tmp, sDate);
     Result := sDate + '  ' + TimeToStr(Date) + '     ';
   end;
+  dmDXCC.qDXCCRef.Close;
 end;
 
 procedure TdmUtils.ModifyWAZITU(var waz, itu: string);

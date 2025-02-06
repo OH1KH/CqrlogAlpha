@@ -594,6 +594,7 @@ begin
   SpotCount.pass:=0;
   SpotCount.spot:=0;
   RbnMonThread.PassCount:=0;
+  RbnMonThread.RcvdCount:=0;
   SpotCount.ToBandMapCount:=0;
   tmrSpotRate.Enabled:=True
 end;

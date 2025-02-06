@@ -523,13 +523,13 @@ object dmData: TdmData
     Transaction = trCallBook
     Params = <>
     Macros = <>
-    Left = 592
+    Left = 784
     Top = 192
   end
   object trCallBook: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 592
+    Left = 784
     Top = 264
   end
   object trLongNote: TSQLTransaction
@@ -568,14 +568,14 @@ object dmData: TdmData
     Params = <>
     Macros = <>
     ParseSQL = False
-    Left = 408
-    Top = 192
+    Left = 968
+    Top = 32
   end
   object trIOTAList: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 408
-    Top = 264
+    Left = 968
+    Top = 96
   end
   object trBands: TSQLTransaction
     Active = False
@@ -626,7 +626,7 @@ object dmData: TdmData
   object trComment: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 488
+    Left = 1160
     Top = 96
   end
   object qComment: TSQLQuery
@@ -635,13 +635,13 @@ object dmData: TdmData
     Params = <>
     Macros = <>
     ParseSQL = False
-    Left = 488
+    Left = 1160
     Top = 32
   end
   object trException: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 872
+    Left = 1064
     Top = 264
   end
   object qException: TSQLQuery
@@ -650,7 +650,7 @@ object dmData: TdmData
     Params = <>
     Macros = <>
     ParseSQL = False
-    Left = 872
+    Left = 1064
     Top = 192
   end
   object trQSOBefore: TSQLTransaction
@@ -952,38 +952,38 @@ object dmData: TdmData
     Transaction = trBandMapFil
     Params = <>
     Macros = <>
-    Left = 1064
-    Top = 192
+    Left = 48
+    Top = 704
   end
   object trBandMapFil: TSQLTransaction
     Active = False
-    Left = 1064
-    Top = 264
+    Left = 48
+    Top = 776
   end
   object qRbnMon: TSQLQuery
     FieldDefs = <>
     Transaction = trRbnMon
     Params = <>
     Macros = <>
-    Left = 488
-    Top = 192
+    Left = 304
+    Top = 704
   end
   object trRbnMon: TSQLTransaction
     Active = False
-    Left = 488
-    Top = 264
+    Left = 304
+    Top = 776
   end
   object qFreqMem: TSQLQuery
     FieldDefs = <>
     Transaction = trFreqMem
     Params = <>
     Macros = <>
-    Left = 784
+    Left = 968
     Top = 192
   end
   object trFreqMem: TSQLTransaction
     Active = False
-    Left = 784
+    Left = 968
     Top = 264
   end
   object W: TSQLQuery
@@ -992,14 +992,14 @@ object dmData: TdmData
     Transaction = trW
     Params = <>
     Macros = <>
-    Left = 312
-    Top = 32
+    Left = 544
+    Top = 704
   end
   object trW: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 312
-    Top = 96
+    Left = 544
+    Top = 776
   end
   object W1: TSQLQuery
     FieldDefs = <>
@@ -1007,14 +1007,14 @@ object dmData: TdmData
     Transaction = trW1
     Params = <>
     Macros = <>
-    Left = 408
-    Top = 32
+    Left = 608
+    Top = 704
   end
   object trW1: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 408
-    Top = 96
+    Left = 608
+    Top = 776
   end
   object Q2: TSQLQuery
     FieldDefs = <>
@@ -1039,14 +1039,14 @@ object dmData: TdmData
     Params = <>
     Macros = <>
     ParseSQL = False
-    Left = 968
-    Top = 192
+    Left = 752
+    Top = 704
   end
   object trCQ: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 968
-    Top = 264
+    Left = 752
+    Top = 776
   end
   object dsrFreqs: TDataSource
     DataSet = qFreqs
@@ -1074,12 +1074,12 @@ object dmData: TdmData
     Transaction = trFreqMemGrid
     Params = <>
     Macros = <>
-    Left = 688
+    Left = 872
     Top = 192
   end
   object trFreqMemGrid: TSQLTransaction
     Active = False
-    Left = 688
+    Left = 872
     Top = 264
   end
   object Qstate: TSQLQuery
@@ -1089,14 +1089,14 @@ object dmData: TdmData
     Params = <>
     Macros = <>
     ParseSQL = False
-    Left = 968
-    Top = 32
+    Left = 680
+    Top = 704
   end
   object trQstate: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 968
-    Top = 96
+    Left = 680
+    Top = 776
   end
   object QStatNewQSO: TSQLQuery
     FieldDefs = <>
@@ -1137,14 +1137,14 @@ object dmData: TdmData
     Params = <>
     Macros = <>
     ParseSQL = False
-    Left = 1160
-    Top = 32
+    Left = 144
+    Top = 704
   end
   object trQCallInLogB: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 1160
-    Top = 96
+    Left = 144
+    Top = 776
   end
   object QCallInLogR: TSQLQuery
     FieldDefs = <>
@@ -1153,13 +1153,13 @@ object dmData: TdmData
     Params = <>
     Macros = <>
     ParseSQL = False
-    Left = 312
-    Top = 192
+    Left = 392
+    Top = 704
   end
   object trQCallInLogR: TSQLTransaction
     Active = False
     Action = caNone
-    Left = 312
-    Top = 264
+    Left = 392
+    Top = 776
   end
 end

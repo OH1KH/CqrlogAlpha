@@ -61,6 +61,7 @@ type
     Label9: TLabel;
     lblModeFrom: TLabel;
     lblNotCountry: TLabel;
+    rbNone: TRadioButton;
     rbAllDx: TRadioButton;
     rbOnlyCall: TRadioButton;
     rbOnlyCallReg: TRadioButton;
@@ -99,7 +100,8 @@ begin
 
   edtSrcCont.Text      := cqrini.ReadString('RBNFilter','SrcCont',C_RBN_CONT);
   edtSrcCall.Text      := cqrini.ReadString('RBNFilter','SrcCall','');
-  rbIgnWkdHour.Checked := cqrini.ReadBool('RBNFilter','IgnHour',True);
+  rbNOne.Checked       := cqrini.ReadBool('RBNFilter','IgnNone',True);
+  rbIgnWkdHour.Checked := cqrini.ReadBool('RBNFilter','IgnHour',False);
   edtLastHours.Text    := IntToStr(cqrini.ReadInteger('RBNFilter','IgnHourValue',48));
   rbIgnWkdDate.Checked := cqrini.ReadBool('RBNFilter','IgnDate',False);
   edtDate.Text         := cqrini.ReadString('RBNFilter','IgnDateValue','');
@@ -182,6 +184,7 @@ begin
   cqrini.WriteString('RBNFilter','SrcCont',RmSp(edtSrcCont.Text));
   cqrini.WriteString('RBNFilter','SrcCall',RmSp(edtSrcCall.Text));
 
+  cqrini.WriteBool('RBNFilter','IgnNone',rbNone.Checked);
   cqrini.WriteBool('RBNFilter','IgnHour',rbIgnWkdHour.Checked);
   cqrini.WriteInteger('RBNFilter','IgnHourValue',StrToint(edtLastHours.Text));
   cqrini.WriteBool('RBNFilter','IgnDate',rbIgnWkdDate.Checked);

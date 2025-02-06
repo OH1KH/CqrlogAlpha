@@ -208,6 +208,8 @@ type
     RbnMonCon    : TSQLConnection;
     LogUploadCon : TSQLConnection;
     dbDXC        : TSQLConnection;
+    WGMWCon      : TSQLConnection;
+
     MySqlLocalRunning : boolean ;
     eQSLUsers : Array of ShortString;
     CallArray : Array of String[20];
@@ -547,16 +549,13 @@ var
 begin
   Result := True;
 
-  if MainCon.Connected then
-    MainCon.Connected := False;
-  if dbDXC.Connected then
-    dbDXC.Connected := False;
-  if LogUploadCon.Connected then
-    LogUploadCon.Connected := False;
-  if RbnMonCon.Connected then
-    RbnMonCon.Connected := False;
+  if MainCon.Connected then  MainCon.Connected := False;
+  if dbDXC.Connected then  dbDXC.Connected := False;
+  if LogUploadCon.Connected then LogUploadCon.Connected := False;
+  if RbnMonCon.Connected then  RbnMonCon.Connected := False;
+  if WGMWCon.Connected then  WGMWCon.Connected := False;
 
-  MainCon.CharSet:='UTF8';
+  MainCon.CharSet      :='UTF8';
   MainCon.HostName     := host;
   MainCon.Params.Text  := 'Port='+port;
   MainCon.UserName     := user;
@@ -566,7 +565,7 @@ begin
   //MainCon.LogEvents:=LogAllEvents;
   // MainCon.OnLog:=@GetLogEvent;
 
-  BandMapCon.CharSet:='UTF8';
+  BandMapCon.CharSet      :='UTF8';
   BandMapCon.HostName     := host;
   BandMapCon.Params.Text  := 'Port='+port;
   BandMapCon.UserName     := user;
@@ -576,7 +575,7 @@ begin
   //BandMapCon.LogEvents:=LogAllEvents;
   // BandMapCon.OnLog:=@GetLogEvent;
 
-  RbnMonCon.CharSet:='UTF8';
+  RbnMonCon.CharSet      :='UTF8';
   RbnMonCon.HostName     := host;
   RbnMonCon.Params.Text  := 'Port='+port;
   RbnMonCon.UserName     := user;
@@ -586,7 +585,7 @@ begin
   // RbnMonCon.LogEvents:=LogAllEvents;
   // RbnMonCon.OnLog:=@GetLogEvent;
 
-  dbDXC.CharSet:='UTF8';
+  dbDXC.CharSet      :='UTF8';
   dbDXC.HostName     := host;
   dbDXC.Params.Text  := 'Port='+port;
   dbDXC.UserName     := user;
@@ -596,7 +595,7 @@ begin
   // dbDXC.LogEvents:=LogAllEvents;
   // dbDXC.OnLog:=@GetLogEvent;
 
-  LogUploadCon.CharSet:='UTF8';
+  LogUploadCon.CharSet      :='UTF8';
   LogUploadCon.HostName     := host;
   LogUploadCon.Params.Text  := 'Port='+port;
   LogUploadCon.UserName     := user;
@@ -606,12 +605,24 @@ begin
   //LogUploadCon.LogEvents:=LogAllEvents;
   //LogUploadCon.OnLog:=@GetLogEvent;
 
+  WGMWCon.CharSet      :='UTF8';
+  WGMWCon.HostName     := host;
+  WGMWCon.Params.Text  := 'Port='+port;
+  WGMWCon.UserName     := user;
+  WGMWCon.Password     := pass;
+  WGMWCon.DatabaseName := 'information_schema';
+
+  //WGMWCon.LogEvents:=LogAllEvents;
+  //WGMWCon.OnLog:=@GetLogEvent;
+
+
   try
     MainCon.Connected      := True;
     dbDXC.Connected        := True;
     LogUploadCon.Connected := True;
     BandMapCon.Connected   := True;
     RbnMonCon.Connected    := True;
+    WGMWCon.Connected      := True;
 
     sql := 'SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'+QuotedStr('ONLY_FULL_GROUP_BY')+','+QuotedStr('')+'));';
 
@@ -619,8 +630,8 @@ begin
     dbDXC.ExecuteDirect(sql);
     LogUploadCon.ExecuteDirect(sql);
     BandMapCon.ExecuteDirect(sql);
-    RbnMonCon.ExecuteDirect(sql)
-
+    RbnMonCon.ExecuteDirect(sql);
+    WGMWCon.ExecuteDirect(sql)
 
   except
     on E : Exception do
@@ -745,6 +756,15 @@ begin
   trRbnMon.StartTransaction;
   qRbnMon.ExecSQL;
   trRbnMon.Commit;
+
+  if trW.Active then trW.Rollback;
+  W.Close;
+  W.SQL.Text := 'use ' + fDBName;
+  if (fDebugLevel>=1) then Writeln(W.SQL.Text);
+  trW.StartTransaction;
+  W.ExecSQL;
+  trW.Commit;
+
 
   Q.SQL.Text := 'SELECT * FROM cqrlog_config';
   trQ.StartTransaction;
@@ -1190,7 +1210,7 @@ begin
      end;
   end;
 
-  //special connection for band map thread
+  //special connections for thread
   BandMapCon.Transaction    := trBandMapFil;
   qBandMapFil.Transaction   := trBandMapFil;
   qBandMapFil.DataBase      := BandMapCon;
@@ -1205,6 +1225,16 @@ begin
   QCallInLogR.DataBase     := RbnMonCon;
   trQCallInLogR.DataBase   := RbnMonCon;
 
+  WGMWCon.Transaction      := trW;
+  W.Transaction            := trW;
+  W.DataBase               := WGMWCon;
+  trW.DataBase             := WGMWCon;
+  W1.DataBase              := WGMWCon;
+  trW1.DataBase            := WGMWCon;
+  Qstate.DataBase          := WGMWCon;
+  trQstate.DataBase        := WGMWCon;
+  CQ.DataBase              := WGMWCon;
+  trCQ.DataBase            := WGMWCon;
 
   FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
 
@@ -1256,6 +1286,7 @@ begin
   DeleteFile(dmData.HomeDir + 'xplanet'+PathDelim+'marker');
   LogUploadCon.Connected:=False;
   RbnMonCon.Connected:=False;
+  WGMWCon.Connected:=False;
   BandMapCon.Connected := False;
   MainCon.Connected := False;
   KillMySQL(False)
@@ -1337,6 +1368,7 @@ begin
   mysql_ping(RbnMonCon.Handle);
   mysql_ping(LogUploadCon.Handle);
   mysql_ping(dbDXC.Handle);
+  mysql_ping(WGMWCon.Handle);
 end;
 
 
@@ -4303,6 +4335,7 @@ begin
   RbnMonCon    := getNewMySQLConnectionObject();
   LogUploadCon := getNewMySQLConnectionObject();
   dbDXC        := getNewMySQLConnectionObject();
+  WGMWCon      := getNewMySQLConnectionObject();
 end;
 
 

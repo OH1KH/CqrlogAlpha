@@ -18,6 +18,7 @@ type
     spot     : integer;
     dupe     : integer;
     pass     : integer;
+    ToBandMapCount : integer;
     end;
 
 type
@@ -84,10 +85,20 @@ type
     fil_ToBandMapCount        : integer;
     fil_RcvdCount             : integer;
 
-    property OnShowSpot : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;
-    property PassCount  : integer read fil_PassCount write  fil_PassCount;
-    property RcvdCount  : integer read fil_RcvdCount write  fil_RcvdCount;
+    property OnShowSpot      : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;
+    property PassCount       : integer read fil_PassCount write  fil_PassCount;
+    property RcvdCount       : integer read fil_RcvdCount write  fil_RcvdCount;
     property ToBandMapCount  : integer read fil_ToBandMapCount write  fil_ToBandMapCount;
+
+    property ToBandMap           : boolean read fil_ToBandMap;
+    property gcfgUseBackColor    : boolean read fil_gcfgUseBackColor;
+    property gcfgeUseBackColor   : boolean read fil_gcfgeUseBackColor;
+    property gcfgUseDXCColors    : boolean read fil_gcfgUseDXCColors;
+    property gcfgNewCountryColor : integer read fil_gcfgNewCountryColor;
+    property gcfgNewBandColor    : integer read fil_gcfgNewBandColor;
+    property gcfgNewModeColor    : integer read fil_gcfgNewModeColor;
+    property gcfgBckColor        : integer read fil_gcfgBckColor;
+    property gcfgeBckColor       : integer read fil_gcfgeBckColor;
 
 end;
 
@@ -181,7 +192,7 @@ var
 implementation
 {$R *.lfm}
 
-uses dUtils, uMyIni, dData, fRbnServer, dDXCluster, fRbnFilter, fNewQSO, fGrayline,fBandMap, fTRXControl;
+uses dUtils, uMyIni, dData, fRbnServer, dDXCluster, fRbnFilter, fNewQSO, fGrayline,fBandMap, fTRXControl, fMain;
 
 { TfrmRbnMonitor }
 
@@ -208,7 +219,7 @@ begin
   SpotCount.spot:=0;
   RbnMonThread.RcvdCount:=0;
   RbnMonThread.PassCount:=0;
-  RbnMonThread.ToBandMapCount:=0;
+  SpotCount.ToBandMapCount:=0;
   tmrSpotRate.Enabled:=True;
 end;
 
@@ -346,7 +357,7 @@ begin
   RbnMonThread.MayLoad:=false;
   RbnMonThread.RcvdCount:=0;
   RbnMonThread.PassCount:=0;
-  RbnMonThread.ToBandMapCount:=0;
+  SpotCount.ToBandMapCount:=0;
   RbnMonThread.Start;
 
   LoadConfigToThread;
@@ -574,7 +585,7 @@ begin
                  ' Sent to RBNmonitorTh: '+IntToStr(SpotCount.pass)+LineEnding+
                  ' Received by RBNmonitorTh: '+IntToStr(RbnMonThread.RcvdCount)+LineEnding+
                  ' Passed by RBN filter settings: '+IntToStr(RbnMonThread.PassCount)+LineEnding+
-                 ' From RBNmonitor to BandMap: '+IntToStr(RbnMonThread.ToBandMapCount)+LineEnding+
+                 ' From RBNmonitor to BandMap: '+IntToStr(SpotCount.ToBandMapCount)+LineEnding+
                  '---Total spots since connected: '+IntToStr(SpotCount.total)+LineEnding+
                  '.'+LineEnding+
                  'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
@@ -583,7 +594,7 @@ begin
   SpotCount.pass:=0;
   SpotCount.spot:=0;
   RbnMonThread.PassCount:=0;
-  RbnMonThread.ToBandMapCount:=0;
+  SpotCount.ToBandMapCount:=0;
   tmrSpotRate.Enabled:=True
 end;
 
@@ -635,7 +646,7 @@ begin
     SrcCalls.AddDelimitedtext(cqrini.ReadString('RBNFilter','SrcCall',''));
     RbnMonThread.fil_SrcCalls := SrcCalls;
 
-    RbnMonThread.fil_IgnWkdHour    := cqrini.ReadBool('RBNFilter','IgnHour',True);
+    RbnMonThread.fil_IgnWkdHour    := cqrini.ReadBool('RBNFilter','IgnHour',False);
     RbnMonThread.fil_IgnHourValue  := cqrini.ReadInteger('RBNFilter','IgnHourValue',48);
     RbnMonThread.fil_IgnDate       := cqrini.ReadBool('RBNFilter','IgnDate',False);
     RbnMonThread.fil_IgnDateValue  := cqrini.ReadString('RBNFilter','IgnDateValue','');
@@ -686,6 +697,19 @@ var
      s : string;
    c,d : currency;
     ex : boolean;
+
+
+  Mfreq   : String;
+  LoTW    : Boolean;
+  eQSL    : Boolean;
+  cLat,
+  cLon    : Currency;
+  sColor  : longint;
+  bkColor : longint;
+  dFreq   : Double;
+
+
+
   begin
 
     i := sgRbn.RowCount;
@@ -697,10 +721,44 @@ var
     sgRbn.Cells[3,i] := RbnSpot.mode;
     sgRbn.Cells[4,i] := RbnSpot.signal;
     sgRbn.Cells[5,i] := RbnSpot.qsl;
-    sgRbn.Cells[6,i] := RbnSpot.dxinfo
+    sgRbn.Cells[6,i] := RbnSpot.dxinfo;
+
+    if assigned(RbnMonThread) then  //may happen at close that thread already destroyed when coming to this
+     begin
+      if RbnMonThread.ToBandMap and frmBandMap.Showing and (RbnSpot.dxinfo<>'') then
+        begin
+          //writeln('to bandmap');
+          dFreq:=0.0; MFreq:='0.0';
+          if TryStrToFloat(RbnSpot.freq,dFreq) then
+             Mfreq:=FloatToStr( dFreq/1000);
+          bkColor := clWindow;
+          sColor     := clDefault;
+          if RbnMonThread.gcfgUseDXCColors then
+           Begin
+             case RbnSpot.dxinfo of
+              'N': sColor:=RbnMonThread.gcfgNewCountryColor;
+              'B': sColor:=RbnMonThread.gcfgNewBandColor;
+              'M': sColor:=RbnMonThread.gcfgNewModeColor;
+             end;
+            eQSL :=(pos('E',RbnSpot.qsl)>0);
+            LoTW :=(pos('L',RbnSpot.qsl)>0);
+
+            if RbnMonThread.gcfgeUseBackColor and eQSL then
+              bkColor := RbnMonThread.gcfgeBckColor;
+            if RbnMonThread.gcfgUseBackColor and LoTW then
+              bkColor := RbnMonThread.gcfgBckColor;
+            end;
+            inc(SpotCount.ToBandMapCount);
+            cLat:=0;
+            cLon:=0;
+            dmUtils.GetCoordinate(dmUtils.GetPfx(RbnSpot.dxstn),cLat,cLon);
+            frmBandMap.AddToBandMap(dFreq,RbnSpot.dxstn,RbnSpot.mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
+                                    sColor,bkColor, False, LoTW,eQSL );
+            //writeln(cLat,' ',cLon);
+        end;
+     end;
   end;
   //-------------------------------------------------------------------
-
 
 begin
  MayAddSpot:=false;
@@ -797,8 +855,15 @@ begin
     dmUtils.DateHoursAgo(fil_IgnHourValue,LastDate,LastTime);
   end
   else begin
+   if  fil_IgnDate then
+    begin
     LastDate := fil_IgnDateValue;
-    LastTime := fil_IgnTimeValue
+    LastTime := fil_IgnTimeValue;
+    end  else
+     Begin  //IgnNone
+       LastDate := Copy(frmMain.sbMain.Panels[4].Text,1,10);
+       LastTime := Copy(frmMain.sbMain.Panels[4].Text,13,5);
+     end;
   end;
 
   Band := dmDXCluster.GetBandFromFreq(freq,True);
@@ -901,12 +966,12 @@ begin
   Result := True
 end;
 
+
 procedure TRBNThread.Execute;
 var
   spot    : String;
   spotter : String;
   freq,
-  Mfreq   : String;
   stren   : String;
   mode    : String;
   dxstn   : String;
@@ -916,11 +981,7 @@ var
   RbnSpot : TRbnSpot;
   index   : Integer;
   band    : String;
-  cLat,
-  cLon    : Currency;
-  sColor  : integer;
-  dFreq   : Double;
-  DEbugThis: boolean;
+  DebugThis: boolean;
 //-----------------------------------------------------------------------
   procedure ParseSpot(spot : String; var spotter, dxstn, freq, mode, stren : String);
    var
@@ -1021,37 +1082,6 @@ begin
         fRbnSpot.dxinfo  := dxinfo;
         fRbnSpot.signal  := stren;
 
-
-        if fil_ToBandMap and frmBandMap.Showing and (dxinfo<>'') then
-          begin
-            if DebugThis then writeln('to bandmap');
-            dFreq:=0.0; MFreq:='0.0';
-            if TryStrToFloat(freq,dFreq) then
-               Mfreq:=FloatToStr( dFreq/1000);
-            fil_ThBckColor := clWindow;
-            sColor     := clDefault;
-            if fil_gcfgUseDXCColors then
-             Begin
-               case dxinfo of
-                'N': sColor:=fil_gcfgNewCountryColor;
-                'B': sColor:=fil_gcfgNewBandColor;
-                'M': sColor:=fil_gcfgNewModeColor;
-               end;
-              if fil_gcfgeUseBackColor and (eQSL='E') then
-                fil_ThBckColor := fil_gcfgeBckColor;
-              if fil_gcfgUseBackColor and (LoTW='L') then
-                fil_ThBckColor := fil_gcfgBckColor;
-              end;
-              inc(fil_ToBandMapCount);
-              cLat:=0;
-              cLon:=0;
-              EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
-              dmUtils.GetCoordinate(dmUtils.GetPfx(dxstn),cLat,cLon);   //do we really need coordinates here? Well, if xplanet in use...
-              frmBandMap.AddToBandMap(dFreq,dxstn,mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
-                                      sColor,fil_ThBckColor, False,(LoTW='L'),(eQSL='E') );
-              LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
-              if DebugThis then writeln(cLat,' ',cLon);
-          end;
         if DebugThis then writeln('sync');
         Synchronize(@ShowSpot);
         Sleep(fil_SpotDelay);

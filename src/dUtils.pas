@@ -5913,10 +5913,13 @@ Begin
 end;
 procedure  TdmUtils.DateHoursAgo(hours:integer;var Adate,Atime:string);
 //should work also with negative hours, not tested
+var
+  Date:  TDateTime;
 Begin
+  Date  := dmUtils.GetDateTime(0);
   if hours=0 then exit; //no need to calculate
-  ADate := DateTimeToStr(DateOf(UnixTODateTime(DateTimeToUnix(now)-(hours * 3600))));
-  ATime := copy(TimeToStr(TimeOf(UnixTODateTime(DateTimeToUnix(now)-(hours * 3600)))),1,5);
+  ADate := DateTimeToStr(DateOf(UnixTODateTime(DateTimeToUnix(Date)-(hours * 3600))));
+  ATime := copy(TimeToStr(TimeOf(UnixTODateTime(DateTimeToUnix(Date)-(hours * 3600)))),1,5);
 end;
 procedure  TdmUtils.ShowTheMessage(Title:String; Message:String; Time:integer);   //time in milliseconds
 var

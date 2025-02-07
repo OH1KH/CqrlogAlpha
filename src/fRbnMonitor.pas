@@ -360,6 +360,7 @@ begin
   RbnMonThread.RcvdCount:=0;
   RbnMonThread.PassCount:=0;
   SpotCount.ToBandMapCount:=0;
+  slDupeCheck.Clear;
   RbnMonThread.Start;
 
   LoadConfigToThread;

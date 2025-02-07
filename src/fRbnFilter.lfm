@@ -116,9 +116,7 @@ object frmRbnFilter: TfrmRbnFilter
       Top = 146
       Width = 166
       Caption = 'Ignore worked in last '
-      Checked = True
       TabOrder = 1
-      TabStop = True
     end
     object edtLastHours: TEdit
       AnchorSideLeft.Control = edtDate
@@ -694,7 +692,69 @@ object frmRbnFilter: TfrmRbnFilter
       Width = 103
       BorderSpacing.Top = 3
       Caption = 'Ignore none'
+      Checked = True
       TabOrder = 15
+      TabStop = True
+    end
+    object GroupBox1: TGroupBox
+      AnchorSideLeft.Control = lblDateTimeFormat
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = grpSource
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = btnCancel
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = edtTime
+      AnchorSideBottom.Side = asrBottom
+      Left = 531
+      Height = 100
+      Hint = 'Frequency resolution when comparing spots to find duplicates '
+      Top = 114
+      Width = 133
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      BorderSpacing.Left = 12
+      BorderSpacing.Top = 6
+      Caption = 'DupeChkRes'
+      ClientHeight = 82
+      ClientWidth = 131
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 16
+      object rb10kHz: TRadioButton
+        AnchorSideLeft.Control = rb1kHz
+        AnchorSideTop.Control = rb1kHz
+        AnchorSideTop.Side = asrBottom
+        Left = 36
+        Height = 23
+        Top = 53
+        Width = 67
+        Caption = '10kHz'
+        TabOrder = 0
+      end
+      object rb1kHz: TRadioButton
+        AnchorSideLeft.Control = GroupBox1
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = GroupBox1
+        AnchorSideTop.Side = asrCenter
+        Left = 36
+        Height = 23
+        Top = 30
+        Width = 59
+        Caption = '1kHz'
+        Checked = True
+        TabOrder = 2
+        TabStop = True
+      end
+      object rb100Hz: TRadioButton
+        AnchorSideLeft.Control = rb1kHz
+        AnchorSideBottom.Control = rb1kHz
+        Left = 36
+        Height = 23
+        Top = 7
+        Width = 67
+        Anchors = [akLeft, akBottom]
+        Caption = '100Hz'
+        TabOrder = 1
+      end
     end
   end
 end

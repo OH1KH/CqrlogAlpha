@@ -10,7 +10,8 @@ uses
   RegExpr;
 
 const
-  C_MAX_ROWS = 1000; //max lines in the list of RBN spots
+  C_MAX_ROWS = 1000;     //max lines in the list of RBN spots
+  C_MAX_DUPE_LIST = 200; //max spots for dupe check. Should be enough to filter same spot from different spotters
 
 type
     TCounter = record
@@ -169,6 +170,8 @@ type
     aRbnArchive  : Array of TRbnSpot;
     SrcCalls : TStringlist;
     SpotCount: TCounter;
+    slDupeCheck : TStringlist;
+    DupeResolution : integer;
 
     procedure lConnect(aSocket: TLSocket);
     procedure lDisconnect(aSocket: TLSocket);
@@ -231,6 +234,7 @@ begin
 end;
 
 procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
+//DX de DL9GTB-#:  14027.1  HB9CCL         CW    10 dB  20 WPM  CQ      0713Z
   var
     i : Integer;
     y : Integer;
@@ -266,10 +270,10 @@ const
   CR = #13;
   LF = #10;
 var
-  sStart, sStop: Integer;
-  tmp : String;
-  buffer : String;
-  UserName : String;
+  sStart, sStop : Integer;
+  tmp,dup       : String;
+  buffer        : String;
+  UserName      : String;
   s,
   spotter,
   dxstn,
@@ -298,31 +302,29 @@ begin
       inc(SpotCount.spot);
       ParseSpots(tmp, spotter, dxstn, freq, mode, stren);
       try
-      for f:=0 to sgRbn.RowCount-1 do
-        Begin
-          if (sgRbn.Cells[2,f] = dxstn) and (sgRbn.Cells[3,f] = mode) then
-            Begin
-             if pos('.', freq)>0 then
-                 s:=copy(freq,1,pos('.',freq)-1)
+       if pos('.', freq)>0 then
+                 s:=copy(freq,1,pos('.',freq)-DupeResolution) //cut check frequency resolution
                else
-                 s:=freq;
-             if (pos(s,sgRbn.Cells[1,f])> 0) then
-               Begin
-                ex:=true;
-                inc(SpotCount.dupe);
-                if dmData.DebugLevel>=1 then
-                       Writeln('RBN grid exist: ',dxstn,' ',s,' ',mode,' ',ex,'   ->   Grid[',f,'] ',sgRbn.Cells[2,f],' ',sgRbn.Cells[1,f],' ',sgRbn.Cells[3,f] );
-                Break;
-               end;
-            end;
-        end;
-       finally
-       end;
-       if not ex then
-              Begin
-                    inc(SpotCount.pass);
-                    AddSpotToThread(tmp);
-              end;
+                 s:=copy(freq,1,length(freq)-(DupeResolution-1)); //just in case the dot is missing, shouldnt.
+
+       dup:=dxstn+s+mode;  //combine all to one string. Assume they are trim():ed already
+       ex:=(slDupeCheck.IndexOf(dup)>-1);  //this combined spot exist in dupelist
+
+       if ex then
+         inc(SpotCount.dupe)
+         else
+         Begin
+           slDupeCheck.Add(dup);
+           if   slDupeCheck.Count >= C_MAX_DUPE_LIST then
+                                               slDupeCheck.Delete(0);
+           inc(SpotCount.pass);
+           AddSpotToThread(tmp);
+         end;
+       if dmData.DebugLevel >=1 then
+                            writeln('Dupe:',ex,'  ',slDupeCheck.Count,'  ',dup,'  ',tmp);
+      finally
+      end;
+
     end
     else begin
       UserName := cqrini.ReadString('RBNMonitor','UserName',cqrini.ReadString('Station', 'Call', ''));
@@ -378,14 +380,17 @@ begin
   lTelnet.Port := port;
   if dmData.DebugLevel>=2 then Writeln(server,'   ',port);
   lTelnet.Connect;
-  btnEatFocus.SetFocus
+  btnEatFocus.SetFocus;
+  MayAddSpot:=true;
 end;
 
 procedure TfrmRbnMonitor.acClearExecute(Sender: TObject);
 var l: integer;
 begin
+
   for l:= sgRbn.rowcount - 1 downto 1 do
     sgRbn.DeleteRow(l);
+  MayAddSpot:=true;
 end;
 
 procedure TfrmRbnMonitor.acDisconnectExecute(Sender: TObject);
@@ -446,6 +451,7 @@ end;
 procedure TfrmRbnMonitor.acScrollDownExecute(Sender : TObject);
 begin
   sgRbn.Row := sgRbn.RowCount;
+  MayAddSpot:=true;
   btnEatFocus.SetFocus
 end;
 
@@ -457,6 +463,9 @@ begin
   for i:=0 to sgRbn.ColCount-1 do
     cqrini.WriteInteger('WindowSize','RbnCol'+IntToStr(i),sgRbn.ColWidths[i]);
   acDisconnectExecute(nil);
+  slRbnSpots.Clear;
+  SrcCalls.Clear;
+  slDupeCheck.Clear;
   dmUtils.SaveWindowPos(self);
 end;
 
@@ -469,6 +478,7 @@ begin
   sgRbn.RowCount := 1;
   tmrSpotRate.Enabled:=False;
 
+  slDupeCheck := TStringList.Create;
   slRbnSpots := TStringList.Create;
   SrcCalls:= TStringList.Create;
 
@@ -484,7 +494,8 @@ begin
   FreeAndNil(lTelnet);
   DoneCriticalsection(csRbnMonitor);
   FreeAndNil(SrcCalls);
-  FreeAndNil(slRbnSpots)
+  FreeAndNil(slRbnSpots);
+  FreeandNil(slDupeCheck);
 end;
 
 procedure TfrmRbnMonitor.FormKeyUp(Sender : TObject; var Key : Word;
@@ -682,6 +693,8 @@ begin
     RbnMonThread.fil_gcfgeBckColor       := cqrini.ReadInteger('LoTW','eBckColor',clSkyBlue);
     RbnMonThread.fil_gcfgUseDXCColors    := cqrini.ReadBool('BandMap','UseDXCColors',False);
 
+    DupeResolution:=cqrini.ReadInteger('RBNMonitor','DupeRes',1);
+
     RbnMonThread.WantToLoad:=false;
   end;
 
@@ -728,7 +741,6 @@ var
      begin
       if RbnMonThread.ToBandMap and frmBandMap.Showing and (RbnSpot.dxinfo<>'') then
         begin
-          //writeln('to bandmap');
           dFreq:=0.0; MFreq:='0.0';
           if TryStrToFloat(RbnSpot.freq,dFreq) then
              Mfreq:=FloatToStr( dFreq/1000);
@@ -755,7 +767,6 @@ var
             dmUtils.GetCoordinate(dmUtils.GetPfx(RbnSpot.dxstn),cLat,cLon);
             frmBandMap.AddToBandMap(dFreq,RbnSpot.dxstn,RbnSpot.mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
                                     sColor,bkColor, False, LoTW,eQSL );
-            //writeln(cLat,' ',cLon);
         end;
      end;
   end;
@@ -793,14 +804,25 @@ end;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 procedure TRBNThread.ShowSpot;
+var
+   timeout:integer;
+
+
 begin
   if Assigned(OnShowSpot) then
   begin
-    while not frmRbnMonitor.MayAddSpot do
+   timeout:=10000;
+   while (not frmRbnMonitor.MayAddSpot) do
      begin
       sleep(1);
+      dec(timeout);
+      if timeout<1 then
+                 Begin
+                   if dmData.DebugLevel>=2 then writeln('ShowSpot timeout');
+                   exit;
+                 end;
      end;
-    FOnShowSpot(fRbnSpot)
+   FOnShowSpot(fRbnSpot)
   end;
 end;
 
@@ -1016,7 +1038,7 @@ var
    end;
   //-----------------------------------------------------------------------
 begin
-  DebugThis:=false;
+  DebugThis:=dmData.DebugLevel>=2;
  try
     while not Terminated do
     begin

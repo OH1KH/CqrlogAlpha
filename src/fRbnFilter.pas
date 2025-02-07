@@ -40,6 +40,7 @@ type
     edtLastHours: TEdit;
     edtSrcCont: TEdit;
     edtTime: TEdit;
+    GroupBox1: TGroupBox;
     grpCallsignFrom: TGroupBox;
     grpDXStation: TGroupBox;
     grpCallisgn: TGroupBox;
@@ -61,6 +62,9 @@ type
     Label9: TLabel;
     lblModeFrom: TLabel;
     lblNotCountry: TLabel;
+    rb10kHz: TRadioButton;
+    rb1kHz: TRadioButton;
+    rb100Hz: TRadioButton;
     rbNone: TRadioButton;
     rbAllDx: TRadioButton;
     rbOnlyCall: TRadioButton;
@@ -125,6 +129,13 @@ begin
   chkNewDXConly.Checked := cqrini.ReadBool('RBNFilter','NewDXCOnly',False);
   edtSpotDelay.Text     := cqrini.ReadString('RBNFilter','SpotDelay','150');
   chkToBandMap.Checked  :=cqrini.ReadBool('RBNMonitor','ToBandMap',false);
+
+  case cqrini.ReadInteger('RBNMonitor','DupeRes',1) of
+       0  : rb100Hz.Checked:=true;
+       1  : rb1kHz.Checked:=true;
+       2  : rb10kHz.Checked:=true;
+  end;
+
 end;
 
 procedure TfrmRbnFilter.btnOKClick(Sender: TObject);
@@ -209,6 +220,12 @@ begin
   cqrini.WriteBool('RBNFilter','NewDXCOnly',chkNewDXConly.Checked);
   cqrini.WriteString('RBNFilter','SpotDelay',edtSpotDelay.Text);
   cqrini.WriteBool('RBNMonitor','ToBandMap',chkToBandMap.Checked );
+
+  cqrini.WriteInteger('RBNMonitor','DupeRes',0);
+  if rb1kHz.Checked then
+     cqrini.WriteInteger('RBNMonitor','DupeRes',1);
+  if rb10kHz.Checked then
+     cqrini.WriteInteger('RBNMonitor','DupeRes',2);
 
   cqrini.SaveToDisk;
   ModalResult := mrOK

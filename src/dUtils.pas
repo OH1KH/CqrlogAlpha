@@ -4232,10 +4232,12 @@ begin
 end;
 
 function TdmUtils.GetNewQSOCaption(capt: string): string;
+var
+  logname:string=' ';
 begin
-  Result := capt + ' ... (CQRLOG for Linux)';
-  if dmData.LogName <> '' then
-    Result := Result + ', database: ' + dmData.LogName;
+  Result := capt + ' (log:';
+  if dmData.LogName <> '' then logname:=dmData.LogName;
+    Result := Result + logname+ ') CqrlogAlpha for Linux' ;
 end;
 
 procedure TdmUtils.FillBandCombo(cmb: TComboBox);

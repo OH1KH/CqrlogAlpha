@@ -2366,6 +2366,7 @@ begin
   //Sets AutoSizeColumns to saved value
   acAutoSizeColumnsExecute(nil);
   idlist:='';
+  Self.Caption:=dmUtils.GetNewQSOCaption('');
 end;
 
 procedure TfrmMain.ShowFields;

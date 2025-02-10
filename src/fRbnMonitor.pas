@@ -88,6 +88,8 @@ type
 
    // property OnShowSpot      : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;   //2025-02 OH1KH a test to replace this event with timer seems to keep up
                                                                                         //and running 3x longer
+                                                                                        //TOnShowSpotEvent is mysterious as it stops working randomly after abt
+                                                                                        //100k spots whe spots are still received but they never get added to grid
     property PassCount       : integer read fil_PassCount write  fil_PassCount;
     property RcvdCount       : integer read fil_RcvdCount write  fil_RcvdCount;
     property ToBandMapCount  : integer read fil_ToBandMapCount write  fil_ToBandMapCount;
@@ -355,7 +357,9 @@ var
   server : String;
   user   : String;
 begin
-  RbnMonThread := TRBNThread.Create(True);
+  if lTelnet.Connected then exit;
+  if not Assigned (RbnMonThread) then
+                                 RbnMonThread := TRBNThread.Create(True);
   RbnMonThread.FreeOnTerminate := False;  //there is freeandNil at disconnect
 //  RbnMonThread.OnShowSpot := @SynRbnMonitor;  //2025-02 OH1KH a test
   RbnMonThread.WantToLoad:=false;
@@ -399,11 +403,17 @@ end;
 
 procedure TfrmRbnMonitor.acDisconnectExecute(Sender: TObject);
 begin
-  lTelnet.Disconnect;
-  RbnMonThread.Terminate;
-  freeAndNil(RbnMonThread);
-  tbtnConnect.Action := acConnect;
-  sbRbn.Panels[0].Text := 'Disconnected'
+  if lTelnet.Connected then
+  begin
+    lTelnet.Disconnect;
+    tmrUnfocus.Enabled:=false;
+    tmrSpotRate.Enabled:=false;
+    tmrAddSpot.Enabled:=false;
+    RbnMonThread.Terminate;
+    freeAndNil(RbnMonThread);
+    tbtnConnect.Action := acConnect;
+    sbRbn.Panels[0].Text := 'Disconnected'
+  end;
 end;
 
 procedure TfrmRbnMonitor.acFilterExecute(Sender: TObject);

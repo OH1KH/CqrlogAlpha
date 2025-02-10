@@ -33,8 +33,8 @@ type
     signal  : String[3];
   end;
 
-type
-  TOnShowSpotEvent = procedure(RbnSpot : TRbnSpot) of Object;
+//type
+ // TOnShowSpotEvent = procedure(RbnSpot : TRbnSpot) of Object;
 
 type
   TRbnThread = class(TThread)
@@ -42,7 +42,7 @@ type
     cs  : TRTLCriticalSection;
     reg : TRegExpr;
     fRbnSpot : TRbnSpot;
-    FOnShowSpot : TOnShowSpotEvent;
+   // FOnShowSpot : TOnShowSpotEvent;
     function AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
     procedure ShowSpot;
   protected
@@ -86,11 +86,13 @@ type
     fil_ToBandMapCount        : integer;
     fil_RcvdCount             : integer;
 
-    property OnShowSpot      : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;
+   // property OnShowSpot      : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;   //2025-02 OH1KH a test to replace this event with timer seems to keep up
+                                                                                        //and running 3x longer
     property PassCount       : integer read fil_PassCount write  fil_PassCount;
     property RcvdCount       : integer read fil_RcvdCount write  fil_RcvdCount;
     property ToBandMapCount  : integer read fil_ToBandMapCount write  fil_ToBandMapCount;
 
+    property SRbnSpot            : TRbnSpot read fRbnSpot;
     property ToBandMap           : boolean read fil_ToBandMap;
     property gcfgUseBackColor    : boolean read fil_gcfgUseBackColor;
     property gcfgeUseBackColor   : boolean read fil_gcfgeUseBackColor;
@@ -132,6 +134,7 @@ type
     tbtnHelp: TToolButton;
     tbtnLastLine: TToolButton;
     tbtnServer: TToolButton;
+    tmrAddSpot: TTimer;
     tmrSpotRate: TTimer;
     tmrUnfocus: TTimer;
     ToolBar1: TToolBar;
@@ -162,12 +165,12 @@ type
     procedure sgRbnExit(Sender: TObject);
     procedure sgRbnHeaderSized(Sender: TObject; IsColumn: Boolean;
       Index: Integer);
+    procedure tmrAddSpotTimer(Sender: TObject);
     procedure tmrSpotRateTimer(Sender: TObject);
     procedure tmrUnfocusTimer(Sender: TObject);
   private
     RbnMonThread : TRbnThread;
     lTelnet      : TLTelnetClientComponent;
-    aRbnArchive  : Array of TRbnSpot;
     SrcCalls : TStringlist;
     SpotCount: TCounter;
     slDupeCheck : TStringlist;
@@ -354,7 +357,7 @@ var
 begin
   RbnMonThread := TRBNThread.Create(True);
   RbnMonThread.FreeOnTerminate := False;  //there is freeandNil at disconnect
-  RbnMonThread.OnShowSpot := @SynRbnMonitor; //shows up when RBN traffic is high like IARU HF contest and connect is tried to close or filter adjusted
+//  RbnMonThread.OnShowSpot := @SynRbnMonitor;  //2025-02 OH1KH a test
   RbnMonThread.WantToLoad:=false;
   RbnMonThread.MayLoad:=false;
   RbnMonThread.RcvdCount:=0;
@@ -659,9 +662,10 @@ begin
     SrcCalls.AddDelimitedtext(cqrini.ReadString('RBNFilter','SrcCall',''));
     RbnMonThread.fil_SrcCalls := SrcCalls;
 
-    RbnMonThread.fil_IgnWkdHour    := cqrini.ReadBool('RBNFilter','IgnHour',False);
+    RbnMonThread.fil_IgnWkdHour    := (cqrini.ReadInteger('RBNFilter','Ignore',0) = 1);
+    RbnMonThread.fil_IgnDate       := (cqrini.ReadInteger('RBNFilter','Ignore',0) = 2);
+
     RbnMonThread.fil_IgnHourValue  := cqrini.ReadInteger('RBNFilter','IgnHourValue',48);
-    RbnMonThread.fil_IgnDate       := cqrini.ReadBool('RBNFilter','IgnDate',False);
     RbnMonThread.fil_IgnDateValue  := cqrini.ReadString('RBNFilter','IgnDateValue','');
     RbnMonThread.fil_IgnTimeValue  := cqrini.ReadString('RBNFilter','IgnTimeValue','');
 
@@ -699,6 +703,12 @@ begin
     RbnMonThread.WantToLoad:=false;
   end;
 
+end;
+
+procedure TfrmRbnMonitor.tmrAddSpotTimer(Sender: TObject);
+begin
+  tmrAddSpot.Enabled:=false;
+  SynRbnMonitor(RbnMonThread.SRbnSpot);
 end;
 
 procedure TfrmRbnMonitor.SynRbnMonitor(RbnSpot : TRbnSpot);
@@ -810,7 +820,7 @@ var
 
 
 begin
-  if Assigned(OnShowSpot) then
+  //if Assigned(OnShowSpot) then   //2025-02 OH1KH a test
   begin
    timeout:=10000;
    while (not frmRbnMonitor.MayAddSpot) do
@@ -823,7 +833,9 @@ begin
                    exit;
                  end;
      end;
-   FOnShowSpot(fRbnSpot)
+   frmRbnMonitor.tmrAddSpot.Enabled:=true;  // //2025-02 OH1KH a test. Trying without FOnShowSpot event as it fails every now and then
+   sleep(1);
+   //FOnShowSpot(fRbnSpot)   //2025-02 OH1KH a test
   end;
 end;
 

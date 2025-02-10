@@ -1,12 +1,12 @@
 object frmRbnFilter: TfrmRbnFilter
   Left = 433
-  Height = 710
+  Height = 721
   Top = 48
-  Width = 687
+  Width = 694
   BorderStyle = bsDialog
   Caption = 'RBN filter criteria'
-  ClientHeight = 710
-  ClientWidth = 687
+  ClientHeight = 721
+  ClientWidth = 694
   OnShow = FormShow
   Position = poOwnerFormCenter
   LCLVersion = '3.6.0.0'
@@ -19,7 +19,7 @@ object frmRbnFilter: TfrmRbnFilter
     Left = 3
     Height = 701
     Top = 3
-    Width = 681
+    Width = 688
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Left = 3
     BorderSpacing.Top = 3
@@ -27,7 +27,7 @@ object frmRbnFilter: TfrmRbnFilter
     BorderSpacing.Bottom = 3
     Caption = 'DX station '
     ClientHeight = 683
-    ClientWidth = 679
+    ClientWidth = 686
     TabOrder = 0
     object grpCallisgn: TGroupBox
       AnchorSideLeft.Control = grpSource
@@ -37,13 +37,13 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideRight.Side = asrBottom
       Left = 6
       Height = 137
-      Top = 246
-      Width = 670
+      Top = 251
+      Width = 677
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 3
       Caption = ' Callsign '
       ClientHeight = 119
-      ClientWidth = 668
+      ClientWidth = 675
       TabOrder = 1
       object rbAllDx: TRadioButton
         Left = 16
@@ -112,7 +112,7 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideTop.Side = asrBottom
       Left = 6
       Height = 23
-      Top = 611
+      Top = 616
       Width = 169
       BorderSpacing.Top = 6
       Caption = 'Show only eQSL users'
@@ -124,7 +124,7 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideTop.Side = asrBottom
       Left = 6
       Height = 23
-      Top = 582
+      Top = 587
       Width = 172
       BorderSpacing.Top = 11
       Caption = 'Show only LoTW users'
@@ -136,7 +136,7 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideTop.Side = asrBottom
       Left = 6
       Height = 23
-      Top = 651
+      Top = 656
       Width = 431
       BorderSpacing.Top = 6
       Caption = 'Show only spots that are "New one"/"New band"/"New mode" '
@@ -270,14 +270,14 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideRight.Side = asrBottom
       Left = 6
       Height = 185
-      Top = 386
-      Width = 670
+      Top = 391
+      Width = 677
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Top = 3
       BorderSpacing.Right = 3
       Caption = 'Callsign From'
       ClientHeight = 167
-      ClientWidth = 668
+      ClientWidth = 675
       TabOrder = 2
       object lblContinentFrom: TLabel
         AnchorSideLeft.Control = grpCallsignFrom
@@ -512,8 +512,8 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideRight.Side = asrBottom
       Left = 12
       Height = 5
-      Top = 640
-      Width = 658
+      Top = 645
+      Width = 665
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 6
       BorderSpacing.Top = 6
@@ -523,7 +523,7 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideTop.Control = grpSource
       AnchorSideRight.Control = grpDXStation
       AnchorSideRight.Side = asrBottom
-      Left = 595
+      Left = 602
       Height = 25
       Top = 15
       Width = 75
@@ -538,7 +538,7 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideLeft.Control = btnOK
       AnchorSideTop.Control = btnOK
       AnchorSideTop.Side = asrBottom
-      Left = 595
+      Left = 602
       Height = 25
       Top = 46
       Width = 75
@@ -556,7 +556,7 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideTop.Side = asrCenter
       Left = 294
       Height = 17
-      Top = 585
+      Top = 590
       Width = 159
       BorderSpacing.Left = 6
       Caption = 'ms delay between spots'
@@ -570,7 +570,7 @@ object frmRbnFilter: TfrmRbnFilter
       Left = 238
       Height = 34
       Hint = 'Adjust delay between received spots printing. '#10'Big value may cause delayed show up,'#10'small value hard to read speed (good filtering may be needed ).'#10'Use small values during high band activity.'#10'Values: 5ms .. 600ms'
-      Top = 576
+      Top = 581
       Width = 50
       BorderSpacing.Left = 60
       MaxLength = 3
@@ -587,7 +587,7 @@ object frmRbnFilter: TfrmRbnFilter
       Left = 238
       Height = 23
       Hint = 'When selected and BandMap is open spots that have DXCC N,M,B '#10'(New DXCC, New Mode, New Band) are sent to BandMap.'#10'BandMap spot uses DXCLuster spot color settings (set them there)'
-      Top = 611
+      Top = 616
       Width = 263
       Caption = 'Send N,B,M DXCC spots to BandMap'
       ParentShowHint = False
@@ -603,10 +603,10 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideBottom.Control = rgIgnore
       AnchorSideBottom.Side = asrBottom
       Left = 546
-      Height = 132
+      Height = 137
       Hint = 'Set frequecy check resolution for finding duplicate spots'
       Top = 111
-      Width = 124
+      Width = 131
       Anchors = [akTop, akLeft, akRight, akBottom]
       AutoFill = True
       BorderSpacing.Left = 3
@@ -618,56 +618,23 @@ object frmRbnFilter: TfrmRbnFilter
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 114
-      ClientWidth = 122
+      ClientHeight = 119
+      ClientWidth = 129
+      Items.Strings = (
+        '100Hz'
+        '1kHz'
+        '10kHz'
+      )
       ParentShowHint = False
       ShowHint = True
       TabOrder = 10
-      object rb10kHz: TRadioButton
-        AnchorSideLeft.Control = rb100Hz
-        AnchorSideTop.Control = rb1kHz
-        AnchorSideTop.Side = asrBottom
-        AnchorSideBottom.Side = asrBottom
-        Left = 6
-        Height = 23
-        Top = 75
-        Width = 67
-        BorderSpacing.Top = 14
-        Caption = '10kHz'
-        TabOrder = 0
-      end
-      object rb1kHz: TRadioButton
-        AnchorSideLeft.Control = rb100Hz
-        AnchorSideTop.Control = rb100Hz
-        AnchorSideTop.Side = asrBottom
-        Left = 6
-        Height = 23
-        Top = 38
-        Width = 59
-        BorderSpacing.Top = 12
-        Caption = '1kHz'
-        Checked = True
-        TabOrder = 1
-        TabStop = True
-      end
-      object rb100Hz: TRadioButton
-        AnchorSideLeft.Control = rgDupe
-        AnchorSideTop.Control = rgDupe
-        Left = 6
-        Height = 23
-        Top = 3
-        Width = 67
-        BorderSpacing.Top = 3
-        Caption = '100Hz'
-        TabOrder = 2
-      end
     end
     object rgIgnore: TRadioGroup
       AnchorSideLeft.Control = grpSource
       AnchorSideTop.Control = grpSource
       AnchorSideTop.Side = asrBottom
       Left = 6
-      Height = 132
+      Height = 137
       Top = 111
       Width = 537
       AutoFill = True
@@ -680,21 +647,14 @@ object frmRbnFilter: TfrmRbnFilter
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 114
+      ClientHeight = 119
       ClientWidth = 535
+      Items.Strings = (
+        'Ignore none'
+        'Ignore worked on last '
+        'Ignore worked after'
+      )
       TabOrder = 11
-      object rbIgnWkdDate: TRadioButton
-        AnchorSideLeft.Control = rbNone
-        AnchorSideTop.Control = edtDate
-        AnchorSideTop.Side = asrCenter
-        Left = 6
-        Height = 23
-        Top = 75
-        Width = 157
-        Caption = 'Ignore worked after '
-        Checked = True
-        TabOrder = 0
-      end
       object lblIgnoreHours: TLabel
         AnchorSideLeft.Control = edtLastHours
         AnchorSideLeft.Side = asrBottom
@@ -702,45 +662,22 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 227
         Height = 17
-        Top = 41
+        Top = 51
         Width = 226
         BorderSpacing.Left = 3
         Caption = 'hours on the same band and mode'
         ParentColor = False
-      end
-      object rbIgnWkdHour: TRadioButton
-        AnchorSideLeft.Control = rbNone
-        AnchorSideTop.Control = rbNone
-        AnchorSideTop.Side = asrBottom
-        Left = 6
-        Height = 23
-        Top = 38
-        Width = 166
-        BorderSpacing.Top = 12
-        Caption = 'Ignore worked in last '
-        TabOrder = 1
-      end
-      object rbNone: TRadioButton
-        AnchorSideLeft.Control = rgIgnore
-        AnchorSideTop.Control = rgIgnore
-        Left = 6
-        Height = 23
-        Top = 3
-        Width = 103
-        BorderSpacing.Top = 3
-        Caption = 'Ignore none'
-        TabOrder = 2
       end
       object lblDateTimeFormat: TLabel
         AnchorSideLeft.Control = edtTime
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = edtTime
         AnchorSideTop.Side = asrCenter
-        Left = 351
+        Left = 363
         Height = 17
-        Top = 78
+        Top = 88
         Width = 150
-        BorderSpacing.Left = 9
+        BorderSpacing.Left = 6
         Caption = '(YYYY-MM-DD, HH:MM)'
         ParentColor = False
       end
@@ -748,43 +685,44 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideLeft.Control = edtDate
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = edtDate
-        Left = 278
+        Left = 293
         Height = 34
-        Top = 69
+        Top = 79
         Width = 64
         AutoSize = False
         AutoSelect = False
         BorderSpacing.Left = 6
-        TabOrder = 3
+        TabOrder = 0
         Text = '12:12'
       end
       object edtDate: TEdit
         AnchorSideLeft.Control = edtLastHours
         AnchorSideTop.Control = edtLastHours
         AnchorSideTop.Side = asrBottom
-        Left = 175
+        Left = 190
         Height = 34
-        Top = 69
+        Top = 79
         Width = 97
         AutoSize = False
         AutoSelect = False
         BorderSpacing.Top = 3
-        TabOrder = 4
+        TabOrder = 1
         Text = '2000-10-10'
       end
       object edtLastHours: TEdit
-        AnchorSideLeft.Control = rbIgnWkdHour
-        AnchorSideLeft.Side = asrBottom
-        AnchorSideTop.Control = rbIgnWkdHour
+        AnchorSideLeft.Control = rgIgnore
+        AnchorSideTop.Control = rgIgnore
         AnchorSideTop.Side = asrCenter
-        Left = 175
+        AnchorSideRight.Side = asrCenter
+        Left = 190
         Height = 34
-        Top = 32
-        Width = 49
+        Top = 42
+        Width = 34
         AutoSize = False
         AutoSelect = False
-        BorderSpacing.Left = 3
-        TabOrder = 5
+        BorderSpacing.Left = 190
+        BorderSpacing.Right = 3
+        TabOrder = 2
         Text = '48'
       end
     end

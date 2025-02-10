@@ -62,13 +62,7 @@ type
     lblModeFrom: TLabel;
     lblNotCountry: TLabel;
     rgIgnore: TRadioGroup;
-    rbIgnWkdDate: TRadioButton;
-    rbIgnWkdHour: TRadioButton;
-    rbNone: TRadioButton;
     rgDupe: TRadioGroup;
-    rb100Hz: TRadioButton;
-    rb10kHz: TRadioButton;
-    rb1kHz: TRadioButton;
     rbAllDx: TRadioButton;
     rbOnlyCall: TRadioButton;
     rbOnlyCallReg: TRadioButton;
@@ -105,10 +99,8 @@ begin
 
   edtSrcCont.Text      := cqrini.ReadString('RBNFilter','SrcCont',C_RBN_CONT);
   edtSrcCall.Text      := cqrini.ReadString('RBNFilter','SrcCall','');
-  rbNOne.Checked       := cqrini.ReadBool('RBNFilter','IgnNone',True);
-  rbIgnWkdHour.Checked := cqrini.ReadBool('RBNFilter','IgnHour',False);
+  rgIgnore.ItemIndex   := cqrini.ReadInteger('RBNFilter','Ignore',0);
   edtLastHours.Text    := IntToStr(cqrini.ReadInteger('RBNFilter','IgnHourValue',48));
-  rbIgnWkdDate.Checked := cqrini.ReadBool('RBNFilter','IgnDate',False);
   edtDate.Text         := cqrini.ReadString('RBNFilter','IgnDateValue','');
   edtTime.Text         := cqrini.ReadString('RBNFilter','IgnTimeValue','');
 
@@ -131,11 +123,7 @@ begin
   edtSpotDelay.Text     := cqrini.ReadString('RBNFilter','SpotDelay','150');
   chkToBandMap.Checked  :=cqrini.ReadBool('RBNMonitor','ToBandMap',false);
 
-  case cqrini.ReadInteger('RBNMonitor','DupeRes',1) of
-       0  : rb100Hz.Checked:=true;
-       1  : rb1kHz.Checked:=true;
-       2  : rb10kHz.Checked:=true;
-  end;
+  rgDupe.ItemIndex:= cqrini.ReadInteger('RBNMonitor','DupeRes',1);
 
 end;
 
@@ -150,7 +138,7 @@ var
 begin
   if not TryStrToInt(edtLastHours.Text,i) then
   begin
-    if rbIgnWkdHour.Checked then
+    if (rgIgnore.ItemIndex=1) then
     begin
       Application.MessageBox('Please enter correct number of hours, please','Error...',mb_OK+mb_IconError);
       edtLastHours.SetFocus;
@@ -162,7 +150,7 @@ begin
 
   if not dmUtils.IsDateOK(edtDate.Text) then
   begin
-    if rbIgnWkdDate.Checked then
+    if (rgIgnore.ItemIndex=2) then
     begin
       Application.MessageBox('Enter date in correct format, please','Error...',mb_Ok+mb_IconError);
       edtDate.SetFocus;
@@ -174,7 +162,7 @@ begin
 
   if not (dmUtils.IsTimeOK(edtTime.Text)) then
   begin
-    if rbIgnWkdDate.Checked then
+    if (rgIgnore.ItemIndex=2) then
     begin
       Application.MessageBox('Enter time in correct format, please','Error...',mb_Ok+mb_IconError);
       edtTime.SetFocus;
@@ -196,10 +184,9 @@ begin
   cqrini.WriteString('RBNFilter','SrcCont',RmSp(edtSrcCont.Text));
   cqrini.WriteString('RBNFilter','SrcCall',RmSp(edtSrcCall.Text));
 
-  cqrini.WriteBool('RBNFilter','IgnNone',rbNone.Checked);
-  cqrini.WriteBool('RBNFilter','IgnHour',rbIgnWkdHour.Checked);
+  cqrini.WriteInteger('RBNFilter','Ignore', rgIgnore.ItemIndex);
+
   cqrini.WriteInteger('RBNFilter','IgnHourValue',StrToint(edtLastHours.Text));
-  cqrini.WriteBool('RBNFilter','IgnDate',rbIgnWkdDate.Checked);
   cqrini.WriteString('RBNFilter','IgnDateValue',edtDate.Text);
   cqrini.WriteString('RBNFilter','IgnTimeValue',edtTime.Text);
 
@@ -222,11 +209,7 @@ begin
   cqrini.WriteString('RBNFilter','SpotDelay',edtSpotDelay.Text);
   cqrini.WriteBool('RBNMonitor','ToBandMap',chkToBandMap.Checked );
 
-  cqrini.WriteInteger('RBNMonitor','DupeRes',0);
-  if rb1kHz.Checked then
-     cqrini.WriteInteger('RBNMonitor','DupeRes',1);
-  if rb10kHz.Checked then
-     cqrini.WriteInteger('RBNMonitor','DupeRes',2);
+  cqrini.WriteInteger('RBNMonitor','DupeRes',rgDupe.ItemIndex);
 
   cqrini.SaveToDisk;
   ModalResult := mrOK

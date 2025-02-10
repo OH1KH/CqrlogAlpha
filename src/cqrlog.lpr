@@ -106,7 +106,7 @@ begin
 
          Writeln('If you then want to use same log database for all Cqrlogs');
          Writeln('you need to set common database server for logs and use ');
-         Writeln('"Preferences/program/Configuretion storage settings" to separate');
+         Writeln('"Preferences/program/Configuration storage settings" to separate');
          Writeln('each Cqrlog saving their own settings.');
          ShowMessage('Cqrlog is already running !!');
          Exit;

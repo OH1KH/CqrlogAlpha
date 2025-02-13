@@ -116,7 +116,7 @@ object frmRbnFilter: TfrmRbnFilter
       Width = 169
       BorderSpacing.Top = 6
       Caption = 'Show only eQSL users'
-      TabOrder = 5
+      TabOrder = 4
     end
     object chkOnlyLoTW: TCheckBox
       AnchorSideLeft.Control = grpCallsignFrom
@@ -140,7 +140,7 @@ object frmRbnFilter: TfrmRbnFilter
       Width = 431
       BorderSpacing.Top = 6
       Caption = 'Show only spots that are "New one"/"New band"/"New mode" '
-      TabOrder = 6
+      TabOrder = 5
     end
     object grpSource: TGroupBox
       AnchorSideLeft.Control = grpDXStation
@@ -531,7 +531,7 @@ object frmRbnFilter: TfrmRbnFilter
       BorderSpacing.Top = 12
       BorderSpacing.Right = 9
       Caption = 'OK'
-      TabOrder = 7
+      TabOrder = 6
       OnClick = btnOKClick
     end
     object btnCancel: TButton
@@ -547,41 +547,9 @@ object frmRbnFilter: TfrmRbnFilter
       Cancel = True
       Caption = 'Cancel'
       ModalResult = 2
-      TabOrder = 8
-    end
-    object lblSpotDelay: TLabel
-      AnchorSideLeft.Control = edtSpotDelay
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = chkOnlyLoTW
-      AnchorSideTop.Side = asrCenter
-      Left = 294
-      Height = 17
-      Top = 590
-      Width = 159
-      BorderSpacing.Left = 6
-      Caption = 'ms delay between spots'
-      ParentColor = False
-    end
-    object edtSpotDelay: TEdit
-      AnchorSideLeft.Control = chkOnlyLoTW
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = chkOnlyLoTW
-      AnchorSideTop.Side = asrCenter
-      Left = 238
-      Height = 34
-      Hint = 'Adjust delay between received spots printing. '#10'Big value may cause delayed show up,'#10'small value hard to read speed (good filtering may be needed ).'#10'Use small values during high band activity.'#10'Values: 5ms .. 600ms'
-      Top = 581
-      Width = 50
-      BorderSpacing.Left = 60
-      MaxLength = 3
-      NumbersOnly = True
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 4
-      OnExit = edtSpotDelayExit
+      TabOrder = 7
     end
     object chkToBandMap: TCheckBox
-      AnchorSideLeft.Control = edtSpotDelay
       AnchorSideTop.Control = chkOnlyeQSL
       AnchorSideTop.Side = asrCenter
       Left = 238
@@ -592,7 +560,7 @@ object frmRbnFilter: TfrmRbnFilter
       Caption = 'Send N,B,M DXCC spots to BandMap'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 9
+      TabOrder = 8
     end
     object rgDupe: TRadioGroup
       AnchorSideLeft.Control = rgIgnore
@@ -627,7 +595,7 @@ object frmRbnFilter: TfrmRbnFilter
       )
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 10
+      TabOrder = 9
     end
     object rgIgnore: TRadioGroup
       AnchorSideLeft.Control = grpSource
@@ -654,7 +622,7 @@ object frmRbnFilter: TfrmRbnFilter
         'Ignore worked on last '
         'Ignore worked after'
       )
-      TabOrder = 11
+      TabOrder = 10
       object lblIgnoreHours: TLabel
         AnchorSideLeft.Control = edtLastHours
         AnchorSideLeft.Side = asrBottom

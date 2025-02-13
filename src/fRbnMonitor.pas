@@ -16,10 +16,12 @@ const
 type
     TCounter = record
     total    : longint;
+    minute   : integer;   //this and below resets every minute, so integer is enough.
     spot     : integer;
     dupe     : integer;
     pass     : integer;
-    ToBandMapCount : integer;
+    BandMap  : integer;
+    xplanet  : integer;
     end;
 
 type
@@ -32,80 +34,6 @@ type
     dxinfo  : String[1];
     signal  : String[3];
   end;
-
-//type
- // TOnShowSpotEvent = procedure(RbnSpot : TRbnSpot) of Object;
-
-type
-  TRbnThread = class(TThread)
-  private
-    cs  : TRTLCriticalSection;
-    reg : TRegExpr;
-    fRbnSpot : TRbnSpot;
-   // FOnShowSpot : TOnShowSpotEvent;
-    function AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
-    procedure ShowSpot;
-  protected
-    procedure Execute; override;
-  public
-    WantToLoad                : Boolean;
-    MayLoad                   : Boolean;
-    DxccWithLoTW              : Boolean;
-    fil_SrcCont               : String;
-    fil_SrcCalls              : TStringList;
-    fil_IgnWkdHour            : Boolean;
-    fil_IgnHourValue          : Integer;
-    fil_IgnDate               : Boolean;
-    fil_IgnDateValue          : String;
-    fil_IgnTimeValue          : String;
-    fil_AllowAllCall          : Boolean;
-    fil_AllowOnlyCall         : Boolean;
-    fil_AllowOnlyCallValue    : String;
-    fil_AllowOnlyCallReg      : Boolean;
-    fil_AllowOnlyCallRegValue : String;
-    fil_AllowCont             : String;
-    fil_AllowBands            : String;
-    fil_AllowModes            : String;
-    fil_AllowCnty             : String;
-    fil_NotCnty               : String;
-    fil_LoTWOnly              : Boolean;
-    fil_eQSLOnly              : Boolean;
-    fil_NewDXCOnly            : Boolean;
-    fil_SpotDelay             : Integer;    //between spots milliseconds
-    fil_ToBandMap             : Boolean;
-    fil_gcfgNewCountryColor   : TColor;
-    fil_gcfgNewBandColor      : TColor;
-    fil_gcfgNewModeColor      : TColor;
-    fil_ThBckColor            : Integer;
-    fil_gcfgUseBackColor      : Boolean;
-    fil_gcfgeUseBackColor     : Boolean;
-    fil_gcfgBckColor          : TColor;
-    fil_gcfgeBckColor         : TColor;
-    fil_gcfgUseDXCColors      : Boolean;
-    fil_PassCount             : integer;
-    fil_ToBandMapCount        : integer;
-    fil_RcvdCount             : integer;
-
-   // property OnShowSpot      : TOnShowSpotEvent read FOnShowSpot write FOnShowSpot;   //2025-02 OH1KH a test to replace this event with timer seems to keep up
-                                                                                        //and running 3x longer
-                                                                                        //TOnShowSpotEvent is mysterious as it stops working randomly after abt
-                                                                                        //100k spots whe spots are still received but they never get added to grid
-    property PassCount       : integer read fil_PassCount write  fil_PassCount;
-    property RcvdCount       : integer read fil_RcvdCount write  fil_RcvdCount;
-    property ToBandMapCount  : integer read fil_ToBandMapCount write  fil_ToBandMapCount;
-
-    property SRbnSpot            : TRbnSpot read fRbnSpot;
-    property ToBandMap           : boolean read fil_ToBandMap;
-    property gcfgUseBackColor    : boolean read fil_gcfgUseBackColor;
-    property gcfgeUseBackColor   : boolean read fil_gcfgeUseBackColor;
-    property gcfgUseDXCColors    : boolean read fil_gcfgUseDXCColors;
-    property gcfgNewCountryColor : integer read fil_gcfgNewCountryColor;
-    property gcfgNewBandColor    : integer read fil_gcfgNewBandColor;
-    property gcfgNewModeColor    : integer read fil_gcfgNewModeColor;
-    property gcfgBckColor        : integer read fil_gcfgBckColor;
-    property gcfgeBckColor       : integer read fil_gcfgeBckColor;
-
-end;
 
 
 type
@@ -136,7 +64,6 @@ type
     tbtnHelp: TToolButton;
     tbtnLastLine: TToolButton;
     tbtnServer: TToolButton;
-    tmrAddSpot: TTimer;
     tmrSpotRate: TTimer;
     tmrUnfocus: TTimer;
     ToolBar1: TToolBar;
@@ -167,31 +94,62 @@ type
     procedure sgRbnExit(Sender: TObject);
     procedure sgRbnHeaderSized(Sender: TObject; IsColumn: Boolean;
       Index: Integer);
-    procedure tmrAddSpotTimer(Sender: TObject);
     procedure tmrSpotRateTimer(Sender: TObject);
     procedure tmrUnfocusTimer(Sender: TObject);
   private
-    RbnMonThread : TRbnThread;
-    lTelnet      : TLTelnetClientComponent;
-    SrcCalls : TStringlist;
-    SpotCount: TCounter;
-    slDupeCheck : TStringlist;
+    lTelnet        : TLTelnetClientComponent;
+    SrcCalls       : TStringlist;
+    SpotCount      : TCounter;
+    slDupeCheck    : TStringlist;
     DupeResolution : integer;
+    WaitMe         : boolean;
+    NoScroll       : boolean;
+    NoSpotsRcvd    : boolean;  //false. Set active if telnet recieved is zero during last minute.
+                              //if true and still zero received initiates telnet reconnect
+    DxccWithLoTW              : Boolean;
+    fil_SrcCont               : String;
+    fil_SrcCalls              : TStringList;
+    fil_IgnWkdHour            : Boolean;
+    fil_IgnHourValue          : Integer;
+    fil_IgnDate               : Boolean;
+    fil_IgnDateValue          : String;
+    fil_IgnTimeValue          : String;
+    fil_AllowAllCall          : Boolean;
+    fil_AllowOnlyCall         : Boolean;
+    fil_AllowOnlyCallValue    : String;
+    fil_AllowOnlyCallReg      : Boolean;
+    fil_AllowOnlyCallRegValue : String;
+    fil_AllowCont             : String;
+    fil_AllowBands            : String;
+    fil_AllowModes            : String;
+    fil_AllowCnty             : String;
+    fil_NotCnty               : String;
+    fil_LoTWOnly              : Boolean;
+    fil_eQSLOnly              : Boolean;
+    fil_NewDXCOnly            : Boolean;
+    fil_ToBandMap             : Boolean;
+    fil_gcfgNewCountryColor   : TColor;
+    fil_gcfgNewBandColor      : TColor;
+    fil_gcfgNewModeColor      : TColor;
+    fil_ThBckColor            : Integer;
+    fil_gcfgUseBackColor      : Boolean;
+    fil_gcfgeUseBackColor     : Boolean;
+    fil_gcfgBckColor          : TColor;
+    fil_gcfgeBckColor         : TColor;
+    fil_gcfgUseDXCColors      : Boolean;
 
     procedure lConnect(aSocket: TLSocket);
     procedure lDisconnect(aSocket: TLSocket);
     procedure lReceive(aSocket: TLSocket);
-    procedure AddSpotToThread(spot : String);
+    procedure ClearAllCounters;
+    procedure ClearCounters;
     procedure ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
-
+    procedure SpotChecksAndShow(tmp:string);
+    procedure Reconnect;
+    function AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
 
   public
-    csRbnMonitor : TRTLCriticalSection;
-    slRbnSpots   : TStringList;
-    DeleteCount  : Integer;
-    MayAddSpot   : boolean;
-    procedure SynRbnMonitor(RbnSpot : TRbnSpot);
-    procedure LoadConfigToThread;
+    procedure LoadConfig;
   end;
 
 var
@@ -205,30 +163,30 @@ uses dUtils, uMyIni, dData, fRbnServer, dDXCluster, fRbnFilter, fNewQSO, fGrayli
 { TfrmRbnMonitor }
 
 
-procedure TfrmRbnMonitor.AddSpotToThread(spot : String);
-
-begin
-  EnterCriticalsection(csRbnMonitor);
-  try
-     slRbnSpots.Add(spot);
-     if  (frmGrayline.Showing and frmGrayline.acLinkToRbnMonitor.Checked) then frmGrayline.AddSpotToList(spot);
-  finally
-    LeaveCriticalsection(csRbnMonitor)
-  end
+procedure TfrmRbnMonitor.ClearAllCounters;
+Begin
+   SpotCount.total:=0;        //total received from telnet during connection
+   ClearCounters;
+end;
+procedure TfrmRbnMonitor.ClearCounters;
+Begin
+  SpotCount.minute:=0;       //total received from telnet during one minute
+  SpotCount.dupe:=0;         //duplicates filtered with pre-dupe-filtering
+  SpotCount.pass:=0;         //passed to RBN filter section
+  SpotCount.spot:=0;         //added to RBN grid table
+  SpotCount.BandMap:=0;      //passed to BandMap
+  SpotCount.xplanet:=0;      //passed to xplanet
+  tmrSpotRate.Enabled:=True; //timer to freeze counts from one minute period
 end;
 
 procedure TfrmRbnMonitor.lConnect(aSocket: TLSocket);
 begin
   tbtnConnect.Action   := acDisconnect;
   sbRbn.Panels[0].Text := 'Connected to RBN';
-  SpotCount.total:=0;
-  SpotCount.dupe:=0;
-  SpotCount.pass:=0;
-  SpotCount.spot:=0;
-  RbnMonThread.RcvdCount:=0;
-  RbnMonThread.PassCount:=0;
-  SpotCount.ToBandMapCount:=0;
-  tmrSpotRate.Enabled:=True;
+  ClearAllCounters;
+  WaitMe:=false;
+  NoScroll:=false;
+  NoSpotsRcvd:=false;
 end;
 
 procedure TfrmRbnMonitor.lDisconnect(aSocket: TLSocket);
@@ -237,38 +195,6 @@ begin
   sbRbn.Panels[0].Text := 'Disconected';
   tmrSpotRate.Enabled:=False;
 end;
-
-procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
-//DX de DL9GTB-#:  14027.1  HB9CCL         CW    10 dB  20 WPM  CQ      0713Z
-  var
-    i : Integer;
-    y : Integer;
-    b : Array of String[50];
-    p : Integer=0;
-  begin
-    SetLength(b,1);
-    for i:=1 to Length(spot) do
-    begin
-      if spot[i]<>' ' then
-        b[p] := b[p]+spot[i]
-      else begin
-        if (b[p]<>'') then
-        begin
-          inc(p);
-          SetLength(b,p+1)
-        end
-      end
-    end;
-
-    spotter := b[2];
-    i := pos('-', spotter);
-    if i > 0 then
-      spotter := copy(spotter, 1, i-1);
-    dxstn := b[4];
-    freq  := b[3];
-    mode  := b[5];
-    stren := b[6]
-  end;
 
 procedure TfrmRbnMonitor.lReceive(aSocket: TLSocket);
 const
@@ -290,7 +216,6 @@ var
 begin
   if lTelnet.GetMessage(buffer) = 0 then
     exit;
-
   sStart := 1;
   sStop := Pos(CR, Buffer);
   if sStop = 0 then
@@ -304,7 +229,8 @@ begin
     if (Pos('DX DE',UpperCase(tmp))>0)  then
     begin
       ex:=false;
-      inc(SpotCount.spot);
+      inc(SpotCount.total);
+      inc(SpotCount.minute);
       ParseSpots(tmp, spotter, dxstn, freq, mode, stren);
       try
        if pos('.', freq)>0 then
@@ -323,7 +249,12 @@ begin
            if   slDupeCheck.Count >= C_MAX_DUPE_LIST then
                                                slDupeCheck.Delete(0);
            inc(SpotCount.pass);
-           AddSpotToThread(tmp);
+           While WaitMe do   //this should not happen with one thread unit
+            Begin
+              sleep(1);
+              Application.ProcessMessages;
+            end;
+           SpotChecksAndShow(tmp);
          end;
        if dmData.DebugLevel >=1 then
                             writeln('Dupe:',ex,'  ',slDupeCheck.Count,'  ',dup,'  ',tmp);
@@ -358,19 +289,11 @@ var
   user   : String;
 begin
   if lTelnet.Connected then exit;
-  if not Assigned (RbnMonThread) then
-                                 RbnMonThread := TRBNThread.Create(True);
-  RbnMonThread.FreeOnTerminate := False;  //there is freeandNil at disconnect
-//  RbnMonThread.OnShowSpot := @SynRbnMonitor;  //2025-02 OH1KH a test
-  RbnMonThread.WantToLoad:=false;
-  RbnMonThread.MayLoad:=false;
-  RbnMonThread.RcvdCount:=0;
-  RbnMonThread.PassCount:=0;
-  SpotCount.ToBandMapCount:=0;
-  slDupeCheck.Clear;
-  RbnMonThread.Start;
 
-  LoadConfigToThread;
+  ClearAllCounters;
+  slDupeCheck.Clear;
+
+  LoadConfig;
 
   server := cqrini.ReadString('RBNMonitor','ServerName','telnet.reversebeacon.net:7000');
   user   := cqrini.ReadString('RBNMonitor','UserName',cqrini.ReadString('Station', 'Call', ''));
@@ -389,16 +312,17 @@ begin
   if dmData.DebugLevel>=2 then Writeln(server,'   ',port);
   lTelnet.Connect;
   btnEatFocus.SetFocus;
-  MayAddSpot:=true;
+
 end;
 
 procedure TfrmRbnMonitor.acClearExecute(Sender: TObject);
 var l: integer;
 begin
-
+  WaitMe:=true;
   for l:= sgRbn.rowcount - 1 downto 1 do
     sgRbn.DeleteRow(l);
-  MayAddSpot:=true;
+  WaitMe:=false;
+  NoScroll:=false;
 end;
 
 procedure TfrmRbnMonitor.acDisconnectExecute(Sender: TObject);
@@ -408,9 +332,6 @@ begin
     lTelnet.Disconnect;
     tmrUnfocus.Enabled:=false;
     tmrSpotRate.Enabled:=false;
-    tmrAddSpot.Enabled:=false;
-    RbnMonThread.Terminate;
-    freeAndNil(RbnMonThread);
     tbtnConnect.Action := acConnect;
     sbRbn.Panels[0].Text := 'Disconnected'
   end;
@@ -421,9 +342,9 @@ begin
   with TfrmRbnFilter.Create(frmRbnMonitor) do
   try
     if ShowModal = mrOK then
-      LoadConfigToThread
+      LoadConfig
   finally
-    Free
+    Free;
   end;
   btnEatFocus.SetFocus
 end;
@@ -464,8 +385,8 @@ end;
 
 procedure TfrmRbnMonitor.acScrollDownExecute(Sender : TObject);
 begin
+  NoScroll:=false;
   sgRbn.Row := sgRbn.RowCount;
-  MayAddSpot:=true;
   btnEatFocus.SetFocus
 end;
 
@@ -477,7 +398,6 @@ begin
   for i:=0 to sgRbn.ColCount-1 do
     cqrini.WriteInteger('WindowSize','RbnCol'+IntToStr(i),sgRbn.ColWidths[i]);
   acDisconnectExecute(nil);
-  slRbnSpots.Clear;
   SrcCalls.Clear;
   slDupeCheck.Clear;
   dmUtils.SaveWindowPos(self);
@@ -485,18 +405,14 @@ end;
 
 procedure TfrmRbnMonitor.FormCreate(Sender: TObject);
 begin
-  InitCriticalSection(csRbnMonitor);
 
-  DeleteCount := 0;
-  MayAddSpot:=false;
   sgRbn.RowCount := 1;
   tmrSpotRate.Enabled:=False;
 
   slDupeCheck := TStringList.Create;
-  slRbnSpots := TStringList.Create;
-  SrcCalls:= TStringList.Create;
+  SrcCalls    := TStringList.Create;
 
-  lTelnet := TLTelnetClientComponent.Create(nil);
+  lTelnet     := TLTelnetClientComponent.Create(nil);
   lTelnet.OnConnect    := @lConnect;
   lTelnet.OnDisconnect := @lDisconnect;
   lTelnet.OnReceive    := @lReceive
@@ -506,9 +422,7 @@ end;
 procedure TfrmRbnMonitor.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(lTelnet);
-  DoneCriticalsection(csRbnMonitor);
   FreeAndNil(SrcCalls);
-  FreeAndNil(slRbnSpots);
   FreeandNil(slDupeCheck);
 end;
 
@@ -548,12 +462,9 @@ begin
                  '.'+LineEnding+
                  'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
 
-  if ((not(TRbnThread = nil)) and ( cqrini.ReadBool('RBN','AutoConnectM',False) )) then
+  if ( cqrini.ReadBool('RBN','AutoConnectM',False)) then
      acConnectExecute(nil);
-  MayAddSpot:=true;
 end;
-//-------------------------------------------------------------------
-//-------------------------------------------------------------------
 
 procedure TfrmRbnMonitor.sgRbnDblClick(Sender: TObject);
 var i:real;
@@ -562,7 +473,8 @@ begin
   //if (sgRbn.Cells[1,sgRbn.Row]<>'Freq') then  //easy way, but works only with header
   f.DecimalSeparator := '.';
   if TryStrToFloat( sgRbn.Cells[1,sgRbn.Row],i,f) then
-    frmNewQSO.NewQSOFromSpot(sgRbn.Cells[2,sgRbn.Row],sgRbn.Cells[1,sgRbn.Row],sgRbn.Cells[3,sgRbn.Row],True)
+    frmNewQSO.NewQSOFromSpot(sgRbn.Cells[2,sgRbn.Row],sgRbn.Cells[1,sgRbn.Row],sgRbn.Cells[3,sgRbn.Row],True);
+  NoScroll:=false;
 end;
 
 procedure TfrmRbnMonitor.sgRbnDrawCell(Sender: TObject; aCol, aRow: Integer;
@@ -584,12 +496,14 @@ procedure TfrmRbnMonitor.sgRbnEnter(Sender: TObject);
 begin
    frmRbnMonitor.Caption:= 'RBN Monitor  PAUSED!';
    ToolBar1.Repaint;
+   NoScroll:=true;
 end;
 
 procedure TfrmRbnMonitor.sgRbnExit(Sender: TObject);
 begin
   frmRbnMonitor.Caption:= 'RBN Monitor';
   ToolBar1.Repaint;
+  NoScroll:=false;
 end;
 
 procedure TfrmRbnMonitor.sgRbnHeaderSized(Sender: TObject; IsColumn: Boolean;
@@ -603,30 +517,30 @@ begin
   tmrSpotRate.Enabled:=False;
   SpotCount.total:=SpotCount.total+SpotCount.spot;
 
-  lblRate.Caption:=IntToStr(SpotCount.spot)+'/'+IntToStr(RbnMonThread.PassCount)+'/min';
+  lblRate.Caption:=IntToStr(SpotCount.minute)+'/'+IntToStr(SpotCount.spot)+'/min';
   lblRate.Hint:='Spot rate during last minute:'+LineEnding+
-                 ' Total received: '+IntToStr(SpotCount.spot)+LineEnding+
-                 ' Duplicates from total: '+IntToStr(SpotCount.dupe)+LineEnding+
-                 ' Sent to RBNmonitorTh: '+IntToStr(SpotCount.pass)+LineEnding+
-                 ' Received by RBNmonitorTh: '+IntToStr(RbnMonThread.RcvdCount)+LineEnding+
-                 ' Passed by RBN filter settings: '+IntToStr(RbnMonThread.PassCount)+LineEnding+
-                 ' From RBNmonitor to BandMap: '+IntToStr(SpotCount.ToBandMapCount)+LineEnding+
-                 '---Total spots since connected: '+IntToStr(SpotCount.total)+LineEnding+
+                 ' Spots received: '+IntToStr(SpotCount.minute)+LineEnding+
+                 ' Duplicates: '+IntToStr(SpotCount.dupe)+LineEnding+
+                 ' Passed to RBN filter: '+IntToStr(SpotCount.pass)+LineEnding+
+                 ' Passed by RBN filter settings: '+IntToStr(SpotCount.spot)+LineEnding+
+                 ' From RBNmonitor to xplanet: '+IntToStr(SpotCount.xplanet)+LineEnding+
+                 ' From RBNmonitor to BandMap: '+IntToStr(SpotCount.BandMap)+LineEnding+
+                 '--------------------------------------'+LineEnding+
+                 'Total spots since connected: '+IntToStr(SpotCount.total)+LineEnding+
                  '.'+LineEnding+
                  'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
 
-  SpotCount.dupe:=0;
-  SpotCount.pass:=0;
-  SpotCount.spot:=0;
-  RbnMonThread.PassCount:=0;
-  RbnMonThread.RcvdCount:=0;
-  SpotCount.ToBandMapCount:=0;
-  tmrSpotRate.Enabled:=True
+  if (SpotCount.minute=0) and NoSpotsRcvd then  //takes two minutes(rounds) to initiate reconnect when zero spots received.
+                                          Reconnect;
+  NoSpotsRcvd:=(SpotCount.minute=0);
+
+  ClearCounters;
 end;
 
 procedure TfrmRbnMonitor.FormDeactivate(Sender: TObject);
 begin
    frmRbnMonitor.Caption:= 'RBN Monitor';
+   NoScroll:=false;
 end;
 
 //-------------------------------------------------
@@ -647,209 +561,91 @@ begin
   acScrollDownExecute(nil);
 end;
 //-------------------------------------------------
-procedure TfrmRbnMonitor.LoadConfigToThread;
-Var
-   timeout:integer=10000;
-begin
-  if Assigned(RbnMonThread) then
-  begin
-    RbnMonThread.WantToLoad:=true;
-    repeat
-      sleep(2);
-      Application.ProcessMessages;
-      dec(timeout);
-      if timeout < 1 then
-                         begin
-                           RbnMonThread.WantToLoad:=false;
-                           exit;
-                         end;
-    until RbnMonThread.MayLoad;
+procedure TfrmRbnMonitor.LoadConfig;
 
-    RbnMonThread.fil_SrcCont := cqrini.ReadString('RBNFilter','SrcCont',C_RBN_CONT);
+begin
+    WaitMe:=true;
+
+    fil_SrcCont := cqrini.ReadString('RBNFilter','SrcCont',C_RBN_CONT);
 
     SrcCalls.Clear;    //we need to do this via another TString list. Direct mods to fil_SrcCalls cause SIGSEGV
     SrcCalls.Delimiter:=',';
     SrcCalls.AddDelimitedtext(cqrini.ReadString('RBNFilter','SrcCall',''));
-    RbnMonThread.fil_SrcCalls := SrcCalls;
+    fil_SrcCalls := SrcCalls;
 
-    RbnMonThread.fil_IgnWkdHour    := (cqrini.ReadInteger('RBNFilter','Ignore',0) = 1);
-    RbnMonThread.fil_IgnDate       := (cqrini.ReadInteger('RBNFilter','Ignore',0) = 2);
+    fil_IgnWkdHour    := (cqrini.ReadInteger('RBNFilter','Ignore',0) = 1);
+    fil_IgnDate       := (cqrini.ReadInteger('RBNFilter','Ignore',0) = 2);
 
-    RbnMonThread.fil_IgnHourValue  := cqrini.ReadInteger('RBNFilter','IgnHourValue',48);
-    RbnMonThread.fil_IgnDateValue  := cqrini.ReadString('RBNFilter','IgnDateValue','');
-    RbnMonThread.fil_IgnTimeValue  := cqrini.ReadString('RBNFilter','IgnTimeValue','');
+    fil_IgnHourValue  := cqrini.ReadInteger('RBNFilter','IgnHourValue',48);
+    fil_IgnDateValue  := cqrini.ReadString('RBNFilter','IgnDateValue','');
+    fil_IgnTimeValue  := cqrini.ReadString('RBNFilter','IgnTimeValue','');
 
-    RbnMonThread.fil_AllowAllCall          := cqrini.ReadBool('RBNFilter','AllowAllCall',True);
-    RbnMonThread.fil_AllowOnlyCall         := cqrini.ReadBool('RBNFilter','AllowOnlyCall',False);
-    RbnMonThread.fil_AllowOnlyCallValue    := cqrini.ReadString('RBNFilter','AllowOnlyCallValue','');
-    RbnMonThread.fil_AllowOnlyCallReg      := cqrini.ReadBool('RBNFilter','AllowOnlyCallReg',False);
-    RbnMonThread.fil_AllowOnlyCallRegValue := cqrini.ReadString('RBNFilter','AllowOnlyCallRegValue','');
+    fil_AllowAllCall          := cqrini.ReadBool('RBNFilter','AllowAllCall',True);
+    fil_AllowOnlyCall         := cqrini.ReadBool('RBNFilter','AllowOnlyCall',False);
+    fil_AllowOnlyCallValue    := cqrini.ReadString('RBNFilter','AllowOnlyCallValue','');
+    fil_AllowOnlyCallReg      := cqrini.ReadBool('RBNFilter','AllowOnlyCallReg',False);
+    fil_AllowOnlyCallRegValue := cqrini.ReadString('RBNFilter','AllowOnlyCallRegValue','');
 
-    RbnMonThread.fil_AllowCont  := cqrini.ReadString('RBNFilter','AllowCont',C_RBN_CONT);
-    RbnMonThread.fil_AllowBands := cqrini.ReadString('RBNFilter','AllowBands',C_RBN_BANDS);
-    RbnMonThread.fil_AllowModes := cqrini.ReadString('RBNFilter','AllowModes',C_RBN_MODES);
-    RbnMonThread.fil_AllowCnty  := cqrini.ReadString('RBNFilter','AllowCnty','');
-    RbnMonThread.fil_NotCnty    := cqrini.ReadString('RBNFilter','NotCnty','');
+    fil_AllowCont  := cqrini.ReadString('RBNFilter','AllowCont',C_RBN_CONT);
+    fil_AllowBands := cqrini.ReadString('RBNFilter','AllowBands',C_RBN_BANDS);
+    fil_AllowModes := cqrini.ReadString('RBNFilter','AllowModes',C_RBN_MODES);
+    fil_AllowCnty  := cqrini.ReadString('RBNFilter','AllowCnty','');
+    fil_NotCnty    := cqrini.ReadString('RBNFilter','NotCnty','');
 
-    RbnMonThread.fil_LoTWOnly := cqrini.ReadBool('RBNFilter','LoTWOnly',False);
-    RbnMonThread.fil_eQSLOnly := cqrini.ReadBool('RBNFilter','eQSLOnly',False);
+    fil_LoTWOnly := cqrini.ReadBool('RBNFilter','LoTWOnly',False);
+    fil_eQSLOnly := cqrini.ReadBool('RBNFilter','eQSLOnly',False);
 
-    RbnMonThread.fil_NewDXCOnly := cqrini.ReadBool('RBNFilter','NewDXCOnly',False);
+    fil_NewDXCOnly := cqrini.ReadBool('RBNFilter','NewDXCOnly',False);
     //note: we can do WriteString and then ReadInteger if parameter has only numbers. No conversion needed.
-    RbnMonThread.fil_SpotDelay:= cqrini.ReadInteger('RBNFilter','SpotDelay',150);
 
-    RbnMonThread.fil_ToBandMap           := cqrini.ReadBool('RBNMonitor','ToBandMap',false);
-    RbnMonThread.fil_gcfgNewCountryColor := cqrini.ReadInteger('DXCluster','NewCountry',0);
-    RbnMonThread.fil_gcfgNewBandColor    := cqrini.ReadInteger('DXCluster','NewBand',0);
-    RbnMonThread.fil_gcfgNewModeColor    := cqrini.ReadInteger('DXCluster','NewMode',0);
-    RbnMonThread.fil_gcfgUseBackColor    := cqrini.ReadBool('LoTW','UseBackColor',True);
-    RbnMonThread.fil_gcfgeUseBackColor   := cqrini.ReadBool('LoTW','eUseBackColor',True);
-    RbnMonThread.fil_gcfgBckColor        := cqrini.ReadInteger('LoTW','BckColor',clMoneyGreen);
-    RbnMonThread.fil_gcfgeBckColor       := cqrini.ReadInteger('LoTW','eBckColor',clSkyBlue);
-    RbnMonThread.fil_gcfgUseDXCColors    := cqrini.ReadBool('BandMap','UseDXCColors',False);
+    fil_ToBandMap           := cqrini.ReadBool('RBNMonitor','ToBandMap',false);
+    fil_gcfgNewCountryColor := cqrini.ReadInteger('DXCluster','NewCountry',0);
+    fil_gcfgNewBandColor    := cqrini.ReadInteger('DXCluster','NewBand',0);
+    fil_gcfgNewModeColor    := cqrini.ReadInteger('DXCluster','NewMode',0);
+    fil_gcfgUseBackColor    := cqrini.ReadBool('LoTW','UseBackColor',True);
+    fil_gcfgeUseBackColor   := cqrini.ReadBool('LoTW','eUseBackColor',True);
+    fil_gcfgBckColor        := cqrini.ReadInteger('LoTW','BckColor',clMoneyGreen);
+    fil_gcfgeBckColor       := cqrini.ReadInteger('LoTW','eBckColor',clSkyBlue);
+    fil_gcfgUseDXCColors    := cqrini.ReadBool('BandMap','UseDXCColors',False);
 
     DupeResolution:=cqrini.ReadInteger('RBNMonitor','DupeRes',1);
-
-    RbnMonThread.WantToLoad:=false;
+    WaitMe:=false;
+    NoScroll:=false;
   end;
 
-end;
+procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
+//DX de DL9GTB-#:  14027.1  HB9CCL         CW    10 dB  20 WPM  CQ      0713Z
+ var
+   i : shortInt;
+   y : Integer;
+   b : Array of String[50];
+   p : Integer=0;
+ begin
+   SetLength(b,1);
+   for i:=1 to Length(spot) do
+   begin
+     if spot[i]<>' ' then
+       b[p] := b[p]+spot[i]
+     else begin
+       if (b[p]<>'') then
+       begin
+         inc(p);
+         SetLength(b,p+1)
+       end
+     end
+   end;
 
-procedure TfrmRbnMonitor.tmrAddSpotTimer(Sender: TObject);
-begin
-  tmrAddSpot.Enabled:=false;
-  SynRbnMonitor(RbnMonThread.SRbnSpot);
-end;
+   spotter := b[2];
+   i := pos('-', spotter);
+   if i > 0 then
+     spotter := copy(spotter, 1, i-1);
+   dxstn := b[4];
+   freq  := b[3];
+   mode  := b[5];
+   stren := b[6]
+ end;
 
-procedure TfrmRbnMonitor.SynRbnMonitor(RbnSpot : TRbnSpot);
-var
-  i : Integer;
-
-  //-------------------------------------------------------------------
-  procedure AddRow;
-  var
-     f : integer;
-     s : string;
-   c,d : currency;
-    ex : boolean;
-
-
-  Mfreq   : String;
-  LoTW    : Boolean;
-  eQSL    : Boolean;
-  cLat,
-  cLon    : Currency;
-  sColor  : longint;
-  bkColor : longint;
-  dFreq   : Double;
-
-
-
-  begin
-
-    i := sgRbn.RowCount;
-    sgRbn.RowCount := i+1;
-
-    sgRbn.Cells[0,i] := RbnSpot.spotter;
-    sgRbn.Cells[1,i] := RbnSpot.freq;
-    sgRbn.Cells[2,i] := RbnSpot.dxstn;
-    sgRbn.Cells[3,i] := RbnSpot.mode;
-    sgRbn.Cells[4,i] := RbnSpot.signal;
-    sgRbn.Cells[5,i] := RbnSpot.qsl;
-    sgRbn.Cells[6,i] := RbnSpot.dxinfo;
-
-    if assigned(RbnMonThread) then  //may happen at close that thread already destroyed when coming to this
-     begin
-      if RbnMonThread.ToBandMap and frmBandMap.Showing and (RbnSpot.dxinfo<>'') then
-        begin
-          dFreq:=0.0; MFreq:='0.0';
-          if TryStrToFloat(RbnSpot.freq,dFreq) then
-             Mfreq:=FloatToStr( dFreq/1000);
-          bkColor := clWindow;
-          sColor     := clDefault;
-          if RbnMonThread.gcfgUseDXCColors then
-           Begin
-             case RbnSpot.dxinfo of
-              'N': sColor:=RbnMonThread.gcfgNewCountryColor;
-              'B': sColor:=RbnMonThread.gcfgNewBandColor;
-              'M': sColor:=RbnMonThread.gcfgNewModeColor;
-             end;
-            eQSL :=(pos('E',RbnSpot.qsl)>0);
-            LoTW :=(pos('L',RbnSpot.qsl)>0);
-
-            if RbnMonThread.gcfgeUseBackColor and eQSL then
-              bkColor := RbnMonThread.gcfgeBckColor;
-            if RbnMonThread.gcfgUseBackColor and LoTW then
-              bkColor := RbnMonThread.gcfgBckColor;
-            end;
-            inc(SpotCount.ToBandMapCount);
-            cLat:=0;
-            cLon:=0;
-            dmUtils.GetCoordinate(dmUtils.GetPfx(RbnSpot.dxstn),cLat,cLon);
-            frmBandMap.AddToBandMap(dFreq,RbnSpot.dxstn,RbnSpot.mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
-                                    sColor,bkColor, False, LoTW,eQSL );
-        end;
-     end;
-  end;
-  //-------------------------------------------------------------------
-
-begin
- MayAddSpot:=false;
- if sgRbn.Focused then
-  begin
-    inc(DeleteCount);
-    AddRow
-  end
- else
-  begin
-    AddRow;
-    if DeleteCount>0 then
-    begin
-      if (sgRbn.RowCount > C_MAX_ROWS) then
-      begin
-        for i:=1 to DeleteCount do
-          sgRbn.DeleteRow(0)
-      end;
-      DeleteCount := 0
-    end
-    else
-    begin
-      if sgRbn.RowCount>C_MAX_ROWS then
-        sgRbn.DeleteRow(0)
-    end;
-
-    sgRbn.Row := sgRbn.RowCount
-  end;
-  MayAddSpot:=True;
-end;
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-procedure TRBNThread.ShowSpot;
-var
-   timeout:integer;
-
-
-begin
-  //if Assigned(OnShowSpot) then   //2025-02 OH1KH a test
-  begin
-   timeout:=10000;
-   while (not frmRbnMonitor.MayAddSpot) do
-     begin
-      sleep(1);
-      dec(timeout);
-      if timeout<1 then
-                 Begin
-                   if dmData.DebugLevel>=2 then writeln('ShowSpot timeout');
-                   exit;
-                 end;
-     end;
-   frmRbnMonitor.tmrAddSpot.Enabled:=true;  // //2025-02 OH1KH a test. Trying without FOnShowSpot event as it fails every now and then
-   sleep(1);
-   //FOnShowSpot(fRbnSpot)   //2025-02 OH1KH a test
-  end;
-end;
-
-function TRBNThread.AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
+function TfrmRbnMonitor.AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
 var
   SrcCont  : String;
   DestCont : String;
@@ -1012,134 +808,104 @@ begin
   Result := True
 end;
 
-
-procedure TRBNThread.Execute;
+procedure  TfrmRbnMonitor.SpotChecksAndShow( tmp:string);
 var
-  spot    : String;
-  spotter : String;
-  freq,
-  stren   : String;
-  mode    : String;
-  dxstn   : String;
-  LoTW    : String;
-  eQSL    : String;
-  dxinfo  : String;
-  RbnSpot : TRbnSpot;
-  index   : Integer;
-  band    : String;
-  DebugThis: boolean;
-//-----------------------------------------------------------------------
-  procedure ParseSpot(spot : String; var spotter, dxstn, freq, mode, stren : String);
-   var
-     i : Integer;
-     y : Integer;
-     b : Array of String[50];
-     p : Integer=0;
-   begin
-     SetLength(b,1);
-     for i:=1 to Length(spot) do
-     begin
-       if spot[i]<>' ' then
-         b[p] := b[p]+spot[i]
-       else begin
-         if (b[p]<>'') then
-         begin
-           inc(p);
-           SetLength(b,p+1)
-         end
-       end
-     end;
+ spot    : String;
+ spotter : String;
+ freq,
+ stren   : String;
+ mode    : String;
+ dxstn   : String;
+ LoTW    : String ='';
+ eQSL    : String ='';
+ dxinfo  : String;
+ i,
+ bkCOlor,
+ sColor  : Integer;
+ band    : String;
+ Mfreq   : String;
+ dfreq   : extended;
+ DebugThis: boolean;
+ cLat,
+ clon     : Currency;
 
-     spotter := b[2];
-     i := pos('-', spotter);
-     if i > 0 then
-       spotter := copy(spotter, 1, i-1);
-     dxstn := b[4];
-     freq  := b[3];
-     mode  := b[5];
-     stren := b[6];
-   end;
-  //-----------------------------------------------------------------------
 begin
-  DebugThis:=dmData.DebugLevel>=2;
- try
-    while not Terminated do
-    begin
+ DebugThis:=dmData.DebugLevel>=2;
+ if tmp='' then exit;
 
-     if WantToLoad then
-      begin
-        if DebugThis then writeln('settings');
-        EnterCriticalsection(frmRbnMonitor.csRbnMonitor); //this stops operation while new filter values are loaded
-        try
-          MayLoad:=true;
-          repeat
-            sleep(1);
-          until not WantToLoad;
-          MayLoad:=false;
-        finally
-         LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
-        end;
-      end;
+     WaitMe:=true;
+     if DebugThis then writeln('parse');
+     ParseSpots(tmp, spotter, dxstn, freq, mode, stren);
 
+     if DebugThis then  writeln('allow filter');
+     if AllowedSpot(spotter,dxstn,freq,mode,LoTW,eQSL,dxinfo) then
+     begin
 
-      EnterCriticalsection(frmRbnMonitor.csRbnMonitor);
-      try
-        if frmRbnMonitor.slRbnSpots.Count>0 then
+       if DebugThis then writeln('lotw eqsl');
+       if dmData.UsesLotw(dxstn) then
+         LoTW := 'L';
+       if dmDXCluster.UseseQSL(dxstn) then
+         eQSL := 'E';
+
+       i := sgRbn.RowCount;
+       sgRbn.RowCount := i+1;
+
+       sgRbn.Cells[0,i] := spotter;
+       sgRbn.Cells[1,i] := freq;
+       sgRbn.Cells[2,i] := dxstn;
+       sgRbn.Cells[3,i] := mode;
+       sgRbn.Cells[4,i] := stren;
+       sgRbn.Cells[5,i] := LoTW+eQSL;
+       sgRbn.Cells[6,i] := dxinfo;
+       inc(SpotCount.spot);
+       if i>=C_MAX_ROWS then
+       sgRbn.DeleteRow(0);
+       if not NoScroll then sgRbn.Row := sgRbn.RowCount;
+
+       if  (frmGrayline.Showing and frmGrayline.acLinkToRbnMonitor.Checked) then
+           Begin
+             frmGrayline.AddSpotToList(tmp);
+             inc(SpotCount.xplanet);
+           end;
+
+       if fil_ToBandMap and frmBandMap.Showing and (dxinfo<>'') then
         begin
-          //if DebugThis then writeln('spot');
-          spot := frmRbnMonitor.slRbnSpots.Strings[0];
-          frmRbnMonitor.slRbnSpots.Delete(0)
-        end
-        else
-          spot := ''
-      finally
-        LeaveCriticalsection(frmRbnMonitor.csRbnMonitor);
-      end;
+         dFreq:=0.0; MFreq:='0.0';
+         if TryStrToFloat(freq,dFreq) then
+            Mfreq:=FloatToStr( dFreq/1000);
+         bkColor := clWindow;
+         sColor     := clDefault;
+         if fil_gcfgUseDXCColors then
+          Begin
+            case dxinfo of
+             'N': sColor:=fil_gcfgNewCountryColor;
+             'B': sColor:=fil_gcfgNewBandColor;
+             'M': sColor:=fil_gcfgNewModeColor;
+            end;
 
-      if (spot='') then
-                      begin
-                        //if DebugThis then writeln('spot empty');
-                        sleep(fil_SpotDelay);
-                        Continue
-                      end;
 
-       inc(fil_RcvdCount);
-      if DebugThis then writeln('parse');
-      ParseSpot(spot, spotter, dxstn, freq, mode, stren);
-      if DebugThis then writeln('lotw eqsl');
-      if dmData.UsesLotw(dxstn) then
-        LoTW := 'L'
-      else
-        LoTW := '';
-      if dmDXCluster.UseseQSL(dxstn) then
-        eQSL := 'E'
-      else
-        eQSL := '';
-
-      if DebugThis then  writeln('allow filter');
-      if AllowedSpot(spotter,dxstn,freq,mode,LoTW,eQSL,dxinfo) then
-      begin
-        inc(fil_PassCount);
-        fRbnSpot.spotter := spotter;
-        fRbnSpot.dxstn   := dxstn;
-        fRbnSpot.freq    := freq;
-        fRbnSpot.mode    := mode;
-        fRbnSpot.qsl     := LoTW+eQSL;
-        fRbnSpot.dxinfo  := dxinfo;
-        fRbnSpot.signal  := stren;
-
-        if DebugThis then writeln('sync');
-        Synchronize(@ShowSpot);
-        Sleep(fil_SpotDelay);
-      end;
-    end;
-  except
-    on E: Exception do
-      Writeln('RBNthread: ',E.Message)
-  end;
+           if fil_gcfgeUseBackColor and (eQSL='E') then
+             bkColor := fil_gcfgeBckColor;
+           if fil_gcfgUseBackColor and (LoTW='L') then
+             bkColor := fil_gcfgBckColor;
+           end;
+           cLat:=0;
+           cLon:=0;
+           dmUtils.GetCoordinate(dmUtils.GetPfx(dxstn),cLat,cLon);
+           frmBandMap.AddToBandMap(dFreq,dxstn,mode,dmUtils.GetBandFromFreq(Mfreq),'',cLat,cLon,
+                                   sColor,bkColor, False, (LoTW='L'),(eQSL='E') );
+           inc(SpotCount.BandMap);
+        end;
+     end;
+    WaitMe:=False;
 end;
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
+procedure TfrmRbnMonitor.Reconnect;
+Begin
+  acDisconnectExecute(nil);
+  sleep(3000);
+  acConnectExecute(nil);
+end;
 
 end.
 

@@ -386,11 +386,4 @@ object frmRbnMonitor: TfrmRbnMonitor
     Left = 184
     Top = 208
   end
-  object tmrAddSpot: TTimer
-    Enabled = False
-    Interval = 1
-    OnTimer = tmrAddSpotTimer
-    Left = 28
-    Top = 282
-  end
 end

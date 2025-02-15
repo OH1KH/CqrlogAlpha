@@ -11,7 +11,7 @@ uses
 
 const
   C_MAX_ROWS = 1000;     //max lines in the list of RBN spots
-  C_MAX_DUPE_LIST = 200; //max spots for dupe check. Should be enough to filter same spot from different spotters
+  C_MAX_DUPE_LIST = 300; //max spots for dupe check. Should be enough to filter same spot from different spotters
 
 type
     TCounter = record
@@ -80,7 +80,6 @@ type
     procedure acHelpExecute(Sender : TObject);
     procedure acRbnServerExecute(Sender: TObject);
     procedure acScrollDownExecute(Sender : TObject);
-    procedure FormActivate(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
@@ -90,10 +89,10 @@ type
     procedure sgRbnDblClick(Sender: TObject);
     procedure sgRbnDrawCell(Sender: TObject; aCol, aRow: Integer; aRect: TRect;
       aState: TGridDrawState);
-    procedure sgRbnEnter(Sender: TObject);
-    procedure sgRbnExit(Sender: TObject);
     procedure sgRbnHeaderSized(Sender: TObject; IsColumn: Boolean;
       Index: Integer);
+    procedure sgRbnMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure tmrSpotRateTimer(Sender: TObject);
     procedure tmrUnfocusTimer(Sender: TObject);
   private
@@ -146,6 +145,7 @@ type
     procedure ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
     procedure SpotChecksAndShow(tmp:string);
     procedure Reconnect;
+    procedure lError(const msg: AnsiString; aSocket: TLSocket);
     function AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
 
   public
@@ -187,6 +187,12 @@ begin
   WaitMe:=false;
   NoScroll:=false;
   NoSpotsRcvd:=false;
+  lblRate.Hint:='Spot rate in minute:'+LineEnding+
+                 ' Please wait. Counting...'+LineEnding+
+                 '.'+LineEnding+
+                 'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
+  lblRate.Caption:= 'Counting...';
+  lblRate.Repaint;
 end;
 
 procedure TfrmRbnMonitor.lDisconnect(aSocket: TLSocket);
@@ -194,6 +200,22 @@ begin
   tbtnConnect.Action := acConnect;
   sbRbn.Panels[0].Text := 'Disconected';
   tmrSpotRate.Enabled:=False;
+  lblRate.Hint:='';
+  lblRate.Caption:= '';
+  lblRate.Repaint;
+end;
+
+procedure TfrmRbnMonitor.Reconnect;
+Begin
+  acDisconnectExecute(nil);
+  sleep(3000);
+  acConnectExecute(nil);
+end;
+
+procedure TfrmRbnMonitor.lError(const msg: AnsiString; aSocket: TLSocket);
+begin
+  //if dmData.DebugLevel >=1  then
+     Writeln('Connect RBN FAILED: '+msg);
 end;
 
 procedure TfrmRbnMonitor.lReceive(aSocket: TLSocket);
@@ -319,8 +341,16 @@ procedure TfrmRbnMonitor.acClearExecute(Sender: TObject);
 var l: integer;
 begin
   WaitMe:=true;
-  for l:= sgRbn.rowcount - 1 downto 1 do
-    sgRbn.DeleteRow(l);
+  sgRbn.Clear;
+  l := sgRbn.RowCount;
+       sgRbn.RowCount := l+1;
+  sgRbn.Cells[0,l] := 'Source';
+  sgRbn.Cells[1,l] := 'Freq';
+  sgRbn.Cells[2,l] := 'DX';
+  sgRbn.Cells[3,l] := 'Mode';
+  sgRbn.Cells[4,l] := 'dB';
+  sgRbn.Cells[5,l] := 'Qsl';
+  sgRbn.Cells[6,l] := 'DXCC';
   WaitMe:=false;
   NoScroll:=false;
 end;
@@ -415,7 +445,8 @@ begin
   lTelnet     := TLTelnetClientComponent.Create(nil);
   lTelnet.OnConnect    := @lConnect;
   lTelnet.OnDisconnect := @lDisconnect;
-  lTelnet.OnReceive    := @lReceive
+  lTelnet.OnReceive    := @lReceive;
+  lTelnet.OnError      := @lError;
 end;
 
 
@@ -457,10 +488,6 @@ begin
   sgRbn.Cells[5,0] := 'Qsl';
   sgRbn.Cells[6,0] := 'DXCC';
 
-  lblRate.Hint:='Spot rate in minute:'+LineEnding+
-                 ' Please wait. Counting...'+LineEnding+
-                 '.'+LineEnding+
-                 'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
 
   if ( cqrini.ReadBool('RBN','AutoConnectM',False)) then
      acConnectExecute(nil);
@@ -474,6 +501,7 @@ begin
   f.DecimalSeparator := '.';
   if TryStrToFloat( sgRbn.Cells[1,sgRbn.Row],i,f) then
     frmNewQSO.NewQSOFromSpot(sgRbn.Cells[2,sgRbn.Row],sgRbn.Cells[1,sgRbn.Row],sgRbn.Cells[3,sgRbn.Row],True);
+  frmRbnMonitor.Caption:= 'RBN Monitor';
   NoScroll:=false;
 end;
 
@@ -492,24 +520,18 @@ begin
    end }
 end;
 
-procedure TfrmRbnMonitor.sgRbnEnter(Sender: TObject);
-begin
-   frmRbnMonitor.Caption:= 'RBN Monitor  PAUSED!';
-   ToolBar1.Repaint;
-   NoScroll:=true;
-end;
-
-procedure TfrmRbnMonitor.sgRbnExit(Sender: TObject);
-begin
-  frmRbnMonitor.Caption:= 'RBN Monitor';
-  ToolBar1.Repaint;
-  NoScroll:=false;
-end;
-
 procedure TfrmRbnMonitor.sgRbnHeaderSized(Sender: TObject; IsColumn: Boolean;
   Index: Integer);
 begin
   btnEatFocus.SetFocus
+end;
+
+procedure TfrmRbnMonitor.sgRbnMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  frmRbnMonitor.Caption:= 'RBN Monitor  PAUSED!';
+  tmrUnfocus.Enabled:=true;
+  NoScroll:=True;
 end;
 
 procedure TfrmRbnMonitor.tmrSpotRateTimer(Sender: TObject);
@@ -539,26 +561,15 @@ end;
 
 procedure TfrmRbnMonitor.FormDeactivate(Sender: TObject);
 begin
-   frmRbnMonitor.Caption:= 'RBN Monitor';
-   NoScroll:=false;
-end;
-
-//-------------------------------------------------
-//if sgRbn cell is selected, then rbn monitor form looses focus and when it gets focus again
-//another cell is randomly selected. There is no way to unselect column when from looses focus.
-//(or then there is bug because it does not work in any way)
-//ScrollDown releases focus but it cannot be called when
-//form gets focus or it causes focus loop. Small delay fixes it and prevents loop.
-
-procedure TfrmRbnMonitor.FormActivate(Sender: TObject);
-begin
-  tmrUnfocus.Enabled:=true;
+  frmRbnMonitor.Caption:= 'RBN Monitor';
+  tmrUnfocus.Enabled:=false;
+  NoScroll:=false;
 end;
 
 procedure TfrmRbnMonitor.tmrUnfocusTimer(Sender: TObject);
 begin
   tmrUnfocus.Enabled:=false;
-  acScrollDownExecute(nil);
+  Self.FormDeactivate(nil);
 end;
 //-------------------------------------------------
 procedure TfrmRbnMonitor.LoadConfig;
@@ -858,9 +869,9 @@ begin
        sgRbn.Cells[5,i] := LoTW+eQSL;
        sgRbn.Cells[6,i] := dxinfo;
        inc(SpotCount.spot);
+
        if i>=C_MAX_ROWS then
-       sgRbn.DeleteRow(0);
-       if not NoScroll then sgRbn.Row := sgRbn.RowCount;
+                        sgRbn.DeleteRow(0);
 
        if  (frmGrayline.Showing and frmGrayline.acLinkToRbnMonitor.Checked) then
            Begin
@@ -898,13 +909,13 @@ begin
         end;
      end;
     WaitMe:=False;
-end;
 
-procedure TfrmRbnMonitor.Reconnect;
-Begin
-  acDisconnectExecute(nil);
-  sleep(3000);
-  acConnectExecute(nil);
+    if NoScroll then
+                exit
+         else
+           Begin
+              sgRbn.Row := sgRbn.RowCount;
+           end;
 end;
 
 end.

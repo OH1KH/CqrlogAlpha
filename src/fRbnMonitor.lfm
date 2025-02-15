@@ -11,14 +11,13 @@ object frmRbnMonitor: TfrmRbnMonitor
   Constraints.MinHeight = 170
   Constraints.MinWidth = 250
   KeyPreview = True
-  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnDeactivate = FormDeactivate
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object sbRbn: TStatusBar
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom
@@ -35,83 +34,6 @@ object frmRbnMonitor: TfrmRbnMonitor
       end>
     SimplePanel = False
   end
-  object sgRbn: TStringGrid
-    AnchorSideLeft.Control = Owner
-    AnchorSideTop.Control = pnlTools
-    AnchorSideTop.Side = asrBottom
-    AnchorSideRight.Control = Owner
-    AnchorSideRight.Side = asrBottom
-    AnchorSideBottom.Control = sbRbn
-    Left = 0
-    Height = 416
-    Top = 28
-    Width = 327
-    Anchors = [akTop, akLeft, akRight, akBottom]
-    ColCount = 7
-    FixedCols = 0
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goSmoothScroll, goScrollKeepVisible]
-    ParentShowHint = False
-    TabOrder = 1
-    OnDblClick = sgRbnDblClick
-    OnDrawCell = sgRbnDrawCell
-    OnEnter = sgRbnEnter
-    OnExit = sgRbnExit
-    OnHeaderSized = sgRbnHeaderSized
-    ColWidths = (
-      64
-      64
-      64
-      45
-      22
-      24
-      20
-    )
-    Cells = (
-      14
-      0
-      0
-      'Source'
-      0
-      1
-      'OK2CQR'
-      1
-      0
-      'Freq'
-      1
-      1
-      '14025.3'
-      2
-      0
-      'DX'
-      2
-      1
-      'WL7E'
-      3
-      0
-      'Mode'
-      3
-      1
-      'CW'
-      4
-      0
-      'Q'
-      4
-      1
-      'LE'
-      5
-      0
-      'dB'
-      5
-      1
-      '40'
-      6
-      0
-      'D'
-      6
-      1
-      'N'
-    )
-  end
   object pnlTools: TPanel
     Left = 0
     Height = 28
@@ -120,7 +42,7 @@ object frmRbnMonitor: TfrmRbnMonitor
     Align = alTop
     ClientHeight = 28
     ClientWidth = 327
-    TabOrder = 2
+    TabOrder = 1
     object ToolBar1: TToolBar
       AnchorSideLeft.Control = pnlTools
       AnchorSideTop.Control = pnlTools
@@ -225,15 +147,92 @@ object frmRbnMonitor: TfrmRbnMonitor
       AnchorSideTop.Control = pnlTools
       AnchorSideTop.Side = asrCenter
       Left = 207
-      Height = 17
-      Top = 6
-      Width = 68
+      Height = 1
+      Top = 14
+      Width = 1
       BorderSpacing.Left = 6
-      Caption = 'counting...'
       Layout = tlCenter
       ParentShowHint = False
       ShowHint = True
     end
+  end
+  object sgRbn: TStringGrid
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = pnlTools
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = sbRbn
+    Left = 0
+    Height = 416
+    Top = 28
+    Width = 327
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    AutoAdvance = aaNone
+    AutoEdit = False
+    ColCount = 7
+    FixedCols = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goSmoothScroll, goScrollKeepVisible]
+    ParentShowHint = False
+    TabOrder = 2
+    OnDblClick = sgRbnDblClick
+    OnDrawCell = sgRbnDrawCell
+    OnHeaderSized = sgRbnHeaderSized
+    OnMouseDown = sgRbnMouseDown
+    ColWidths = (
+      64
+      64
+      64
+      45
+      22
+      24
+      20
+    )
+    Cells = (
+      14
+      0
+      0
+      'Source'
+      0
+      1
+      'OK2CQR'
+      1
+      0
+      'Freq'
+      1
+      1
+      '14025.3'
+      2
+      0
+      'DX'
+      2
+      1
+      'WL7E'
+      3
+      0
+      'Mode'
+      3
+      1
+      'CW'
+      4
+      0
+      'Q'
+      4
+      1
+      'LE'
+      5
+      0
+      'dB'
+      5
+      1
+      '40'
+      6
+      0
+      'D'
+      6
+      1
+      'N'
+    )
   end
   object acRbnMonitor: TActionList
     Images = imgRbnMonitor
@@ -375,7 +374,7 @@ object frmRbnMonitor: TfrmRbnMonitor
   end
   object tmrUnfocus: TTimer
     Enabled = False
-    Interval = 60
+    Interval = 30000
     OnTimer = tmrUnfocusTimer
     Left = 104
     Top = 208

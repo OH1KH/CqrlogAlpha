@@ -9,7 +9,7 @@ object frmRbnFilter: TfrmRbnFilter
   ClientWidth = 694
   OnShow = FormShow
   Position = poOwnerFormCenter
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object grpDXStation: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -693,6 +693,20 @@ object frmRbnFilter: TfrmRbnFilter
         TabOrder = 2
         Text = '48'
       end
+    end
+    object chkDupFilt: TCheckBox
+      AnchorSideLeft.Control = chkToBandMap
+      AnchorSideTop.Control = chkOnlyLoTW
+      AnchorSideTop.Side = asrCenter
+      Left = 238
+      Height = 23
+      Hint = 'This drops even 2/3 of incoming spots before RBN filters.'#10'How ever it affects to "Source data from" filtering results.'
+      Top = 587
+      Width = 209
+      Caption = 'Use duplicate spots filtering'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 11
     end
   end
 end

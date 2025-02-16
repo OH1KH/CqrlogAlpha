@@ -32,7 +32,9 @@ type
     mode    : String[10];
     qsl     : String[2];
     dxinfo  : String[1];
-    signal  : String[3];
+    stren   : String[3];
+    LoTW    : String[1];
+    eQSL    : String[1];
   end;
 
 
@@ -100,6 +102,7 @@ type
     SrcCalls       : TStringlist;
     SpotCount      : TCounter;
     slDupeCheck    : TStringlist;
+    DupeFiltUsed   : boolean;
     DupeResolution : integer;
     WaitMe         : boolean;
     NoScroll       : boolean;
@@ -142,11 +145,11 @@ type
     procedure lReceive(aSocket: TLSocket);
     procedure ClearAllCounters;
     procedure ClearCounters;
-    procedure ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
-    procedure SpotChecksAndShow(tmp:string);
+    procedure ParseSpots(spot:String; var InSpot:TRBNSpot);
+    procedure SpotChecksAndShow(tmp:String;CSpot:TRBNSpot);
     procedure Reconnect;
     procedure lError(const msg: AnsiString; aSocket: TLSocket);
-    function AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
+    function AllowedSpot(var ASpot:TRBNSpot) : Boolean;
 
   public
     procedure LoadConfig;
@@ -223,18 +226,28 @@ const
   CR = #13;
   LF = #10;
 var
+  TheSpot       : TRBNSpot;
   sStart, sStop : Integer;
   tmp,dup       : String;
   buffer        : String;
   UserName      : String;
-  s,
-  spotter,
-  dxstn,
-  freq,
-  mode,
-  stren : String;
-  EX    : boolean;
-  f     : integer;
+  s             : String;
+  EX            : boolean;
+  f             : integer;
+
+procedure GoOn;
+Begin
+     inc(SpotCount.pass);
+     While WaitMe do
+      Begin
+        sleep(1);
+        Application.ProcessMessages;
+      end;
+     SpotChecksAndShow(tmp,TheSpot);
+end;
+
+
+
 begin
   if lTelnet.GetMessage(buffer) = 0 then
     exit;
@@ -251,17 +264,19 @@ begin
     if (Pos('DX DE',UpperCase(tmp))>0)  then
     begin
       ex:=false;
+      dup:='(nil)';
       inc(SpotCount.total);
       inc(SpotCount.minute);
-      ParseSpots(tmp, spotter, dxstn, freq, mode, stren);
-      try
-       if pos('.', freq)>0 then
-                 s:=copy(freq,1,pos('.',freq)-DupeResolution) //cut check frequency resolution
+      ParseSpots(tmp, TheSpot);
+      if  DupeFiltUsed then    //this affects to filter "Source data from" but reduces load on later stages
+       begin
+         if pos('.', TheSpot.freq)>0 then
+                 s:=copy(TheSpot.freq,1,pos('.',TheSpot.freq)-DupeResolution) //cut check frequency resolution
                else
-                 s:=copy(freq,1,length(freq)-(DupeResolution-1)); //just in case the dot is missing, shouldnt.
+                 s:=copy(TheSpot.freq,1,length(TheSpot.freq)-(DupeResolution-1)); //just in case the dot is missing, shouldnt.
 
-       dup:=dxstn+s+mode;  //combine all to one string. Assume they are trim():ed already
-       ex:=(slDupeCheck.IndexOf(dup)>-1);  //this combined spot exist in dupelist
+         dup:=TheSpot.dxstn+s+TheSpot.mode;  //combine all to one string. Assume they are trim():ed already
+         ex:=(slDupeCheck.IndexOf(dup)>-1);  //this combined spot exist in dupelist
 
        if ex then
          inc(SpotCount.dupe)
@@ -270,27 +285,22 @@ begin
            slDupeCheck.Add(dup);
            if   slDupeCheck.Count >= C_MAX_DUPE_LIST then
                                                slDupeCheck.Delete(0);
-           inc(SpotCount.pass);
-           While WaitMe do   //this should not happen with one thread unit
-            Begin
-              sleep(1);
-              Application.ProcessMessages;
-            end;
-           SpotChecksAndShow(tmp);
+           GoOn;
          end;
-       if dmData.DebugLevel >=1 then
-                            writeln('Dupe:',ex,'  ',slDupeCheck.Count,'  ',dup,'  ',tmp);
-      finally
-      end;
-
+       end
+     else
+       Begin
+        GoOn;
+       end;
     end
-    else begin
+    else //Pos('DX DE'
+     begin
       UserName := cqrini.ReadString('RBNMonitor','UserName',cqrini.ReadString('Station', 'Call', ''));
       if (Pos('LOGIN',UpperCase(tmp)) > 0) and (UserName <> '') then
         lTelnet.SendMessage(UserName+#13+#10);
       if (Pos('please enter your call',LowerCase(tmp)) > 0) and (UserName <> '') then
         lTelnet.SendMessage(UserName+#13+#10)
-    end;
+     end;
 
     sStart := sStop + 1;
     if sStart > Length(Buffer) then
@@ -620,11 +630,13 @@ begin
     fil_gcfgUseDXCColors    := cqrini.ReadBool('BandMap','UseDXCColors',False);
 
     DupeResolution:=cqrini.ReadInteger('RBNMonitor','DupeRes',1);
+    DupeFiltUsed := cqrini.ReadBool('RBNMonitor','DupeFiltUsed', false);
+
     WaitMe:=false;
     NoScroll:=false;
   end;
 
-procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mode, stren : String);
+procedure TfrmRbnMonitor.ParseSpots(spot : String; var InSpot : TRBNSpot);
 //DX de DL9GTB-#:  14027.1  HB9CCL         CW    10 dB  20 WPM  CQ      0713Z
  var
    i : shortInt;
@@ -632,6 +644,7 @@ procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mod
    b : Array of String[50];
    p : Integer=0;
  begin
+
    SetLength(b,1);
    for i:=1 to Length(spot) do
    begin
@@ -646,6 +659,8 @@ procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mod
      end
    end;
 
+  With InSpot do
+  begin
    spotter := b[2];
    i := pos('-', spotter);
    if i > 0 then
@@ -655,8 +670,8 @@ procedure TfrmRbnMonitor.ParseSpots(spot : String; var spotter, dxstn, freq, mod
    mode  := b[5];
    stren := b[6]
  end;
-
-function TfrmRbnMonitor.AllowedSpot(spotter, dxstn, freq, mode, LoTW, eQSL : String; var dxinfo : String) : Boolean;
+end;
+function TfrmRbnMonitor.AllowedSpot(var ASpot:TRBNSpot) : Boolean;
 var
   SrcCont  : String;
   DestCont : String;
@@ -678,6 +693,8 @@ begin
   Result := False;
   DebugThis:=dmData.DebugLevel>=2;
 
+ With ASpot do
+ Begin
   if (fil_SrcCalls.Count>0) then
    Begin
      SpotterOK:=false;
@@ -817,19 +834,10 @@ begin
      end;
   end; //case
   Result := True
+ end;
 end;
-
-procedure  TfrmRbnMonitor.SpotChecksAndShow( tmp:string);
+procedure  TfrmRbnMonitor.SpotChecksAndShow(tmp:String;CSpot:TRBNSpot);
 var
- spot    : String;
- spotter : String;
- freq,
- stren   : String;
- mode    : String;
- dxstn   : String;
- LoTW    : String ='';
- eQSL    : String ='';
- dxinfo  : String;
  i,
  bkCOlor,
  sColor  : Integer;
@@ -841,23 +849,24 @@ var
  clon     : Currency;
 
 begin
- DebugThis:=dmData.DebugLevel>=2;
- if tmp='' then exit;
+  DebugThis:=dmData.DebugLevel>=2;
+  if tmp='' then exit;
 
+  with CSpot do
+  Begin
      WaitMe:=true;
-     if DebugThis then writeln('parse');
-     ParseSpots(tmp, spotter, dxstn, freq, mode, stren);
-
+      if DebugThis then writeln('lotw eqsl');
+      if dmData.UsesLotw(dxstn) then
+         LoTW := 'L'
+       else
+         loTW:='';
+      if dmDXCluster.UseseQSL(dxstn) then
+         eQSL := 'E'
+       else
+         eQSL:='';
      if DebugThis then  writeln('allow filter');
-     if AllowedSpot(spotter,dxstn,freq,mode,LoTW,eQSL,dxinfo) then
+     if AllowedSpot(CSpot) then
      begin
-
-       if DebugThis then writeln('lotw eqsl');
-       if dmData.UsesLotw(dxstn) then
-         LoTW := 'L';
-       if dmDXCluster.UseseQSL(dxstn) then
-         eQSL := 'E';
-
        i := sgRbn.RowCount;
        sgRbn.RowCount := i+1;
 
@@ -916,6 +925,7 @@ begin
            Begin
               sgRbn.Row := sgRbn.RowCount;
            end;
+  end;
 end;
 
 end.

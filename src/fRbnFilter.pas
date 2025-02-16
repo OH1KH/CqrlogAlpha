@@ -23,6 +23,7 @@ type
     btnOK: TButton;
     btnSrcContAll: TButton;
     btnSrcCallAll: TButton;
+    chkDupFilt: TCheckBox;
     chkToBandMap: TCheckBox;
     chkNewDXConly: TCheckBox;
     chkOnlyeQSL: TCheckBox;
@@ -120,6 +121,7 @@ begin
   chkToBandMap.Checked  :=cqrini.ReadBool('RBNMonitor','ToBandMap',false);
 
   rgDupe.ItemIndex:= cqrini.ReadInteger('RBNMonitor','DupeRes',1);
+  chkDupFilt.Checked:= cqrini.ReadBool('RBNMonitor','DupeFiltUsed', false);
 
 end;
 
@@ -205,6 +207,7 @@ begin
   cqrini.WriteBool('RBNMonitor','ToBandMap',chkToBandMap.Checked );
 
   cqrini.WriteInteger('RBNMonitor','DupeRes',rgDupe.ItemIndex);
+  cqrini.WriteBool('RBNMonitor','DupeFiltUsed', chkDupFilt.Checked);
 
   cqrini.SaveToDisk;
   ModalResult := mrOK

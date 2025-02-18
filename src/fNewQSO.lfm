@@ -2140,7 +2140,7 @@ object frmNewQSO: TfrmNewQSO
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object pnlAll: TPanel
     AnchorSideTop.Control = dbgrdQSOBefore
     AnchorSideTop.Side = asrBottom
@@ -3130,7 +3130,7 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Side = asrBottom
             Caption = 'DXCC statistic'
-            ClientHeight = 104
+            ClientHeight = 101
             ClientWidth = 523
             object sgrdStatistic: TStringGrid
               AnchorSideRight.Side = asrBottom
@@ -3153,14 +3153,14 @@ object frmNewQSO: TfrmNewQSO
               TitleStyle = tsNative
               OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
               ColWidths = (
+                262
                 261
-                260
               )
             end
           end
           object tabCallStat: TTabSheet
             Caption = 'Call statistic'
-            ClientHeight = 104
+            ClientHeight = 101
             ClientWidth = 523
             object sgrdCallStatistic: TStringGrid
               AnchorSideRight.Side = asrBottom
@@ -3183,15 +3183,15 @@ object frmNewQSO: TfrmNewQSO
               TitleStyle = tsNative
               OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
               ColWidths = (
-                260
-                259
+                262
+                261
               )
             end
           end
           object tabSatellite: TTabSheet
             AnchorSideBottom.Side = asrBottom
             Caption = 'Satellite'
-            ClientHeight = 104
+            ClientHeight = 101
             ClientWidth = 523
             object cmbPropagation: TComboBox
               AnchorSideLeft.Control = lblStatellite
@@ -3321,7 +3321,7 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideRight.Side = asrBottom
             AnchorSideBottom.Side = asrBottom
             Caption = 'LO Config'
-            ClientHeight = 104
+            ClientHeight = 101
             ClientWidth = 523
             object cbTxLo: TCheckBox
               Left = 8

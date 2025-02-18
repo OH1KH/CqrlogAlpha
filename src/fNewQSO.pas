@@ -5775,6 +5775,12 @@ var
 begin
 
   //key ESC definitions
+  if (Shift = [ssShift]) and (key = VK_ESCAPE) then                 //emulates Ctrl+F2
+       Begin
+         Shift := [ssCtrl];
+         key   := VK_F2;
+       end;
+
   if key = VK_ESCAPE then                                           //VK_ESCAPE
   begin
     if not (fViewQSO or fEditQSO) then

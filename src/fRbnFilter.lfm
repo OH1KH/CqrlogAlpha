@@ -700,7 +700,7 @@ object frmRbnFilter: TfrmRbnFilter
       AnchorSideTop.Side = asrCenter
       Left = 238
       Height = 23
-      Hint = 'This drops even 2/3 of incoming spots before RBN filters.'#10'How ever it affects to "Source data from" filtering results.'
+      Hint = 'This drops even 2/3 of incoming spots before RBN filters.'#10'How ever "Source data from" filtering is done before duplication check. '
       Top = 587
       Width = 209
       Caption = 'Use duplicate spots filtering'

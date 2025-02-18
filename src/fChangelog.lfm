@@ -1,33 +1,33 @@
 object frmChangelog: TfrmChangelog
   Left = 427
-  Height = 467
+  Height = 463
   Top = 275
-  Width = 628
-  HorzScrollBar.Page = 628
+  Width = 798
+  HorzScrollBar.Page = 174
   VertScrollBar.Page = 88
   AutoScroll = True
-  ClientHeight = 467
-  ClientWidth = 628
+  ClientHeight = 463
+  ClientWidth = 798
   Constraints.MinHeight = 100
   Constraints.MinWidth = 250
   DefaultMonitor = dmPrimary
   FormStyle = fsStayOnTop
   Position = poScreenCenter
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 34
-    Top = 433
-    Width = 630
+    Top = 429
+    Width = 798
     Align = alBottom
     BevelOuter = bvNone
     ClientHeight = 34
-    ClientWidth = 630
+    ClientWidth = 798
     TabOrder = 0
     object Button1: TButton
-      Left = 547
+      Left = 715
       Height = 25
       Top = 5
       Width = 75
@@ -40,9 +40,9 @@ object frmChangelog: TfrmChangelog
   end
   object IpHtmlPanel1: TIpHtmlPanel
     Left = 2
-    Height = 429
+    Height = 425
     Top = 2
-    Width = 626
+    Width = 794
     Align = alClient
     BorderSpacing.Left = 2
     BorderSpacing.Top = 2

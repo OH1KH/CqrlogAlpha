@@ -90,6 +90,7 @@ begin
         Writeln('    -4  Wsjtx remote & Worked grids debug messages');
         Writeln('    -8  CW keying & TRXControl debug messages');
         Writeln('   -16  Grayline map RBN debug messages');
+        Writeln('   -32  RBNmonitor debug messages');
         Writeln;
         Exit;
      end;

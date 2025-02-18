@@ -121,7 +121,7 @@ begin
   chkToBandMap.Checked  :=cqrini.ReadBool('RBNMonitor','ToBandMap',false);
 
   rgDupe.ItemIndex:= cqrini.ReadInteger('RBNMonitor','DupeRes',1);
-  chkDupFilt.Checked:= cqrini.ReadBool('RBNMonitor','DupeFiltUsed', false);
+  chkDupFilt.Checked:= cqrini.ReadBool('RBNMonitor','DupeFiltUsed', true);
 
 end;
 

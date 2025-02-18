@@ -140,6 +140,8 @@ type
     fil_gcfgeBckColor         : TColor;
     fil_gcfgUseDXCColors      : Boolean;
 
+    DebugThis                 : boolean;
+
     procedure lConnect(aSocket: TLSocket);
     procedure lDisconnect(aSocket: TLSocket);
     procedure lReceive(aSocket: TLSocket);
@@ -149,10 +151,12 @@ type
     procedure SpotChecksAndShow(tmp:String;CSpot:TRBNSpot);
     procedure Reconnect;
     procedure lError(const msg: AnsiString; aSocket: TLSocket);
+    procedure LoadConfig;
+
+    function OkSource(var ASpot:TRBNSpot) : Boolean;
     function AllowedSpot(var ASpot:TRBNSpot) : Boolean;
 
   public
-    procedure LoadConfig;
   end;
 
 var
@@ -233,7 +237,7 @@ var
   UserName      : String;
   s             : String;
   EX            : boolean;
-  f             : integer;
+  i             : integer;
 
 procedure GoOn;
 Begin
@@ -268,29 +272,36 @@ begin
       inc(SpotCount.total);
       inc(SpotCount.minute);
       ParseSpots(tmp, TheSpot);
-      if  DupeFiltUsed then    //this affects to filter "Source data from" but reduces load on later stages
-       begin
-         if pos('.', TheSpot.freq)>0 then
-                 s:=copy(TheSpot.freq,1,pos('.',TheSpot.freq)-DupeResolution) //cut check frequency resolution
-               else
-                 s:=copy(TheSpot.freq,1,length(TheSpot.freq)-(DupeResolution-1)); //just in case the dot is missing, shouldnt.
-
-         dup:=TheSpot.dxstn+s+TheSpot.mode;  //combine all to one string. Assume they are trim():ed already
-         ex:=(slDupeCheck.IndexOf(dup)>-1);  //this combined spot exist in dupelist
-
-       if ex then
-         inc(SpotCount.dupe)
-         else
-         Begin
-           slDupeCheck.Add(dup);
-           if   slDupeCheck.Count >= C_MAX_DUPE_LIST then
-                                               slDupeCheck.Delete(0);
-           GoOn;
-         end;
-       end
-     else
+      if OkSource(TheSpot) then   //check spotter source here before dupe
        Begin
-        GoOn;
+          if  DupeFiltUsed then    //check duplicate spot
+           begin
+             if pos('.', TheSpot.freq)>0 then
+                     s:=copy(TheSpot.freq,1,pos('.',TheSpot.freq)-DupeResolution) //cut check frequency resolution
+                   else
+                     s:=copy(TheSpot.freq,1,length(TheSpot.freq)-(DupeResolution-1)); //just in case the dot is missing, shouldnt.
+
+             dup:=TheSpot.dxstn+s+TheSpot.mode;  //combine all to one string. Assume they are trim():ed already
+             ex:=(slDupeCheck.IndexOf(dup)>-1);  //this combined spot exist in dupelist
+
+           if ex then
+             begin
+             inc(SpotCount.dupe);
+             if DebugThis then
+                                  Writeln('RBNMonitor: ','Duplicate spot - ',TheSpot.dxstn);
+             end
+             else
+             Begin
+               slDupeCheck.Add(dup);
+               if   slDupeCheck.Count >= C_MAX_DUPE_LIST then
+                                                   slDupeCheck.Delete(0);
+               GoOn;
+             end;
+           end
+         else
+           Begin
+            GoOn;
+           end;
        end;
     end
     else //Pos('DX DE'
@@ -457,6 +468,13 @@ begin
   lTelnet.OnDisconnect := @lDisconnect;
   lTelnet.OnReceive    := @lReceive;
   lTelnet.OnError      := @lError;
+
+  //set debug rules for this form
+  // bit 6, %100000,  ---> -32 for routines in this form
+  DebugThis := dmData.DebugLevel >= 1 ;
+  if dmData.DebugLevel < 0 then
+      DebugThis :=  DebugThis or ((abs(dmData.DebugLevel) and 32) = 32 );
+
 end;
 
 
@@ -671,6 +689,57 @@ procedure TfrmRbnMonitor.ParseSpots(spot : String; var InSpot : TRBNSpot);
    stren := b[6]
  end;
 end;
+function TfrmRbnMonitor.OkSource(var ASpot:TRBNSpot) : Boolean;
+var
+  i:integer;
+  SrcCont  : String;
+  Country  : String;
+  waz,itu  : String;
+  pfx      : String;
+
+begin
+ with ASpot do
+  begin
+   if (fil_SrcCalls.Count>0) then //chk source here before dupe check.
+    Begin
+     Result:=false;
+     for i:=0 to fil_SrcCalls.Count-1 do
+      Begin
+        if (pos(fil_SrcCalls.Strings[i], spotter)=1) then  //begins with definition
+                                   begin
+                                     Result := True;
+                                     Break;
+                                   end;
+      end;
+     if Not Result then
+        Begin
+          if DebugThis then
+                                  Writeln('RBNMonitor: ','Wrong source callsign - ',Spotter);
+          Exit
+        end
+       else
+         if DebugThis then
+                                  Writeln('RBNMonitor: ','Source callsign passed - ',Spotter);
+    end
+   else   //if not source call defined then check continent
+    begin
+     Result:=true;
+     if fil_SrcCont<>C_RBN_CONT then
+       begin
+        dmDXCluster.id_country(spotter,now,pfx,Country,waz,itu,SrcCont);
+        if (Pos(SrcCont+',',fil_SrcCont+',') = 0) and (fil_SrcCont<>'') then
+        begin
+          if DebugThis then Writeln('RBNMonitor: ','Wrong source continent - ',SrcCont);
+          Result:=false;
+          exit
+        end
+        else
+         if DebugThis then
+                                  Writeln('RBNMonitor: ','Source continent passed - ',Spotter);
+       end;
+    end;
+  end;
+end;
 function TfrmRbnMonitor.AllowedSpot(var ASpot:TRBNSpot) : Boolean;
 var
   SrcCont  : String;
@@ -687,39 +756,13 @@ var
   f        : Double;
   i        : integer;
   SpotterOk: Boolean;
-  DebugThis: Boolean;
 
 begin
   Result := False;
-  DebugThis:=dmData.DebugLevel>=2;
 
  With ASpot do
  Begin
-  if (fil_SrcCalls.Count>0) then
-   Begin
-     SpotterOK:=false;
-     for i:=0 to fil_SrcCalls.Count-1 do
-      Begin
-        if (pos(fil_SrcCalls.Strings[i], spotter)=1) then  //begins with definition
-                                   begin
-                                     SpotterOk := True;
-                                     Break;
-                                   end;
-      end;
-     if Not SpotterOK then
-        Begin
-          if DebugThis then
-                                  Writeln('RBNMonitor: ','Wrong source callsign - ',Spotter);
-          Exit
-        end;
-    end;
 
-  dmDXCluster.id_country(spotter,now,pfx,Country,waz,itu,SrcCont);
-  if (Pos(SrcCont+',',fil_SrcCont+',') = 0) and (fil_SrcCont<>'') then
-  begin
-    if DebugThis then Writeln('RBNMonitor: ','Wrong source continent - ',SrcCont);
-    exit
-  end;
   if fil_IgnWkdHour then
   begin
     dmUtils.DateHoursAgo(fil_IgnHourValue,LastDate,LastTime);
@@ -771,17 +814,14 @@ begin
     end
   end;
   tmp:=fil_AllowBands;
-  if DebugThis then Writeln(band,'->',tmp);
   If (pos('RIG',UpperCase(tmp))>0) then
            tmp:=StringReplace(tmp,'RIG', dmDXCluster.GetBandFromFreq(FloatToStr(frmTRXControl.GetFreqkHz),True),[rfReplaceAll,rfIgnoreCase]);
-  if DebugThis then Writeln(band,'->',tmp);
   if (Pos(','+band+',',','+tmp+',')=0) and (tmp<>'') then
   begin
     if DebugThis then Writeln('RBNMonitor: ','This band is NOT allowed - ',band);
     exit
   end;
   tmp:= fil_AllowModes;
-  if DebugThis then Writeln(mode,'->',tmp);
   If (pos('RIG',UpperCase(tmp))>0) then
            tmp:=StringReplace(tmp,'RIG',frmTRXControl.GetActualMode,[rfReplaceAll,rfIgnoreCase]);
   if DebugThis then Writeln(mode,'->',tmp);
@@ -844,18 +884,15 @@ var
  band    : String;
  Mfreq   : String;
  dfreq   : extended;
- DebugThis: boolean;
  cLat,
  clon     : Currency;
 
 begin
-  DebugThis:=dmData.DebugLevel>=2;
   if tmp='' then exit;
 
   with CSpot do
   Begin
      WaitMe:=true;
-      if DebugThis then writeln('lotw eqsl');
       if dmData.UsesLotw(dxstn) then
          LoTW := 'L'
        else
@@ -864,7 +901,8 @@ begin
          eQSL := 'E'
        else
          eQSL:='';
-     if DebugThis then  writeln('allow filter');
+     if DebugThis then
+                  Writeln('RBNMonitor: LotW+eQSL - ',dxstn,' - ',LoTW,eQSL);
      if AllowedSpot(CSpot) then
      begin
        i := sgRbn.RowCount;

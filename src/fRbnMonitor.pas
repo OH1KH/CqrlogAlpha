@@ -206,6 +206,7 @@ procedure TfrmRbnMonitor.lDisconnect(aSocket: TLSocket);
 begin
   tbtnConnect.Action := acConnect;
   sbRbn.Panels[0].Text := 'Disconected';
+  sbRbn.Panels[1].Text :=  '';
   tmrSpotRate.Enabled:=False;
   lblRate.Hint:='';
   lblRate.Caption:= '';
@@ -264,6 +265,9 @@ begin
     tmp  := Copy(Buffer, sStart, sStop - sStart);
     tmp  := trim(tmp);
     if dmData.DebugLevel >=1 then Writeln(tmp);
+
+    if (Pos('RATE',UpperCase(tmp))>0)  then
+                              sbRbn.Panels[1].Text:=tmp;
 
     if (Pos('DX DE',UpperCase(tmp))>0)  then
     begin
@@ -580,10 +584,11 @@ begin
                  '.'+LineEnding+
                  'Grid MAX rows: '+IntToStr(C_MAX_ROWS);
 
+  sbRbn.Panels[1].Text :=  '';
+
   if (SpotCount.minute=0) and NoSpotsRcvd then  //takes two minutes(rounds) to initiate reconnect when zero spots received.
                                           Reconnect;
   NoSpotsRcvd:=(SpotCount.minute=0);
-
   ClearCounters;
 end;
 

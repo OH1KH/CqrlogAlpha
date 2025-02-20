@@ -30,7 +30,10 @@ object frmRbnMonitor: TfrmRbnMonitor
     Width = 327
     Panels = <    
       item
-        Width = 50
+        Width = 135
+      end
+      item
+        Width = 150
       end>
     SimplePanel = False
   end

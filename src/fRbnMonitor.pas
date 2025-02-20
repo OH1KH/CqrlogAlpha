@@ -214,9 +214,16 @@ begin
 end;
 
 procedure TfrmRbnMonitor.Reconnect;
+var i:integer;
 Begin
   acDisconnectExecute(nil);
-  sleep(3000);
+  sbRbn.Panels[1].Text :=  'Reconneting in 20secs';
+  for i:=1 to 200 do
+   Begin
+    sleep(100);
+    Application.ProcessMessages;
+   end;
+  sbRbn.Panels[1].Text :=  '';
   acConnectExecute(nil);
 end;
 

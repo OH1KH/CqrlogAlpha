@@ -10,7 +10,7 @@ uses
   RegExpr;
 
 const
-  C_MAX_ROWS = 1000;     //max lines in the list of RBN spots
+  C_MAX_ROWS = 1000;     //max lines in the list of RBN spots (800 rows + 200 rows overhead for pausing)
   C_MAX_DUPE_LIST = 300; //max spots for dupe check. Should be enough to filter same spot from different spotters
 
 type
@@ -917,6 +917,9 @@ begin
                   Writeln('RBNMonitor: LotW+eQSL - ',dxstn,' - ',LoTW,eQSL);
      if AllowedSpot(CSpot) then
      begin
+       if (sgRbn.RowCount>=C_MAX_ROWS) and NoScroll then  //when paused do not delete rows until max_rows reach
+                                        sgRbn.DeleteRow(0);
+                                                         //This is because scroll pause does not work if grid is full to max_rows
        i := sgRbn.RowCount;
        sgRbn.RowCount := i+1;
 
@@ -929,8 +932,10 @@ begin
        sgRbn.Cells[6,i] := dxinfo;
        inc(SpotCount.spot);
 
-       if i>=C_MAX_ROWS then
+       if (i>=C_MAX_ROWS-200) and (not NoScroll) then  //when scrolling normally keep 200 rows reserve for paused situation.
+                       repeat
                         sgRbn.DeleteRow(0);
+                       until  (sgRbn.RowCount< C_MAX_ROWS-200);
 
        if  (frmGrayline.Showing and frmGrayline.acLinkToRbnMonitor.Checked) then
            Begin

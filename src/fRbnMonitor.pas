@@ -374,6 +374,7 @@ var l: integer;
 begin
   WaitMe:=true;
   sgRbn.Clear;
+  slDupeCheck.Clear;
   l := sgRbn.RowCount;
        sgRbn.RowCount := l+1;
   sgRbn.Cells[0,l] := 'Source';

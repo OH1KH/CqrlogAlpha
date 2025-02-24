@@ -58,7 +58,7 @@ const
     'DIGITALVOICE', 'FM', 'FSK44', 'FSK441', 'FST4', 'GTOR', 'HELL', 'ISCAT', 'JS8', 'JT4',
     'JT44', 'JT65', 'JT65A', 'JT65B', 'JT65C', 'JT6M', 'JT9', 'MFSK', 'MFSK16', 'MSK144',
     'MT63', 'MTOR', 'OLIVIA', 'PACKET', 'PACTOR', 'PSK', 'PSK125', 'PSK250', 'PSK31', 'PSK63',
-    'QRA64', 'QRSS', 'ROS', 'SSTV', 'THROB', 'WSJT', 'WSPR');
+    'QRA64', 'QRSS', 'ROS', 'SSTV', 'THRB', 'WSJT', 'WSPR');
 
   cMaxBandsCount = 31; //True count of bands. (loops have 0..MaxBandsCount-1)
                        //when you change this check also frmContest.CommonStatus.ContestBandPtr

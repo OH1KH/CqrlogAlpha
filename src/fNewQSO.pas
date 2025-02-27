@@ -5741,11 +5741,11 @@ begin
         QRZ.FreeOnTerminate := True;
         QRZ.Start
       end
-    end
+    end;
+     edtGridExit(nil); //enables LocMap button if grid ok
+     FreqBefChange := frmTRXControl.GetFreqMHz;
   end;
 
-  if (not (fEditQSO or fViewQSO)) then
-    FreqBefChange := frmTRXControl.GetFreqMHz;
 
   //no need here //dmUtils.HamClockSetNewDE(CurrentMyloc,'','',UpperCase(cqrini.ReadString('Station', 'Call', '')));
   dmUtils.HamClockSetNewDX(lblLat.Caption,lblLong.Caption,edtGrid.Text);

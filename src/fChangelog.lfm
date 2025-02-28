@@ -4,7 +4,7 @@ object frmChangelog: TfrmChangelog
   Top = 275
   Width = 798
   HorzScrollBar.Page = 174
-  VertScrollBar.Page = 88
+  VertScrollBar.Page = 429
   AutoScroll = True
   ClientHeight = 463
   ClientWidth = 798
@@ -15,13 +15,12 @@ object frmChangelog: TfrmChangelog
   Position = poScreenCenter
   LCLVersion = '3.8.0.0'
   object Panel1: TPanel
-    AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 34
-    Top = 429
+    Top = 0
     Width = 798
-    Align = alBottom
+    Align = alTop
     BevelOuter = bvNone
     ClientHeight = 34
     ClientWidth = 798
@@ -41,9 +40,9 @@ object frmChangelog: TfrmChangelog
   object IpHtmlPanel1: TIpHtmlPanel
     Left = 2
     Height = 425
-    Top = 2
+    Top = 36
     Width = 794
-    Align = alClient
+    Align = alBottom
     BorderSpacing.Left = 2
     BorderSpacing.Top = 2
     BorderSpacing.Right = 2
@@ -63,6 +62,7 @@ object frmChangelog: TfrmChangelog
     PrintSettings.Preview.Width = 1080
     PrintSettings.Preview.Height = 675
     TabOrder = 1
+    UsePaintBuffer = False
   end
   object IpFileDataProvider1: TIpFileDataProvider
     Left = 63

@@ -75,6 +75,7 @@ procedure TfrmAbout.btnChangelogClick(Sender: TObject);
 begin
   with TfrmChangelog.Create(Application) do
   try
+    ViewChangelog;
     ShowModal
   finally
     Free

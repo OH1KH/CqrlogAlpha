@@ -1,11 +1,10 @@
 object frmDXCluster: TfrmDXCluster
-  Left = 129
+  Left = 116
   Height = 425
-  Top = 116
+  Top = 118
   Width = 709
   HelpType = htKeyword
   HelpKeyword = 'help/h21.html#ah19'
-  ActiveControl = pgDXCluster
   Caption = 'DXCluster'
   ClientHeight = 425
   ClientWidth = 709
@@ -121,7 +120,7 @@ object frmDXCluster: TfrmDXCluster
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.6.0.0'
   object pgDXCluster: TPageControl
     Left = 0
     Height = 425
@@ -159,8 +158,8 @@ object frmDXCluster: TfrmDXCluster
           Anchors = [akTop, akRight]
           BorderSpacing.InnerBorder = 4
           Caption = 'Connect'
-          OnClick = btnWebConnectClick
           TabOrder = 0
+          OnClick = btnWebConnectClick
         end
         object btnClear: TButton
           Left = 528
@@ -170,8 +169,8 @@ object frmDXCluster: TfrmDXCluster
           Anchors = [akTop, akRight]
           BorderSpacing.InnerBorder = 4
           Caption = 'Clear'
-          OnClick = btnClearClick
           TabOrder = 1
+          OnClick = btnClearClick
         end
         object btnHelp: TButton
           Left = 142
@@ -180,9 +179,9 @@ object frmDXCluster: TfrmDXCluster
           Width = 75
           BorderSpacing.InnerBorder = 4
           Caption = 'Help'
-          OnClick = btnHelpClick
           TabOrder = 2
           Visible = False
+          OnClick = btnHelpClick
         end
         object btnFont: TButton
           Left = 448
@@ -216,6 +215,7 @@ object frmDXCluster: TfrmDXCluster
       Caption = 'Telnet'
       ClientHeight = 394
       ClientWidth = 699
+      OnMouseWheel = tabTelnetMouseWheel
       object Panel1: TPanel
         Left = 0
         Height = 34
@@ -242,8 +242,8 @@ object frmDXCluster: TfrmDXCluster
           Top = 3
           Width = 266
           BorderSpacing.Left = 2
-          OnKeyPress = edtCommandKeyPress
           TabOrder = 0
+          OnKeyPress = edtCommandKeyPress
         end
         object Button1: TButton
           AnchorSideLeft.Side = asrBottom
@@ -254,8 +254,8 @@ object frmDXCluster: TfrmDXCluster
           Anchors = [akRight, akBottom]
           BorderSpacing.InnerBorder = 4
           Caption = 'Help'
-          OnClick = btnHelpClick
           TabOrder = 1
+          OnClick = btnHelpClick
         end
         object Button2: TButton
           Left = 528
@@ -263,9 +263,9 @@ object frmDXCluster: TfrmDXCluster
           Top = -8
           Width = 75
           Caption = 'Button2'
-          OnClick = Button2Click
           TabOrder = 2
           Visible = False
+          OnClick = Button2Click
         end
         object trChatSize: TTrackBar
           AnchorSideLeft.Control = edtCommand
@@ -282,6 +282,7 @@ object frmDXCluster: TfrmDXCluster
           Position = 20
           ScalePos = trLeft
           OnClick = trChatSizeClick
+          OnMouseWheel = trChatSizeMouseWheel
           TabOrder = 3
           Visible = False
         end
@@ -310,8 +311,8 @@ object frmDXCluster: TfrmDXCluster
           Width = 75
           BorderSpacing.InnerBorder = 4
           Caption = 'Select'
-          OnClick = btnSelectClick
           TabOrder = 1
+          OnClick = btnSelectClick
         end
         object btnTelConnect: TButton
           Left = 288
@@ -320,8 +321,8 @@ object frmDXCluster: TfrmDXCluster
           Width = 87
           BorderSpacing.InnerBorder = 4
           Caption = 'Connect'
-          OnClick = btnTelConnectClick
           TabOrder = 2
+          OnClick = btnTelConnectClick
         end
         object btnPreferences: TButton
           Left = 384
@@ -329,8 +330,8 @@ object frmDXCluster: TfrmDXCluster
           Top = 1
           Width = 104
           Caption = 'Preferences'
-          OnClick = btnPreferencesClick
           TabOrder = 3
+          OnClick = btnPreferencesClick
         end
       end
       object pnlTelnet: TPanel
@@ -493,8 +494,8 @@ object frmDXCluster: TfrmDXCluster
         Width = 500
         BorderSpacing.Left = 12
         BorderSpacing.Top = 3
-        OnExit = edtFExit
         TabOrder = 0
+        OnExit = edtFExit
       end
       object edtF2: TEdit
         AnchorSideLeft.Control = edtF1
@@ -504,8 +505,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 57
         Width = 500
-        OnExit = edtFExit
         TabOrder = 1
+        OnExit = edtFExit
       end
       object edtF3: TEdit
         AnchorSideLeft.Control = edtF1
@@ -515,8 +516,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 91
         Width = 500
-        OnExit = edtFExit
         TabOrder = 2
+        OnExit = edtFExit
       end
       object edtF4: TEdit
         AnchorSideLeft.Control = edtF1
@@ -526,8 +527,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 125
         Width = 500
-        OnExit = edtFExit
         TabOrder = 3
+        OnExit = edtFExit
       end
       object edtF5: TEdit
         AnchorSideLeft.Control = edtF1
@@ -537,8 +538,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 159
         Width = 500
-        OnExit = edtFExit
         TabOrder = 4
+        OnExit = edtFExit
       end
       object edtF6: TEdit
         AnchorSideLeft.Control = edtF1
@@ -548,8 +549,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 193
         Width = 500
-        OnExit = edtFExit
         TabOrder = 5
+        OnExit = edtFExit
       end
       object edtF7: TEdit
         AnchorSideLeft.Control = edtF1
@@ -559,8 +560,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 227
         Width = 500
-        OnExit = edtFExit
         TabOrder = 6
+        OnExit = edtFExit
       end
       object edtF8: TEdit
         AnchorSideLeft.Control = edtF1
@@ -570,8 +571,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 261
         Width = 500
-        OnExit = edtFExit
         TabOrder = 7
+        OnExit = edtFExit
       end
       object edtF9: TEdit
         AnchorSideLeft.Control = edtF1
@@ -581,8 +582,8 @@ object frmDXCluster: TfrmDXCluster
         Height = 34
         Top = 295
         Width = 500
-        OnExit = edtFExit
         TabOrder = 8
+        OnExit = edtFExit
       end
       object edtF10: TEdit
         AnchorSideLeft.Control = edtF1
@@ -694,5 +695,12 @@ object frmDXCluster: TfrmDXCluster
       Caption = 'acChatSize'
       OnExecute = acChatSizeExecute
     end
+  end
+  object tmrStopScroll: TTimer
+    Enabled = False
+    Interval = 5000
+    OnTimer = tmrStopScrollTimer
+    Left = 440
+    Top = 368
   end
 end

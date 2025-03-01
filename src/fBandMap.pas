@@ -267,21 +267,15 @@ begin
 
       if (FOnlyCurrMode) and (FCurrentMode<>'') then
       begin
-        if ((FCurrentMode='LSB') or (FCurrentMode='USB')) then
-        begin
-          if BandMapItems[i].Mode<>'SSB' then
-            Continue
-        end
-        else begin
-          if ((FCurrentMode='CW') or (FCurrentMode='CWR')) then
-          begin
-            if (BandMapItems[i].Mode<>'CW') and (BandMapItems[i].Mode<>'CWR') then
-              Continue
-          end
-          else begin
+        case  FCurrentMode of
+
+         'LSB','USB' :  if BandMapItems[i].Mode<>'SSB' then
+                                                           Continue;
+         'CW','CWR'  :  if (BandMapItems[i].Mode<>'CW') and (BandMapItems[i].Mode<>'CWR') then
+                                                                                              Continue;
+        else
             if BandMapItems[i].Mode<>FCurrentMode then
-              Continue
-          end
+                                                      Continue
         end
       end;
 
@@ -393,213 +387,6 @@ begin
   end
 end;
 
-function TBandMapThread.ItemExists(call,band,mode: String) : Integer;
-var
-  i : Integer;
-begin
-  Result := 0;
-  for i:=1 to MAX_ITEMS do
-  begin
-    if (frmBandMap.BandMapItems[i].call=call) and (frmBandMap.BandMapItems[i].band=band) and (frmBandMap.BandMapItems[i].mode=mode) then
-    begin
-      if dmData.DebugLevel>=1 then
-      begin
-        Writeln('Ex:BandMapItems[',i,'].Freq:',frmBandMap.BandMapItems[i].Freq);
-        Writeln('Ex:BandMapItems[',i,'].Call:',frmBandMap.BandMapItems[i].Call);
-        Writeln('Ex:BandMapItems[',i,'].Position:',frmBandMap.BandMapItems[i].Position)
-      end;
-      Result := i;
-      Break
-    end
-  end
-end;
-
-procedure TBandMapThread.DeleteFromArray(index : Integer);
-begin
-  frmBandMap.BandMapItems[index].Freq := 0;
-  frmBandMap.BandMapItems[index].Call := '';
-  frmBandMap.BandMapItems[index].Mode := '';
-  frmBandMap.BandMapItems[index].Band := '';
-  frmBandMap.BandMapItems[index].Flag := ''
-end;
-
-function TBandMapThread.FindFirstEmptyPos : Word;
-var
-  i : Integer;
-begin
-  Result := 0;
-  for i:=MAX_ITEMS downto 1 do
-  begin
-    if frmBandMap.BandMapItems[i].Freq = 0 then
-    begin
-      Result := i;
-      Break
-    end
-  end
-end;
-
-
-procedure TBandMapThread.Execute;
-var
-  i : Integer;
-  y : Integer;
-  p : Integer;
-  Changed : Boolean = False;
-  When : TDateTime;
-  iter : Word;
-  skip : Boolean = False;
-  LastDate : String;
-  LastTime : String;
-begin
-  try
-    SetLength(DelArray,0);
-    SetLength(AddArray,0);
-    iter := 1;
-    while not Terminated do
-    begin
-      try
-        When := now;
-        EnterCriticalSection(frmBandMap.BandMapCrit);
-        AddArray := frmBandMap.AddToBandMapArr;
-        DelArray := frmBandMap.DeleteFromBandMapArr;
-
-        SetLength(frmBandMap.AddToBandMapArr,0);
-        SetLength(frmBandMap.DeleteFromBandMapArr,0)
-      finally
-        LeaveCriticalSection(frmBandMap.BandMapCrit)
-      end;
-
-      if (frmBandMap.FDateFilterType = dftShowLastHours) then
-      begin
-        dmUtils.DateHoursAgo(frmBandMap.FLastHours,LastDate,LastTime);
-      end
-      else begin
-        if (frmBandMap.FDateFilterType = dftShowLastDateTime) then
-        begin
-          LastDate := frmBandMap.FSinceDate;
-          LastTime := frmBandMap.FSinceTime
-        end
-      end;
-
-      for y:=0 to Length(AddArray)-1 do
-      begin
-        p := ItemExists(AddArray[y].call,AddArray[y].band,AddArray[y].mode);
-        if dmData.DebugLevel>=1 then Writeln('Deleted data on position:',p);
-        if p>0 then
-        begin
-          DeleteFromArray(p)
-        end;
-
-        skip := False;
-
-        if not (frmBandMap.FDateFilterType = dftShowAll) then
-          skip := dmData.IsCallInLog(dmData.qBandMapFil,dmData.trBandMapFil,AddArray[y].Call,AddArray[y].Band,AddArray[y].Mode,LastDate,LastTime);
-
-        if frmBandMap.FOnlyLoTW and frmBandMap.FOnlyEQSL then
-        begin
-           if not (AddArray[y].isLoTW or AddArray[y].isEQSL) then
-             skip := True
-        end
-        else begin
-          if ((not AddArray[y].isLoTW) and frmBandMap.FOnlyLoTW) then
-            skip := True
-          else begin
-           if ((not AddArray[y].isEQSL) and frmBandMap.FOnlyEQSL) then
-            skip := True
-          end
-        end;
-
-        if skip then
-          Continue;
-
-
-        i := FindFirstemptyPos;
-        if (i>0) then
-        begin
-          frmBandMap.BandMapItems[i].frmNewQSO := AddArray[y].frmNewQSO;
-          frmBandMap.BandMapItems[i].Freq      := AddArray[y].Freq+Random(100)*0.000000001;
-          frmBandMap.BandMapItems[i].Call      := AddArray[y].Call;
-          frmBandMap.BandMapItems[i].Mode      := AddArray[y].Mode;
-          frmBandMap.BandMapItems[i].Band      := AddArray[y].Band;
-          frmBandMap.BandMapItems[i].SplitInfo := AddArray[y].SplitInfo;
-          frmBandMap.BandMapItems[i].Lat       := AddArray[y].Lat;
-          frmBandMap.BandMapItems[i].Long      := AddArray[y].Long;
-          frmBandMap.BandMapItems[i].Color     := AddArray[y].Color;
-          frmBandMap.BandMapItems[i].BgColor   := AddArray[y].BgColor;
-          frmBandMap.BandMapItems[i].TimeStamp := AddArray[y].TimeStamp;
-          frmBandMap.BandMapItems[i].TextValue := AddArray[y].TextValue;
-          frmBandMap.BandMapItems[i].isLoTW    := AddArray[y].isLoTW;
-          frmBandMap.BandMapItems[i].isEQSL    := AddArray[y].isEQSL;
-          frmBandMap.BandMapItems[i].Position  := i
-        end;
-        NewAdded := True
-      end;
-
-      for i:=1 to MAX_ITEMS do
-      begin
-        for y:=0 to Length(DelArray)-1 do
-        begin
-          if (frmBandMap.BandMapItems[i].Call=DelArray[y].call) and  (frmBandMap.BandMapItems[i].Band=DelArray[y].band) and
-             (frmBandMap.BandMapItems[i].Mode=DelArray[y].mode) then
-          begin
-            DeleteFromArray(i);
-            NewAdded := True
-          end
-        end;
-
-        if frmBandMap.BandMapItems[i].Freq = 0 then
-          Continue;
-
-        if When>(frmBandMap.BandMapItems[i].TimeStamp + (frmBandMap.FDeleteAfter/86400)) then
-        begin
-          DeleteFromArray(i);
-          Changed := True
-        end
-        else if (When>(frmBandMap.BandMapItems[i].TimeStamp + (frmBandMap.FSecondInterval/86400))) and (frmBandMap.BandMapItems[i].Flag='S') then
-        begin
-          frmBandMap.BandMapItems[i].Color := IncColor(frmBandMap.BandMapItems[i].Color,40);
-          frmBandMap.BandMapItems[i].Flag  := 'X';
-          Changed := True
-        end
-        else if (When>(frmBandMap.BandMapItems[i].TimeStamp + (frmBandMap.FFirstInterval/86400))) and (frmBandMap.BandMapItems[i].Flag='') then
-        begin
-          frmBandMap.BandMapItems[i].Color := IncColor(frmBandMap.BandMapItems[i].Color,60);
-          frmBandMap.BandMapItems[i].Flag  := 'S';
-          Changed := True
-        end
-      end;
-      if NewAdded then
-      begin
-        frmBandMap.SortBandMapArray(1,MAX_ITEMS,cqrini.ReadBool('BandMap', 'ReverseOrder', False) );
-        NewAdded := False;
-        Changed  := True
-      end;
-      if Changed or (iter>3) then
-      begin
-        Synchronize(@frmBandMap.SyncBandMap);
-        Changed := False;
-        iter    := 1
-      end;
-      inc(iter);
-      Sleep(500)
-    end
-  except
-     on E : Exception do Writeln(E.Message)
-  end
-end;
-
-
-function TBandMapThread.IncColor(AColor: TColor; AQuantity: Byte) : TColor;
-var
-  R, G, B : Byte;
-begin
-  RedGreenBlue(ColorToRGB(AColor), R, G, B);
-  R := Max(0, Integer(R) + AQuantity);
-  G := Max(0, Integer(G) + AQuantity);
-  B := Max(0, Integer(B) + AQuantity);
-  Result := RGBToColor(R, G, B);
-end;
-
 function TfrmBandMap.SetSizeLeft(Value : String;Len : Integer) : String;
 var
   i : Integer;
@@ -688,13 +475,13 @@ end;
 procedure TfrmBandMap.FormActivate(Sender: TObject);
 begin
   BmPause:=true;
-  frmBandMap.Caption:='BM PAUSED!';
+  Self.Caption:='BM PAUSED!';
 end;
 
 procedure TfrmBandMap.ReleasePaused;
 Begin
   BmPause:=false;
-  frmBandMap.Caption:= 'Band map';
+  Self.Caption:= 'Band map';
   frmNewQso.ReturnToNewQSO;
 end;
 procedure TfrmBandMap.acClearExecute(Sender: TObject);
@@ -878,31 +665,23 @@ begin
     for i:=1 to MAX_ITEMS do
     begin
       if (BandMapItems[i].Freq = 0) or (MaxXplanetSpots=0) then
-        Continue;
-
+                                                               Continue;
       if (FOnlyCurrBand) and (FCurrentBand<>'') then
       begin
         if BandMapItems[i].Band<>FCurrentBand then
-          Continue
+                                                  Continue
       end;
-
       if (FOnlyCurrMode) and (FCurrentMode<>'') then
       begin
-        if ((FCurrentMode='LSB') or (FCurrentMode='USB')) then
-        begin
-          if BandMapItems[i].Mode<>'SSB' then
-            Continue
-        end
-        else begin
-          if ((FCurrentMode='CW') and (FCurrentMode='CWR')) then
-          begin
-            if (BandMapItems[i].Mode<>'CW') or (BandMapItems[i].Mode<>'CWR') then
-              Continue
-          end
-          else begin
+         case  FCurrentMode of
+
+         'LSB','USB' :  if BandMapItems[i].Mode<>'SSB' then
+                                                           Continue;
+         'CW','CWR'  :  if (BandMapItems[i].Mode<>'CW') and (BandMapItems[i].Mode<>'CWR') then
+                                                                                              Continue;
+        else
             if BandMapItems[i].Mode<>FCurrentMode then
-              Continue
-          end
+                                                      Continue
         end
       end;
 
@@ -954,6 +733,216 @@ begin
 
   frmBandMap.OnlyLoTW := cqrini.ReadBool('BandMapFilter','OnlyLoTW',False);
   frmBandMap.OnlyEQSL := cqrini.ReadBool('BandMapFilter','OnlyeQSL',False)
+end;
+
+function TBandMapThread.ItemExists(call,band,mode: String) : Integer;
+var
+  i : Integer;
+begin
+  Result := 0;
+  for i:=1 to MAX_ITEMS do
+  begin
+    if (frmBandMap.BandMapItems[i].call=call) and (frmBandMap.BandMapItems[i].band=band) and (frmBandMap.BandMapItems[i].mode=mode) then
+    begin
+      if dmData.DebugLevel>=1 then
+      begin
+        Writeln('Ex:BandMapItems[',i,'].Freq:',frmBandMap.BandMapItems[i].Freq);
+        Writeln('Ex:BandMapItems[',i,'].Call:',frmBandMap.BandMapItems[i].Call);
+        Writeln('Ex:BandMapItems[',i,'].Position:',frmBandMap.BandMapItems[i].Position)
+      end;
+      Result := i;
+      Break
+    end
+  end
+end;
+
+procedure TBandMapThread.DeleteFromArray(index : Integer);
+begin
+  frmBandMap.BandMapItems[index].Freq := 0;
+  frmBandMap.BandMapItems[index].Call := '';
+  frmBandMap.BandMapItems[index].Mode := '';
+  frmBandMap.BandMapItems[index].Band := '';
+  frmBandMap.BandMapItems[index].Flag := ''
+end;
+
+function TBandMapThread.FindFirstEmptyPos : Word;
+var
+  i : Integer;
+begin
+  Result := 0;
+  for i:=MAX_ITEMS downto 1 do
+  begin
+    if frmBandMap.BandMapItems[i].Freq = 0 then
+    begin
+      Result := i;
+      Break
+    end
+  end
+end;
+
+
+procedure TBandMapThread.Execute;
+var
+  i : Integer;
+  y : Integer;
+  p : Integer;
+  Changed : Boolean = False;
+  When : TDateTime;
+  iter : Word;
+  skip : Boolean = False;
+  LastDate : String;
+  LastTime : String;
+begin
+  try
+    SetLength(DelArray,0);
+    SetLength(AddArray,0);
+    iter := 1;
+    while not Terminated do
+    begin
+     NewAdded:=false;
+      try
+        When := now;
+        EnterCriticalSection(frmBandMap.BandMapCrit);
+        AddArray := frmBandMap.AddToBandMapArr;
+        DelArray := frmBandMap.DeleteFromBandMapArr;
+
+        SetLength(frmBandMap.AddToBandMapArr,0);
+        SetLength(frmBandMap.DeleteFromBandMapArr,0)
+      finally
+        LeaveCriticalSection(frmBandMap.BandMapCrit)
+      end;
+
+      if (frmBandMap.FDateFilterType = dftShowLastHours) then
+      begin
+        dmUtils.DateHoursAgo(frmBandMap.FLastHours,LastDate,LastTime);
+      end
+      else begin
+        if (frmBandMap.FDateFilterType = dftShowLastDateTime) then
+        begin
+          LastDate := frmBandMap.FSinceDate;
+          LastTime := frmBandMap.FSinceTime
+        end
+      end;
+
+      for y:=0 to Length(AddArray)-1 do
+          begin
+              p := ItemExists(AddArray[y].call,AddArray[y].band,AddArray[y].mode);
+              if p>0 then
+              begin
+                DeleteFromArray(p);
+                if dmData.DebugLevel>=1 then
+                                      Writeln('Deleted data on position:',p);
+              end;
+
+              skip := False;
+
+              if not (frmBandMap.FDateFilterType = dftShowAll) then
+                skip := dmData.IsCallInLogB(AddArray[y].Call,AddArray[y].Band,AddArray[y].Mode,LastDate,LastTime);
+
+              if frmBandMap.FOnlyLoTW and frmBandMap.FOnlyEQSL then
+              begin
+                 if not (AddArray[y].isLoTW or AddArray[y].isEQSL) then
+                   skip := True
+              end
+              else begin
+                if ((not AddArray[y].isLoTW) and frmBandMap.FOnlyLoTW) then
+                  skip := True
+                else begin
+                 if ((not AddArray[y].isEQSL) and frmBandMap.FOnlyEQSL) then
+                  skip := True
+                end
+              end;
+
+              if skip then
+                Continue;
+
+              i := FindFirstemptyPos;
+              if (i>0) then
+              begin
+                frmBandMap.BandMapItems[i].frmNewQSO := AddArray[y].frmNewQSO;
+                frmBandMap.BandMapItems[i].Freq      := AddArray[y].Freq+Random(100)*0.000000001;
+                frmBandMap.BandMapItems[i].Call      := AddArray[y].Call;
+                frmBandMap.BandMapItems[i].Mode      := AddArray[y].Mode;
+                frmBandMap.BandMapItems[i].Band      := AddArray[y].Band;
+                frmBandMap.BandMapItems[i].SplitInfo := AddArray[y].SplitInfo;
+                frmBandMap.BandMapItems[i].Lat       := AddArray[y].Lat;
+                frmBandMap.BandMapItems[i].Long      := AddArray[y].Long;
+                frmBandMap.BandMapItems[i].Color     := AddArray[y].Color;
+                frmBandMap.BandMapItems[i].BgColor   := AddArray[y].BgColor;
+                frmBandMap.BandMapItems[i].TimeStamp := AddArray[y].TimeStamp;
+                frmBandMap.BandMapItems[i].TextValue := AddArray[y].TextValue;
+                frmBandMap.BandMapItems[i].isLoTW    := AddArray[y].isLoTW;
+                frmBandMap.BandMapItems[i].isEQSL    := AddArray[y].isEQSL;
+                frmBandMap.BandMapItems[i].Position  := i;
+                NewAdded := True
+              end;
+          end;
+
+      for i:=1 to MAX_ITEMS do
+      begin
+        for y:=0 to Length(DelArray)-1 do
+        begin
+          if (frmBandMap.BandMapItems[i].Call=DelArray[y].call) and  (frmBandMap.BandMapItems[i].Band=DelArray[y].band) and
+             (frmBandMap.BandMapItems[i].Mode=DelArray[y].mode) then
+          begin
+            DeleteFromArray(i);
+            NewAdded := True
+          end
+        end;
+
+        if frmBandMap.BandMapItems[i].Freq = 0 then
+          Continue;
+
+        if When>(frmBandMap.BandMapItems[i].TimeStamp + (frmBandMap.FDeleteAfter/86400)) then
+        begin
+          DeleteFromArray(i);
+          Changed := True
+        end
+        else if (When>(frmBandMap.BandMapItems[i].TimeStamp + (frmBandMap.FSecondInterval/86400))) and (frmBandMap.BandMapItems[i].Flag='S') then
+        begin
+          frmBandMap.BandMapItems[i].Color := IncColor(frmBandMap.BandMapItems[i].Color,40);
+          frmBandMap.BandMapItems[i].Flag  := 'X';
+          Changed := True
+        end
+        else if (When>(frmBandMap.BandMapItems[i].TimeStamp + (frmBandMap.FFirstInterval/86400))) and (frmBandMap.BandMapItems[i].Flag='') then
+        begin
+          frmBandMap.BandMapItems[i].Color := IncColor(frmBandMap.BandMapItems[i].Color,60);
+          frmBandMap.BandMapItems[i].Flag  := 'S';
+          Changed := True
+        end
+      end;
+
+      if NewAdded then
+      begin
+        frmBandMap.SortBandMapArray(1,MAX_ITEMS,cqrini.ReadBool('BandMap', 'ReverseOrder', False) );
+        NewAdded := False;
+        Changed  := True
+      end;
+
+      if Changed or (iter>3) then
+      begin
+        Synchronize(@frmBandMap.SyncBandMap);
+        Changed := False;
+        iter    := 1
+      end;
+      inc(iter);
+      Sleep(500)
+    end
+  except
+     on E : Exception do Writeln('Bandmap thread: ',E.Message)
+  end
+end;
+
+
+function TBandMapThread.IncColor(AColor: TColor; AQuantity: Byte) : TColor;
+var
+  R, G, B : Byte;
+begin
+  RedGreenBlue(ColorToRGB(AColor), R, G, B);
+  R := Max(0, Integer(R) + AQuantity);
+  G := Max(0, Integer(G) + AQuantity);
+  B := Max(0, Integer(B) + AQuantity);
+  Result := RGBToColor(R, G, B);
 end;
 
 end.

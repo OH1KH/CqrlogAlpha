@@ -62,11 +62,13 @@ type
     mQ: TSQLQuery;
     Q2: TSQLQuery;
     CQ: TSQLQuery;
+    QCallInLogR: TSQLQuery;
     QDXCCStat: TSQLQuery;
     QStatNewQSO: TSQLQuery;
     Qstate: TSQLQuery;
     qFreqMemGrid: TSQLQuery;
     qFreqs: TSQLQuery;
+    QCallInLogB: TSQLQuery;
     trFreqMemGrid: TSQLTransaction;
     trFreqs: TSQLTransaction;
     trQ2: TSQLTransaction;
@@ -96,9 +98,11 @@ type
     qRbnMon: TSQLQuery;
     qFreqMem: TSQLQuery;
     trCQ: TSQLTransaction;
+    trQCallInLogR: TSQLTransaction;
     trQDXCCStat: TSQLTransaction;
     trQStatNewQSO: TSQLTransaction;
     trQstate: TSQLTransaction;
+    trQCallInLogB: TSQLTransaction;
     trW: TSQLTransaction;
     trWorkedContests: TSQLTransaction;
     W1: TSQLQuery;
@@ -172,7 +176,6 @@ type
     aProf : Array of TExpProfile;
     aSCP  : Array of String[20];
     MySQLProcess : TProcess;
-    csPreviousQSO : TRTLCriticalSection;
     fMySQLVersion : Currency;
     FreqMemCount  : integer;
 
@@ -205,6 +208,8 @@ type
     RbnMonCon    : TSQLConnection;
     LogUploadCon : TSQLConnection;
     dbDXC        : TSQLConnection;
+    WGMWCon      : TSQLConnection;
+
     MySqlLocalRunning : boolean ;
     eQSLUsers : Array of ShortString;
     CallArray : Array of String[20];
@@ -281,7 +286,8 @@ type
     function  TriggersExistsOnCqrlog_main : Boolean;
     function  GetLastAllertCallId(const callsign,band,mode : String) : Integer;
     function  RbnMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean;  var index : integer) : String;
-    function  IsCallInLog(AQue:TSQLQuery;ATra:TSQLTransaction;callsign,band,mode,LastDate,LastTime : String) : Boolean;
+    function  IsCallInLogB(callsign,band,mode,LastDate,LastTime : String) : Boolean;
+    function  IsCallInLogR(callsign,band,mode,LastDate,LastTime : String) : Boolean;
     function  CallNoteExists(Callsign : String) : Boolean;
     function  GetNewLogNumber : Integer;
     function  getNewMySQLConnectionObject : TMySQL57Connection;
@@ -344,6 +350,11 @@ type
     procedure GetRXTXOffset(Freq : Currency; var RXOffset,TXOffset : Currency);
     procedure LoadQSODateColorSettings;
     procedure PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery;lTr : TSQLTransaction);
+
+  protected
+   // This procedure will receive the events that are logged by the connection:
+   procedure GetLogEvent(Sender: TSQLConnection; EventType: TDBEventType; Const Msg : String);
+
   end;
 
 var
@@ -538,49 +549,72 @@ var
 begin
   Result := True;
 
-  if MainCon.Connected then
-    MainCon.Connected := False;
-  if dbDXC.Connected then
-    dbDXC.Connected := False;
-  if LogUploadCon.Connected then
-    LogUploadCon.Connected := False;
-  if RbnMonCon.Connected then
-    RbnMonCon.Connected := False;
+  if MainCon.Connected then  MainCon.Connected := False;
+  if dbDXC.Connected then  dbDXC.Connected := False;
+  if LogUploadCon.Connected then LogUploadCon.Connected := False;
+  if RbnMonCon.Connected then  RbnMonCon.Connected := False;
+  if WGMWCon.Connected then  WGMWCon.Connected := False;
 
-  MainCon.CharSet:='UTF8';
+  MainCon.CharSet      :='UTF8';
   MainCon.HostName     := host;
   MainCon.Params.Text  := 'Port='+port;
   MainCon.UserName     := user;
   MainCon.Password     := pass;
   MainCon.DatabaseName := 'information_schema';
 
-  BandMapCon.CharSet:='UTF8';
+  //MainCon.LogEvents:=LogAllEvents;
+  // MainCon.OnLog:=@GetLogEvent;
+
+  BandMapCon.CharSet      :='UTF8';
   BandMapCon.HostName     := host;
   BandMapCon.Params.Text  := 'Port='+port;
   BandMapCon.UserName     := user;
   BandMapCon.Password     := pass;
   BandMapCon.DatabaseName := 'information_schema';
 
-  RbnMonCon.CharSet:='UTF8';
+  //BandMapCon.LogEvents:=LogAllEvents;
+  // BandMapCon.OnLog:=@GetLogEvent;
+
+  RbnMonCon.CharSet      :='UTF8';
   RbnMonCon.HostName     := host;
   RbnMonCon.Params.Text  := 'Port='+port;
   RbnMonCon.UserName     := user;
   RbnMonCon.Password     := pass;
   RbnMonCon.DatabaseName := 'information_schema';
 
-  dbDXC.CharSet:='UTF8';
+  // RbnMonCon.LogEvents:=LogAllEvents;
+  // RbnMonCon.OnLog:=@GetLogEvent;
+
+  dbDXC.CharSet      :='UTF8';
   dbDXC.HostName     := host;
   dbDXC.Params.Text  := 'Port='+port;
   dbDXC.UserName     := user;
   dbDXC.Password     := pass;
   dbDXC.DatabaseName := 'information_schema';
 
-  LogUploadCon.CharSet:='UTF8';
+  // dbDXC.LogEvents:=LogAllEvents;
+  // dbDXC.OnLog:=@GetLogEvent;
+
+  LogUploadCon.CharSet      :='UTF8';
   LogUploadCon.HostName     := host;
   LogUploadCon.Params.Text  := 'Port='+port;
   LogUploadCon.UserName     := user;
   LogUploadCon.Password     := pass;
   LogUploadCon.DatabaseName := 'information_schema';
+
+  //LogUploadCon.LogEvents:=LogAllEvents;
+  //LogUploadCon.OnLog:=@GetLogEvent;
+
+  WGMWCon.CharSet      :='UTF8';
+  WGMWCon.HostName     := host;
+  WGMWCon.Params.Text  := 'Port='+port;
+  WGMWCon.UserName     := user;
+  WGMWCon.Password     := pass;
+  WGMWCon.DatabaseName := 'information_schema';
+
+  //WGMWCon.LogEvents:=LogAllEvents;
+  //WGMWCon.OnLog:=@GetLogEvent;
+
 
   try
     MainCon.Connected      := True;
@@ -588,6 +622,7 @@ begin
     LogUploadCon.Connected := True;
     BandMapCon.Connected   := True;
     RbnMonCon.Connected    := True;
+    WGMWCon.Connected      := True;
 
     sql := 'SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'+QuotedStr('ONLY_FULL_GROUP_BY')+','+QuotedStr('')+'));';
 
@@ -595,7 +630,9 @@ begin
     dbDXC.ExecuteDirect(sql);
     LogUploadCon.ExecuteDirect(sql);
     BandMapCon.ExecuteDirect(sql);
-    RbnMonCon.ExecuteDirect(sql)
+    RbnMonCon.ExecuteDirect(sql);
+    WGMWCon.ExecuteDirect(sql)
+
   except
     on E : Exception do
     begin
@@ -719,6 +756,15 @@ begin
   trRbnMon.StartTransaction;
   qRbnMon.ExecSQL;
   trRbnMon.Commit;
+
+  if trW.Active then trW.Rollback;
+  W.Close;
+  W.SQL.Text := 'use ' + fDBName;
+  if (fDebugLevel>=1) then Writeln(W.SQL.Text);
+  trW.StartTransaction;
+  W.ExecSQL;
+  trW.Commit;
+
 
   Q.SQL.Text := 'SELECT * FROM cqrlog_config';
   trQ.StartTransaction;
@@ -877,7 +923,7 @@ end;
 
 procedure TdmData.KillMySQL(const OnStart : Boolean = True);
 var
-  res       : Byte;
+  res       : Longint;
   SearchRec : TSearchRec;
   f         : TextFile;
   pid       : String = '';
@@ -1105,7 +1151,6 @@ var
   AStringList: TStringList;
 
 begin
-  InitCriticalSection(csPreviousQSO);
   cqrini       := nil;
   IsSFilter    := False;
   fDLLSSLName  := '';
@@ -1150,26 +1195,46 @@ begin
 
   CreateDBConnections;
 
-  MainCon.KeepConnection := True;
+  MainCon.KeepConnection := True;  //OH1KH 2025-01 that is set at connection creation already -> TdmData.getNewMySQLConnectionObject!!
   MainCon.Transaction := trmQ;
+
   for i:=0 to ComponentCount-1 do
   begin
     if Components[i] is TSQLQuery then
+     Begin
       (Components[i] as TSQLQuery).DataBase := MainCon;
+     end;
     if Components[i] is TSQLTransaction then
-      (Components[i] as TSQLTransaction).DataBase := MainCon
+     begin
+      (Components[i] as TSQLTransaction).DataBase := MainCon;
+     end;
   end;
 
-  //special connection for band map thread
+  //special connections for thread
   BandMapCon.Transaction    := trBandMapFil;
   qBandMapFil.Transaction   := trBandMapFil;
   qBandMapFil.DataBase      := BandMapCon;
   trBandMapFil.DataBase     := BandMapCon;
+  QCallInLogB.DataBase      := BandMapCon;
+  trQCallInLogB.DataBase    := BandMapCon;
 
   RbnMonCon.Transaction    := trRbnMon;
   qRbnMon.Transaction      := trRbnMon;
   qRbnMon.DataBase         := RbnMonCon;
   trRbnMon.DataBase        := RbnMonCon;
+  QCallInLogR.DataBase     := RbnMonCon;
+  trQCallInLogR.DataBase   := RbnMonCon;
+
+  WGMWCon.Transaction      := trW;
+  W.Transaction            := trW;
+  W.DataBase               := WGMWCon;
+  trW.DataBase             := WGMWCon;
+  W1.DataBase              := WGMWCon;
+  trW1.DataBase            := WGMWCon;
+  Qstate.DataBase          := WGMWCon;
+  trQstate.DataBase        := WGMWCon;
+  CQ.DataBase              := WGMWCon;
+  trCQ.DataBase            := WGMWCon;
 
   FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
 
@@ -1219,9 +1284,11 @@ begin
   qCQRLOG.Close;
   reg.Free;
   DeleteFile(dmData.HomeDir + 'xplanet'+PathDelim+'marker');
+  LogUploadCon.Connected:=False;
+  RbnMonCon.Connected:=False;
+  WGMWCon.Connected:=False;
   BandMapCon.Connected := False;
   MainCon.Connected := False;
-  DoneCriticalsection(csPreviousQSO);
   KillMySQL(False)
 end;
 
@@ -1294,42 +1361,14 @@ begin
 end;
 
 procedure TdmData.tmrDBPingTimer(Sender: TObject);
-{
-var
-  pq : TSQLQuery;
-  tq : TSQLTransaction;
-}
+
 begin
-{
-  pq := TSQLQuery.Create(nil);
-  tq := TSQLTransaction.Create(nil);
-  try
-    if (MainCon.Connected) and (fDBName<>'') then
-    begin
-      pq.DataBase := MainCon;
-      tq.DataBase := MainCon;
-      pq.Transaction := tq;
-      pq.SQL.Text := 'select * from '+fDBName+'.db_version';
-      tq.StartTransaction;
-      if fDebugLevel>=1 then Writeln('DBPing - ',pq.SQL.Text);
-      pq.Open;
-      pq.Close;
-      tq.Rollback;
-      pq.DataBase := dmDXCluster.dbDXC;
-      tq.DataBase := dmDXCluster.dbDXC;
-      pq.Transaction := tq;
-      pq.SQL.Text := 'select * from '+fDBName+'.db_version';
-      tq.StartTransaction;
-      if fDebugLevel>=1 then Writeln('DBPing - ',pq.SQL.Text);
-      pq.Open;
-      pq.Close;
-      tq.Rollback
-    end
-  finally
-    pq.Free;
-    tq.Free
-  end
-}
+  mysql_ping(MainCon.Handle);
+  mysql_ping(BandMapCon.Handle);
+  mysql_ping(RbnMonCon.Handle);
+  mysql_ping(LogUploadCon.Handle);
+  mysql_ping(dbDXC.Handle);
+  mysql_ping(WGMWCon.Handle);
 end;
 
 
@@ -2487,9 +2526,9 @@ var
   procedure HandleRecord;
    Begin
         Myloc := Q.Fields[0].AsString;
-        if length(Myloc) = 4 then Myloc := Myloc +'LL';
+        if length(Myloc) = 4 then Myloc := Myloc +'MM';
         loc := Q.Fields[1].AsString;
-        if length(loc) = 4 then loc := loc +'LL';
+        if length(loc) = 4 then loc := loc +'MM';
         dmUtils.DistanceFromLocator(dmUtils.CompleteLoc(Myloc),loc,qrb,qrc);
         if StrToIntDef(qrb,0) > LongestDist then  LongestDist := StrToIntDef(qrb,0);
         SumDist:= SumDist + StrToIntDef(qrb,0);
@@ -3966,33 +4005,51 @@ begin
   end
 end;
 
-function TdmData.IsCallInLog(AQue:TSQLQuery;ATra:TSQLTransaction;callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog
+function TdmData.IsCallInLogB(callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog Bandmap
 var
   sql : String;
 begin
- EnterCriticalsection(csPreviousQSO);
-  try
     Result := False;
-    if ATra.Active then ATra.Rollback;
-    AQue.Close;
+    if trQCallInLogB.Active then trQCallInLogB.Rollback;
+    QCallInLogB.Close;
 
     //this ugly query is because I made a stupid mistake when stored qsodate and time_on as Varchar(), now it's probably
     //too late to rewrite it (Petr, OK2CQR)
     sql := 'select id_cqrlog_main from cqrlog_main where (callsign= '+QuotedStr(callsign)+') and (band = '+QuotedStr(band)+') '+
            'and (mode = '+QuotedStr(mode)+') and (str_to_date(concat(qsodate,'+QuotedStr(' ')+',time_on), '+
            QuotedStr('%Y-%m-%d %H:%i')+')) > str_to_date('+QuotedStr(LastDate+' '+LastTime)+', '+QuotedStr('%Y-%m-%d %H:%i')+')';
-    AQue.SQL.Text := sql;
+    QCallInLogB.SQL.Text := sql;
     if fDebugLevel>=1 then
-                      Writeln(AQue.SQL.Text);
-    AQue.Open;
-    Result := AQue.RecordCount > 0 ;
+                      Writeln(QCallInLogB.SQL.Text);
+    QCallInLogB.Open;
+    Result := QCallInLogB.RecordCount > 0 ;
     if fDebugLevel>=1 then
-                      writeln ('IsInLog from:',AQue.name,' call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
-  finally
-    AQue.Close;
-    ATra.RollBack;
-    LeaveCriticalsection(csPreviousQSO)
-  end;
+                      writeln ('IsInLog from BandMap call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
+    QCallInLogB.Close;
+    trQCallInLogB.RollBack;
+end;
+function TdmData.IsCallInLogR(callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog RBNmonitor
+var
+  sql : String;
+begin
+    Result := False;
+    if trQCallInLogR.Active then trQCallInLogR.Rollback;
+    QCallInLogR.Close;
+
+    //this ugly query is because I made a stupid mistake when stored qsodate and time_on as Varchar(), now it's probably
+    //too late to rewrite it (Petr, OK2CQR)
+    sql := 'select id_cqrlog_main from cqrlog_main where (callsign= '+QuotedStr(callsign)+') and (band = '+QuotedStr(band)+') '+
+           'and (mode = '+QuotedStr(mode)+') and (str_to_date(concat(qsodate,'+QuotedStr(' ')+',time_on), '+
+           QuotedStr('%Y-%m-%d %H:%i')+')) > str_to_date('+QuotedStr(LastDate+' '+LastTime)+', '+QuotedStr('%Y-%m-%d %H:%i')+')';
+    QCallInLogR.SQL.Text := sql;
+    if fDebugLevel>=1 then
+                      Writeln(QCallInLogR.SQL.Text);
+    QCallInLogR.Open;
+    Result := QCallInLogR.RecordCount > 0 ;
+    if fDebugLevel>=1 then
+                      writeln ('IsInLog from RBNmonitor call:',callsign,' Band:',band, ' mode:',mode,' LDate:',Lastdate,' Ltime:',LastTime,' ',Result);
+    QCallInLogR.Close;
+    trQCallInLogR.RollBack;
 end;
 procedure TdmData.StoreFreqMemories(grid : TStringGrid);
 const
@@ -4278,6 +4335,7 @@ begin
   RbnMonCon    := getNewMySQLConnectionObject();
   LogUploadCon := getNewMySQLConnectionObject();
   dbDXC        := getNewMySQLConnectionObject();
+  WGMWCon      := getNewMySQLConnectionObject();
 end;
 
 
@@ -4358,9 +4416,27 @@ begin
   Connection := TMySQL57Connection.Create(self);
   Connection.SkipLibraryVersionCheck := True;
   Connection.KeepConnection := True;
-
+//  mysql_options(Connection.Handle, MYSQL_OPT_RECONNECT, 'true');   //compiles, but causes crash at start. Why?
   result := Connection
 end;
+
+procedure TdmData.GetLogEvent(Sender: TSQLConnection;
+   EventType: TDBEventType; const Msg: String);
+ var
+   Source: string;
+ begin
+   case EventType of
+     detCustom:   Source:='Custom:  ';
+     detPrepare:  Source:='Prepare: ';
+     detExecute:  Source:='Execute: ';
+     detFetch:    Source:='Fetch:   ';
+     detCommit:   Source:='Commit:  ';
+     detRollBack: Source:='Rollback:';
+     else Source:='Unknown event. Please fix program code.';
+   end;
+      Writeln(Source + ' ' + Msg);
+ end;
+
 
 end.
 

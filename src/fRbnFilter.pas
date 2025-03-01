@@ -23,13 +23,14 @@ type
     btnOK: TButton;
     btnSrcContAll: TButton;
     btnSrcCallAll: TButton;
+    chkDupFilt: TCheckBox;
     chkToBandMap: TCheckBox;
     chkNewDXConly: TCheckBox;
     chkOnlyeQSL: TCheckBox;
     chkOnlyLoTW: TCheckBox;
-    edtSpotDelay: TEdit;
-    edtSrcCall: TEdit;
     edtDate: TEdit;
+    edtLastHours: TEdit;
+    edtSrcCall: TEdit;
     edtDXBand: TEdit;
     edtDXCNotCnty: TEdit;
     edtDXCnty: TEdit;
@@ -37,14 +38,13 @@ type
     edtDXMode: TEdit;
     edtDXOnlyCall: TEdit;
     edtDXOnlyExpres: TEdit;
-    edtLastHours: TEdit;
     edtSrcCont: TEdit;
     edtTime: TEdit;
     grpCallsignFrom: TGroupBox;
     grpDXStation: TGroupBox;
     grpCallisgn: TGroupBox;
     grpSource: TGroupBox;
-    lblSpotDelay: TLabel;
+    lblDateTimeFormat: TLabel;
     lblIgnoreHours: TLabel;
     Label10: TLabel;
     lblCallExample: TLabel;
@@ -56,16 +56,15 @@ type
     lblContExFrom: TLabel;
     lblContinentFrom: TLabel;
     lblCountryFrom: TLabel;
-    lblDateTimeFormat: TLabel;
     lblContent: TLabel;
     Label9: TLabel;
     lblModeFrom: TLabel;
     lblNotCountry: TLabel;
+    rgIgnore: TRadioGroup;
+    rgDupe: TRadioGroup;
     rbAllDx: TRadioButton;
     rbOnlyCall: TRadioButton;
     rbOnlyCallReg: TRadioButton;
-    rbIgnWkdDate: TRadioButton;
-    rbIgnWkdHour: TRadioButton;
     procedure btnDxBandsAllClick(Sender: TObject);
     procedure btnDXCCntyClick(Sender: TObject);
     procedure btnDXCNotCntyClick(Sender: TObject);
@@ -74,7 +73,6 @@ type
     procedure btnOKClick(Sender: TObject);
     procedure btnSrcCallAllClick(Sender: TObject);
     procedure btnSrcContAllClick(Sender: TObject);
-    procedure edtSpotDelayExit(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
     { private declarations }
@@ -99,9 +97,8 @@ begin
 
   edtSrcCont.Text      := cqrini.ReadString('RBNFilter','SrcCont',C_RBN_CONT);
   edtSrcCall.Text      := cqrini.ReadString('RBNFilter','SrcCall','');
-  rbIgnWkdHour.Checked := cqrini.ReadBool('RBNFilter','IgnHour',True);
+  rgIgnore.ItemIndex   := cqrini.ReadInteger('RBNFilter','Ignore',0);
   edtLastHours.Text    := IntToStr(cqrini.ReadInteger('RBNFilter','IgnHourValue',48));
-  rbIgnWkdDate.Checked := cqrini.ReadBool('RBNFilter','IgnDate',False);
   edtDate.Text         := cqrini.ReadString('RBNFilter','IgnDateValue','');
   edtTime.Text         := cqrini.ReadString('RBNFilter','IgnTimeValue','');
 
@@ -121,8 +118,11 @@ begin
   chkOnlyeQSL.Checked := cqrini.ReadBool('RBNFilter','eQSLOnly',False);
 
   chkNewDXConly.Checked := cqrini.ReadBool('RBNFilter','NewDXCOnly',False);
-  edtSpotDelay.Text     := cqrini.ReadString('RBNFilter','SpotDelay','150');
   chkToBandMap.Checked  :=cqrini.ReadBool('RBNMonitor','ToBandMap',false);
+
+  rgDupe.ItemIndex:= cqrini.ReadInteger('RBNMonitor','DupeRes',1);
+  chkDupFilt.Checked:= cqrini.ReadBool('RBNMonitor','DupeFiltUsed', true);
+
 end;
 
 procedure TfrmRbnFilter.btnOKClick(Sender: TObject);
@@ -136,7 +136,7 @@ var
 begin
   if not TryStrToInt(edtLastHours.Text,i) then
   begin
-    if rbIgnWkdHour.Checked then
+    if (rgIgnore.ItemIndex=1) then
     begin
       Application.MessageBox('Please enter correct number of hours, please','Error...',mb_OK+mb_IconError);
       edtLastHours.SetFocus;
@@ -148,7 +148,7 @@ begin
 
   if not dmUtils.IsDateOK(edtDate.Text) then
   begin
-    if rbIgnWkdDate.Checked then
+    if (rgIgnore.ItemIndex=2) then
     begin
       Application.MessageBox('Enter date in correct format, please','Error...',mb_Ok+mb_IconError);
       edtDate.SetFocus;
@@ -160,7 +160,7 @@ begin
 
   if not (dmUtils.IsTimeOK(edtTime.Text)) then
   begin
-    if rbIgnWkdDate.Checked then
+    if (rgIgnore.ItemIndex=2) then
     begin
       Application.MessageBox('Enter time in correct format, please','Error...',mb_Ok+mb_IconError);
       edtTime.SetFocus;
@@ -182,9 +182,9 @@ begin
   cqrini.WriteString('RBNFilter','SrcCont',RmSp(edtSrcCont.Text));
   cqrini.WriteString('RBNFilter','SrcCall',RmSp(edtSrcCall.Text));
 
-  cqrini.WriteBool('RBNFilter','IgnHour',rbIgnWkdHour.Checked);
+  cqrini.WriteInteger('RBNFilter','Ignore', rgIgnore.ItemIndex);
+
   cqrini.WriteInteger('RBNFilter','IgnHourValue',StrToint(edtLastHours.Text));
-  cqrini.WriteBool('RBNFilter','IgnDate',rbIgnWkdDate.Checked);
   cqrini.WriteString('RBNFilter','IgnDateValue',edtDate.Text);
   cqrini.WriteString('RBNFilter','IgnTimeValue',edtTime.Text);
 
@@ -204,8 +204,10 @@ begin
   cqrini.WriteBool('RBNFilter','eQSLOnly',chkOnlyeQSL.Checked);
 
   cqrini.WriteBool('RBNFilter','NewDXCOnly',chkNewDXConly.Checked);
-  cqrini.WriteString('RBNFilter','SpotDelay',edtSpotDelay.Text);
   cqrini.WriteBool('RBNMonitor','ToBandMap',chkToBandMap.Checked );
+
+  cqrini.WriteInteger('RBNMonitor','DupeRes',rgDupe.ItemIndex);
+  cqrini.WriteBool('RBNMonitor','DupeFiltUsed', chkDupFilt.Checked);
 
   cqrini.SaveToDisk;
   ModalResult := mrOK
@@ -219,18 +221,6 @@ end;
 procedure TfrmRbnFilter.btnSrcContAllClick(Sender: TObject);
 begin
   edtSrcCont.Text := C_RBN_CONT
-end;
-
-procedure TfrmRbnFilter.edtSpotDelayExit(Sender: TObject);
-var
-  v :integer;
-begin
- if TryStrToInt(edtSpotDelay.Text,v) then
-   begin
-     if v<5 then edtSpotDelay.Text:='5';
-     if v>600 then edtSpotDelay.Text:='600';
-   end;
- if edtSpotDelay.Text='' then edtSpotDelay.Text:='150';
 end;
 
 procedure TfrmRbnFilter.btnDXCCntyClick(Sender: TObject);

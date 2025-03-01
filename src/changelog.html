@@ -11,7 +11,84 @@
     <strong>CQRLOG α (Alpha)</strong><br>
     What is new:
     <ul style="list-style: square;text-align:left; color: green;" >
-    <li>(134)</li><ul>
+    <li>(135)</li><ul>
+    <li>About:Fix: changelog view</li>
+    <li>NewQSO:Fix: check grid and enable LocMap button (if ok) when new call entered</li>
+    <li>NewQSO:Mode selector:Fix: changed mode THORB -> THRB that is ardif.org standard.</li>
+    <li>RBNMonitor:Add: when grid cleared clear dupe check list too</li>
+    <li>RBNMonitor:Fix: 200 rows reserve for pausing. Otherwise pause does not stop grid scrolling if max_rows is already reach</li>
+    <li>RBNMonitor:Fix: reconnect delay (when no spots received in minute)</li>
+    <li>RBNMonitor:Add: Statusbar shows spot rate at connect if RBN server informs it</li>
+    <li>RBNFilter:Fix: layout fix for QT</li>
+    <li>NewQSO:Shortcut keys:Add: Shift+ESC initiates new qso (same as in Contest) Emulates Ctrl+F2</li>
+    <li>RBNMonitor:Fix: source filtering before duplicate check. Debug printing fixes</li>
+    <li>RBNMonitor:Fix: code cleanup. Add: selectable dupe filtering (because it affects to 'Source data from' filter)</li>
+    <li>RBNMonitor:Fix: grid pausing. Counter display</li>
+    <li>RBNMonitor: Let's try this without any second thread in unit. It should handle at least 1000spot/min
+        <br> with modern computer. Weekend Arrl DX CW will tell more...</li>
+    <li>RBNMonitor:Fix: Crash if RBNmonitor window was closed when telnet was disconnected</li>
+    <li>RBNMonitor:Fix: Replaced Thread event with timer.RBFilter and Preferences layout fixes.</li>
+    <li>RBNMonitor:Fix: telnet connect clears dupe check list</li>
+    <li>RBNFilter:Fix: layout fix for QT</li>
+    <li>RBNMonitor:Fix: improved duplicate spot filtering</li>
+    <li>Help:Operation: RBNMonitor: updated</li>
+    <li>RBNMonitor:Spot rate counter:Fix: reset received counter</li>
+    <li>RBNMonitor: moved sending to BandMap. RBNFilter:Add:Ignore none(by date&time). Utils:Fix DateHoursAgo to use UTC.
+	<br>SQL:new connection for WorkedGrids,Wsjt remote,Contest to balance traffic.</li>
+    <li>SQL: Bug hunting. Weird random faults when nerly empty log, wsjt remote, bandmap and RBNmonitor active</li>
+    <li>Fixes and tests: NewQSO,Contest,dmData. Hopefully no new bugs...;)</li>
+    <li>Contest:Fix:Typo from copying. Score used wrong sql query.</li>
+    <li>RBNMonitor:Add:Pre filter for duplicates. Counters for spot rate handling</li>
+    <li>Bug hunting continued. Own functions 'IsInLog' for  RBN and Bandmap.<br>
+	 Some empty result checking in Contest and WorkedGrid units.<br>
+	 RBM and Bandmap: moved thread codes to end of unit source for easier find/read</li>
+    <li>SQL:Bug hunting. Enabled "Use LCL scaling (Hi-DPi)"</li> 
+    <li>RBNMonitor:Fix: spot adding(no dupes). Removed: Spot rate counters, alive indicator
+	There is memory leak somewhere...RBN monitor breaks Contest score countings</li>
+    <li>Help:Fix RBN monitor. Contest:Fix: counters</li>
+    <li>RBNMonitor:Add: Prevent spot adding if call+mode+freq(integer kHz) already in Grid. Add: Spot rate counters, alive indicator</li>
+    <li>Hint: Added some hint texts and fixed some typos from hint texts</li>
+    <li>RigControl:Fix: More checks that rig really exist</li>
+    <li>RigControl:Fix: Bugfix: Try to survive CqrlogAlpha start when rig is defined but cable is not connected</li>
+    <li>WSJT remote:Map mode:Add: Added file filter. Show only callsigns in filter list</li>
+    <li>About:Fix: Always show 'upgrade' tab</li>
+    <li>Cqrlog:Fix: Use 'pidof' for more reliable count of running cqrlog instances</li>
+    <li>About:Fix: Prevent html links opening to stop Cqrlog (open in background)</li>
+    <li>Cqrlog:Add: Detect that only one instance can be started at time</li>
+    <li>Export:Add: Adif and html export complete with autoclose (5sec) message</li>
+    <li>NewQSO: Comment to QSO:Add: Return key can now be used when writing (does not save qso there) </li>	
+    <li>Help/Operation/NewQSO(online logging):Add: Description how 'Comment to callsign" field works</li>
+    <li>VersionCheck: Update links </li>
+    <li>RigControl:Fix: More bugfixes</li>
+    <li>RigControl:Fix: Bugfix: When all was OK Cqrlog did not start now fixed</li>
+    <li>RigControl:Fix: Try to recover if rig is swithed off at Cqrlog start</li>
+    <li>NewQSO:Tune: Added autoclose ShowMessage to tuning.(Can be used elsewhere too)</li>	
+    <li>NewQSO:Fix: Layout, but it is a panel jungle and acts differently with GTK2,QT5 and QT6</li>
+    <li>NewQSO:File: Tune:Fix: Uses rigctld func for tuner (if supported) Can tune now also if no CW interface is defined</li>
+    <li>RigControl:Add: Reads now can rig set/get func, and what functions are supported</li>
+    <li>NewQso:Add: Disable 'Quit' button while there is a callsign entered</li>
+    <li>RigControl:Fix: Typo at set XIT</li>
+    <li>NewQso:Add: Set PWR by rig RFPOWER if supported by Hamlib and checked from preferences/NewQSO</li>
+    <li>RigControl:Add: RFpower check (if supported) added to rig polling. Not used yet.(needs more work)</li> 
+    <li>TRXControl:Remove: FreqBar that is useless. Now there is only RFPowerBar. (still need testing)</li>
+    <li>TRXControl:Add: RFPower bar changed to slider that can change rig power (if supported by Hamlib)</li>
+    <li>TRXControl:Fix: Frequency/mode bar can now be RFpower bar aternatively</li> 
+    <li>RigControl:Add: Second TCP connection to rigctld for commands.The first one handles now only rig polling.
+	<br>Faster response to TRXControl buttons also when big rig poll values.</li>
+    <li>Preferences:Fix: Scrollbars were missing</li>
+    <li>BandMap:Fix: NewQSO added (Ctrl+A) spot color selection in preferences did not work</li>
+    <li>Loctor grid: Conversion to 6chr: For 2chr loc add '44XX', for 4chr loc add 'MM'</li>
+    <li>TRXControl: Fix Small change to form layout</li> 
+    <li>Changelog Splash: Fix Small change to form layout</li>
+    <li>DXCluster:Add: Mouse wheel movement will pause Telnet DXCluster for 5 secs. Add: After pressing Shift+F1..10 set focus to Telnet Tab.</li> 
+    <li>Wsjtxremote:Fix: Tried to solve form width setting problem when switching CQ/Map and GTK2 compiled. QT works</li>
+    <li>Wsjtxremote:Fix: FCC US-callsign info address has changed. Add:State info update can now be initated by Shift+Right Mode click over USt-checkbox</li>
+    <li>DXCCStatistics:Fix: 'DIGITALVOICE' was missing from few lines</li>
+    <li>DXCCStatistics: Added 'DIGITALVOICE' to DXCC PHONE modes count (by ARRL Basic rules). Renamed NewQSO/DXCCStatistic/SSB to PHO (phone)</li>
+    <li>Preferences:Bands: Frequencies:Fix: Better mode definition with DXClcluster spots</li>
+    <li>New Log:Fix: Use Changelog splash also as New Log splash</li>
+    <li>Contest:Add: Checkbox NS. When checked NRs/NRr can contain letters. Fos special use, not ADIF std. compatible</li>	
+    </ul><li>(134)</li><ul>
     <li>NewQSO:Fix: This fixes MainMenu's "autoclose" bug when compiled with QT6
     <br>This is not happening with QT5 and GTK2 but fix suits for all compiles and is so important
     <br>that it is time of new version number release.</li>

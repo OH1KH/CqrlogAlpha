@@ -18,7 +18,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, inifiles,
   ExtCtrls, ComCtrls, StdCtrls, Buttons, httpsend, uColorMemo,
-  db, lcltype, Menus, ActnList, Spin, Grids, dynlibs, lNetComponents, lnet;
+  db, lcltype, Menus, ActnList, Spin, Grids, dynlibs, lNetComponents, lnet, Types;
 
 type
   { TfrmDXCluster }
@@ -88,6 +88,7 @@ type
     tabWeb: TTabSheet;
     tmrAutoConnect: TTimer;
     tmrSpots: TTimer;
+    tmrStopScroll: TTimer;
     trChatSize: TTrackBar;
     procedure acCallAlertExecute(Sender : TObject);
     procedure acChatSizeExecute(Sender: TObject);
@@ -113,10 +114,15 @@ type
     procedure mnuSkimAllowFreqClick(Sender: TObject);
     procedure mnuSkimQSLCheckClick(Sender: TObject);
     procedure tabFkeysShow(Sender: TObject);
+    procedure tabTelnetMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure tmrAutoConnectTimer(Sender: TObject);
     procedure tmrSpotsTimer(Sender: TObject);
+    procedure tmrStopScrollTimer(Sender: TObject);
     procedure trChatSizeChange(Sender: TObject);
     procedure trChatSizeClick(Sender: TObject);
+    procedure trChatSizeMouseWheel(Sender: TObject; Shift: TShiftState;
+      WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
   private
     telDesc    : String;
     telAddr    : String;
@@ -190,6 +196,7 @@ type
     ConWeb    : Boolean;
     ConTelnet : Boolean;
     csTelnet  : TRTLCriticalSection;
+    LockScroll   : Boolean;
 
     procedure SendCommand(cmd : String);
     procedure StopAllConnections;
@@ -529,6 +536,7 @@ begin
         end;
   until HistPtr =0;
   SentStartCmd :=false;
+  LockScroll:=False;
 end;
 
 procedure TfrmDXCluster.FormKeyUp(Sender: TObject; var Key: Word;
@@ -542,48 +550,37 @@ begin
   if (Key >= VK_F1) and (Key <= VK_F10) and (ConTelnet = True) and (Shift = [ssShift])  then
    begin
       case key of
-        VK_F1     :Begin
-                    if edtF1.Text<>'' then SendCommand(edtF1.Text);
-                      key := 0
-                   end;
-        VK_F2     :Begin
-                    if edtF2.Text<>'' then SendCommand(edtF2.Text);
-                      key := 0
-                   end;
-        VK_F3     :Begin
-                    if edtF3.Text<>'' then SendCommand(edtF3.Text);
-                      key := 0
-                   end;
-        VK_F4     :Begin
-                    if edtF4.Text<>'' then SendCommand(edtF4.Text);
-                      key := 0
-                   end;
-        VK_F5     :Begin
-                    if edtF5.Text<>'' then SendCommand(edtF5.Text);
-                      key := 0
-                   end;
-        VK_F6     :Begin
-                    if edtF6.Text<>'' then SendCommand(edtF6.Text);
-                      key := 0
-                   end;
-        VK_F7     :Begin
-                    if edtF7.Text<>'' then SendCommand(edtF7.Text);
-                      key := 0
-                   end;
-        VK_F8     :Begin
-                    if edtF8.Text<>'' then SendCommand(edtF8.Text);
-                      key := 0
-                   end;
-        VK_F9     :Begin
-                    if edtF9.Text<>'' then SendCommand(edtF9.Text);
-                      key := 0
-                   end;
-        VK_F10    :Begin
-                    if edtF10.Text<>'' then SendCommand(edtF10.Text);
-                      key := 0
-                   end;
+        VK_F1     :if edtF1.Text<>'' then SendCommand(edtF1.Text);
+        VK_F2     :if edtF2.Text<>'' then SendCommand(edtF2.Text);
+        VK_F3     :if edtF3.Text<>'' then SendCommand(edtF3.Text);
+        VK_F4     :if edtF4.Text<>'' then SendCommand(edtF4.Text);
+        VK_F5     :if edtF5.Text<>'' then SendCommand(edtF5.Text);
+        VK_F6     :if edtF6.Text<>'' then SendCommand(edtF6.Text);
+        VK_F7     :if edtF7.Text<>'' then SendCommand(edtF7.Text);
+        VK_F8     :if edtF8.Text<>'' then SendCommand(edtF8.Text);
+        VK_F9     :if edtF9.Text<>'' then SendCommand(edtF9.Text);
+        VK_F10    :if edtF10.Text<>'' then SendCommand(edtF10.Text);
+        end;
+       key := 0;
+       pgDXCluster.ActivePageIndex := 1
       end;
-  end;
+end;
+
+procedure TfrmDXCluster.tabTelnetMouseWheel(Sender: TObject;
+  Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+  frmDXCluster.Caption:='DXCluster paused!';
+  LockScroll:=true;
+  tmrStopScroll.Enabled:=False;
+  tmrStopScroll.Enabled:=True;
+end;
+
+procedure TfrmDXCluster.tmrStopScrollTimer(Sender: TObject);
+begin
+   tmrStopScroll.Enabled:=False;
+   LockScroll:=false;
+   frmDXCluster.Caption:='DXCluster';
 end;
 procedure TfrmDXCluster.WebDbClick(where:longint;mb:TmouseButton;ms:TShiftState);
 var
@@ -661,7 +658,7 @@ begin
   if cqrini.ReadBool('DXCluster', 'ConAfterRun', False) then
     tmrAutoConnect.Enabled := True;
   pnlChat.Height := cqrini.ReadInteger('DXCluster','ChatSize',2);  //default now 2 = invisible
-
+  LockScroll:=False;
   tabFkeysShow(nil);
 end;
 
@@ -1032,6 +1029,13 @@ begin
       if dmData.DebugLevel >=1 then Writeln('Chat sizing Click');
 end;
 
+procedure TfrmDXCluster.trChatSizeMouseWheel(Sender: TObject;
+  Shift: TShiftState; WheelDelta: Integer; MousePos: TPoint;
+  var Handled: Boolean);
+begin
+  Handled:=True;
+end;
+
 function TfrmDXCluster.GetSplit(info : String) : String;
 var
   spl : String;
@@ -1144,7 +1148,6 @@ var
   cfgOC  : Boolean;
 begin
   sColor  := clWindowText; //cerna
-
   EnterCriticalSection(csDXCPref);
   try
     cfgUseBackColor  := gcfgUseBackColor;
@@ -1215,6 +1218,7 @@ begin
       Writeln('Cannot find out mode from frequency, exiting ...');
     exit
   end;
+
   if band = '' then
   begin
     Result := False;
@@ -1226,14 +1230,15 @@ begin
   adif    := dmDXCluster.id_country(call,now,prefix,stmp,waz,itu,cont,lat,long);
   prefix  := dmDXCluster.PfxFromADIF(adif);
   Country := dmDXCluster.CountryFromADIF(adif);
-  dmDXCluster.DXCCInfo(adif,freq,mode,index);
+  dmDXCluster.DXCCInfo(adif,freq,mode,index);    //worked status
   if dmData.DebugLevel>=1 then
-  begin
+   begin
     Writeln('dx_prefix:',prefix);
     Writeln('dx_cont:  ',cont);
     Writeln('Freq:     ',freq);
+    Writeln('mode:     ',mode);
     Writeln('Call:     ',call)
-  end;
+   end;
   if dmData.DebugLevel >=2 then
   begin
     Writeln('Prefix: ',prefix);
@@ -1499,7 +1504,9 @@ begin
       if dmData.DebugLevel>=1 then Writeln('TelThread.Execute - after Synchronize(@frmDXCluster.SynChat)')
     end;
 
-    sleep(500)
+    repeat
+     sleep(500)
+    until  not frmDXCluster.LockScroll;
   end
 end;
 

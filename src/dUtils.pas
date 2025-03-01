@@ -58,7 +58,7 @@ const
     'DIGITALVOICE', 'FM', 'FSK44', 'FSK441', 'FST4', 'GTOR', 'HELL', 'ISCAT', 'JS8', 'JT4',
     'JT44', 'JT65', 'JT65A', 'JT65B', 'JT65C', 'JT6M', 'JT9', 'MFSK', 'MFSK16', 'MSK144',
     'MT63', 'MTOR', 'OLIVIA', 'PACKET', 'PACTOR', 'PSK', 'PSK125', 'PSK250', 'PSK31', 'PSK63',
-    'QRA64', 'QRSS', 'ROS', 'SSTV', 'THROB', 'WSJT', 'WSPR');
+    'QRA64', 'QRSS', 'ROS', 'SSTV', 'THRB', 'WSJT', 'WSPR');
 
   cMaxBandsCount = 31; //True count of bands. (loops have 0..MaxBandsCount-1)
                        //when you change this check also frmContest.CommonStatus.ContestBandPtr
@@ -122,6 +122,7 @@ type
     procedure LoadRigListCombo(CurrentRigId : String; RigList : TStringList; RigComboBox : TComboBox);
     procedure ModeConvListsCreate(SetUp:boolean);
     procedure MakeMissingModeFile(num:integer);
+    procedure TheButtonClick(Sender: TObject);
 
     function nr(ch: char): integer;
     function GetTagValue(Data, tg: string): string;
@@ -245,6 +246,7 @@ type
     procedure DateHoursAgo(hours:integer;var Adate,Atime:string);
     procedure FillNewBandModeLimits; //upgrade new limits to modes table
     procedure GetUserMode(var mode : String);
+    procedure ShowTheMessage(Title:String; Message:String; Time:longint);
 
     function  UTF8UpperFirst(Value:UTF8String):UTF8String;
     function  IsNonAsciiChrs(s:string):Boolean;
@@ -814,7 +816,7 @@ procedure TdmUtils.InsertWorkedContests(cmbContest: TComboBox);
 var
   i: integer;
 const
-  C_SEL = 'SELECT DISTINCT `contestname` FROM `cqrlog_main` WHERE `contestname` IS NOT NULL and `contestname` != "" ORDER BY `contestname` ASC';
+  C_SEL = 'SELECT DISTINCT contestname FROM cqrlog_main WHERE contestname IS NOT NULL and contestname <> "" ORDER BY contestname ASC';
 begin
   cmbContest.Clear;
   dmData.qWorkedContests.Close;
@@ -1199,8 +1201,8 @@ begin
      if  (Length(loc) mod 2 = 0 ) then
        begin
          case  Length(loc) of
-           2:              loc := loc + '44LL';
-           4:              loc := loc + 'LL';
+           2:              loc := loc + '44XX'; //big 2chr Grid center
+           4:              loc := loc + 'MM';   //mid 4chr grid center
            else
              loc := copy(loc,1,6);
          end;
@@ -1254,13 +1256,18 @@ procedure TdmUtils.GetCoordinate(pfx: string; var latitude, longitude: currency)
 var
   s, d: string;
 begin
-  //dmDXCC.trDXCCRef.StartTransaction;
+  s:='';
+  d:='';
   dmDXCC.qDXCCRef.Close;
-  dmDXCC.qDXCCRef.SQL.Text := 'SELECT * FROM cqrlog_common.dxcc_ref WHERE pref=' +
-    QuotedStr(pfx);
+  if dmDXCC.trDXCCRef.Active then dmDXCC.trDXCCRef.Rollback;
+  dmDXCC.qDXCCRef.SQL.Text := 'SELECT * FROM cqrlog_common.dxcc_ref WHERE pref=' + QuotedStr(pfx);
   dmDXCC.qDXCCRef.Open;
-  s := dmDXCC.qDXCCRef.Fields[4].AsString;
-  d := dmDXCC.qDXCCRef.Fields[5].AsString;
+  if (dmDXCC.qDXCCRef.Fields.FindField('lat')<> nil) then
+       s := dmDXCC.qDXCCRef.FieldByName('lat').AsString;
+  if (dmDXCC.qDXCCRef.Fields.FindField('longit')<> nil) then
+       d := dmDXCC.qDXCCRef.FieldByName('longit').AsString;
+
+  dmDXCC.qDXCCRef.Close;
 
   if ((Length(s) = 0) or (Length(d) = 0)) then
   begin
@@ -1329,8 +1336,8 @@ begin
   Result := '';
   tmp := '';
   dmDXCC.qDXCCRef.Close;
-  dmDXCC.qDXCCRef.SQL.Text := 'SELECT utc FROM cqrlog_common.dxcc_ref WHERE pref = ' +
-    QuotedStr(pfx);
+  if dmDXCC.trDXCCRef.Active then dmDXCC.trDXCCRef.Rollback;
+  dmDXCC.qDXCCRef.SQL.Text := 'SELECT utc FROM cqrlog_common.dxcc_ref WHERE pref = ' + QuotedStr(pfx);
   dmDXCC.qDXCCRef.Open;
   if dmDXCC.qDXCCRef.RecordCount > 0 then
   begin
@@ -1341,6 +1348,7 @@ begin
     dmUtils.DateInRightFormat(date, tmp, sDate);
     Result := sDate + '  ' + TimeToStr(Date) + '     ';
   end;
+  dmDXCC.qDXCCRef.Close;
 end;
 
 procedure TdmUtils.ModifyWAZITU(var waz, itu: string);
@@ -4224,10 +4232,12 @@ begin
 end;
 
 function TdmUtils.GetNewQSOCaption(capt: string): string;
+var
+  logname:string=' ';
 begin
-  Result := capt + ' ... (CQRLOG for Linux)';
-  if dmData.LogName <> '' then
-    Result := Result + ', database: ' + dmData.LogName;
+  Result := capt + ' (log:';
+  if dmData.LogName <> '' then logname:=dmData.LogName;
+    Result := Result + logname+ ') CqrlogAlpha for Linux' ;
 end;
 
 procedure TdmUtils.FillBandCombo(cmb: TComboBox);
@@ -4888,16 +4898,22 @@ begin
 end;
 
 procedure TdmUtils.OpenInApp(what: string);
+var
+  b:string;
 begin
-  if ((pos('.HTML',upcase(what))>0) or (pos('.HTM',upcase(what))>0)) //because possible "hashtag in link-problem"
-    then
+  if ((pos('.HTML',upcase(what))>0)
+    or (pos('.HTM',upcase(what))>0)
+    or (pos('HTTP',upcase(what))>0) ) then //because possible "hashtag in link-problem"
      Begin
-      RunOnBackground(cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser) + ' ' + what);
-     end
-   else
-    begin
-      RunOnBackground('xdg-open ' + what);
-    end;
+      b:= cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
+      if (b<>'') then
+        Begin
+          RunOnBackground(cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser) + ' ' + what);
+          exit;
+        end;
+     end;
+
+  RunOnBackground('xdg-open ' + what);
 end;
 
 function TdmUtils.GetDescKeyFromCode(key: word): string;
@@ -5629,7 +5645,7 @@ begin
       g.Cells[i,y] := '   ';
   with g do
   begin
-    Cells[0, 1] := 'SSB';
+    Cells[0, 1] := 'PHO';
     Cells[0, 2] := 'CW';
     Cells[0, 3] := 'DIGI'
   end;
@@ -5723,7 +5739,7 @@ begin
     eQSL := dmData.QStatNewQSO.Fields[4].AsString;
     if i > 0 then
     begin
-      if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+      if (mode = 'SSB') or (mode='FM') or (mode='AM') or (mode='DIGITALVOICE') then   //phone
       begin
         tmps := g.Cells[i,1] ;
         if QSLR = 'Q' then
@@ -5735,7 +5751,7 @@ begin
        g.Cells[i,1] := tmps
       end
       else begin
-        if (Mode='CW') or (Mode='CWQ') then
+        if (Mode='CW') or (Mode='CWQ') then           //cw
         begin
           tmps := g.Cells[i,2] ;
           if QSLR = 'Q' then
@@ -5746,7 +5762,7 @@ begin
             tmps[3] := 'E';
           g.Cells[i,2] := tmps
         end
-        else begin
+        else begin                              //digi
           tmps := g.Cells[i,3] ;
           if QSLR = 'Q' then
             tmps[1] := 'Q';
@@ -5776,11 +5792,11 @@ begin
 
     if i > 0 then
       begin
-        if ((mode = 'SSB') or (mode = 'FM') or (mode = 'AM')) then
+        if ((mode = 'SSB') or (mode = 'FM') or (mode = 'AM') or (mode='DIGITALVOICE')) then   //phone
           if(g.Cells[i,1] = space+space+space) then g.Cells[i,1] := ' X ';
-        if ((mode = 'CW') or (mode = 'CWR')) then
+        if ((mode = 'CW') or (mode = 'CWR')) then                                             //cw
           if (g.Cells[i,2] = space+space+space) then g.Cells[i,2] := ' X ';
-        if ((mode <> 'SSB') and (mode <>'FM') and (mode <> 'AM') and (mode <> 'CW') and (mode <> 'CWR')) then
+        if ((mode <> 'SSB') and (mode <>'FM') and (mode <> 'AM') and (mode<>'DIGITALVOICE') and (mode <> 'CW') and (mode <> 'CWR')) then //digi
           if (g.Cells[i,3] = space+space+space) then g.Cells[i,3] := ' X '
       end;
       dmData.QStatNewQSO.Next;
@@ -5899,10 +5915,70 @@ Begin
 end;
 procedure  TdmUtils.DateHoursAgo(hours:integer;var Adate,Atime:string);
 //should work also with negative hours, not tested
+var
+  Date:  TDateTime;
 Begin
+  Date  := dmUtils.GetDateTime(0);
   if hours=0 then exit; //no need to calculate
-  ADate := DateTimeToStr(DateOf(UnixTODateTime(DateTimeToUnix(now)-(hours * 3600))));
-  ATime := copy(TimeToStr(TimeOf(UnixTODateTime(DateTimeToUnix(now)-(hours * 3600)))),1,5);
+  ADate := DateTimeToStr(DateOf(UnixTODateTime(DateTimeToUnix(Date)-(hours * 3600))));
+  ATime := copy(TimeToStr(TimeOf(UnixTODateTime(DateTimeToUnix(Date)-(hours * 3600)))),1,5);
+end;
+procedure  TdmUtils.ShowTheMessage(Title:String; Message:String; Time:integer);   //time in milliseconds
+var
+ TheForm: TForm;
+ TheButton: TButton;
+ TheLabel: Tlabel;
+
+
+Begin
+  TheForm:=TForm.Create(nil);
+  With TheForm do
+  Begin
+   SetBounds(100, 100, 220, 150);
+   TheForm.Caption:=Title;
+   //TheForm.Position := poScreenCenter;
+   TheForm.FormStyle := fsSystemStayOnTop;
+   TheForm.Position:= poWorkAreaCenter;
+  end;
+  TheButton:=TButton.create(TheForm);
+  With TheButton do
+  Begin
+   Caption:='OK    ('+IntToStr(Time div 1000)+')';
+   SetBounds(114, 114, 100, 30);
+   Anchors := [akBottom, akRight];
+   Parent:=TheForm;
+   OnClick:=@TheButtonClick;
+  end;
+  TheLabel:=Tlabel.Create(TheForm);
+  With TheLabel do
+  Begin
+   SetBounds(50,10,170,100);
+   Caption:=Message;
+   AutoSize:=true;
+   Anchors := [akLeft, akRight];
+   Parent:=TheForm;
+   WordWrap:=true;
+  end;
+
+  TheForm.Show;
+
+  While Time>0 do
+   Begin
+    Application.ProcessMessages;
+    sleep(100);
+    Time:=Time-100;
+    TheButton.Caption:='OK    ('+IntToStr(Time div 1000)+')';
+   end;
+  TheButtonClick(TheButton);
+
+  FreeAndNil(TheForm);
+
+end;
+
+procedure TdmUtils.TheButtonClick(Sender: TObject);
+begin
+  if Sender is TButton then
+    TForm(TButton(Sender).Parent).Close;
 end;
 
 end.

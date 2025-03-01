@@ -82,7 +82,7 @@ var
 begin
   InitCriticalSection(csLogUpload);
 
-  dmData.LogUploadCon.KeepConnection := True;
+  dmData.LogUploadCon.KeepConnection := True;  //OH1KH 2025-01 that is set at connection creation already -> TdmData.getNewMySQLConnectionObject!!
   for i:=0 to ComponentCount-1 do
   begin
     if Components[i] is TSQLQuery then
@@ -94,7 +94,7 @@ end;
 
 procedure TdmLogUpload.DataModuleDestroy(Sender: TObject);
 begin
-  DoneCriticalSection(csLogUpload)
+  DoneCriticalSection(csLogUpload);
 end;
 
 procedure TdmLogUpload.Q1BeforeOpen(DataSet: TDataSet);

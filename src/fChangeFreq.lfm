@@ -11,7 +11,7 @@ object frmChangeFreq: TfrmChangeFreq
   ClientWidth = 567
   OnShow = FormShow
   Position = poScreenCenter
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object lblBBegin: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -61,7 +61,6 @@ object frmChangeFreq: TfrmChangeFreq
     Width = 75
     BorderSpacing.Top = 6
     BorderSpacing.InnerBorder = 4
-    Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 8
@@ -547,5 +546,19 @@ object frmChangeFreq: TfrmChangeFreq
       Caption = 'CW'
       ParentColor = False
     end
+  end
+  object btnHelp: TButton
+    AnchorSideLeft.Control = btnOK
+    AnchorSideTop.Control = btnCancel
+    AnchorSideTop.Side = asrBottom
+    Left = 470
+    Height = 25
+    Top = 74
+    Width = 75
+    BorderSpacing.Top = 6
+    BorderSpacing.InnerBorder = 4
+    Caption = 'Help'
+    TabOrder = 9
+    OnClick = btnHelpClick
   end
 end

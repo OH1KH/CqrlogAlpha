@@ -58,7 +58,9 @@ type TRigControl = class
     fPwrPcnt        : String;   //not actually %, but value 0.0 .. 1.0
     fPwrmW          : String;
     fGetRFPower     : boolean;
+    fMemGetRFP      : boolean;
     fSetRFPower     : boolean;
+    fMemSetRFP      : boolean;
     fSetFunc        : boolean; //if can set/get func then test "U currVFO ?" supported functions "fSupFuncs"
     fGetFunc        : boolean;
     fSupFuncs       : String;
@@ -149,8 +151,11 @@ public
     property GetSplitTX : Boolean read fGetSplitTX write  fGetSplitTX;
     property RigSplitActive : Boolean read fRigSplitActive;
 
-    property GetRFPower: boolean read fGetRFPower;
-    property SetRFPower: boolean read fSetRFPower;
+    property GetRFPower: boolean read fGetRFPower  write fGetRFPower;
+    property SetRFPower: boolean read fSetRFPower  write fSetRFPower;
+    property MemGetRFP: boolean read fMemGetRFP;
+    property MemSetRFP: boolean read fMemSetRFP;
+
     property SetFunc   : boolean read fSetFunc;
     property GetFunc   : boolean read fGetFunc;
     property SupFuncs  : String read fSupFuncs;
@@ -847,11 +852,12 @@ begin
        if pos('CAN GET POWER2MW:',a[i])>0 then
        begin
           fGetRFPower:= b[3]='Y';
+          fMemGetRFP:= fGetRFPower; //this is to remember rig's answer
        end;
        if pos('CAN GET MW2POWER:',a[i])>0 then
        begin
          fSetRFPower:= b[3]='Y';
-
+         fMemSetRFP:= fSetRFPower; //this is to remember rig's answer
 
          RigCommand.Clear;
          Hit:=true;

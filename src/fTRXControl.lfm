@@ -154,7 +154,7 @@ object frmTRXControl: TfrmTRXControl
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object gbMode: TGroupBox
     AnchorSideLeft.Control = gbVfo
     AnchorSideTop.Control = gbVfo

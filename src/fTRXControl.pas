@@ -1840,6 +1840,18 @@ Begin
         exit;
        end;
 
+     if mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled then
+       Begin
+          radio.GetRFPower:=radio.MemGetRFP;  //this way we get original +\dump_caps answer in use
+          radio.SetRFPower:=radio.MemSetRFP;
+       end
+      else
+       Begin
+          radio.GetRFPower:=false;  //if pwr bar disabled also polling of rig pwr will be disabled
+          radio.SetRFPower:=false;
+          exit;
+       end;
+
      if (mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled and radio.GetRFPower and (StopPwrUpdate=0)) then
       begin
            tmp:=radio.PwrPcnt;

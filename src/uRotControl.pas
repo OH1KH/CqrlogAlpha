@@ -153,7 +153,7 @@ end;
 
 function TRotControl.RotConnected  : Boolean;
 const
-  ERR_MSG = 'Could not connect to rigctld';
+  ERR_MSG = 'Could not connect to rotctld';
 begin
   if fDebugMode then
   begin
@@ -189,7 +189,7 @@ begin
   rcvdAzimut.Port := fRotCtldPort;
 
   //rcvdAzimut.Connect(fRotCtldHost,fRotCtldPort);
-  if rcvdAzimut.Connect(fRotCtldHost,fRotCtldPort) then
+  if rcvdAzimut.Connect(fRotCtldHost,fRotCtldPort) then //this does not work as connection indicator, is always true!!
   begin
     if fDebugMode then Writeln('Connected to rotctld @ ',fRotCtldHost,':',fRotCtldPort);
     AzMin:=0;    //default limits

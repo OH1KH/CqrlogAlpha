@@ -1212,8 +1212,11 @@ begin
   Sleep(500);
   Application.ProcessMessages;
 
-  if not TryStrToInt(cqrini.ReadString('TRX' + RigInUse, 'model', ''), id) then
+  if ((not TryStrToInt(cqrini.ReadString('TRX' + RigInUse, 'model', ''), id))
+     or (cqrini.ReadString('TRX' + RigInUse, 'host', 'localhost')='')) then
    Begin
+    if (dmData.DebugLevel > 0) or cqrini.ReadBool('TRX', 'Debug', False) then
+      Writeln('TRXControl/Rig model or TRXControl/Host is empty!');
     cmbRig.Items[cmbRig.ItemIndex]:= RigInUse + ' Is not Set';
     lblFreq.Caption:=empty_freq;  //empty_freq is String Const in dUtils
     lblFreq.Font.Height := 30;
@@ -1270,9 +1273,9 @@ begin
 
   if not radio.Connected then
       begin
-        ShowMessage(radio.LastError+LineEnding+
+          ShowMessage(radio.LastError+LineEnding+
                     'Start cqrlog from command console as:'+LineEnding+LineEnding+
-                    'cqrlog debug=1'+LineEnding+LineEnding+
+                    'cqrlog --debug=1'+LineEnding+LineEnding+
                     'to see more debug information.');
         FreeAndNil(radio);
         Exit;

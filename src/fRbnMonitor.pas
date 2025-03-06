@@ -466,6 +466,7 @@ begin
   SrcCalls.Clear;
   slDupeCheck.Clear;
   dmUtils.SaveWindowPos(self);
+  tmrUnfocus.Enabled:=false;
 end;
 
 procedure TfrmRbnMonitor.FormCreate(Sender: TObject);

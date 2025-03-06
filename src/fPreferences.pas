@@ -107,6 +107,7 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkRotControlDebug: TCheckBox;
     chkUseRigPwr: TCheckBox;
     chkHamClock: TCheckBox;
     chkNewAlpha: TCheckBox;
@@ -678,6 +679,7 @@ type
     Label108: TLabel;
     Label12: TLabel;
     Label13: TLabel;
+    lblRotDebug: TLabel;
     lblPwrFactor: TLabel;
     lblHamclock: TLabel;
     lblK3NGHex: TLabel;
@@ -1353,6 +1355,7 @@ begin
   ClearUnUsedRigs;  //rigs modes and cw are saved when editing. Just delete unused rigs (model=empty)
 
   cqrini.WriteString('ROT', 'RotCtldPath', edtRotCtldPath.Text);
+  cqrini.WriteBool('ROT','Debug', chkRotControlDebug.Checked);
 
   cqrini.WriteString('ROT1', 'device', edtRot1Device.Text);
   cqrini.WriteString('ROT1', 'model',  dmUtils.GetRigIdFromComboBoxItem(cmbModelRot1.Text));
@@ -3198,7 +3201,7 @@ begin
     Application.MessageBox('rotctld binary not found, unable to load list of supported rotators!'+LineEnding+LineEnding+
                            'Fix path to rotctld in ROT control tab.', 'Error', mb_OK+ mb_IconError)
   end;
-
+  chkRotControlDebug.Checked := cqrini.ReadBool('ROT','Debug',false);
 
   edtRot1Device.Text := cqrini.ReadString('ROT1', 'device', '');
   edtRot1Poll.Text := cqrini.ReadString('ROT1', 'poll', '500');

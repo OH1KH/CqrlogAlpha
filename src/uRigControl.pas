@@ -215,7 +215,7 @@ begin
   RigCommand           := TStringList.Create;
   RigCommand.Sorted    :=False;
   fDebugMode           := False;
-  if DebugMode then Writeln('In create');
+  if fDebugMode then Writeln('In create');
   fRigCtldHost         := 'localhost';
   fRigCtldPort         := 4532;
   fRigPoll             := 500;   //Check relationship to fPollTimeout
@@ -242,7 +242,6 @@ begin
   fGetFunc             := false;
   fSetFunc             := false;
   fSupFuncs            := '';
-  if DebugMode then Writeln('All objects created');
   tmrRigPoll.OnTimer       := @OnRigPollTimer;
   RigctldConnect.OnReceive := @OnReceivedRigctldConnect;
   RigctldConnect.OnConnect := @OnConnectRigctldConnect;
@@ -355,7 +354,7 @@ begin
   InitDone            :=false;
   fResponseTimeout    :=false;
 
-  if RigctldConnect.Connect(fRigCtldHost,fRigCtldPort) then//this does not work as connection indicator, is always true!!
+  if ( RigctldConnect.Connect(fRigCtldHost,fRigCtldPort) and (fRigCtldHost<>'') ) then
    Begin
      repeat
          begin
@@ -705,7 +704,7 @@ begin
   while (( aSocket.GetMessage(msg) > 0 ) and (not fResponseTimeout)) do
   begin
     msg := StringReplace(upcase(trim(msg)),#$09,' ',[rfReplaceAll]); //note the char case upper for now on! Remove TABs
-    if DebugMode then
+    if fDebugMode then
          Writeln('Msg from rig:',StringReplace(msg,LineEnding,'|',[rfReplaceAll]));
 
      a := Explode(LineEnding,msg);
@@ -714,7 +713,7 @@ begin
     for i:=0 to MaxArg do     //this handles received message line by line
     begin
       Hit:=false;
-      if DebugMode then
+      if fDebugMode then
          Writeln('a['+IntToStr(i)+']:',a[i]);
       if a[i]='' then Continue;
 
@@ -798,7 +797,7 @@ begin
          ParmVfoChkd:=true;
          if b[1]='1' then
                         ParmHasVfo := 1;
-         if DebugMode then Writeln('"--vfo" checked:',ParmHasVfo);
+         if fDebugMode then Writeln('"--vfo" checked:',ParmHasVfo);
          if ParmHasVfo > 0 then VfoStr:=' currVFO';  //note set leading one space to string!
          Hit:=true;
          AllowCommand:=9; //next dump caps
@@ -809,7 +808,7 @@ begin
          ParmVfoChkd:=true;
          if b[1]='1' then
                         ParmHasVfo := 2;
-         if DebugMode then Writeln('"--vfo" checked:',ParmHasVfo);
+         if fDebugMode then Writeln('"--vfo" checked:',ParmHasVfo);
          if ParmHasVfo > 0 then VfoStr:=' currVFO';  //note set leading one space to string!
          Hit:=true;
          AllowCommand:=9; //next dump caps
@@ -866,7 +865,7 @@ begin
                                // then we should send set_powerstat 1 if power up is asked and rig can do it
            else
                AllowCommand:=1; //check pending commands (should not be any)
-         if DebugMode then
+         if fDebugMode then
                    Begin
                       Writeln(LineEnding,'This is New Hamlib: ',fIsNewHamlib);
                       Writeln('Cqrlog can switch power: ',fPower);
@@ -923,13 +922,13 @@ begin
          Hit:=true;
          if pos('1',a[i])>0 then //line may have 'STAT: 1' or 'STAT: CURRVFO 1'
           Begin
-            if DebugMode then Writeln('Power on, start polling');
+            if fDebugMode then Writeln('Power on, start polling');
             AllowCommand:=92; //check pending commands via delay Assume rig needs time to start
             PowerOffIssued:=false;
           end
          else
           Begin
-            if DebugMode then Writeln('Power off, stop poll decode (-2)');
+            if fDebugMode then Writeln('Power off, stop poll decode (-2)');
             AllowCommand:=-2; //there is no timeout for this
             Exit;
           end;
@@ -1019,7 +1018,7 @@ begin
 
  if fCompoundPoll then
        Begin
-        if DebugMode then
+        if fDebugMode then
            Write(LineEnding+'Poll Sending:'+trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding);
         if not SendPoll(trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding) then exit;
        end
@@ -1029,7 +1028,7 @@ begin
             Begin
               if s[f]<>'' then
                Begin
-                  if DebugMode then
+                  if fDebugMode then
                         Write(LineEnding+'Poll Sending:'+s[f]+LineEnding);
                   if not SendPoll(s[f]+LineEnding) then exit;
                end
@@ -1048,7 +1047,7 @@ end;
 
 //-----------------------------------------------------------
 begin
- if DebugMode then
+ if fDebugMode then
                Writeln('Polling - allowcommand:',AllowCommand);
 
  case AllowCommand of
@@ -1057,7 +1056,7 @@ begin
                dec(fPollCount);
                if fPollCount<1 then
                   Begin
-                    if DebugMode then
+                    if fDebugMode then
                                 Writeln('Rig/rigctld did not respond to command within timeout!');
                     tmrRigPoll.Enabled  := False;
                     fResponseTimeout := true;
@@ -1079,7 +1078,7 @@ begin
      //high priority commands
      10:  Begin
                cmd:='+\chk_vfo'+LineEnding;
-               if DebugMode then
+               if fDebugMode then
                      Write(LineEnding+'Sending: '+cmd);
                if not SendPoll(cmd) then exit;
                AllowCommand:=-1; //waiting for reply
@@ -1087,7 +1086,7 @@ begin
           end;
       9:  Begin
                cmd:='+\dump_caps'+LineEnding;
-                if DebugMode then
+                if fDebugMode then
                      Write(LineEnding+'Sending: '+cmd);
                if not SendPoll(cmd) then exit;
                AllowCommand:=-1; //waiting for reply
@@ -1095,7 +1094,7 @@ begin
           end;
       8:  Begin
                cmd:= '+\set_powerstat 1'+LineEnding;
-               if DebugMode then
+               if fDebugMode then
                      Write(LineEnding+'Sending: '+cmd);
                if not SendPoll(cmd) then exit;
                AllowCommand:=-1; //waiting for reply
@@ -1106,15 +1105,15 @@ begin
       1:  Begin
             if (RigCommand.Text<>'') then
               begin
-                if DebugMode then
+                if fDebugMode then
                      write('Queue in:'+LineEnding,RigCommand.Text);
                  cmd := Trim(RigCommand.Strings[0])+LineEnding;
-                  if DebugMode then
+                  if fDebugMode then
                           Write(LineEnding+'Queue Sending[0]:',cmd);
                  for i:=0 to RigCommand.Count-2 do
                     RigCommand.Exchange(i,i+1);
                   RigCommand.Delete(RigCommand.Count-1);
-                  if DebugMode then
+                  if fDebugMode then
                      write('Queue out:'+LineEnding,RigCommand.Text);
                   if not SendPoll(cmd) then exit;
                   AllowCommand:=-1; //wait answer
@@ -1131,7 +1130,7 @@ begin
 end;
 procedure TRigControl.OnConnectRigctldConnect(aSocket: TLSocket);
 Begin
-    if DebugMode then
+    if fDebugMode then
                    Writeln('Connected to rigctld Poll (OnConnect)');
 
     ParmHasVfo:=0;   //default: "--vfo" is not used as start parameter
@@ -1156,7 +1155,7 @@ procedure TRigControl.OnErrorRigctldConnect(const msg: string; aSocket: TLSocket
 
 begin
   ErrorRigctldConnect:= True;
-  if DebugMode then
+  if fDebugMode then
                    writeln('Error with rigctld: ' ,msg);
    if (pos('[107]',msg)>0) or (pos('[104]',msg)>0) then
    Begin
@@ -1211,28 +1210,28 @@ var
   excode : Integer=0;
 begin
   inherited;
-  if DebugMode then Writeln('Destroy rigctld'+LineEnding+'1');
+  if fDebugMode then Writeln('Destroy rigctld'+LineEnding+'1');
   if fRunRigCtld then
   begin
     if rigProcess.Running then
     begin
-      if DebugMode then Writeln('1a');
+      if fDebugMode then Writeln('1a');
       rigProcess.Terminate(excode)
     end
   end;
-  if DebugMode then Writeln(2);
+  if fDebugMode then Writeln(2);
   tmrRigPoll.Enabled := False;
   sleep(fRigPoll);
-  if DebugMode then Writeln(3);
+  if fDebugMode then Writeln(3);
   RigctldConnect.Disconnect();
   RigctldCmd.Disconnect();
-  if DebugMode then Writeln(4);
+  if fDebugMode then Writeln(4);
   FreeAndNil(RigctldConnect);
   FreeAndNil(RigctldCmd);
-  if DebugMode then Writeln(5);
+  if fDebugMode then Writeln(5);
   FreeAndNil(rigProcess);
   FreeAndNil(RigCommand);
-  if DebugMode then Writeln('6'+LineEnding+'Done!')
+  if fDebugMode then Writeln('6'+LineEnding+'Done!')
 end;
 function TRigControl.SendCmd(cmd:string):boolean;
 var
@@ -1255,7 +1254,7 @@ Begin
 
   if t>=2000 then
             Begin
-              if DebugMode then
+              if fDebugMode then
                 Writeln('Send cmd: Failed to get free channel for: ',cmd);
               exit;
             end;
@@ -1263,7 +1262,7 @@ Begin
   RigCmdChannelMsg:='';
   try
     RigctldCmd.SendMessage(cmd+LineEnding);
-    if DebugMode then
+    if fDebugMode then
      Writeln('Sent rigctld cmd: ',cmd,'(+LineEnding)');
   finally
   end;
@@ -1277,7 +1276,7 @@ Begin
   until ( not RigCmdChannelBusy ) or (t>2000);
   if t>2000 then
            Begin
-               if DebugMode then
+               if fDebugMode then
                 Writeln('Send cmd: Failed to get response to: ',cmd);
               exit;
             end;
@@ -1292,7 +1291,7 @@ Begin
     RigCmdChannelMsg := RigCmdChannelMsg+StringReplace(upcase(trim(s)),#$09,' ',[rfReplaceAll]); //note the char case upper for now on! Remove TABs
 
   RigCmdChannelMsg := StringReplace(RigCmdChannelMsg,LineEnding,'|',[rfReplaceAll]);
-  if DebugMode then
+  if fDebugMode then
      Begin
          Writeln('CmdMsg from rigctld:',RigCmdChannelMsg);
          s:= trim(copy(RigCmdChannelMsg,pos('RPRT', RigCmdChannelMsg)+5,4));
@@ -1304,7 +1303,7 @@ Begin
 end;
 procedure TRigControl.OnConnectRigctldCmd(aSocket: TLSocket);
 Begin
- if DebugMode then
+ if fDebugMode then
                    Writeln('Connected to rigctld Cmd! (OnConnect)');
   RigCmdChannelBusy :=false;
   RigCmdChannelMsg  :='';
@@ -1313,7 +1312,7 @@ end;
 procedure TRigControl.OnErrorRigctldCmd(const msg: string; aSocket: TLSocket);
 Begin
   ErrorRigctldConnect:= True;
-  if DebugMode then
+  if fDebugMode then
                    writeln('Error with rigctld: ',msg);
   if (pos('[107]',msg)>0) or (pos('[104]',msg)>0) then
    Begin

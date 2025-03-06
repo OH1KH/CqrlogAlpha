@@ -389,13 +389,20 @@ begin
   else
     n := '2';
 
-  rotor := TRotControl.Create;
-  if dmData.DebugLevel>0 then
-    rotor.DebugMode := True;
-  if not TryStrToInt(cqrini.ReadString('ROT'+n,'model',''),id) then
-    rotor.RotId := 1
+  if ((not TryStrToInt(cqrini.ReadString('ROT'+n,'model',''),id))
+     or (cqrini.ReadString('ROT'+n,'host','localhost')='')) then
+    Begin
+      if dmData.DebugLevel>0 then
+          Writeln('ROTControl/Rot model or ROTControl/Host is empty!');
+      exit;
+    end
   else
-    rotor.RotId := id;
+    begin
+      rotor := TRotControl.Create;
+      if (dmData.DebugLevel>0) or (cqrini.ReadBool('ROT','Debug',false)) then
+          rotor.DebugMode := True;
+      rotor.RotId := id;
+    end;
 
   //broken configuration caused crash because RotCtldPort was empty
   //probably late to change it to Integer, I have no idea if the current
@@ -427,6 +434,10 @@ begin
   Result := True;
   if not rotor.Connected then
   begin
+          ShowMessage(rotor.LastError+LineEnding+
+                    'Start cqrlog from command console as:'+LineEnding+LineEnding+
+                    'cqrlog --debug=1'+LineEnding+LineEnding+
+                    'to see more debug information.');
     FreeAndNil(rotor)
   end
 end;

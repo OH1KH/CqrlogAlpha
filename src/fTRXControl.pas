@@ -499,6 +499,7 @@ begin
   MemRelated := cqrini.ReadBool('TRX', 'MemModeRelated', False);
   gbInfo.Visible := cqrini.ReadBool('TRX', 'MemShowInfo', False);
   mnuShowPwrBar.Checked:= cqrini.ReadBool('TRX', 'ShowPwrBar', false);
+  pnlPwrBar.Visible:= mnuShowPwrBar.Checked;
   mnuShowInfo.Checked := gbInfo.Visible;
   gbVfo.Visible := cqrini.ReadBool('TRX', 'ShowVfo', False);
   pnlUsr.Visible := cqrini.ReadBool('TRX', 'ShowUsr', False);

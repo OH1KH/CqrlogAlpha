@@ -173,12 +173,15 @@ begin
       dmData.qFreqs.First;
       while not dmData.qFreqs.Eof do
       begin
-          if (OnlyBand<>'') and (dmData.qFreqs.Fields[1].AsString=OnlyBand) then
-            break
-           else
-            if (band<>'') and (dmData.qFreqs.Fields[1].AsString=band) then
+        if (OnlyBand<>'') then
+         Begin
+          if (dmData.qFreqs.Fields[1].AsString=OnlyBand) then
+            break;
+          end
+         else
+           if (band<>'') and (dmData.qFreqs.Fields[1].AsString=band) then
              break;
-          dmData.qFreqs.Next
+        dmData.qFreqs.Next
       end;
   finally
       dmData.qFreqs.EnableControls

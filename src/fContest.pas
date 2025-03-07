@@ -288,7 +288,10 @@ begin
          'FM',
          'AM'  :  frmTRXControl.StopVoice;
          'CW'  :   if Assigned(frmNewQSO.CWint)then
-                                                   frmNewQSO.CWint.StopSending;
+                              Begin
+                                frmNewQSO.CWint.StopSending;
+                                CQstart(false);
+                              end;
          end;
          inc(EscTimes);
          tmrESC2.Enabled := True;

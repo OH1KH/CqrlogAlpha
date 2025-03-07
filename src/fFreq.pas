@@ -33,6 +33,7 @@ type
     procedure btnChangeClick(Sender: TObject);
   private
     band: String;
+    mode : string;
     procedure RefreshData(OnlyBand : String = '');
   public
     { public declarations }
@@ -45,10 +46,11 @@ implementation
 {$R *.lfm}
 
 { TfrmFreq }
-uses dData, fChangeFreq, dUtils, uMyIni;
+uses dData, fChangeFreq, dUtils, fTRXControl, uMyIni;
 
 procedure TfrmFreq.FormShow(Sender: TObject);
 begin
+  frmTRXControl.GetModeBand(mode,band);
   dmUtils.LoadWindowPos(frmFreq);
   chkNewModes.Checked:= cqrini.ReadBool('Bands', 'UseNewModeFreq',false);
   RefreshData()
@@ -145,8 +147,8 @@ begin
                              StrToFloat(edtE_fm.Text));
     end
   finally
+    RefreshData(band);
     Free;
-    RefreshData(band)
   end
 end;
 
@@ -155,6 +157,7 @@ const
   C_SEL = 'SELECT * FROM cqrlog_common.bands ORDER BY b_begin';
 var
   i : Integer;
+
 begin
   if dmData.trFreqs.Active then
     dmData.trFreqs.Rollback;
@@ -165,21 +168,20 @@ begin
 
   dbgrdFreq.Columns[0].Visible := False;
 
-  if (OnlyBand<>'') then
-  begin
-    dmData.qFreqs.DisableControls;
-    try
+  try
+      dmData.qFreqs.DisableControls;
       dmData.qFreqs.First;
       while not dmData.qFreqs.Eof do
       begin
-        if (dmData.qFreqs.Fields[1].AsString=OnlyBand) then
-          break
-        else
+          if (OnlyBand<>'') and (dmData.qFreqs.Fields[1].AsString=OnlyBand) then
+            break
+           else
+            if (band<>'') and (dmData.qFreqs.Fields[1].AsString=band) then
+             break;
           dmData.qFreqs.Next
-      end
-    finally
+      end;
+  finally
       dmData.qFreqs.EnableControls
-    end
   end;
 
   dmUtils.LoadDBGridInForm(frmFreq);

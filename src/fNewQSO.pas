@@ -656,7 +656,8 @@ type
     LoTWcfm    : String;
     UsrAssignedProfile : String;
     EditId             : longint;     //id_cqrlog_main of qso in edit mode
-    DetailsCMBColorDone : string;      //changes done for DXCCdetails column color by currently used call+mode+band
+    DetailsCMBColorDone : string;     //changes done for DXCCdetails column color by currently used call+mode+band
+    FirstClose          : boolean;    //When close button is clicked first time wit call in call column.
 
     procedure showDOK(stat:boolean);
     procedure ShowDXCCInfo(ref_adif : Word = 0);
@@ -1905,6 +1906,7 @@ begin
      NewLogSplash;
 
    dmUtils.UpdateCallBookcnf;  //renames old user and pass of ini file
+   FirstClose:=True;
 end;
 
 procedure TfrmNewQSO.tmrEndStartTimer(Sender: TObject);
@@ -3525,23 +3527,21 @@ end;
 
 procedure TfrmNewQSO.btnCancelClick(Sender: TObject);
 begin
-  if edtCall.Text<>'' then
+  if (edtCall.Text<>'') and FirstClose and (Sender<>nil) then
    Begin
-    btnCancel.Caption:='Clear Call!';
+    btnCancel.Caption:='Save Qso?';
     btnCancel.Hint:='Do you have unsaved qso?';
     btnCancel.ShowHint:=True;
     btnCancel.Font.Color:=clFuchsia;
     btnCancel.Font.Style:=[fsBold];
     btnCancel.Repaint;
     Application.ProcessMessages;
+    FirstClose:=false;
    end
   else
    Begin
-    btnCancel.Caption:=' Closing... ';
-    btnCancel.Font.Color:=clRed;
-    btnCancel.Font.Style:=[fsBold];
-    btnCancel.Repaint;
     Application.ProcessMessages;
+    sleep(100);
     acClose.Execute
    end;
 end;
@@ -4114,6 +4114,13 @@ end;
 
 procedure TfrmNewQSO.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  btnCancel.Caption:=' Closing... ';
+  btnCancel.Font.Color:=clRed;
+  btnCancel.Font.Style:=[fsBold];
+  btnCancel.Repaint;
+  sleep(10);
+  Application.ProcessMessages;
+  sleep(10);
   if cqrini.ReadBool('Backup','Enable',False) then
   begin
     if cqrini.ReadBool('Backup','AskFirst',False) then
@@ -5755,7 +5762,8 @@ begin
   CheckQTHClub;
   CheckStateClub;
   CheckAttachment;
-  CheckQSLImage
+  CheckQSLImage;
+  FirstClose:=True;
 end;
 
 procedure TfrmNewQSO.FormKeyUp(Sender: TObject; var Key: Word;

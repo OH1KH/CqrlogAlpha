@@ -315,6 +315,7 @@ procedure TfrmChangeFreq.FormShow(Sender: TObject);
 
 begin
   pnlNew.Visible:= UseNew;
+  btnHelp.Visible:=UseNew;   //help picture refers to new grid
   pnlOld.Visible:= not UseNew;
   pnlOldHelp.Visible:= not UseNew;
   editErrors:=TStringList.Create();

@@ -4192,6 +4192,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Top = 12
         Caption = 'Show communication with ROT in console'
         TabOrder = 2
+        OnChange = chkRotControlDebugChange
       end
       object lblRotDebug: TLabel
         AnchorSideLeft.Control = chkRotControlDebug

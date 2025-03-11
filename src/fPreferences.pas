@@ -1032,6 +1032,7 @@ type
     procedure chkHamClockChange(Sender: TObject);
     procedure chkHaUpEnabledChange(Sender: TObject);
     procedure chkHrUpEnabledChange(Sender: TObject);
+    procedure chkRotControlDebugChange(Sender: TObject);
     procedure chkUdUpEnabledChange(Sender: TObject);
     procedure chkIgnoreEditChange(Sender: TObject);
     procedure chkIgnoreLoTWChange(Sender: TObject);
@@ -2356,6 +2357,11 @@ begin
   edtHrCode.Enabled     := chkHrUpEnabled.Checked;
   chkHrUpOnline.Enabled := chkHrUpEnabled.Checked;
   cmbHrColor.Enabled    := chkHrUpEnabled.Checked
+end;
+
+procedure TfrmPreferences.chkRotControlDebugChange(Sender: TObject);
+begin
+  RotChanged := True;
 end;
 
 procedure TfrmPreferences.chkIgnoreEditChange(Sender: TObject);

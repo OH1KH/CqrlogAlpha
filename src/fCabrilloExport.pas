@@ -319,20 +319,30 @@ end;
 
 procedure TfrmCabrilloExport.btnFileNameFrmFltClick(Sender: TObject);
 var
-   tmp:String;
+   tmp,
+   cname:String;
 begin
+ tmp:='';
  if not dmData.IsFilter then
   begin
       Application.MessageBox('You must first use Contest Filter for qsos to export!','Error ...',mb_OK+mb_IconError);
       exit
   end;
+  cname:=StringReplace(dmUtils.ContestNameFromFilteredQsos,' ','_',[rfReplaceAll]);
+
   if  edtCabFileName.Text<> '' then
     Begin
-      tmp:=ExtractFilePath(edtCabFileName.Text);
-      edtCabFileName.Text:=tmp+dmUtils.ContestNameFromFilteredQsos+'.cbr';
+      if  (edtCabFileName.Text[1]='/') and (length(edtCabFileName.Text)>1) then
+        tmp:= ExtractFileDir(edtCabFileName.Text)+'/';
+      if DirectoryExists(tmp) then
+            edtCabFileName.Text:=tmp+cname+'.cbr'
+       else
+            edtCabFileName.Text:=dmData.UsrHomeDir+cname+'.cbr';
     end
    else
-      edtCabFileName.Text:=dmData.UsrHomeDir+dmUtils.ContestNameFromFilteredQsos+'.cbr';
+      edtCabFileName.Text:=dmData.UsrHomeDir+cname+'.cbr';
+   if pos('//',edtCabFileName.Text)=1 then
+      edtCabFileName.Text:=dmData.UsrHomeDir+cname+'.cbr';
 end;
 
 procedure TfrmCabrilloExport.btnNameClearClick(Sender: TObject);

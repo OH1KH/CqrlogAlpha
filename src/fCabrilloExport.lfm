@@ -11,7 +11,7 @@ object frmCabrilloExport: TfrmCabrilloExport
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object lblCabfileName: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -49,8 +49,8 @@ object frmCabrilloExport: TfrmCabrilloExport
     BorderSpacing.Left = 9
     BorderSpacing.Right = 6
     Caption = 'Browse'
-    OnClick = btnCabBrowseClick
     TabOrder = 1
+    OnClick = btnCabBrowseClick
   end
   object btnCabClose: TButton
     AnchorSideTop.Control = pbCabExport
@@ -79,8 +79,8 @@ object frmCabrilloExport: TfrmCabrilloExport
     Anchors = [akTop, akRight]
     BorderSpacing.Right = 6
     Caption = 'Export'
-    OnClick = btnCabExportClick
     TabOrder = 13
+    OnClick = btnCabExportClick
   end
   object pbCabExport: TProgressBar
     AnchorSideLeft.Control = lblCabfileName
@@ -204,11 +204,11 @@ object frmCabrilloExport: TfrmCabrilloExport
     AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
     CharCase = ecUppercase
     ItemHeight = 0
-    OnChange = cmbCabContestNameChange
-    OnExit = cmbCabContestNameExit
     ParentShowHint = False
     ShowHint = True
     TabOrder = 2
+    OnChange = cmbCabContestNameChange
+    OnExit = cmbCabContestNameExit
   end
   object btnCabHelp: TSpeedButton
     AnchorSideTop.Control = lblCabfileName
@@ -321,11 +321,11 @@ object frmCabrilloExport: TfrmCabrilloExport
       BorderSpacing.Left = 6
       MaxLength = 2
       NumbersOnly = True
-      OnExit = edtCabInfoSEx1WdtExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 3
       Text = '6'
+      OnExit = edtCabInfoSEx1WdtExit
     end
     object cmbCabInfoSEx2: TComboBox
       AnchorSideLeft.Side = asrBottom
@@ -362,11 +362,11 @@ object frmCabrilloExport: TfrmCabrilloExport
       BorderSpacing.Right = 15
       MaxLength = 2
       NumbersOnly = True
-      OnExit = edtCabInfoSEx2WdtExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
       Text = '6'
+      OnExit = edtCabInfoSEx2WdtExit
     end
     object lblCabSEx1Cmb: TLabel
       AnchorSideLeft.Control = cmbCabInfoSEx1
@@ -400,11 +400,11 @@ object frmCabrilloExport: TfrmCabrilloExport
       BorderSpacing.Left = 6
       MaxLength = 2
       NumbersOnly = True
-      OnExit = edtCabInfoSrstWdtExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1
       Text = '3'
+      OnExit = edtCabInfoSrstWdtExit
     end
     object lblCabInfoSrst: TLabel
       AnchorSideLeft.Control = chkCabInfoSrst
@@ -507,11 +507,11 @@ object frmCabrilloExport: TfrmCabrilloExport
       BorderSpacing.Right = 15
       MaxLength = 2
       NumbersOnly = True
-      OnExit = edtCabInfoREx2WdtExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 5
       Text = '6'
+      OnExit = edtCabInfoREx2WdtExit
     end
     object lblCabSrxCmb: TLabel
       AnchorSideLeft.Control = cmbCabInfoREx1
@@ -545,11 +545,11 @@ object frmCabrilloExport: TfrmCabrilloExport
       BorderSpacing.Left = 6
       MaxLength = 2
       NumbersOnly = True
-      OnExit = edtCabInfoREx1WdtExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 3
       Text = '6'
+      OnExit = edtCabInfoREx1WdtExit
     end
     object edtCabInfoRrstWdt: TEdit
       AnchorSideLeft.Control = chkCabInfoRrst
@@ -563,11 +563,11 @@ object frmCabrilloExport: TfrmCabrilloExport
       BorderSpacing.Left = 6
       MaxLength = 2
       NumbersOnly = True
-      OnExit = edtCabInfoRrstWdtExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 1
       Text = '3'
+      OnExit = edtCabInfoRrstWdtExit
     end
     object lblCabInfoRrst: TLabel
       AnchorSideLeft.Control = chkCabInfoRrst
@@ -621,11 +621,11 @@ object frmCabrilloExport: TfrmCabrilloExport
       BorderSpacing.Right = 6
       MaxLength = 2
       NumbersOnly = True
-      OnExit = edtCabCallWdtExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
       Text = '13'
+      OnExit = edtCabCallWdtExit
     end
     object lblCabQsoHeader1: TLabel
       AnchorSideTop.Control = edtCabCallWdt
@@ -775,8 +775,8 @@ object frmCabrilloExport: TfrmCabrilloExport
       Width = 70
       BorderSpacing.Left = 6
       Caption = 'Save'
-      OnClick = btCabSaveClick
       TabOrder = 0
+      OnClick = btCabSaveClick
     end
     object btCabLoad: TButton
       AnchorSideLeft.Side = asrBottom
@@ -791,8 +791,8 @@ object frmCabrilloExport: TfrmCabrilloExport
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 6
       Caption = 'Load'
-      OnClick = btCabLoadClick
       TabOrder = 1
+      OnClick = btCabLoadClick
     end
   end
   object gbCabCoCount: TGroupBox
@@ -822,10 +822,10 @@ object frmCabrilloExport: TfrmCabrilloExport
       Top = 6
       Width = 70
       CharCase = ecUppercase
-      OnExit = edtCabCountCExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
+      OnExit = edtCabCountCExit
     end
   end
   object mCabStatistics: TMemo
@@ -861,8 +861,8 @@ object frmCabrilloExport: TfrmCabrilloExport
     Anchors = [akTop, akRight]
     BorderSpacing.Right = 6
     Caption = 'Frm Flt'
-    OnClick = btnCabFrmFltClick
     TabOrder = 3
+    OnClick = btnCabFrmFltClick
   end
   object btnResultFile: TButton
     AnchorSideRight.Control = btnCabClose
@@ -875,8 +875,8 @@ object frmCabrilloExport: TfrmCabrilloExport
     Anchors = [akRight, akBottom]
     BorderSpacing.Bottom = 2
     Caption = 'Open exported file'
-    OnClick = btnResultFileClick
     TabOrder = 14
+    OnClick = btnResultFileClick
   end
   object btnFileNameFrmFlt: TButton
     AnchorSideLeft.Control = btnNameClear
@@ -889,8 +889,8 @@ object frmCabrilloExport: TfrmCabrilloExport
     Width = 140
     BorderSpacing.Left = 9
     Caption = 'Name frm flt'
-    OnClick = btnFileNameFrmFltClick
     TabOrder = 18
+    OnClick = btnFileNameFrmFltClick
   end
   object btnNameClear: TButton
     AnchorSideLeft.Control = lblCabfileName
@@ -903,8 +903,8 @@ object frmCabrilloExport: TfrmCabrilloExport
     Width = 75
     BorderSpacing.Left = 9
     Caption = 'Clear'
-    OnClick = btnNameClearClick
     TabOrder = 19
+    OnClick = btnNameClearClick
   end
   object dlgCabSave: TSaveDialog
     Title = 'Save with file name'

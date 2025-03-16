@@ -5808,7 +5808,10 @@ end;
 function TdmUtils.ContestNameFromFilteredQsos:string;
 begin
   Result:='';
+  dmData.qCQRLOG.Last;
   dmData.qCQRLOG.First;
+  if (dmData.qCQRLOG.RecordCount=0) then
+     Result:='Contest? eh? There are no QSOs!';
     while not dmData.qCQRLOG.eof do
     begin
          if (dmData.qCQRLOG.FieldByName('contestname').AsString <> '') then

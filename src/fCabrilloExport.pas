@@ -821,7 +821,7 @@ begin
   if (cmbCabContestName.Text<>'') then
    begin
     f:= dlgCabSave.FileName;
-    dlgCabSave.FileName:= cmbCabContestName.Text;
+    dlgCabSave.FileName:= StringReplace(dmUtils.ContestNameFromFilteredQsos,' ','_',[rfReplaceAll]);
    end;
   dlgCabSave.DefaultExt:='.templ';
   dlgCabSave.Filter:='Cabrillo template|*.templ';

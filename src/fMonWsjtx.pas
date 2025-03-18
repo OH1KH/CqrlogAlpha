@@ -81,6 +81,8 @@ type
     procedure btFtxtNameClick(Sender: TObject);
     procedure chkFFltChange(Sender: TObject);
     procedure chkFFltClick(Sender: TObject);
+    procedure chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure chkFltChange(Sender: TObject);
     procedure chkFltClick(Sender: TObject);
     procedure chkMapClick(Sender: TObject);
@@ -1082,6 +1084,13 @@ end;
 procedure TfrmMonWsjtx.chkFFltClick(Sender: TObject);
 begin
   cqrini.WriteBool('MonWsjtx', 'FileFilter', chkFFlt.Checked);
+end;
+
+procedure TfrmMonWsjtx.chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbRight then
+            dmUtils.ViewTextFile(dmData.HomeDir + 'ctyfiles' + PathDelim+'filefilter.txt');
 end;
 
 procedure TfrmMonWsjtx.chkFltChange(Sender: TObject);

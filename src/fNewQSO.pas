@@ -3017,7 +3017,7 @@ begin
            //----------------------------------------------------
            pwr:= trim(StrBuf(index));
            if dmData.DebugLevel>=1 then Writeln('Pwr :', pwr);
-           edtPWR.Text := pwr;
+           if pwr<>'' then edtPWR.Text := pwr;   //empty value leaves NewQSO/pwr valid
            //----------------------------------------------------
            note:= trim(StrBuf(index));
            if dmData.DebugLevel>=1 then Writeln('Comments :', note);

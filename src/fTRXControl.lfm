@@ -938,6 +938,13 @@ object frmTRXControl: TfrmTRXControl
       object Separator2: TMenuItem
         Caption = '-'
       end
+      object mnuBclearXR: TMenuItem
+        Caption = 'BandClearsXitRit'
+        OnClick = mnuBclearXRClick
+      end
+      object Separator4: TMenuItem
+        Caption = '-'
+      end
       object mnuShowInfo: TMenuItem
         Caption = 'Show Mem Info'
         Checked = True

@@ -69,6 +69,7 @@ type
     lblPwrBar: TLabel;
     lblFreq : TLabel;
     lblInitRig: TLabel;
+    mnuBclearXR: TMenuItem;
     mnuShowPwrBar: TMenuItem;
     mnuShowUsr : TMenuItem;
     mnuShowInfo : TMenuItem;
@@ -87,6 +88,7 @@ type
     Separator1: TMenuItem;
     Separator2: TMenuItem;
     Separator3: TMenuItem;
+    Separator4: TMenuItem;
     tmrChokeWheel: TTimer;
     tmrSetRigTime: TTimer;
     tmrRadio : TTimer;
@@ -135,6 +137,7 @@ type
     procedure btnDATAClick(Sender : TObject);
     procedure btnSSBClick(Sender : TObject);
     procedure gbFreqClick(Sender : TObject);
+    procedure mnuBclearXRClick(Sender: TObject);
     procedure mnuShowPwrBarClick(Sender: TObject);
     procedure mnuShowInfoClick(Sender : TObject);
     procedure mnuShowPwrClick(Sender : TObject);
@@ -157,6 +160,7 @@ type
     CaretMousePos   : integer;
     radio : TRigControl;
     old_mode : String;
+    old_band : String;
 
     btn160MBand : String;
     btn80MBand : String;
@@ -332,7 +336,7 @@ begin
   lblFreq.Caption := FormatFloat(empty_freq, f);
 
   UpdateModeButtons(m);
-  ClearBandButtonsColor;
+
   // this waits5 rig polls before lock freq set by memory. After that if freq changes (by vfo knob) clean info text
   // stupid but works quite well
   case infosetstage of
@@ -399,6 +403,7 @@ begin
         else
           mG := 0; //CW  or unlisted
       end;
+
       if (oldG <> mG) then
       begin
         old_mode := m;
@@ -409,6 +414,13 @@ begin
 
   if (b = '') then
     b := dmUtils.GetBandFromFreq(lblFreq.Caption);
+  if b<>old_band then
+   Begin
+     old_band:=b;
+     if cqrini.ReadBool('TRX', 'BandModeClearsXitRit', True) then
+                                                             DisableRitXit;
+   end;
+  ClearBandButtonsColor;
   if b = btn160MBand then
     btn160m.Font.Color := clRed
   else if b = btn80MBand then
@@ -496,9 +508,11 @@ begin
   cmbRig.ItemIndex:=cqrini.ReadInteger('TRX', 'RigInUse', 1);
   cmbRigCloseUp(nil); //defaults rig 1 in case of undefined
   old_mode := '';
+  old_band := '';
   MemRelated := cqrini.ReadBool('TRX', 'MemModeRelated', False);
   gbInfo.Visible := cqrini.ReadBool('TRX', 'MemShowInfo', False);
   mnuShowPwrBar.Checked:= cqrini.ReadBool('TRX', 'ShowPwrBar', false);
+  mnuBclearXR.Checked := cqrini.ReadBool('TRX', 'BandClearsXitRit', True);
   pnlPwrBar.Visible:= mnuShowPwrBar.Checked;
   mnuShowInfo.Checked := gbInfo.Visible;
   gbVfo.Visible := cqrini.ReadBool('TRX', 'ShowVfo', False);
@@ -711,6 +725,12 @@ begin
   edtFreqInput.Repaint;
   edtFreqInput.SetFocus;
 
+end;
+
+procedure TfrmTRXControl.mnuBclearXRClick(Sender: TObject);
+begin
+  mnuBclearXR.Checked  := not  mnuBclearXR.Checked;
+  cqrini.WriteBool('TRX', 'BandClearsXitRit', mnuBclearXR.Checked);
 end;
 
 procedure TfrmTRXControl.mnuShowPwrBarClick(Sender: TObject);
@@ -1622,6 +1642,7 @@ begin
   btnDATA.Font.Color := COLOR_WINDOWTEXT;
   btnAM.Font.Color := COLOR_WINDOWTEXT;
   btnFM.Font.Color := COLOR_WINDOWTEXT;
+
 end;
 
 function TfrmTRXControl.GetModeBand(var mode, band : String) : Boolean;

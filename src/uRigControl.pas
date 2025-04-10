@@ -63,6 +63,9 @@ type TRigControl = class
     fMemSetRFP      : boolean;
     fSetFunc        : boolean; //if can set/get func then test "U currVFO ?" supported functions "fSupFuncs"
     fGetFunc        : boolean;
+    fSetLevel       : boolean;
+    fGetLevel       : boolean;
+    fSupLevels      : String;
     fSupFuncs       : String;
     fResponseTimeout : Boolean;
     AllowCommand    : integer; //for command priority
@@ -712,266 +715,224 @@ begin
     if not InitDone then
       Begin
        if pos('CHKVFO',Imsg)>0 then
-        begin
+         Begin
+         ParmVfoChkd:=true;
+         if  (pos('1', Imsg)>0) then
+           if (pos('CHKVFO:', Imsg)>0) then   //oller rigctld has 'CHKVFO' (without double dot)
+                                                        ParmHasVfo := 1  //rigctld > 4.0
+                                                       else
+                                                        ParmHasVfo := 2;  // rigctld vers 3.x
 
+         if ParmHasVfo > 0 then VfoStr:=' currVFO';  //note set leading one space to string!
+         if fDebugMode then
+                           Writeln('"--vfo" checked:',ParmHasVfo,' using VfoString:',VfoStr);
+         Hit:=true;
+         AllowCommand:=9; //next dump_caps
         end;
+
        if pos('DUMP_CAPS',Imsg)>0 then
-        Begin
+         Begin
+            fIsNewHamlib := (pos('HAMLIB VERSION:',      Imsg)>0);  //old versions do not have this
+            fPower       := (pos('CAN SET POWER STAT: Y',Imsg)>0);
+            fGetVfo      := (pos('CAN GET VFO: Y',       Imsg)>0);
+            fSetFunc     := (pos('CAN SET FUNC: Y',      Imsg)>0);
+            fGetFunc     := (pos('CAN GET FUNC: Y',      Imsg)>0);
+            fSetLevel    := (pos('CAN SET LEVEL: Y',     Imsg)>0);
+            fGetLevel    := (pos('CAN GET LEVEL: Y',     Imsg)>0);
+            fMorse       := (pos('CAN SEND MORSE: Y',    Imsg)>0);
+            fVoice       := (pos('CAN SEND VOICE: Y',    Imsg)>0);
+            fGetRFPower  := (pos('CAN GET POWER2MW: Y',  Imsg)>0);
+            fMemGetRFP   := fGetRFPower; //this is to remember rig's answer
+            fSetRFPower  := (pos('CAN GET MW2POWER: Y',  Imsg)>0);
+            fMemSetRFP   := fSetRFPower; //this is to remember rig's answer
 
-        end;
+          if fDebugMode then
+                 Begin
+                    Writeln(LineEnding,'This is New Hamlib: ',fIsNewHamlib);
+                    Writeln('Cqrlog can switch power: ',fPower);
+                    Writeln('Cqrlog can get VFO: ',fGetVfo);
+                    Writeln('Cqrlog can get func: ',fGetFunc);
+                    Writeln('Cqrlog can set func: ',fSetFunc);
+                    Writeln('Cqrlog can get level: ',fGetLevel);
+                    Writeln('Cqrlog can set level: ',fSetLevel);
+                    Writeln('Cqrlog can send Morse: ',fMorse);
+                    Writeln('Cqrlog can launch voice memories: ',fVoice);
+                    Writeln('Cqrlog can get power2mW: ',fGetRFPower);
+                    Writeln('Cqrlog can set mW2power: ',fSetRFPower,LineEnding);
+                 end;
+          Hit:=true;
+          AllowCommand:=8; //next set_func
+          end;
+
+
        if pos('SET_FUNC',Imsg)>0 then
         Begin
-
+           fSupFuncs:= ExtractWord(2,Imsg,['|']);
+           if fDebugMode then
+                      Writeln(LineEnding,'Functions: ',fSupFuncs);
+           Hit:=true;
+           AllowCommand:=7; //next set_level
         end;
+
        if pos('SET_LEVEL',Imsg)>0 then
         Begin
-
-        end;
-      end;
-
-
-
-
-
-     a := Explode(LineEnding,msg);
-    MaxArg:=Length(a)-1;
-
-    for i:=0 to MaxArg do     //this handles received message line by line
-    begin
-      Hit:=false;
-      if fDebugMode then
-         Writeln('a['+IntToStr(i)+']:',a[i]);
-      if a[i]='' then Continue;
-
-      //we send all commands with '+' prefix that makes receiving sort lot easier
-      b:= Explode(' ', a[i]);
-
-
-      if (b[0]='FREQUENCY:')then
-       Begin
-         if TryStrToFloat(b[1],f) then
-           Begin
-             fFReq := f;
-           end
-          else
-           fFReq := 0;
-          Hit:=true;
-          AllowCommand:=1; //check pending commands
-       end;
-
-      if ((b[0]='TX') and (b[1]='FREQUENCY:') )then    //get split TX freq
-       Begin
-         if TryStrToFloat(b[2],f) then
-           Begin
-             fSFReq := f;
-           end
-          else
-           fSFReq := 0;
-          Hit:=true;
-          AllowCommand:=1; //check pending commands
-       end;
-
-       if (b[0]='SPLIT:')then
-       Begin
-         fRigSplitActive:= (b[1] = '1');
-       end;
-
-       if ( (b[0]='TX') and (b[1]='MODE:') ) then   //WFview false rigctld emulating says "TX MODE:"
-        Begin
-          b[0]:=b[1];
-          b[1]:=b[2];
-        end;
-
-      if (b[0]='MODE:') then
-       Begin
-         fMode.raw  := b[1];
-         fMode.mode :=  fMode.raw;
-         if (fMode.mode = 'USB') or (fMode.mode = 'LSB') then
-           fMode.mode := 'SSB';
-         if fMode.mode = 'CWR' then
-           fMode.mode := 'CW';
-         Hit:=true;
-         AllowCommand:=1;
-        end;
-
-      //FT-920 returned VFO as MEM
-      //Some rigs report VFO as Main,MainA,MainB or Sub,SubA,SubB
-      //Hamlib dummy has also "None" could it be in some real rigs too?
-      if (b[0]='VFO:') then
-       Begin
-         b:= Explode(' ', a[i]);
-         case b[1] of
-           'VFOA',
-           'MAIN',
-           'MAINA',
-           'SUBA'    :fVFO := VFOA;
-
-           'VFOB',
-           'SUB',
-           'MAINB',
-           'SUBB'    :fVFO := VFOB;
-          else
-            fVFO := VFOA;
-         end;
-         Hit:=true;
-         AllowCommand:=1;
-        end;
-
-
-       if b[0]='CHKVFO:' then //Hamlib 4.3
-        Begin
-         ParmVfoChkd:=true;
-         if b[1]='1' then
-                        ParmHasVfo := 1;
-         if fDebugMode then Writeln('"--vfo" checked:',ParmHasVfo);
-         if ParmHasVfo > 0 then VfoStr:=' currVFO';  //note set leading one space to string!
-         Hit:=true;
-         AllowCommand:=9; //next dump caps
-        end;
-
-       if b[0]='CHKVFO' then //Hamlib 3.1
-        Begin
-         ParmVfoChkd:=true;
-         if b[1]='1' then
-                        ParmHasVfo := 2;
-         if fDebugMode then Writeln('"--vfo" checked:',ParmHasVfo);
-         if ParmHasVfo > 0 then VfoStr:=' currVFO';  //note set leading one space to string!
-         Hit:=true;
-         AllowCommand:=9; //next dump caps
-        end;
-
-      //these come from\dump_caps
-       if pos('HAMLIB VERSION:',a[i])>0 then
-             Begin                   //Old hamlib does not have this line, new has.
-               fIsNewHamlib:= true; //this is enough now to now it exist. Later version number and date can be used if needed
-             end;
-
-       if pos('CAN SET POWER STAT:',a[i])>0 then
-       Begin
-         fPower:= b[4]='Y';
-       end;
-
-      if pos('CAN GET VFO:',a[i])>0 then
-       Begin
-         fGetVfo:= b[3]='Y';
-       end;
-
-      if pos('CAN SET FUNC:',a[i])>0 then
-       Begin
-         fSetFunc:= b[3]='Y';
-       end;
-      if pos('CAN GET FUNC:',a[i])>0 then
-       Begin
-         fGetFunc:= b[3]='Y';
-       end;
-
-      if pos('CAN SEND MORSE:',a[i])>0 then
-       Begin
-         fMorse:= b[3]='Y';
-       end;
-
-       if pos('CAN SEND VOICE:',a[i])>0 then
-       Begin
-         fVoice:= b[3]='Y';
-       end;
-       if pos('CAN GET POWER2MW:',a[i])>0 then
-       begin
-          fGetRFPower:= b[3]='Y';
-          fMemGetRFP:= fGetRFPower; //this is to remember rig's answer
-       end;
-       if pos('CAN GET MW2POWER:',a[i])>0 then
-       begin
-         fSetRFPower:= b[3]='Y';
-         fMemSetRFP:= fSetRFPower; //this is to remember rig's answer
-
-         RigCommand.Clear;
-         Hit:=true;
-         if ((fRigId<10) and fPowerON and fPower) then
-               AllowCommand:=8 // if rigctld is remote it can not make auto_power_on as startup parameter
+          fSupLevels:= ExtractWord(2,Imsg,['|']);
+          if fDebugMode then
+                      Writeln(LineEnding,'Levels: ',fSupLevels);
+           Hit:=true;
+           RigCommand.Clear;
+           tmrRigPoll.Interval := fRigPoll;  //set user poll speed
+           InitDone:=true;
+           if ((fRigId<10) and fPowerON and fPower) then
+               AllowCommand:=6 // if rigctld is remote it can not make auto_power_on as startup parameter
                                // then we should send set_powerstat 1 if power up is asked and rig can do it
            else
-               AllowCommand:=1; //check pending commands (should not be any)
-         if fDebugMode then
-                   Begin
-                      Writeln(LineEnding,'This is New Hamlib: ',fIsNewHamlib);
-                      Writeln('Cqrlog can switch power: ',fPower);
-                      Writeln('Cqrlog can get VFO: ',fGetVfo);
-                      Writeln('Cqrlog can get func: ',fGetFunc);
-                      Writeln('Cqrlog can set func: ',fSetFunc);
-                      Writeln('Cqrlog can send Morse: ',fMorse);
-                      Writeln('Cqrlog can launch voice memories: ',fVoice);
-                      Writeln('Cqrlog can get power2mW: ',fGetRFPower);
-                      Writeln('Cqrlog can set mW2power: ',fSetRFPower,LineEnding);
-                   end;
+               AllowCommand:=0;
+        end;
+     end //init
+  else
+     Begin
+        a := Explode(LineEnding,msg);
+        MaxArg:=Length(a)-1;
 
-         if fSetFunc then
-                 RigCommand.Add('+\set_func'+VfoStr+' ?'+LineEnding)
-          else
+        for i:=0 to MaxArg do     //this handles received message line by line
+        begin
+          Hit:=false;
+          if fDebugMode then
+             Writeln('a['+IntToStr(i)+']:',a[i]);
+          if a[i]='' then Continue;
+
+          //we send all commands with '+' prefix that makes receiving sort lot easier
+          b:= Explode(' ', a[i]);
+
+
+          if (b[0]='FREQUENCY:')then
+           Begin
+             if TryStrToFloat(b[1],f) then
+               Begin
+                 fFReq := f;
+               end
+              else
+               fFReq := 0;
+              Hit:=true;
+              AllowCommand:=1; //check pending commands
+           end;
+
+          if ((b[0]='TX') and (b[1]='FREQUENCY:') )then    //get split TX freq
+           Begin
+             if TryStrToFloat(b[2],f) then
+               Begin
+                 fSFReq := f;
+               end
+              else
+               fSFReq := 0;
+              Hit:=true;
+              AllowCommand:=1; //check pending commands
+           end;
+
+           if (b[0]='SPLIT:')then
+           Begin
+             fRigSplitActive:= (b[1] = '1');
+           end;
+
+           if ( (b[0]='TX') and (b[1]='MODE:') ) then   //WFview false rigctld emulating says "TX MODE:"
             Begin
-             sleep(1000);
-             InitDone:=true;
+              b[0]:=b[1];
+              b[1]:=b[2];
             end;
 
-         Break;  //break searching from \dump_caps reply
-       end;
-      //\dump_caps end
+          if (b[0]='MODE:') then
+           Begin
+             fMode.raw  := b[1];
+             fMode.mode :=  fMode.raw;
+             if (fMode.mode = 'USB') or (fMode.mode = 'LSB') then
+               fMode.mode := 'SSB';
+             if fMode.mode = 'CWR' then
+               fMode.mode := 'CW';
+             Hit:=true;
+             AllowCommand:=1;
+            end;
 
-       if ((pos('RFPOWER',a[i])>0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
-         if (pos('RPRT 0',a[i+2])>0) then
-          Begin
-           Hit:=true;
-           fPwrPcnt:= a[i+1];
-           tmp:=FloatToStr(fFreq);
-           if fGetRFPower then
-             RigCommand.Add('+\power2mW '+fPwrPcnt+' '+tmp+' '+fMode.mode+LineEnding);
-          end;
+          //FT-920 returned VFO as MEM
+          //Some rigs report VFO as Main,MainA,MainB or Sub,SubA,SubB
+          //Hamlib dummy has also "None" could it be in some real rigs too?
+          if (b[0]='VFO:') then
+           Begin
+             b:= Explode(' ', a[i]);
+             case b[1] of
+               'VFOA',
+               'MAIN',
+               'MAINA',
+               'SUBA'    :fVFO := VFOA;
 
-       if ((pos('POWER MW:',a[i])>0) and (i+1 <= MaxArg)) then
-        if(pos('RPRT 0',a[i+1])>0) then
-         Begin
-          Hit:=true;
-          fPwrmW:=b[2];
-         end;
+               'VFOB',
+               'SUB',
+               'MAINB',
+               'SUBB'    :fVFO := VFOB;
+              else
+                fVFO := VFOA;
+             end;
+             Hit:=true;
+             AllowCommand:=1;
+            end;
 
-       if ((pos('SET_FUNC',a[i])>0) and (pos('?',a[i])>0) and  (i+2 <= MaxArg)) then
-        if (pos('RPRT 0',a[i+2])>0) then
-          Begin
-            Hit:=true;
-            fSupFuncs:=a[i+1];
-            InitDone:=true;
-            AllowCommand:=1;
-            Break;
-          end;
+           if ((pos('RFPOWER',a[i])>0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
+             if (pos('RPRT 0',a[i+2])>0) then
+              Begin
+               Hit:=true;
+               fPwrPcnt:= a[i+1];
+               tmp:=FloatToStr(fFreq);
+               if fGetRFPower then
+                 RigCommand.Add('+\power2mW '+fPwrPcnt+' '+tmp+' '+fMode.mode+LineEnding);
+              end;
 
-       if pos('SET_POWERSTAT:',a[i])>0 then
-       Begin
-         Hit:=true;
-         if pos('1',a[i])>0 then //line may have 'STAT: 1' or 'STAT: CURRVFO 1'
-          Begin
-            if fDebugMode then Writeln('Power on, start polling');
-            AllowCommand:=92; //check pending commands via delay Assume rig needs time to start
-            PowerOffIssued:=false;
-          end
-         else
-          Begin
-            if fDebugMode then Writeln('Power off, stop poll decode (-2)');
-            AllowCommand:=-2; //there is no timeout for this
-            Exit;
-          end;
-       end;
+           if ((pos('POWER MW:',a[i])>0) and (i+1 <= MaxArg)) then
+            if(pos('RPRT 0',a[i+1])>0) then
+             Begin
+              Hit:=true;
+              fPwrmW:=b[2];
+             end;
+
+           if ((pos('SET_FUNC',a[i])>0) and (pos('?',a[i])>0) and  (i+2 <= MaxArg)) then
+            if (pos('RPRT 0',a[i+2])>0) then
+              Begin
+                Hit:=true;
+                fSupFuncs:=a[i+1];
+                InitDone:=true;
+                AllowCommand:=1;
+                Break;
+              end;
+
+           if pos('SET_POWERSTAT:',a[i])>0 then
+           Begin
+             Hit:=true;
+             if pos('1',a[i])>0 then //line may have 'STAT: 1' or 'STAT: CURRVFO 1'
+              Begin
+                if fDebugMode then Writeln('Power on, start polling');
+                AllowCommand:=92; //check pending commands via delay Assume rig needs time to start
+                PowerOffIssued:=false;
+              end
+             else
+              Begin
+                if fDebugMode then Writeln('Power off, stop poll decode (-2)');
+                AllowCommand:=-2; //there is no timeout for this
+                Exit;
+              end;
+           end;
 
 
-       if (b[0]='RPRT') then
-       Begin
-         //if none of above hits what to expect we accept just report received to be the one
-         if not Hit then AllowCommand:=1;
-           HamlibErrors(b[1]);
-       end;
+           if (b[0]='RPRT') then
+           Begin
+             //if none of above hits what to expect we accept just report received to be the one
+             if not Hit then AllowCommand:=1;
+               HamlibErrors(b[1]);
+           end;
 
-   end;  //line by line loop
-  end; //while msg
-
+        end; //max arg loop
+     end; //other than init
+   end;  //while rcvd
 end;
+
 procedure TRigControl.OnRigPollTimer(Sender: TObject);
 var
   cmd     : String;
@@ -1008,7 +969,7 @@ begin
      92:  AllowCommand:=91;
      91:  AllowCommand:=1;
 
-     //high priority commands
+     //high priority (init) commands
      10:  Begin
                cmd:='+\chk_vfo'+LineEnding;
                if fDebugMode then
@@ -1026,6 +987,22 @@ begin
                fPollCount :=  fPollTimeout;
           end;
       8:  Begin
+               cmd:=('+\set_func'+VfoStr+' ?'+LineEnding);
+               if fDebugMode then
+                   Write(LineEnding+'Sending: '+cmd);
+               if not SendPoll(cmd) then exit;
+               AllowCommand:=-1; //waiting for reply
+               fPollCount :=  fPollTimeout;
+          end;
+      7:  Begin
+               cmd:=('+\set_level'+VfoStr+' ?'+LineEnding);
+               if fDebugMode then
+                     Write(LineEnding+'Sending: '+cmd);
+               if not SendPoll(cmd) then exit;
+               AllowCommand:=-1; //waiting for reply
+               fPollCount :=  fPollTimeout;
+          end;
+      6:  Begin
                cmd:= '+\set_powerstat 1'+LineEnding;
                if fDebugMode then
                      Write(LineEnding+'Sending: '+cmd);
@@ -1036,7 +1013,7 @@ begin
 
       //lower priority commands queue handled here
       1:  Begin
-            if (RigCommand.Text<>'') then
+           if (RigCommand.Text<>'') then
               begin
                 if fDebugMode then
                      write('Queue in:'+LineEnding,RigCommand.Text);
@@ -1052,6 +1029,8 @@ begin
                   AllowCommand:=-1; //wait answer
                   fPollCount :=  fPollTimeout;
                end
+            else
+              AllowCommand :=0;
           end;
 
        //polling has lowest prority, do if there is nothing else to do
@@ -1149,12 +1128,12 @@ end;
 procedure TRigControl.OnConnectRigctldConnect(aSocket: TLSocket);
 Begin
     if fDebugMode then
-                   Writeln('Connected to rigctld Poll (OnConnect)');
+                   Writeln('Connecting to rigctld Poll (OnConnect)');
 
     ParmHasVfo:=0;   //default: "--vfo" is not used as start parameter
     AllowCommand:=10;  //start with chk_vfo
     RigCommand.Clear;
-    tmrRigPoll.Interval := fRigPoll;
+    tmrRigPoll.Interval := 50; //to speed up init
     tmrRigPoll.Enabled  := True;
 
     if RigChkVfo then
@@ -1322,7 +1301,7 @@ end;
 procedure TRigControl.OnConnectRigctldCmd(aSocket: TLSocket);
 Begin
  if fDebugMode then
-                   Writeln('Connected to rigctld Cmd! (OnConnect)');
+                   Writeln('Connecting to rigctld Cmd! (OnConnect)');
   RigCmdChannelBusy :=false;
   RigCmdChannelMsg  :='';
   ConnectionDone    :=True;

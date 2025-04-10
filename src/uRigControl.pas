@@ -691,7 +691,8 @@ end;
 
 procedure TRigControl.OnReceivedRigctldConnect(aSocket: TLSocket);
 var
-  msg : String;
+  msg,
+  Imsg : String;
   a,b : TExplodeArray;
   i   : Integer;
   f   : Double;
@@ -704,8 +705,33 @@ begin
   while (( aSocket.GetMessage(msg) > 0 ) and (not fResponseTimeout)) do
   begin
     msg := StringReplace(upcase(trim(msg)),#$09,' ',[rfReplaceAll]); //note the char case upper for now on! Remove TABs
+    Imsg:=StringReplace(msg,LineEnding,'|',[rfReplaceAll]);
     if fDebugMode then
-         Writeln('Msg from rig:',StringReplace(msg,LineEnding,'|',[rfReplaceAll]));
+         Writeln('Msg from rig:',Imsg);
+
+    if not InitDone then
+      Begin
+       if pos('CHKVFO',Imsg)>0 then
+        begin
+
+        end;
+       if pos('DUMP_CAPS',Imsg)>0 then
+        Begin
+
+        end;
+       if pos('SET_FUNC',Imsg)>0 then
+        Begin
+
+        end;
+       if pos('SET_LEVEL',Imsg)>0 then
+        Begin
+
+        end;
+      end;
+
+
+
+
 
      a := Explode(LineEnding,msg);
     MaxArg:=Length(a)-1;
@@ -950,102 +976,9 @@ procedure TRigControl.OnRigPollTimer(Sender: TObject);
 var
   cmd     : String;
   i       : Integer;
-//-----------------------------------------------------------
-procedure DoRigPoll;
-var
-   f:integer;
-   s:array[1..5] of string=('','','','','');
+  f       :integer;
+  s       :array[1..5] of string=('','','','','');
 
-begin
-  if   ((not RigctldConnect.Connected)
-         or fResponseTimeout )
-                       then exit;
-
- if  ParmHasVfo=2 then
-   begin
-     if fGetVfo then
-        begin
-          s[1]:='+f'+VfoStr;
-          s[2]:='+m'+VfoStr;
-          s[3]:='+v'+VfoStr;
-          if fGetSplitTX then
-           Begin
-             s[4]:='+i'+VfoStr;
-             s[5]:='+s'+VfoStr;
-           end;
-          //cmd := '+f'+VfoStr+' +m'+VfoStr+' +v'+VfoStr+LineEnding //chk this with rigctld v3.1
-        end
-      else
-        begin
-          s[1]:='+f'+VfoStr;
-          s[2]:='+m'+VfoStr;
-          if fGetSplitTX then
-           Begin
-             s[3]:='+i'+VfoStr;
-             s[4]:='+s'+VfoStr;
-           end;
-          //cmd := '+f'+VfoStr+' +m'+VfoStr+LineEnding //do not ask vfo if rig can't
-        end
-
-   end
-  else
-   begin
-     if fGetVfo then
-        begin
-          s[1]:='+f'+VfoStr;
-          s[2]:='+m'+VfoStr;
-          s[3]:='+v';
-          if fGetSplitTX then
-           Begin
-             s[4]:='+i'+VfoStr;
-             s[5]:='+s'+VfoStr;
-           end;
-          //cmd := '+f'+VfoStr+' +m'+VfoStr+' +v'+LineEnding
-        end
-      else
-      begin
-          s[1]:='+f'+VfoStr;
-          s[2]:='+m'+VfoStr;
-          if fGetSplitTX then
-           Begin
-             s[3]:='+i'+VfoStr;
-             s[4]:='+s'+VfoStr;
-           end;
-          //cmd := '+f'+VfoStr+' +m'+VfoStr+LineEnding //do not ask vfo if rig can't
-        end
-   end;
-
-
- if fCompoundPoll then
-       Begin
-        if fDebugMode then
-           Write(LineEnding+'Poll Sending:'+trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding);
-        if not SendPoll(trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding) then exit;
-       end
-      else
-        Begin
-          for f:=1 to 5 do
-            Begin
-              if s[f]<>'' then
-               Begin
-                  if fDebugMode then
-                        Write(LineEnding+'Poll Sending:'+s[f]+LineEnding);
-                  if not SendPoll(s[f]+LineEnding) then exit;
-               end
-              else
-              break;
-              sleep(2);
-            end;
-        end;
-
-  if fGetRFPower then
-    rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
-
- AllowCommand:=-1; //waiting for reply
- fPollCount :=  fPollTimeout;
-end;
-
-//-----------------------------------------------------------
 begin
  if fDebugMode then
                Writeln('Polling - allowcommand:',AllowCommand);
@@ -1119,13 +1052,98 @@ begin
                   AllowCommand:=-1; //wait answer
                   fPollCount :=  fPollTimeout;
                end
-              else
-               DoRigPoll;
           end;
 
        //polling has lowest prority, do if there is nothing else to do
-       0:  DoRigPoll;
+    else
+     begin
+      if   ((not RigctldConnect.Connected)
+             or fResponseTimeout )
+                           then exit;
 
+     if  ParmHasVfo=2 then
+       begin
+         if fGetVfo then
+            begin
+              s[1]:='+f'+VfoStr;
+              s[2]:='+m'+VfoStr;
+              s[3]:='+v'+VfoStr;
+              if fGetSplitTX then
+               Begin
+                 s[4]:='+i'+VfoStr;
+                 s[5]:='+s'+VfoStr;
+               end;
+              //cmd := '+f'+VfoStr+' +m'+VfoStr+' +v'+VfoStr+LineEnding //chk this with rigctld v3.1
+            end
+          else
+            begin
+              s[1]:='+f'+VfoStr;
+              s[2]:='+m'+VfoStr;
+              if fGetSplitTX then
+               Begin
+                 s[3]:='+i'+VfoStr;
+                 s[4]:='+s'+VfoStr;
+               end;
+              //cmd := '+f'+VfoStr+' +m'+VfoStr+LineEnding //do not ask vfo if rig can't
+            end
+
+       end
+      else
+       begin
+         if fGetVfo then
+            begin
+              s[1]:='+f'+VfoStr;
+              s[2]:='+m'+VfoStr;
+              s[3]:='+v';
+              if fGetSplitTX then
+               Begin
+                 s[4]:='+i'+VfoStr;
+                 s[5]:='+s'+VfoStr;
+               end;
+              //cmd := '+f'+VfoStr+' +m'+VfoStr+' +v'+LineEnding
+            end
+          else
+          begin
+              s[1]:='+f'+VfoStr;
+              s[2]:='+m'+VfoStr;
+              if fGetSplitTX then
+               Begin
+                 s[3]:='+i'+VfoStr;
+                 s[4]:='+s'+VfoStr;
+               end;
+              //cmd := '+f'+VfoStr+' +m'+VfoStr+LineEnding //do not ask vfo if rig can't
+            end
+       end;
+
+
+     if fCompoundPoll then
+           Begin
+            if fDebugMode then
+               Write(LineEnding+'Poll Sending:'+trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding);
+            if not SendPoll(trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding) then exit;
+           end
+          else
+            Begin
+              for f:=1 to 5 do
+                Begin
+                  if s[f]<>'' then
+                   Begin
+                      if fDebugMode then
+                            Write(LineEnding+'Poll Sending:'+s[f]+LineEnding);
+                      if not SendPoll(s[f]+LineEnding) then exit;
+                   end
+                  else
+                  break;
+                  sleep(2);
+                end;
+            end;
+
+      if fGetRFPower then
+        rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
+
+     AllowCommand:=-1; //waiting for reply
+     fPollCount :=  fPollTimeout;
+    end;
  end;//case
 end;
 procedure TRigControl.OnConnectRigctldConnect(aSocket: TLSocket);

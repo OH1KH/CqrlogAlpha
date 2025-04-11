@@ -247,7 +247,7 @@ procedure TfrmTRXControl.HLTune(start : Boolean);
 begin
   if Assigned(radio) then
   begin
-    if pos('TUNER',radio.SupFuncs)>0 then //tune with rigctld cmds
+    if pos('TUNER',radio.SupSetFuncs)>0 then //tune with rigctld cmds
      Begin
          if start then
           Begin

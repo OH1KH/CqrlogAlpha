@@ -440,96 +440,112 @@ end;
 procedure TRigControl.SetCurrVFO(vfo : TVFO);
 begin
   case vfo of
-    VFOA : SendCmd('V VFOA');
-    VFOB : SendCmd('V VFOB');
+    VFOA : RigCommand.Add('V VFOA');
+    VFOB : RigCommand.Add('V VFOB');
   end; //case
+  Allowcommand:=1;
 end;
 
 procedure TRigControl.SetModePass(mode : TRigMode);
 begin
   if (mode.mode='CW') and fRigSendCWR then
     mode.mode := 'CWR';
-  SendCmd('+\set_mode'+VfoStr+' '+mode.mode+' '+IntToStr(mode.pass));
+  RigCommand.Add('+\set_mode'+VfoStr+' '+mode.mode+' '+IntToStr(mode.pass));
+  Allowcommand:=1;
 end;
 
 procedure TRigControl.SetFreqKHz(freq : Double);
 begin
-  SendCmd('+\set_freq'+VfoStr+' '+FloatToStr(freq*1000-TXOffset*1000000));
+  RigCommand.Add('+\set_freq'+VfoStr+' '+FloatToStr(freq*1000-TXOffset*1000000));
+  Allowcommand:=1;
 end;
 
 procedure TRigControl.SetTuner;
 begin
   if fSetFunc and (Pos('TUNER', fSupFuncs)>0) then
-    SendCmd('+\set_func'+VfoStr+' TUNER 1');
+    RigCommand.Add('+\set_func'+VfoStr+' TUNER 1');
+  Allowcommand:=1;
 end;
 
 procedure TRigControl.ReSetTuner;
 begin
   if fSetFunc and (Pos('TUNER', fSupFuncs)>0) then
-    SendCmd('+\set_func'+VfoStr+' TUNER 0');
+    RigCommand.Add('+\set_func'+VfoStr+' TUNER 0');
+  Allowcommand:=1;
 end;
 procedure TRigControl.ClearRit;
 begin
-  SendCmd('+\set_rit'+VfoStr+' 0');
+  RigCommand.Add('+\set_rit'+VfoStr+' 0');
+  Allowcommand:=1;
 end;
 procedure TRigControl.DisableRit;
 Begin
-  SendCmd('+\set_func'+VfoStr+' RIT 0');
+  RigCommand.Add('+\set_func'+VfoStr+' RIT 0');
+  Allowcommand:=1;
 end;
 procedure TRigControl.SetSplit(up:integer);
 Begin
-  if not SendCmd('+\set_xit'+VfoStr+' '+IntToStr(up)) then
-                                                      exit;
-  if pos('RPRT 0', RigCmdChannelMsg)>0 then
-    SendCmd( '+\set_func'+VfoStr+' XIT 1');
+  RigCommand.Add('+\set_xit'+VfoStr+' '+IntToStr(up));
+  RigCommand.Add( '+\set_func'+VfoStr+' XIT 1');
+  Allowcommand:=1;
 end;
 procedure TRigControl.ClearXit;
 begin
- SendCmd('+\set_xit'+VfoStr+' 0');
+ RigCommand.Add('+\set_xit'+VfoStr+' 0');
+ Allowcommand:=1;
 end;
 procedure TRigControl.DisableSplit;
 Begin
- SendCmd('+\set_func'+VfoStr+' XIT 0');
+ RigCommand.Add('+\set_func'+VfoStr+' XIT 0');
+ Allowcommand:=1;
 end;
 procedure TRigControl.PttOn;
 begin
-  SendCmd('+\set_ptt'+VfoStr+' 1');
+  RigCommand.Add('+\set_ptt'+VfoStr+' 1');
+  Allowcommand:=1;
 end;
 procedure TRigControl.PttOff;
 begin
- SendCmd('+\set_ptt'+VfoStr+' 0');
+ RigCommand.Add('+\set_ptt'+VfoStr+' 0');
+ Allowcommand:=1;
 end;
 procedure TRigControl.SendVoice(Vmem:String);
 begin
-  SendCmd('+\send_voice_mem '+Vmem);
+  RigCommand.Add('+\send_voice_mem '+Vmem);
+  Allowcommand:=1;
 end;
 procedure TRigControl.StopVoice;
 begin
-  SendCmd('+\stop_voice_mem');
+  RigCommand.Add('+\stop_voice_mem');
+  Allowcommand:=1;
 end;
 procedure TRigControl.PwrOn;
 begin
-  AllowCommand:=8; //high prority  passes -1 state
+  AllowCommand:=6; //high prority  passes -1 state
 end;
 procedure TRigControl.PwrOff;
 begin
   PowerOffIssued:=true;
   RigCommand.Add('+\set_powerstat 0');
+  Allowcommand:=1;
 end;
 procedure TRigControl.PwrStBy;
 begin
    PowerOffIssued:=true;
    RigCommand.Add('+\set_powerstat 2');
+   Allowcommand:=1;
 end;
 procedure TRigControl.UsrCmd(cmd:String);
 begin
-  if (cmd<>'') then SendCmd(cmd);
+  if (cmd<>'') then RigCommand.Add(cmd);
+  Allowcommand:=1;
 end;
 
 procedure TRigControl.SetPowerPercent(p:integer);
 begin
   if not fSetRFPower then exit;
-  SendCmd('+\set_level'+VfoStr+' RFPOWER '+FloatToStrF(p/100,ffFixed,3,2));
+  RigCommand.Add('+\set_level'+VfoStr+' RFPOWER '+FloatToStrF(p/100,ffFixed,3,2));
+  Allowcommand:=1;
 end;
 
 function TRigControl.GetCurrVFO  : TVFO;
@@ -893,16 +909,6 @@ begin
               fPwrmW:=b[2];
              end;
 
-           if ((pos('SET_FUNC',a[i])>0) and (pos('?',a[i])>0) and  (i+2 <= MaxArg)) then
-            if (pos('RPRT 0',a[i+2])>0) then
-              Begin
-                Hit:=true;
-                fSupFuncs:=a[i+1];
-                InitDone:=true;
-                AllowCommand:=1;
-                Break;
-              end;
-
            if pos('SET_POWERSTAT:',a[i])>0 then
            Begin
              Hit:=true;
@@ -1161,13 +1167,16 @@ begin
    end;
 end;
 function TRigControl.SendPoll(msg:string):boolean;
+var r: integer;
 begin
   Result:=false;
   if   ((not RigctldConnect.Connected)
          or fResponseTimeout )
                        then exit;
-  RigctldConnect.SendMessage(msg);
-  Result:=true;
+  r:=RigctldConnect.SendMessage(msg);
+  Result:=(r=length(msg)); //SendMessage returns sent char count (inc LineEnding)
+  if fDebugMode then
+                writeln('Sent :',r,' ',Result);
 end;
 procedure TRigControl.Restart;
 var

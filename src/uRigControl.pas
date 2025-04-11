@@ -229,7 +229,7 @@ begin
   fSupSetLevels        := '';
   fSupGetLevels        := '';
   fRfPwrMtrWtts        := '';
-  fMemRfPwrMtrWtts     := '';
+  fMemRfPwrMtrWtts     := '0';
   tmrRigPoll.OnTimer       := @OnRigPollTimer;
   RigctldConnect.OnReceive := @OnReceivedRigctldConnect;
   RigctldConnect.OnConnect := @OnConnectRigctldConnect;
@@ -486,9 +486,17 @@ begin
 end;
 
 procedure TRigControl.SetPowerPercent(p:integer);
+var
+   s:String;
 begin
   if not fSetRFPower then exit;
-  RigCommand.Add('+\set_level'+VfoStr+' RFPOWER '+FloatToStrF(p/100,ffFixed,3,2));
+  case p of
+     0:   s:='0';
+     100: s:='1';
+   else
+    s:='0.'+IntToStr(p)+'66';
+  end;
+  RigCommand.Add('+\set_level'+VfoStr+' RFPOWER '+s);
   Allowcommand:=1;
 end;
 
@@ -831,13 +839,13 @@ begin
              AllowCommand:=1;
             end;
 
-          if ((pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
+          if ((pos('RFPOWER_METER_',a[i])>0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
             if (pos('RPRT 0',a[i+2])>0) then
              Begin
               Hit:=true;
-              fRfPwrMtrWtts:= a[i+1];
+              fRfPwrMtrWtts:= trim(a[i+1]);
               if  fRfPwrMtrWtts<>'0' then
-                 fMemRfPwrMtrWtts:= fRfPwrMtrWtts;
+                 fMemRfPwrMtrWtts:= copy(fRfPwrMtrWtts,1,pos('.',fRfPwrMtrWtts)-1);
              end;
 
            if ((pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
@@ -845,9 +853,6 @@ begin
               Begin
                Hit:=true;
                fPwrPcnt:= a[i+1];
-               tmp:=FloatToStr(fFreq);
-               if fGetRFPower then
-                 RigCommand.Add('+\power2mW '+fPwrPcnt+' '+tmp+' '+fMode.mode+LineEnding);
               end;
 
            if ((pos('POWER MW:',a[i])>0) and (i+1 <= MaxArg)) then
@@ -1089,7 +1094,7 @@ begin
 
        if fGetRFPower then   //if it is possible and allowed by user
        Begin
-         if fGetLevel and (Pos('RFPOWER', fSupGetLevels)>0) then
+         if fGetLevel and (Pos('RFPOWER ', fSupGetLevels)>0) then
            rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
 
          if fGetLevel and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then

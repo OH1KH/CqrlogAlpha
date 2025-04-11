@@ -19,7 +19,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, StdCtrls,
   ExtCtrls, inifiles, process, lcltype, Buttons, Menus, ActnList, dynlibs,
-  uRigControl, Types, StrUtils, ComCtrls;
+  uRigControl, Types, StrUtils, ComCtrls, Math;
 
 type
 
@@ -819,7 +819,8 @@ procedure TfrmTRXControl.tbPwrMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if assigned(radio) then
-     radio.SetPowerPercent(tbPwr.Position);
+                           //this sets value we see in % better than tbPwr.Position
+     radio.SetPowerPercent(StrToInt(copy(lblPwrBar.Caption,1,length(lblPwrBar.Caption)-1)));
   StopPwrUpdate:=-1; //negative -1 => wait 2 poll rounds before release
 end;
 
@@ -1854,7 +1855,7 @@ end;
 
 procedure  TfrmTRXControl.UpdatePwrBar;
 var
- f: double;
+ f: integer;
  tmp: String;
 Begin
  if assigned(radio) then
@@ -1864,7 +1865,8 @@ Begin
         inc(StopPwrUpdate);
         exit;
        end;
-
+     if  (StopPwrUpdate > 0) Then // positive then exit
+                                 Exit;
      if mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled then
        Begin
           radio.GetRFPower:=radio.MemGetRFP;  //this way we get original +\dump_caps answer in use
@@ -1877,19 +1879,23 @@ Begin
           exit;
        end;
 
-     if (mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled and radio.GetRFPower and (StopPwrUpdate=0)) then
+     if (mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled and radio.GetRFPower) then
       begin
            tmp:=radio.PwrPcnt;
-           if tryStrToFloat(tmp,f) then
+           case tmp of
+            '0': tmp:='0';
+            '1': tmp:='100';
+           else
+             tmp:=copy(tmp,pos('.',tmp)+1,2);
+           end;
+           if tryStrToInt(tmp,f) then
             begin
              tbPwr.Min:=0;
              tbPwr.Max:=100;
              tbPwr.Enabled:=True;
-             tbPwr.Position:=round(f*100);
+             tbPwr.Position:=f;
              lblPwrBar.Font.Height:=8;
-             tmp:=radio.PwrmW;
-             if tryStrToFloat(tmp,f) then
-                lblPwrBar.Caption:=IntToStr(Round(f/ 1000))+'W';
+             lblPwrBar.Caption:=tmp+'%';
              pnlPwrBar.Visible:=true;
             end
         else
@@ -1900,11 +1906,15 @@ end;
 
 function TfrmTRXControl.GetRigPower(var pwr:string): boolean;
 Begin
+ pwr:='0';
+ Result:= false;
  if assigned(radio) then
   Begin
-   Result:=radio.GetRFPower;
-   if radio.GetRFPower then
-      pwr:=radio.PwrmW;
+   if (radio.GetRFPower) and (radio.MemRfPwrMtrWtts<>'0') then
+    begin
+     pwr:=radio.MemRfPwrMtrWtts;
+     Result:=true;
+    end;
   end;
 end;
 

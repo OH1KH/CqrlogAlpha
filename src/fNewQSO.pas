@@ -1262,16 +1262,18 @@ end;
 
 procedure TfrmNewQSO.ClearAll;
 var
-  i : Integer;
-  sDate, Mask : String;
-  date : TDateTime;
+  i      : Integer;
+  sDate,
+  Mask,
+  tmp    : String;
+  date   : TDateTime;
   sTimeOn  : String = '';
   sTimeOff : String = '';
   ShowRecentQSOs : Boolean = False;
   ShowB4call     : Boolean = False;
   RecentQSOCount : Integer = 0;
   since  : String;
-  lat,long : Currency;
+  lat,long,p : Currency;
 begin
   if fViewQSO then
   begin
@@ -1395,12 +1397,18 @@ begin
   if sbNewQSO.Panels[0].Text = '' then
     sbNewQSO.Panels[0].Text := cMyLoc + CurrentMyLoc;
 
-  cmbFreq.Text := cqrini.ReadString('TMPQSO','FREQ',cqrini.ReadString(
-                  'NewQSO','FREQ','7.025'));
-  cmbMode.Text := cqrini.ReadString('TMPQSO','Mode',cqrini.ReadString(
-                  'NewQSO','Mode','CW'));
-  edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString(
-                  'NewQSO','PWR','100'));
+  cmbFreq.Text := cqrini.ReadString('TMPQSO','FREQ',cqrini.ReadString('NewQSO','FREQ','7.025'));
+  cmbMode.Text := cqrini.ReadString('TMPQSO','Mode',cqrini.ReadString('NewQSO','Mode','CW'));
+
+  if (cqrini.ReadBool('NewQSO', 'UseRigPwr', False) and frmTRXControl.GetRigPower(tmp)) then
+    Begin
+     if tryStrToCurr(tmp,p) then  //conversion str->int->str is needed to allow power factor usage
+            edtPWR.Text:=FloatToStrF((p*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1)),ffFixed,3,1)
+      else
+            edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
+    end
+   else
+     edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
 
   edtHisRST.Text := cqrini.ReadString('NewQSO', 'RST_S', '599');
   edtMyRST.Text  := cqrini.ReadString('NewQSO', 'RST_R', '599');
@@ -5556,7 +5564,7 @@ var
   qsl_via    : String = '';
   i          : integer;
   tmp        : string;
-  p          : double;
+  p          : integer;
 begin
   mode := '';
   freq := '';
@@ -5659,7 +5667,10 @@ begin
   if (not (fViewQSO or fEditQSO)) then
   begin
     InsertNameQTH;
-    cmbQSL_S.Text := dmData.SendQSL(edtCall.Text,cmbMode.Text,cmbFreq.Text,adif)
+    cmbQSL_S.Text := dmData.SendQSL(edtCall.Text,cmbMode.Text,cmbFreq.Text,adif);
+    if (cqrini.ReadBool('NewQSO', 'UseRigPwr', False) and frmTRXControl.GetRigPower(tmp)) then
+     if tryStrToInt(tmp,p) then  //conversion str->int->str is needed to allow power factor usage
+            edtPWR.Text:=IntToStr(p*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1));
   end;
 
 
@@ -5668,11 +5679,7 @@ begin
   else
     ShowDXCCInfo();
 
-  if ((cqrini.ReadBool('NewQSO', 'UseRigPwr', False)) and (frmTRXControl.GetRigPower(tmp)) and (not (fViewQSO or fEditQSO))) then
-    Begin
-     if tryStrToFloat(tmp,p) then
-            edtPWR.Text:=IntToStr(Round(p/1000)*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1));
-    end;
+
 
   ShowCountryInfo;
   ChangeReports;

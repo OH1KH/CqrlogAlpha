@@ -902,6 +902,13 @@ object frmTRXControl: TfrmTRXControl
         ShowHint = True
         TabOrder = 0
       end
+      object pbPwr: TProgressBar
+        Left = 1
+        Height = 20
+        Top = 6
+        Width = 100
+        TabOrder = 1
+      end
     end
     object lblHidAnch: TLabel
       AnchorSideLeft.Control = pnlRig

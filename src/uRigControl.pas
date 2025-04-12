@@ -70,6 +70,7 @@ type TRigControl = class
     fSupSetFuncs    : String;
     fSupGetLevels   : String;
     fSupGetFuncs    : String;
+    fPtt            : String;
     fResponseTimeout: Boolean;
     AllowCommand    : integer; //for command priority
     ErrorRigctldConnect : Boolean;
@@ -144,6 +145,7 @@ public
     property GetLevel  : boolean read fGetLevel;                             //can get Levels
     property SupSetLevels : String read fSupSetLevels;                       //list of supported Levels set
     property SupGetLevels : String read fSupGetLevels;                       //list of supported Levels get
+    property Ptt          : String read fPtt;                                //PTT state;
 
     property PwrPcnt :  String read fPwrPcnt write fPwrPcnt;                 //Set/Get the amount of Power level in %
     property PwrmW   :  String read fPwrmW   write fPwrmW;                   //Mode-band related milliWatts for  Power level in %
@@ -230,6 +232,7 @@ begin
   fSupGetLevels        := '';
   fRfPwrMtrWtts        := '';
   fMemRfPwrMtrWtts     := '0';
+  fPtt                 := '';
   tmrRigPoll.OnTimer       := @OnRigPollTimer;
   RigctldConnect.OnReceive := @OnReceivedRigctldConnect;
   RigctldConnect.OnConnect := @OnConnectRigctldConnect;
@@ -839,13 +842,18 @@ begin
              AllowCommand:=1;
             end;
 
+          if (b[0]='PTT:')then
+           Begin
+             fPtt:= b[1];
+           end;
+
           if ((pos('RFPOWER_METER_',a[i])>0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
             if (pos('RPRT 0',a[i+2])>0) then
              Begin
               Hit:=true;
               fRfPwrMtrWtts:= trim(a[i+1]);
-              if  fRfPwrMtrWtts<>'0' then
-                 fMemRfPwrMtrWtts:= copy(fRfPwrMtrWtts,1,pos('.',fRfPwrMtrWtts)-1);
+              if (fRfPwrMtrWtts<>'0') and (fRfPwrMtrWtts<>'') then
+                 fMemRfPwrMtrWtts:= copy(fRfPwrMtrWtts,1,pos('.',fRfPwrMtrWtts)+1);
              end;
 
            if ((pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
@@ -1093,13 +1101,17 @@ begin
             end;
 
        if fGetRFPower then   //if it is possible and allowed by user
-       Begin
-         if fGetLevel and (Pos('RFPOWER ', fSupGetLevels)>0) then
-           rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
+           Begin
+             if fGetLevel and (Pos('RFPOWER ', fSupGetLevels)>0) then
+               rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
 
-         if fGetLevel and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
-           rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
-       end;
+             if fGetLevel and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
+               rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
+
+             rigCommand.Add('+\get_ptt'+VfoStr);
+           end
+        else
+          fPtt:='';
 
      AllowCommand:=-1; //waiting for reply
      fPollCount :=  fPollTimeout;

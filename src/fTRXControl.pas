@@ -85,6 +85,7 @@ type
     pnlUsr : TPanel;
     pnlMain : TPanel;
     pnlPower : TPanel;
+    pbPwr: TProgressBar;
     Separator1: TMenuItem;
     Separator2: TMenuItem;
     Separator3: TMenuItem;
@@ -819,7 +820,7 @@ procedure TfrmTRXControl.tbPwrMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if assigned(radio) then
-                           //this sets value we see in % better than tbPwr.Position
+                           //this sets value we see in % better than using tbPwr.Position
      radio.SetPowerPercent(StrToInt(copy(lblPwrBar.Caption,1,length(lblPwrBar.Caption)-1)));
   StopPwrUpdate:=-1; //negative -1 => wait 2 poll rounds before release
 end;
@@ -1860,11 +1861,6 @@ var
 Begin
  if assigned(radio) then
   begin
-     if  (StopPwrUpdate < 0) Then   //if negative should wait abs(n)+1 rounds
-       Begin
-        inc(StopPwrUpdate);
-        exit;
-       end;
      if  (StopPwrUpdate > 0) Then // positive then exit
                                  Exit;
      if mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled then
@@ -1881,30 +1877,55 @@ Begin
 
      if (mnuShowPwrBar.Checked and mnuShowPwrBar.Enabled and radio.GetRFPower) then
       begin
-           tmp:=radio.PwrPcnt;
-           case tmp of
-            '0': tmp:='0';
-            '1': tmp:='100';
-           else
-             tmp:=copy(tmp,pos('.',tmp)+1,2);
-           end;
-           if tryStrToInt(tmp,f) then
+         case radio.Ptt of
+          '','0': begin
+                   tmp:=radio.PwrPcnt;
+                   case tmp of        //best way to convert, no roundings.
+                    '0': tmp:='0';
+                    '1': tmp:='100';
+                   else
+                     tmp:=copy(tmp,pos('.',tmp)+1,2);
+                   end;
+                   if tryStrToInt(tmp,f) then
+                    begin
+                     if  (StopPwrUpdate < 0) then
+                      if abs(tbPwr.Position-f)>5 then //if difference between set and current position is more than 5%
+                                                 exit;//after setting changed do not allow update
+                     StopPwrUpdate := 0;
+                     tbPwr.Min:=0;
+                     tbPwr.Max:=100;
+                     tbPwr.Enabled:=True;
+                     tbPwr.Position:=f;
+                     lblPwrBar.Font.Height:=8;
+                     lblPwrBar.Caption:=tmp+'%';
+                     tbPwr.Visible:=true;
+                     pbPwr.Visible:=false;
+                    end;
+                   end;
+          else
             begin
-             tbPwr.Min:=0;
-             tbPwr.Max:=100;
-             tbPwr.Enabled:=True;
-             tbPwr.Position:=f;
-             lblPwrBar.Font.Height:=8;
-             lblPwrBar.Caption:=tmp+'%';
-             pnlPwrBar.Visible:=true;
-            end
+              if GetRigPower(tmp) then
+               begin
+                tbPwr.Visible:=false;
+                pbPwr.Visible:=true;
+                pbPwr.Min:=0;
+                pbPwr.Max:=100;
+                pbPwr.Visible:=true;
+                pbPwr.Enabled:=True;
+                tmp:=copy(tmp,1,pos('.',tmp)-1);
+                if tryStrToInt(tmp,f) then
+                  pbPwr.Position:=f;
+                writeln(tmp,'  ',f);
+               end;
+            end;
+          end;
+         end
         else
          pnlPwrBar.Visible:=false;
       end;
-  end;
 end;
 
-function TfrmTRXControl.GetRigPower(var pwr:string): boolean;
+function TfrmTRXControl.GetRigPower(var pwr:string): boolean;   //returns power meter reading during last TX period, otherwise 0 and false
 Begin
  pwr:='0';
  Result:= false;

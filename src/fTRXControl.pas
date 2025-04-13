@@ -1913,6 +1913,8 @@ Begin
                 pnlPwrBar.Visible:=false;
                 tmp:=copy(tmp,1,pos('.',tmp)+1);
                 lblTXPwr.Caption:=tmp+'W';
+                lblTXPwr.Font.Height:=14;
+                lblTXPwr.Repaint;
                end;
             end;
           end;

@@ -768,86 +768,11 @@ begin
              Writeln('a['+IntToStr(i)+']:',a[i]);
           if a[i]='' then Continue;
 
+
           //we send all commands with '+' prefix that makes receiving sort lot easier
           b:= Explode(' ', a[i]);
 
-
-          if (b[0]='FREQUENCY:')then
-           Begin
-             if TryStrToFloat(b[1],f) then
-               Begin
-                 fFReq := f;
-               end
-              else
-               fFReq := 0;
-              Hit:=true;
-              AllowCommand:=1; //check pending commands
-           end;
-
-          if ((b[0]='TX') and (b[1]='FREQUENCY:') )then    //get split TX freq
-           Begin
-             if TryStrToFloat(b[2],f) then
-               Begin
-                 fSFReq := f;
-               end
-              else
-               fSFReq := 0;
-              Hit:=true;
-              AllowCommand:=1; //check pending commands
-           end;
-
-           if (b[0]='SPLIT:')then
-           Begin
-             fRigSplitActive:= (b[1] = '1');
-           end;
-
-           if ( (b[0]='TX') and (b[1]='MODE:') ) then   //WFview false rigctld emulating says "TX MODE:"
-            Begin
-              b[0]:=b[1];
-              b[1]:=b[2];
-            end;
-
-          if (b[0]='MODE:') then
-           Begin
-             fMode.raw  := b[1];
-             fMode.mode :=  fMode.raw;
-             if (fMode.mode = 'USB') or (fMode.mode = 'LSB') then
-               fMode.mode := 'SSB';
-             if fMode.mode = 'CWR' then
-               fMode.mode := 'CW';
-             Hit:=true;
-             AllowCommand:=1;
-            end;
-
-          //FT-920 returned VFO as MEM
-          //Some rigs report VFO as Main,MainA,MainB or Sub,SubA,SubB
-          //Hamlib dummy has also "None" could it be in some real rigs too?
-          if (b[0]='VFO:') then
-           Begin
-             b:= Explode(' ', a[i]);
-             case b[1] of
-               'VFOA',
-               'MAIN',
-               'MAINA',
-               'SUBA'    :fVFO := VFOA;
-
-               'VFOB',
-               'SUB',
-               'MAINB',
-               'SUBB'    :fVFO := VFOB;
-              else
-                fVFO := VFOA;
-             end;
-             Hit:=true;
-             AllowCommand:=1;
-            end;
-
-          if (b[0]='PTT:')then
-           Begin
-             fPtt:= b[1];
-           end;
-
-          if ((pos('RFPOWER_METER_',a[i])>0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
+          if (( not Hit ) and (pos('RFPOWER_METER_',a[i])>0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
             if (pos('RPRT 0',a[i+2])>0) then
              Begin
               Hit:=true;
@@ -856,21 +781,21 @@ begin
                  fMemRfPwrMtrWtts:= copy(fRfPwrMtrWtts,1,pos('.',fRfPwrMtrWtts)+1);
              end;
 
-           if ((pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
+           if (( not Hit ) and (pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
              if (pos('RPRT 0',a[i+2])>0) then
               Begin
                Hit:=true;
                fPwrPcnt:= a[i+1];
               end;
 
-           if ((pos('POWER MW:',a[i])>0) and (i+1 <= MaxArg)) then
+           if (( not Hit ) and (pos('POWER MW:',a[i])>0) and (i+1 <= MaxArg)) then
             if(pos('RPRT 0',a[i+1])>0) then
              Begin
               Hit:=true;
               fPwrmW:=b[2];
              end;
 
-           if pos('SET_POWERSTAT:',a[i])>0 then
+           if (( not Hit ) and (pos('SET_POWERSTAT:',a[i])>0)) then
            Begin
              Hit:=true;
              if pos('1',a[i])>0 then //line may have 'STAT: 1' or 'STAT: CURRVFO 1'
@@ -887,13 +812,87 @@ begin
               end;
            end;
 
+          if ( not Hit ) then
+           case b[0] of
 
-           if (b[0]='RPRT') then
-           Begin
-             //if none of above hits what to expect we accept just report received to be the one
-             if not Hit then AllowCommand:=1;
-               HamlibErrors(b[1]);
-           end;
+            'FREQUENCY:'         : Begin
+                                     if TryStrToFloat(b[1],f) then
+                                       Begin
+                                         fFReq := f;
+                                       end
+                                      else
+                                       fFReq := 0;
+                                      Hit:=true;
+                                      AllowCommand:=1; //check pending commands
+                                   end;
+
+            'TX'                   : begin
+                                      if (b[1]='FREQUENCY:') then    //get split TX freq
+                                       Begin
+                                         if TryStrToFloat(b[2],f) then
+                                           Begin
+                                             fSFReq := f;
+                                           end
+                                          else
+                                           fSFReq := 0;
+                                          Hit:=true;
+                                          AllowCommand:=1; //check pending commands
+                                       end;
+
+                                       if (b[1]='MODE:')  then   //WFview false rigctld emulating says "TX MODE:"
+                                          Begin
+                                            b[0]:=b[1];
+                                            b[1]:=b[2];
+                                          end;
+                                     end;
+
+             'SPLIT:'              : Begin
+                                       fRigSplitActive:= (b[1] = '1');
+                                     end;
+
+             'MODE:'               : Begin
+                                       fMode.raw  := b[1];
+                                       fMode.mode :=  fMode.raw;
+                                       if (fMode.mode = 'USB') or (fMode.mode = 'LSB') then
+                                         fMode.mode := 'SSB';
+                                       if fMode.mode = 'CWR' then
+                                         fMode.mode := 'CW';
+                                       Hit:=true;
+                                       AllowCommand:=1;
+                                      end;
+
+              'VFO:'                : //FT-920 returned VFO as MEM
+                                      //Some rigs report VFO as Main,MainA,MainB or Sub,SubA,SubB
+                                      //Hamlib dummy has also "None" could it be in some real rigs too?
+                                       Begin
+                                         b:= Explode(' ', a[i]);
+                                         case b[1] of
+                                           'VFOA',
+                                           'MAIN',
+                                           'MAINA',
+                                           'SUBA'    :fVFO := VFOA;
+
+                                           'VFOB',
+                                           'SUB',
+                                           'MAINB',
+                                           'SUBB'    :fVFO := VFOB;
+                                          else
+                                            fVFO := VFOA;
+                                         end;
+                                         Hit:=true;
+                                         AllowCommand:=1;
+                                        end;
+
+              'PTT:'                  : Begin
+                                         fPtt:= b[1];
+                                        end;
+
+              'RPRT'                  : Begin
+                                         //if none of above hits what to expect we accept just report received to be the one
+                                         if not Hit then AllowCommand:=1;
+                                           HamlibErrors(b[1]);
+                                        end;
+          end;
 
         end; //max arg loop
      end; //other than init

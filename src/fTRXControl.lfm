@@ -902,13 +902,6 @@ object frmTRXControl: TfrmTRXControl
         ShowHint = True
         TabOrder = 0
       end
-      object pbPwr: TProgressBar
-        Left = 1
-        Height = 20
-        Top = 6
-        Width = 100
-        TabOrder = 1
-      end
     end
     object lblHidAnch: TLabel
       AnchorSideLeft.Control = pnlRig
@@ -920,6 +913,46 @@ object frmTRXControl: TfrmTRXControl
       Top = 15
       Width = 1
       AutoSize = False
+    end
+    object pnlTXPwr: TPanel
+      AnchorSideLeft.Control = lblHidAnch
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlRig
+      AnchorSideRight.Control = pnlRig
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = pnlRig
+      AnchorSideBottom.Side = asrBottom
+      Left = 143
+      Height = 28
+      Top = 1
+      Width = 132
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 3
+      BorderSpacing.Top = 1
+      BorderSpacing.Right = 3
+      BorderSpacing.Bottom = 1
+      ClientHeight = 28
+      ClientWidth = 132
+      TabOrder = 2
+      object lblTXPwr: TLabel
+        AnchorSideLeft.Control = pnlTXPwr
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = pnlTXPwr
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Side = asrCenter
+        Left = 59
+        Height = 17
+        Top = 6
+        Width = 15
+        Align = alCustom
+        Caption = 'W'
+        Font.Color = clRed
+        Font.Height = 14
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
     end
   end
   object tmrRadio: TTimer

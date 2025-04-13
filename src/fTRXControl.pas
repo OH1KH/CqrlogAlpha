@@ -69,6 +69,7 @@ type
     lblPwrBar: TLabel;
     lblFreq : TLabel;
     lblInitRig: TLabel;
+    lblTXPwr: TLabel;
     mnuBclearXR: TMenuItem;
     mnuShowPwrBar: TMenuItem;
     mnuShowUsr : TMenuItem;
@@ -81,11 +82,11 @@ type
     mnuProgPref : TMenuItem;
     mnuMem : TMainMenu;
     pnlPwrBar: TPanel;
+    pnlTXPwr: TPanel;
     pnlRig: TPanel;
     pnlUsr : TPanel;
     pnlMain : TPanel;
     pnlPower : TPanel;
-    pbPwr: TProgressBar;
     Separator1: TMenuItem;
     Separator2: TMenuItem;
     Separator3: TMenuItem;
@@ -500,6 +501,8 @@ end;
 procedure TfrmTRXControl.FormShow(Sender : TObject);
 
 begin
+  pnlTXPwr.Visible:=false;
+  pnlPwrBar.Visible:=false;
   LoadUsrButtonCaptions;
   LoadButtonCaptions;
   LoadBandButtons;
@@ -1898,24 +1901,18 @@ Begin
                      tbPwr.Position:=f;
                      lblPwrBar.Font.Height:=8;
                      lblPwrBar.Caption:=tmp+'%';
-                     tbPwr.Visible:=true;
-                     pbPwr.Visible:=false;
+                     pnlTXPwr.Visible:=false;
+                     pnlPwrBar.Visible:=true;
                     end;
                    end;
           else
             begin
               if GetRigPower(tmp) then
                begin
-                tbPwr.Visible:=false;
-                pbPwr.Visible:=true;
-                pbPwr.Min:=0;
-                pbPwr.Max:=100;
-                pbPwr.Visible:=true;
-                pbPwr.Enabled:=True;
-                tmp:=copy(tmp,1,pos('.',tmp)-1);
-                if tryStrToInt(tmp,f) then
-                  pbPwr.Position:=f;
-                writeln(tmp,'  ',f);
+                pnlTXPwr.Visible:=true;
+                pnlPwrBar.Visible:=false;
+                tmp:=copy(tmp,1,pos('.',tmp)+1);
+                lblTXPwr.Caption:=tmp+'W';
                end;
             end;
           end;

@@ -982,6 +982,13 @@ begin
   if Assigned(radio) then
   begin
     radio.PwrOff;
+    tmrRadio.Enabled := false;
+    lblFreq.Caption:=FormatFloat(empty_freq, 0);
+    ClearBandButtonsColor;
+    ClearModeButtonsColor;
+    frmNewQSO.edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
+    tbPwr.Position:=0;
+    lblPwrBar.Caption:='0%';
     btPon.Font.Color := clDefault;
     btPstby.Font.Color := clDefault;
     btPoff.Font.Color := clRed;
@@ -993,6 +1000,7 @@ begin
   if Assigned(radio) then
   begin
     radio.PwrOn;
+    tmrRadio.Enabled := True;
     btPon.Font.Color := clRed;
     btPstby.Font.Color := clDefault;
     btPoff.Font.Color := clDefault;
@@ -1004,6 +1012,13 @@ begin
   if Assigned(radio) then
   begin
     radio.PwrStBy;
+    tmrRadio.Enabled := false;
+    lblFreq.Caption:=FormatFloat(empty_freq, 0);
+    ClearBandButtonsColor;
+    ClearModeButtonsColor;
+    frmNewQSO.edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
+    tbPwr.Position:=0;
+    lblPwrBar.Caption:='0%';
     btPon.Font.Color := clDefault;
     btPstby.Font.Color := clRed;
     btPoff.Font.Color := clDefault;

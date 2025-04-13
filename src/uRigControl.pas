@@ -925,14 +925,14 @@ begin
            end;
 
      //delay up to 10 timer rounds with this selecting one of numbers
-     99:  AllowCommand:=98;
-     98:  AllowCommand:=97;
-     97:  AllowCommand:=96;
-     96:  AllowCommand:=95;
-     95:  AllowCommand:=94;
-     94:  AllowCommand:=93;
-     93:  AllowCommand:=92;
-     92:  AllowCommand:=91;
+     99:  Begin AllowCommand:=98;  end;
+     98:  Begin AllowCommand:=97;  end;
+     97:  Begin AllowCommand:=96;  end;
+     96:  Begin AllowCommand:=95;  end;
+     95:  Begin AllowCommand:=94;  end;
+     94:  Begin AllowCommand:=93;  end;
+     93:  Begin AllowCommand:=92;  end;
+     92:  Begin AllowCommand:=91;  end;
      91:  AllowCommand:=1;
 
      //high priority (init) commands
@@ -990,6 +990,7 @@ begin
                      Write(LineEnding+'Sending: '+cmd);
                if not SendPoll(cmd) then exit;
                AllowCommand:=-1; //waiting for reply
+               sleep(4000); //allow rig to wake up
                fPollCount :=  fPollTimeout;
           end;
 

@@ -1400,15 +1400,7 @@ begin
   cmbFreq.Text := cqrini.ReadString('TMPQSO','FREQ',cqrini.ReadString('NewQSO','FREQ','7.025'));
   cmbMode.Text := cqrini.ReadString('TMPQSO','Mode',cqrini.ReadString('NewQSO','Mode','CW'));
 
-  if (cqrini.ReadBool('NewQSO', 'UseRigPwr', False) and frmTRXControl.GetRigPower(tmp)) then
-    Begin
-     if tryStrToCurr(tmp,p) then  //conversion str->int->str is needed to allow power factor usage
-            edtPWR.Text:=FloatToStrF((p*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1)),ffFixed,3,1)
-      else
-            edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
-    end
-   else
-     edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
+  edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
 
   edtHisRST.Text := cqrini.ReadString('NewQSO', 'RST_S', '599');
   edtMyRST.Text  := cqrini.ReadString('NewQSO', 'RST_R', '599');
@@ -2287,10 +2279,10 @@ end;
 
 procedure TfrmNewQSO.tmrRadioTimer(Sender: TObject);
 var
-  mode, freq, band : String;
+  mode, freq, band, tmp : String;
   dfreq : Double;
   actTab  : TTabSheet;
-
+  p :currency;
 begin
   mode := '';
   freq := '';
@@ -2303,6 +2295,10 @@ begin
     begin
       if cbOffline.Checked and (not AnyRemoteOn) then
         exit;   //offline, but not remote mode
+    
+      if (cqrini.ReadBool('NewQSO', 'UseRigPwr', False) and frmTRXControl.GetRigPower(tmp)) then
+         if tryStrToCurr(tmp,p) then  //conversion str->int->str is needed to allow power factor usage
+            edtPWR.Text:=FloatToStrF(p*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1),ffFixed,3,1);
 
       if cbOffline.Checked
         and ((mnuRemoteMode.Checked and (cqrini.ReadInteger('fldigi','freq',0) > 0))
@@ -5564,7 +5560,7 @@ var
   qsl_via    : String = '';
   i          : integer;
   tmp        : string;
-  p          : integer;
+  p          : currency;
 begin
   mode := '';
   freq := '';
@@ -5668,9 +5664,6 @@ begin
   begin
     InsertNameQTH;
     cmbQSL_S.Text := dmData.SendQSL(edtCall.Text,cmbMode.Text,cmbFreq.Text,adif);
-    if (cqrini.ReadBool('NewQSO', 'UseRigPwr', False) and frmTRXControl.GetRigPower(tmp)) then
-     if tryStrToInt(tmp,p) then  //conversion str->int->str is needed to allow power factor usage
-            edtPWR.Text:=IntToStr(p*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1));
   end;
 
 

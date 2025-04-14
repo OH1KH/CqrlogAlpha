@@ -778,7 +778,8 @@ begin
               Hit:=true;
               fRfPwrMtrWtts:= trim(a[i+1]);
               if (fRfPwrMtrWtts<>'0') and (fRfPwrMtrWtts<>'') then
-                 fMemRfPwrMtrWtts:= copy(fRfPwrMtrWtts,1,pos('.',fRfPwrMtrWtts)+1);
+                  fMemRfPwrMtrWtts:= fRfPwrMtrWtts;
+              AllowCommand:=1;
              end;
 
            if (( not Hit ) and (pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
@@ -786,6 +787,7 @@ begin
               Begin
                Hit:=true;
                fPwrPcnt:= a[i+1];
+               AllowCommand:=1;
               end;
 
            if (( not Hit ) and (pos('POWER MW:',a[i])>0) and (i+1 <= MaxArg)) then
@@ -793,6 +795,7 @@ begin
              Begin
               Hit:=true;
               fPwrmW:=b[2];
+              AllowCommand:=1;
              end;
 
            if (( not Hit ) and (pos('SET_POWERSTAT:',a[i])>0)) then
@@ -843,11 +846,13 @@ begin
                                           Begin
                                             b[0]:=b[1];
                                             b[1]:=b[2];
+                                            AllowCommand:=1;
                                           end;
                                      end;
 
              'SPLIT:'              : Begin
                                        fRigSplitActive:= (b[1] = '1');
+                                       AllowCommand:=1;
                                      end;
 
              'MODE:'               : Begin
@@ -885,6 +890,7 @@ begin
 
               'PTT:'                  : Begin
                                          fPtt:= b[1];
+                                         AllowCommand:=1;
                                         end;
 
               'RPRT'                  : Begin

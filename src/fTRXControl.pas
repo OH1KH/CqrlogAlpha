@@ -1926,7 +1926,8 @@ Begin
                begin
                 pnlTXPwr.Visible:=true;
                 pnlPwrBar.Visible:=false;
-                tmp:=copy(tmp,1,pos('.',tmp)+1);
+                if pos('.',tmp)>0 then
+                   tmp:=copy(tmp,1,pos('.',tmp)+1);
                 lblTXPwr.Caption:=tmp+'W';
                 lblTXPwr.Font.Height:=14;
                 lblTXPwr.Repaint;

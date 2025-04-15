@@ -779,7 +779,6 @@ begin
               fRfPwrMtrWtts:= trim(a[i+1]);
               if (fRfPwrMtrWtts<>'0') and (fRfPwrMtrWtts<>'') then
                   fMemRfPwrMtrWtts:= fRfPwrMtrWtts;
-              AllowCommand:=1;
              end;
 
            if (( not Hit ) and (pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
@@ -787,7 +786,6 @@ begin
               Begin
                Hit:=true;
                fPwrPcnt:= a[i+1];
-               AllowCommand:=1;
               end;
 
            if (( not Hit ) and (pos('POWER MW:',a[i])>0) and (i+1 <= MaxArg)) then
@@ -795,7 +793,6 @@ begin
              Begin
               Hit:=true;
               fPwrmW:=b[2];
-              AllowCommand:=1;
              end;
 
            if (( not Hit ) and (pos('SET_POWERSTAT:',a[i])>0)) then
@@ -816,6 +813,7 @@ begin
            end;
 
           if ( not Hit ) then
+           Begin
            case b[0] of
 
             'FREQUENCY:'         : Begin
@@ -826,7 +824,6 @@ begin
                                       else
                                        fFReq := 0;
                                       Hit:=true;
-                                      AllowCommand:=1; //check pending commands
                                    end;
 
             'TX'                   : begin
@@ -839,14 +836,12 @@ begin
                                           else
                                            fSFReq := 0;
                                           Hit:=true;
-                                          AllowCommand:=1; //check pending commands
                                        end;
 
                                        if (b[1]='MODE:')  then   //WFview false rigctld emulating says "TX MODE:"
                                           Begin
                                             b[0]:=b[1];
                                             b[1]:=b[2];
-                                            AllowCommand:=1;
                                           end;
                                      end;
 
@@ -863,7 +858,6 @@ begin
                                        if fMode.mode = 'CWR' then
                                          fMode.mode := 'CW';
                                        Hit:=true;
-                                       AllowCommand:=1;
                                       end;
 
               'VFO:'                : //FT-920 returned VFO as MEM
@@ -885,24 +879,24 @@ begin
                                             fVFO := VFOA;
                                          end;
                                          Hit:=true;
-                                         AllowCommand:=1;
                                         end;
 
               'PTT:'                  : Begin
                                          fPtt:= b[1];
-                                         AllowCommand:=1;
                                         end;
 
               'RPRT'                  : Begin
-                                         //if none of above hits what to expect we accept just report received to be the one
-                                         if not Hit then AllowCommand:=1;
+                                         //RPRT should always end the received command
+                                           AllowCommand:=1; //check pending commands
                                            HamlibErrors(b[1]);
                                         end;
-          end;
-
-        end; //max arg loop
-     end; //other than init
-   end;  //while rcvd
+          end; //case
+         end   //not Hit
+        else  //Hit from first block (RF)
+         Allowcommand:=1;
+     end; //max arg loop
+   end; //other than init
+  end;  //while rcvd
 end;
 
 procedure TRigControl.OnRigPollTimer(Sender: TObject);
@@ -1005,7 +999,7 @@ begin
            if (RigCommand.Text<>'') then
               begin
                 if fDebugMode then
-                     write('Queue in:'+LineEnding,RigCommand.Text);
+                     write('Queue has:'+LineEnding,RigCommand.Text);
                  cmd := Trim(RigCommand.Strings[0])+LineEnding;
                   if fDebugMode then
                           Write(LineEnding+'Queue Sending[0]:',cmd);
@@ -1013,7 +1007,7 @@ begin
                     RigCommand.Exchange(i,i+1);
                   RigCommand.Delete(RigCommand.Count-1);
                   if fDebugMode then
-                     write('Queue out:'+LineEnding,RigCommand.Text);
+                     write('Queue left:'+LineEnding,RigCommand.Text);
                   if not SendPoll(cmd) then exit;
                   AllowCommand:=-1; //wait answer
                   fPollCount :=  fPollTimeout;
@@ -1022,8 +1016,10 @@ begin
               AllowCommand :=0;
           end;
 
-       //polling has lowest prority, do if there is nothing else to do
-    else
+       end;//case
+
+     //polling has lowest prority, do if there is nothing else to do
+    if (AllowCommand=0 ) then
      begin
       if   ((not RigctldConnect.Connected)
              or fResponseTimeout )
@@ -1114,7 +1110,7 @@ begin
              if fGetLevel and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
                rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
 
-             rigCommand.Add('+\get_ptt'+VfoStr);
+             rigCommand.Add('+\get_ptt'+VfoStr);  //PTT controls TRXCOntrol Power out display
            end
         else
           fPtt:='';
@@ -1122,7 +1118,7 @@ begin
      AllowCommand:=-1; //waiting for reply
      fPollCount :=  fPollTimeout;
     end;
- end;//case
+
 end;
 procedure TRigControl.OnConnectRigctldConnect(aSocket: TLSocket);
 Begin

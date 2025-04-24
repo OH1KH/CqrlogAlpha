@@ -1,18 +1,18 @@
 object frmPreferences: TfrmPreferences
   Left = 230
-  Height = 635
+  Height = 609
   Top = 34
-  Width = 1067
+  Width = 1041
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1067
-  VertScrollBar.Page = 635
+  HorzScrollBar.Page = 1041
+  VertScrollBar.Page = 609
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 635
-  ClientWidth = 1067
+  ClientHeight = 609
+  ClientWidth = 1041
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   OnCloseQuery = FormCloseQuery
@@ -27,9 +27,9 @@ object frmPreferences: TfrmPreferences
     Height = 788
     Top = 0
     Width = 846
-    ActivePage = TabROTcontrol
+    ActivePage = tabProgram
     Align = alClient
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 0
     OnChange = pgPreferencesChange
     object tabProgram: TTabSheet
@@ -2529,7 +2529,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Control = lblModelR
           Left = 236
           Height = 17
-          Top = 59
+          Top = 56
           Width = 157
           BorderSpacing.Left = 30
           Caption = 'Device (e.g. /dev/ttyS0):'
@@ -2540,19 +2540,19 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 6
           Height = 17
-          Top = 59
+          Top = 56
           Width = 72
           BorderSpacing.Left = 6
-          BorderSpacing.Top = 5
+          BorderSpacing.Top = 3
           Caption = 'RIG model:'
         end
         object lblPollR: TLabel
-          AnchorSideLeft.Control = edtRDevice
+          AnchorSideLeft.Control = edtRRigCtldPort
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = lblDeviceR
-          Left = 439
+          AnchorSideTop.Control = lblPortR
+          Left = 549
           Height = 17
-          Top = 59
+          Top = 56
           Width = 58
           BorderSpacing.Left = 30
           Caption = 'Poll rate:'
@@ -2564,27 +2564,27 @@ object frmPreferences: TfrmPreferences
           Left = 236
           Height = 34
           Hint = 'Device that connects to rig. It can be /dev/ttyXXXX or /dev/serial/by-id/XXXXXXXXXXX'#10'or if rig has eternet connection IPaddress:port  (10.11.12.13:1234)'
-          Top = 76
+          Top = 73
           Width = 173
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 4
+          TabOrder = 5
           OnChange = TRXParamsChange
         end
         object edtPoll: TEdit
           AnchorSideLeft.Control = lblPollR
           AnchorSideTop.Control = lblPollR
           AnchorSideTop.Side = asrBottom
-          Left = 439
+          Left = 549
           Height = 34
           Hint = 'How often rig is polled (in Milliseconds). Suitable value is around 500-3000'#10
-          Top = 76
+          Top = 73
           Width = 80
           MaxLength = 5
           NumbersOnly = True
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 5
+          TabOrder = 6
           Text = '500'
           OnChange = TRXParamsChange
           OnExit = edtPollExit
@@ -2595,11 +2595,11 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Control = lblExtra
           Left = 273
           Height = 23
-          Top = 113
+          Top = 110
           Width = 185
           BorderSpacing.Left = 12
           Caption = 'Use CWR instead of CW '
-          TabOrder = 8
+          TabOrder = 9
           OnChange = TRXParamsChange
         end
         object chkRunRigCtld: TCheckBox
@@ -2609,12 +2609,12 @@ object frmPreferences: TfrmPreferences
           Left = 273
           Height = 23
           Hint = 'Cqrlog will start rigctld if checked. This is not needed when rigctld runs on'#10'other PC, or is started separately, or emulator (sdr rig, flrig, WFview...etc.)'#10'is used.'
-          Top = 136
+          Top = 133
           Width = 235
           Caption = 'Run rigctld when program starts'
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 9
+          TabOrder = 10
           OnChange = TRXParamsChange
         end
         object lblExtra: TLabel
@@ -2623,7 +2623,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 6
           Height = 17
-          Top = 113
+          Top = 110
           Width = 209
           BorderSpacing.Top = 3
           Caption = 'Extra command line arguments:'
@@ -2635,20 +2635,20 @@ object frmPreferences: TfrmPreferences
           Left = 6
           Height = 34
           Hint = 'Extra arguments for rigctld command line that do not belong in TRXConrol tab''s'#10'setting. These could be for example "--vfo", "-vvvvv" etc.'
-          Top = 130
+          Top = 127
           Width = 255
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 7
+          TabOrder = 8
           OnChange = TRXParamsChange
         end
         object lblPortR: TLabel
-          AnchorSideLeft.Control = edtPoll
+          AnchorSideLeft.Control = edtRDevice
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = lblPollR
-          Left = 549
+          AnchorSideTop.Control = lblDeviceR
+          Left = 439
           Height = 17
-          Top = 59
+          Top = 56
           Width = 84
           BorderSpacing.Left = 30
           Caption = 'Port number:'
@@ -2657,13 +2657,13 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Control = lblPortR
           AnchorSideTop.Control = lblPortR
           AnchorSideTop.Side = asrBottom
-          Left = 549
+          Left = 439
           Height = 34
-          Top = 76
+          Top = 73
           Width = 80
           MaxLength = 5
           NumbersOnly = True
-          TabOrder = 6
+          TabOrder = 7
           Text = '4532'
           OnChange = TRXParamsChange
         end
@@ -2673,13 +2673,13 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 6
           Height = 148
-          Top = 167
+          Top = 164
           Width = 511
           BorderSpacing.Top = 3
           Caption = 'Radio one serial parameters'
           ClientHeight = 130
           ClientWidth = 509
-          TabOrder = 11
+          TabOrder = 12
           object lblSerialRSpd: TLabel
             AnchorSideLeft.Control = grbSerialR
             AnchorSideTop.Control = grbSerialR
@@ -2919,16 +2919,16 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 6
           Height = 34
-          Top = 76
+          Top = 73
           Width = 200
           ItemHeight = 0
-          TabOrder = 3
+          TabOrder = 4
           OnChange = cmbModelRigChange
         end
         object lblHost: TLabel
           AnchorSideLeft.Control = edtRHost
           AnchorSideTop.Control = lblRName
-          Left = 439
+          Left = 391
           Height = 17
           Top = 3
           Width = 30
@@ -2936,11 +2936,12 @@ object frmPreferences: TfrmPreferences
           Caption = 'Host'
         end
         object edtRadioName: TEdit
-          AnchorSideLeft.Control = edtRDevice
+          AnchorSideLeft.Control = cmbModelRig
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = lblRName
           AnchorSideTop.Side = asrBottom
           AnchorSideRight.Side = asrBottom
-          Left = 236
+          Left = 206
           Height = 34
           Hint = 'Name of rig. This will show up in radio selector.'
           Top = 20
@@ -2951,14 +2952,16 @@ object frmPreferences: TfrmPreferences
           OnChange = TRXParamsChange
         end
         object edtRHost: TEdit
-          AnchorSideLeft.Control = edtPoll
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = edtRadioName
+          AnchorSideRight.Control = edtRRigCtldPort
           AnchorSideRight.Side = asrBottom
-          Left = 439
+          Left = 391
           Height = 34
           Hint = 'IP address of runnig rigctld or emulator. Usually "127.0.0.1" or "localhost"'#10'If you do not have rig you can set this empty to prevent Cqrlog trying to find it. '
           Top = 20
           Width = 128
+          Anchors = [akTop, akRight]
           ParentShowHint = False
           ShowHint = True
           TabOrder = 2
@@ -2973,8 +2976,8 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Control = grbRadio
           AnchorSideBottom.Side = asrBottom
           Left = 6
-          Height = 119
-          Top = 318
+          Height = 122
+          Top = 315
           Width = 643
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Left = 6
@@ -2982,9 +2985,9 @@ object frmPreferences: TfrmPreferences
           BorderSpacing.Right = 6
           BorderSpacing.Bottom = 6
           Caption = 'User defined TRX control buttons'
-          ClientHeight = 101
+          ClientHeight = 104
           ClientWidth = 641
-          TabOrder = 12
+          TabOrder = 13
           object lblUsr1R: TLabel
             AnchorSideLeft.Control = grpUsrCmds
             AnchorSideTop.Control = edtUsr1R
@@ -3101,7 +3104,7 @@ object frmPreferences: TfrmPreferences
           Left = 520
           Height = 23
           Hint = 'Check if rigctld has started with --vfo parameter. '#10'if response is 1 the polling command format should be'#10'changed from "+f +m +v" to "+f currVFO +m currVFO +v"'#10'And also some other Hamlib commands need "currVFO" then.'
-          Top = 113
+          Top = 110
           Width = 103
           BorderSpacing.Left = 3
           Caption = 'Use \chkvfo'
@@ -3109,7 +3112,7 @@ object frmPreferences: TfrmPreferences
           ParentShowHint = False
           ShowHint = True
           State = cbChecked
-          TabOrder = 10
+          TabOrder = 11
           OnChange = TRXParamsChange
         end
         object cmbRadioNr: TComboBox
@@ -3118,10 +3121,9 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 6
           Height = 33
-          Top = 21
+          Top = 20
           Width = 120
           BorderSpacing.Left = 6
-          BorderSpacing.Top = 1
           ItemHeight = 0
           Style = csDropDownList
           TabOrder = 0
@@ -3130,12 +3132,11 @@ object frmPreferences: TfrmPreferences
         end
         object lblRName: TLabel
           AnchorSideLeft.Control = edtRadioName
-          AnchorSideTop.Control = grbRadio
-          Left = 236
+          AnchorSideTop.Control = lblRadio
+          Left = 206
           Height = 17
           Top = 3
           Width = 39
-          BorderSpacing.Top = 3
           BorderSpacing.Right = 6
           Caption = 'Name'
         end
@@ -3146,14 +3147,14 @@ object frmPreferences: TfrmPreferences
           Left = 520
           Height = 23
           Hint = 'When checked Power_ON command will be sent when initializing rig.'#10'This is done with extra rigctld command line argument "-C auto_power_on=1"'
-          Top = 136
+          Top = 133
           Width = 131
           Caption = 'Rig pwr ON cmd'
           Checked = True
           ParentShowHint = False
           ShowHint = True
           State = cbChecked
-          TabOrder = 13
+          TabOrder = 14
           OnChange = TRXParamsChange
         end
         object lblRadio: TLabel
@@ -3173,12 +3174,12 @@ object frmPreferences: TfrmPreferences
           Left = 520
           Height = 23
           Hint = 'Send UTC time from PC to rig via Hamlib command.'#10'Sending occurs once after rigctld start.'
-          Top = 159
+          Top = 156
           Width = 120
           Caption = 'Set UTC to Rig'
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 14
+          TabOrder = 15
           OnChange = TRXParamsChange
         end
         object chkCPollR: TCheckBox
@@ -3188,14 +3189,14 @@ object frmPreferences: TfrmPreferences
           Left = 520
           Height = 23
           Hint = 'Default rig poll is compound +f +m +v as one command.'#10'Unchecking this breaks compound and every single '#10'command is sent as own line.'#10'This may help poor rigctld emulators like WFview to work.'
-          Top = 205
+          Top = 202
           Width = 124
           Caption = 'Compound poll'
           Checked = True
           ParentShowHint = False
           ShowHint = True
           State = cbChecked
-          TabOrder = 15
+          TabOrder = 16
           OnChange = TRXParamsChange
         end
         object chkVoiceR: TCheckBox
@@ -3205,13 +3206,37 @@ object frmPreferences: TfrmPreferences
           Left = 520
           Height = 23
           Hint = 'When using phone modes launch rig''s voice memories'#10'via rigctld command instead of starting voice_keyer'#10'script. (Rig must support \send_voice_mem command)'
-          Top = 182
+          Top = 179
           Width = 118
           Caption = 'Send rig voice'
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 16
+          TabOrder = 17
           OnChange = TRXParamsChange
+        end
+        object edtPollTimeout: TEdit
+          AnchorSideLeft.Control = lblPollTimeout
+          AnchorSideTop.Control = lblPollTimeout
+          AnchorSideTop.Side = asrBottom
+          Left = 549
+          Height = 34
+          Hint = 'Poll timeout value in poll rounds (default 15)'#10'(Poll Timeout * Poll Rate = Poll timeout in milliseconds)'
+          Top = 20
+          Width = 80
+          NumbersOnly = True
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 3
+          OnChange = TRXParamsChange
+        end
+        object lblPollTimeout: TLabel
+          AnchorSideLeft.Control = lblPollR
+          AnchorSideTop.Control = lblHost
+          Left = 549
+          Height = 17
+          Top = 3
+          Width = 79
+          Caption = 'Poll timeout'
         end
       end
     end
@@ -3229,7 +3254,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 6
         Caption = ' rotctld '
-        ClientHeight = 70
+        ClientHeight = 86
         ClientWidth = 655
         TabOrder = 0
         object Label124: TLabel
@@ -3277,7 +3302,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Control = pgROTControl
           AnchorSideBottom.Side = asrBottom
           Caption = 'Rotor one'
-          ClientHeight = 361
+          ClientHeight = 388
           ClientWidth = 647
           object gbRot1: TGroupBox
             AnchorSideLeft.Control = tabRot1
@@ -3289,7 +3314,7 @@ object frmPreferences: TfrmPreferences
             BorderSpacing.Left = 6
             BorderSpacing.Top = 12
             Caption = ' Rotor one, desc.:'
-            ClientHeight = 323
+            ClientHeight = 339
             ClientWidth = 622
             TabOrder = 0
             object lblDevice1: TLabel
@@ -3416,14 +3441,14 @@ object frmPreferences: TfrmPreferences
               AnchorSideBottom.Side = asrBottom
               Left = 6
               Height = 161
-              Top = 156
+              Top = 172
               Width = 610
               Anchors = [akLeft, akRight, akBottom]
               BorderSpacing.Left = 6
               BorderSpacing.Right = 6
               BorderSpacing.Bottom = 6
               Caption = 'Rotor one serial parameters'
-              ClientHeight = 143
+              ClientHeight = 159
               ClientWidth = 608
               TabOrder = 5
               object lblSpeed1: TLabel
@@ -3731,7 +3756,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Control = tabRot1
           AnchorSideBottom.Side = asrBottom
           Caption = 'Rotor two'
-          ClientHeight = 361
+          ClientHeight = 388
           ClientWidth = 647
           object gbRot2: TGroupBox
             AnchorSideLeft.Control = tabRot2

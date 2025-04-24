@@ -153,7 +153,7 @@ public
     property ResponseTimeout : Boolean read fResponseTimeout;
     property CompoundPoll : Boolean read fCompoundPoll  write  fCompoundPoll;//Char to use between compound commands.
                                                                              //Default is space, can be also LineEnding that breaks compound
-    property PollTimeout  : integer read fPollTimeout write fPolltimeout;    //if ever needed to read or change from main program
+    property PollTimeout  : integer read fPollTimeout write fPolltimeout;    //Poll timeout in poll rounds (PollTimeout X RigPoll = timeout in milliseconds)
 
     function  GetCurrVFO  : TVFO;
     function  GetModePass : TRigMode;

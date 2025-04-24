@@ -1296,6 +1296,7 @@ begin
   radio.RigCtldPort := port;
   radio.RigCtldHost := cqrini.ReadString('TRX' + RigInUse, 'host', 'localhost');
   radio.RigPoll := poll;
+  radio.PollTimeout:=cqrini.ReadInteger('TRX' + RigInUse, 'PollTimeout', 15); //rig response timeout in poll rounds NOTE:This is read/write as (numbers only)String in preferences
   radio.RigSendCWR := cqrini.ReadBool('TRX' + RigInUse, 'CWR', False);
   radio.RigChkVfo := cqrini.ReadBool('TRX' + RigInUse, 'ChkVfo', True);
   radio.PowerON:=cqrini.ReadBool('TRX'+ RigInUse, 'RigPwrON', True);

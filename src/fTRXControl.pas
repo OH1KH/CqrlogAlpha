@@ -332,7 +332,12 @@ begin
     UpdatePwrBar;
   end
   else
+   begin
     f := 0;
+    lblTXPwr.Caption:='';
+    tbPwr.Position:=0;
+    lblPwrBar.Caption:='';
+   end;
 
   f := f + txlo;
   lblFreq.Caption := FormatFloat(empty_freq, f);

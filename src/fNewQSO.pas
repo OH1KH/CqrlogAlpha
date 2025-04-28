@@ -3533,8 +3533,8 @@ procedure TfrmNewQSO.btnCancelClick(Sender: TObject);
 begin
   if (edtCall.Text<>'') and FirstClose and (Sender<>nil) then
    Begin
-    btnCancel.Caption:='Save Qso?';
-    btnCancel.Hint:='Do you have unsaved qso?';
+    btnCancel.Caption:='Unsaved qso?';
+    btnCancel.Hint:='Do you have unsaved qso?'+LineEnding+'2nd click will close anyway';
     btnCancel.ShowHint:=True;
     btnCancel.Font.Color:=clFuchsia;
     btnCancel.Font.Style:=[fsBold];

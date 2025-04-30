@@ -81,6 +81,8 @@ type
     procedure btFtxtNameClick(Sender: TObject);
     procedure chkFFltChange(Sender: TObject);
     procedure chkFFltClick(Sender: TObject);
+    procedure chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure chkFltChange(Sender: TObject);
     procedure chkFltClick(Sender: TObject);
     procedure chkMapClick(Sender: TObject);
@@ -477,7 +479,6 @@ begin
   else
     SaveFormPos('Cq');  //to be same as intial save
   dmUtils.SaveWindowPos(frmMonWsjtx);
-  //DoneCriticalsection(crit)
 end;
  
 procedure TfrmMonWsjtx.Setbitmap(bm: TBitmap; col: Tcolor);
@@ -1084,6 +1085,13 @@ begin
   cqrini.WriteBool('MonWsjtx', 'FileFilter', chkFFlt.Checked);
 end;
 
+procedure TfrmMonWsjtx.chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if Button = mbRight then
+            dmUtils.ViewTextFile(dmData.HomeDir + 'ctyfiles' + PathDelim+'filefilter.txt');
+end;
+
 procedure TfrmMonWsjtx.chkFltChange(Sender: TObject);
 begin
   if chkFlt.Checked then
@@ -1382,7 +1390,6 @@ begin
   LastWsjtLineTime := '';
   DblClickCall :='';
   DXpopOK      :=false;
-   //InitCriticalSection(crit);
 
   cmHere.Bitmap := TBitmap.Create;
   cmBand.Bitmap := TBitmap.Create;
@@ -2548,8 +2555,9 @@ var
    Stat:string;
 begin
 
-   Result:='';
-   if not CanCloseUSDBProcess then exit;
+  Result:='';
+  if CanCloseUSDBProcess then   //there is no database update going on
+   Begin
      try
       if dmData.trQstate.Active then dmData.trQstate.Rollback;
       dmData.trQstate.StartTransaction;
@@ -2589,9 +2597,8 @@ begin
         Result:=Stat;
        end
     finally
-      //LeaveCriticalsection(crit)
     end;
-
+   end;
 end;
 
 procedure TfrmMonWsjtx.tmrUSDBTimer(Sender: TObject);
@@ -2660,6 +2667,11 @@ begin
     exit;
    end;
 
+  ShowMessage('Do not close WSJT remote while US state update is running!'+LineEnding+LineEnding
+               +'There is a known problem that update will fail if you receive decodes during update.'+LineEnding
+               +'Therefore set rig to frequency where there is nothing to decode or keep WSJT-X closed'+LineEnding
+               +'when entering to WSJT remote and start US state update.'+LineEnding
+               +'(this may be fixed later)');
   CanCloseUSDBProcess:=false;
   DPstarted:=3;
   tmrUSDB.Enabled:=True;
@@ -2668,7 +2680,6 @@ begin
   frmProgress.DoStep('Abt 1,5M calls takes a while...');
   Application.ProcessMessages;
   sleep(100);
-
   AssignFile(tfIn,dmData.HomeDir+C_STATE_SOURCE);
    try
     reset(tfIn);
@@ -2743,9 +2754,10 @@ begin
                         dmData.Qstate.ExecSQL;
                         //if you want also qth to database table release below and comment out other one
                         //dmData.Qstate.SQL.Text := 'replace into cqrlog_common.states (callsign,call_qth,call_state) values ';
-
+                        dmData.trQstate.Commit;
+                        if dmData.trQstate.Active then dmData.trQstate.Rollback;
                         //just callsign and state to table
-                         dmData.Qstate.SQL.Text := 'replace into cqrlog_common.states (callsign,call_state) values ';
+                        dmData.Qstate.SQL.Text := 'replace into cqrlog_common.states (callsign,call_state) values ';
                       end;
 
         except
@@ -2946,6 +2958,7 @@ var
 
    frmProgress.hide;
    Application.ProcessMessages;
+   CanCloseUSDBProcess:=true;
 end;
 Procedure  TfrmMonWsjtx.CloseUSDBProcess;
 begin

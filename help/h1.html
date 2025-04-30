@@ -246,6 +246,7 @@
     <br>roll over CW and SSB segments. FM can roll over AM and DATA can roll over FM (or AM) if overlapping.        
     <br>
 <p align=center><img src=img/line.png></p>
+</div>
 <a name=ah7><h2><strong>TRX Control</strong></h2></a>
 <img src=img/h10.png border=0><br><br>
 
@@ -271,8 +272,8 @@
     <ul><li><strong>Note: </strong>If you have 3 rigs and you delete rig #2 Cqrlog does not reorder selection list. Your rig #3 stays as 3rd in 
     selector list and #2 becomes "None"
     </ul></li>
-    <strong>Host:</strong> computer where rigctld is running, localhost is fine for most cases but can be IP address of another computer where
-    rigctld is running (I.E. even over local network or internet) <br><br>
+    <strong>Host:</strong> computer where rigctld is running, 'localhost' is fine for most cases but some Linux versions defaults 'localhost' to IPv6 address ::1 and it may not work. Using '127.0.0.1' instead makes sure that IPv4 localhost is used.
+    <br> Host can also be IP address of another computer where rigctld is running (I.E. over local network or even internet) <br><br>
     <strong>RIG model:</strong> choose your radio model from the list.
     <br> Rig models below 10 (Dummy, NET rigctld, FLRig, TRXManager) are using TCP communication and so the <strong>Device</strong> as well
      as <strong>Radio serial parameters</strong> do not need settings.
@@ -286,11 +287,14 @@
     like it often happens if you reorder USB wires in PS's sokets.
     <br>(I.E my ci7300 shows out as /dev/serial/by-id/usb-Silicon_Labs_CP2102_USB_to_UART_Bridge_Controller_IC-7300_03003483-if00-port0  )
     </li></ul>
-    <strong>Poll rate:</strong> specifies how often CQRLOG should read data from rigctld. 500 milliseconds is defaut. 
-    If your rig is old and slow values 1000 - 3000 may work better.
-    <br><br>
     <strong>Port number</strong> is the number of the port used to communicate with rigctld.
     Default value of rigctld is 4532.
+    <br><br>
+    <strong>Poll Timeout:</strong> specifies how many poll rounds Cqrlog will wait for rig's answer to last issued rigctld command.
+    Timeout in milliseconds is (Poll Timeout * Poll rate).
+    <br><br>
+    <strong>Poll rate:</strong> specifies how often CQRLOG should read data from rigctld. 500 milliseconds is defaut. 
+    If your rig is old and slow values 1000 - 3000 may work better. With modern rig and computer poll rate of 100 - 300 should work OK.
     <br><br>
     <strong>Extra command line arguments</strong> usefull when you have to specify more parameters to
     rigctld. E.g. CIV address (--civaddr=ID, where ID is the CIV address) or similars. See rigctld man page for supported parameters.

@@ -5,28 +5,17 @@ unit uRotControl;
 interface
 
 uses
-  Classes, SysUtils, Process, ExtCtrls, lNetComponents, lnet, strutils, graphics;
-
-{type TRigMode =  record
-    mode : String[10];
-    pass : word;
-end;
-
-type TVFO = (VFOA,VFOB);
+  Classes, SysUtils, Process, ExtCtrls, lNetComponents, lnet, Forms, strutils, graphics;
 
 
-type
-  TExplodeArray = Array of String;
-}
 type TRotControl = class
-    rcvdAzimut   : TLTCPComponent;
+    RotctldConn   : TLTCPComponent;
     rotProcess   : TProcess;
     tmrRotPoll   : TTimer;
   private
     fRotCtldPath : String;
     fRotCtldArgs : String;
     fRunRotCtld  : Boolean;
-//    fMode        : TRigMode;
     fAzimut        : Double;
     fRotPoll     : Word;
     fRotCtldPort : Word;
@@ -35,14 +24,18 @@ type TRotControl = class
     fRotDevice   : String;
     fDebugMode   : Boolean;
     fRotCtldHost : String;
-//    fVFO         : TVFO;
+    fResponseTimeout : boolean;
     RotCommand   : TStringList;
+
+    ErrorRotctldConnect : Boolean;
+    ConnectionDone  : Boolean;
 
     function  RotConnected   : Boolean;
     function  StartRotctld   : Boolean;
-//    function  Explode(const cSeparator, vString: String): TExplodeArray;
 
-    procedure OnReceivedRcvdAzimut(aSocket: TLSocket);
+    procedure OnReceivedRotctldConn(aSocket: TLSocket);
+    procedure OnErrorRotctldConnect(const msg: string; aSocket: TLSocket);
+    procedure OnConnectRotctldConnect(aSocket: TLSocket);
     procedure OnRotPollTimer(Sender: TObject);
   public
 
@@ -72,6 +65,7 @@ type TRotControl = class
     //poll rate in milliseconds
     property LastError   : String  read fLastError;
     //last error during operation
+    property ResponseTimeout : Boolean read fResponseTimeout;
 
     function  GetAzimut   : Double;
     procedure StopRot;
@@ -96,19 +90,19 @@ uses fRotControl, uMyIni;
 constructor TRotControl.Create;
 begin
   RotCommand := TStringList.Create;
-  fDebugMode   := DebugMode;
-  if DebugMode then Writeln('In create');
+  fDebugMode   := False;
   fRotCtldHost := 'localhost';
   fRotCtldPort := 4533;
   fRotPoll     := 500;
   fRunRotCtld  := True;
-  rcvdAzimut   := TLTCPComponent.Create(nil);
+  RotctldConn   := TLTCPComponent.Create(nil);
   rotProcess   := TProcess.Create(nil);
   tmrRotPoll   := TTimer.Create(nil);
   tmrRotPoll.Enabled := False;
-  if DebugMode then Writeln('All objects created');
-  tmrRotPoll.OnTimer   := @OnRotPollTimer;
-  rcvdAzimut.OnReceive := @OnReceivedRcvdAzimut
+  tmrRotPoll.OnTimer    := @OnRotPollTimer;
+  RotctldConn.OnReceive := @OnReceivedRotctldConn;
+  RotctldConn.OnConnect := @OnConnectRotctldConnect;
+  RotctldConn.OnError   := @OnErrorRotctldConnect;
 end;
 
 function TRotControl.StartRotctld : Boolean;
@@ -116,7 +110,7 @@ var
    index     : integer;
    paramList : TStringList;
 begin
-  if DebugMode then Writeln('Starting RotCtld ...');
+  if fDebugMode then Writeln('Starting RotCtld ...');
 
   rotProcess.Executable := fRotCtldPath;
   index:=0;
@@ -130,7 +124,7 @@ begin
     inc(index);
   end;
   paramList.Free;
-  if DebugMode then Writeln('rotProcess.Executable: ',rotProcess.Executable,LineEnding,'Parameters:',LineEnding,rotProcess.Parameters.Text);
+  if fDebugMode then Writeln('rotProcess.Executable: ',rotProcess.Executable,LineEnding,'Parameters:',LineEnding,rotProcess.Parameters.Text);
 
   try
     rotProcess.Execute;
@@ -153,7 +147,10 @@ end;
 
 function TRotControl.RotConnected  : Boolean;
 const
-  ERR_MSG = 'Could not connect to rigctld';
+  ERR_MSG = 'Could not connect to rotctld';
+var
+ RetryCount    : integer;
+
 begin
   if fDebugMode then
   begin
@@ -185,33 +182,50 @@ begin
      if fDebugMode then Writeln('Not started rotctld process. (Run is set FALSE)');
 
 
-  rcvdAzimut.Host := fRotCtldHost;
-  rcvdAzimut.Port := fRotCtldPort;
+  RotctldConn.Host := fRotCtldHost;
+  RotctldConn.Port := fRotCtldPort;
+  ConnectionDone  := False;
+  fResponseTimeout:=false;
+  RetryCount      :=1;
 
-  //rcvdAzimut.Connect(fRotCtldHost,fRotCtldPort);
-  if rcvdAzimut.Connect(fRotCtldHost,fRotCtldPort) then
+
+  if ( RotctldConn.Connect(fRotCtldHost,fRotCtldPort) and (fRotCtldHost<>'') ) then
   begin
-    if fDebugMode then Writeln('Connected to rotctld @ ',fRotCtldHost,':',fRotCtldPort);
-    AzMin:=0;    //default limits
-    AzMax:=360;
-    UseState:=False;
-    WarnFix:=False;
-    result := True;
-    tmrRotPoll.Interval := fRotPoll;
-    tmrRotPoll.Enabled  := True;
+    repeat
+     begin
+        if fDebugMode then
+                      Writeln('Waiting for rotctld Cmd ',RetryCount,' @ ',fRotCtldHost,':',fRotCtldPort);
+        if  ErrorRotctldConnect then
+            Begin
+              ErrorRotctldConnect := False;
+              RotctldConn.Connect(fRotCtldHost,fRotCtldPort);
+            end;
+        inc(RetryCount);
+        sleep(1000);
+        Application.ProcessMessages;
+      end;
+    until (ConnectionDone or (Retrycount > 10)) ;
 
-    UseState := ( (cqrini.ReadBool('ROT1', 'RotAzMinMax', False) and (frmRotControl.rbRotor1.Checked)) or
-                  (cqrini.ReadBool('ROT2', 'RotAzMinMax', False) and (frmRotControl.rbRotor2.Checked)) );
+    if ConnectionDone then
+        Begin
+         if fDebugMode then
+                       Writeln('Connected to rotctld (RotConnected)');
+         result := True
+        end
+      else
+        begin
+         if fDebugMode then
+                       Writeln('RETRY ERROR: *NOT* connected to rotctld Cmd @ ',fRotCtldHost,':',fRotCtldPort);
+         fLastError := ERR_MSG;
+         Result     := False
+        end;
+      end
+    else begin
+      if fDebugMode then Writeln('SETTINGS ERROR: *NOT* connected to rotctld @ ',fRotCtldHost,':',fRotCtldPort);
+      fLastError := ERR_MSG;
+      Result     := False
+    end;
 
-    if UseState then RotCommand.Add('+\dump_state'+LineEnding); //user defined limits
-                       //RotCommand.Add('+\dump_caps'+LineEnding);  //factory values
-
-  end
-  else begin
-    if fDebugMode then Writeln('NOT connected to rotctld @ ',fRotCtldHost,':',fRotCtldPort);
-    fLastError := ERR_MSG;
-    Result     := False
-  end
 end;
 
 procedure TRotControl.SetAzimuth(azim : String);
@@ -247,17 +261,47 @@ begin
 end;
 procedure TRotControl.StopRot ;
 begin
-  rcvdAzimut.SendMessage('S'+LineEnding);
+  RotctldConn.SendMessage('S'+LineEnding);
 end;
 procedure TRotControl.LeftRot ;
 begin
-  rcvdAzimut.SendMessage('M 8 -1'+LineEnding);
+  RotctldConn.SendMessage('M 8 -1'+LineEnding);
 end;
 procedure TRotControl.RightRot ;
 begin
-  rcvdAzimut.SendMessage('M 16 -1'+LineEnding);
+  RotctldConn.SendMessage('M 16 -1'+LineEnding);
 end;
-procedure TRotControl.OnReceivedRcvdAzimut(aSocket: TLSocket);
+procedure TRotControl.OnErrorRotctldConnect(const msg: string; aSocket: TLSocket);
+
+begin
+  ErrorRotctldConnect:= True;
+  if fDebugMode then
+                   writeln('Error with rotctld: ' ,msg);
+   if (pos('[107]',msg)>0) or (pos('[104]',msg)>0) then
+   Begin
+     tmrRotPoll.Enabled  := False;
+     fResponseTimeout := true;
+   end;
+end;
+procedure TRotControl.OnConnectRotctldConnect(aSocket: TLSocket);
+Begin
+    if fDebugMode then
+                   Writeln('Connected to rotctld (OnConnect)');
+    AzMin:=0;    //default limits
+    AzMax:=360;
+    UseState:=False;
+    WarnFix:=False;
+    tmrRotPoll.Interval := fRotPoll;
+    tmrRotPoll.Enabled  := True;
+
+    UseState := ( (cqrini.ReadBool('ROT1', 'RotAzMinMax', False) and (frmRotControl.rbRotor1.Checked)) or
+                  (cqrini.ReadBool('ROT2', 'RotAzMinMax', False) and (frmRotControl.rbRotor2.Checked)) );
+
+    if UseState then RotCommand.Add('+\dump_state'+LineEnding); //user defined limits
+                       //RotCommand.Add('+\dump_caps'+LineEnding);  //factory values
+    ConnectionDone:=true;
+end;
+procedure TRotControl.OnReceivedRotctldConn(aSocket: TLSocket);
 var
   msg  : String;
   tmp  : String;
@@ -319,13 +363,13 @@ begin
     begin
       sleep(100);
       cmd := RotCommand.Strings[i]+LineEnding;
-      rcvdAzimut.SendMessage(cmd);
-      if DebugMode then Writeln('Sending: '+cmd)
+      RotctldConn.SendMessage(cmd);
+      if fDebugMode then Writeln('Sending: '+cmd)
     end;
     RotCommand.Clear
   end
   else begin
-    rcvdAzimut.SendMessage('+p'+LineEnding)
+    RotctldConn.SendMessage('+p'+LineEnding)
   end
 end;
 
@@ -335,7 +379,7 @@ var
 begin
   rotProcess.Terminate(excode);
   tmrRotPoll.Enabled := False;
-  rcvdAzimut.Disconnect();
+  RotctldConn.Disconnect();
   RotConnected
 end;
 
@@ -344,26 +388,26 @@ destructor TRotControl.Destroy;
 var
   excode : Integer=0;
 begin
-  if DebugMode then Writeln(1);
+  if fDebugMode then Writeln(1);
   if fRunRotCtld then
   begin
     if rotProcess.Running then
     begin
-      if DebugMode then Writeln('RotProcess terminating');
+      if fDebugMode then Writeln('RotProcess terminating');
       rotProcess.Terminate(excode)
     end
   end;
   sleep(500);
-  if DebugMode then Writeln(2);
+  if fDebugMode then Writeln(2);
   tmrRotPoll.Enabled := False;
-  if DebugMode then Writeln(3);
-  rcvdAzimut.Disconnect();
-  if DebugMode then Writeln(4);
-  FreeAndNil(rcvdAzimut);
-  if DebugMode then Writeln(5);
+  if fDebugMode then Writeln(3);
+  RotctldConn.Disconnect();
+  if fDebugMode then Writeln(4);
+  FreeAndNil(RotctldConn);
+  if fDebugMode then Writeln(5);
   FreeAndNil(rotProcess);
   FreeAndNil(RotCommand);
-  if DebugMode then Writeln(6)
+  if fDebugMode then Writeln(6)
 end;
 
 end.

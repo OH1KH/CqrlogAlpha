@@ -656,7 +656,8 @@ type
     LoTWcfm    : String;
     UsrAssignedProfile : String;
     EditId             : longint;     //id_cqrlog_main of qso in edit mode
-    DetailsCMBColorDone : string;      //changes done for DXCCdetails column color by currently used call+mode+band
+    DetailsCMBColorDone : string;     //changes done for DXCCdetails column color by currently used call+mode+band
+    FirstClose          : boolean;    //When close button is clicked first time wit call in call column.
 
     procedure showDOK(stat:boolean);
     procedure ShowDXCCInfo(ref_adif : Word = 0);
@@ -1261,16 +1262,18 @@ end;
 
 procedure TfrmNewQSO.ClearAll;
 var
-  i : Integer;
-  sDate, Mask : String;
-  date : TDateTime;
+  i      : Integer;
+  sDate,
+  Mask,
+  tmp    : String;
+  date   : TDateTime;
   sTimeOn  : String = '';
   sTimeOff : String = '';
   ShowRecentQSOs : Boolean = False;
   ShowB4call     : Boolean = False;
   RecentQSOCount : Integer = 0;
   since  : String;
-  lat,long : Currency;
+  lat,long,p : Currency;
 begin
   if fViewQSO then
   begin
@@ -1394,12 +1397,10 @@ begin
   if sbNewQSO.Panels[0].Text = '' then
     sbNewQSO.Panels[0].Text := cMyLoc + CurrentMyLoc;
 
-  cmbFreq.Text := cqrini.ReadString('TMPQSO','FREQ',cqrini.ReadString(
-                  'NewQSO','FREQ','7.025'));
-  cmbMode.Text := cqrini.ReadString('TMPQSO','Mode',cqrini.ReadString(
-                  'NewQSO','Mode','CW'));
-  edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString(
-                  'NewQSO','PWR','100'));
+  cmbFreq.Text := cqrini.ReadString('TMPQSO','FREQ',cqrini.ReadString('NewQSO','FREQ','7.025'));
+  cmbMode.Text := cqrini.ReadString('TMPQSO','Mode',cqrini.ReadString('NewQSO','Mode','CW'));
+
+  edtPWR.Text  := cqrini.ReadString('TMPQSO','PWR',cqrini.ReadString('NewQSO','PWR','100'));
 
   edtHisRST.Text := cqrini.ReadString('NewQSO', 'RST_S', '599');
   edtMyRST.Text  := cqrini.ReadString('NewQSO', 'RST_R', '599');
@@ -1905,6 +1906,7 @@ begin
      NewLogSplash;
 
    dmUtils.UpdateCallBookcnf;  //renames old user and pass of ini file
+   FirstClose:=True;
 end;
 
 procedure TfrmNewQSO.tmrEndStartTimer(Sender: TObject);
@@ -2277,10 +2279,10 @@ end;
 
 procedure TfrmNewQSO.tmrRadioTimer(Sender: TObject);
 var
-  mode, freq, band : String;
+  mode, freq, band, tmp : String;
   dfreq : Double;
   actTab  : TTabSheet;
-
+  p :currency;
 begin
   mode := '';
   freq := '';
@@ -2293,6 +2295,10 @@ begin
     begin
       if cbOffline.Checked and (not AnyRemoteOn) then
         exit;   //offline, but not remote mode
+    
+      if (cqrini.ReadBool('NewQSO', 'UseRigPwr', False) and frmTRXControl.GetRigPower(tmp)) then
+         if tryStrToCurr(tmp,p) then  //conversion str->int->str is needed to allow power factor usage
+            edtPWR.Text:=FloatToStrF(p*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1),ffFixed,3,1);
 
       if cbOffline.Checked
         and ((mnuRemoteMode.Checked and (cqrini.ReadInteger('fldigi','freq',0) > 0))
@@ -3015,7 +3021,7 @@ begin
            //----------------------------------------------------
            pwr:= trim(StrBuf(index));
            if dmData.DebugLevel>=1 then Writeln('Pwr :', pwr);
-           edtPWR.Text := pwr;
+           if pwr<>'' then edtPWR.Text := pwr;   //empty value leaves NewQSO/pwr valid
            //----------------------------------------------------
            note:= trim(StrBuf(index));
            if dmData.DebugLevel>=1 then Writeln('Comments :', note);
@@ -3525,23 +3531,21 @@ end;
 
 procedure TfrmNewQSO.btnCancelClick(Sender: TObject);
 begin
-  if edtCall.Text<>'' then
+  if (edtCall.Text<>'') and FirstClose and (Sender<>nil) then
    Begin
-    btnCancel.Caption:='Clear Call!';
-    btnCancel.Hint:='Do you have unsaved qso?';
+    btnCancel.Caption:='Unsaved qso?';
+    btnCancel.Hint:='Do you have unsaved qso?'+LineEnding+'2nd click will close anyway';
     btnCancel.ShowHint:=True;
     btnCancel.Font.Color:=clFuchsia;
     btnCancel.Font.Style:=[fsBold];
     btnCancel.Repaint;
     Application.ProcessMessages;
+    FirstClose:=false;
    end
   else
    Begin
-    btnCancel.Caption:=' Closing... ';
-    btnCancel.Font.Color:=clRed;
-    btnCancel.Font.Style:=[fsBold];
-    btnCancel.Repaint;
     Application.ProcessMessages;
+    sleep(100);
     acClose.Execute
    end;
 end;
@@ -4114,6 +4118,13 @@ end;
 
 procedure TfrmNewQSO.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
+  btnCancel.Caption:=' Closing... ';
+  btnCancel.Font.Color:=clRed;
+  btnCancel.Font.Style:=[fsBold];
+  btnCancel.Repaint;
+  sleep(10);
+  Application.ProcessMessages;
+  sleep(10);
   if cqrini.ReadBool('Backup','Enable',False) then
   begin
     if cqrini.ReadBool('Backup','AskFirst',False) then
@@ -5549,7 +5560,7 @@ var
   qsl_via    : String = '';
   i          : integer;
   tmp        : string;
-  p          : double;
+  p          : currency;
 begin
   mode := '';
   freq := '';
@@ -5652,7 +5663,7 @@ begin
   if (not (fViewQSO or fEditQSO)) then
   begin
     InsertNameQTH;
-    cmbQSL_S.Text := dmData.SendQSL(edtCall.Text,cmbMode.Text,cmbFreq.Text,adif)
+    cmbQSL_S.Text := dmData.SendQSL(edtCall.Text,cmbMode.Text,cmbFreq.Text,adif);
   end;
 
 
@@ -5661,11 +5672,7 @@ begin
   else
     ShowDXCCInfo();
 
-  if ((cqrini.ReadBool('NewQSO', 'UseRigPwr', False)) and (frmTRXControl.GetRigPower(tmp)) and (not (fViewQSO or fEditQSO))) then
-    Begin
-     if tryStrToFloat(tmp,p) then
-            edtPWR.Text:=IntToStr(Round(p/1000)*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1));
-    end;
+
 
   ShowCountryInfo;
   ChangeReports;
@@ -5755,7 +5762,8 @@ begin
   CheckQTHClub;
   CheckStateClub;
   CheckAttachment;
-  CheckQSLImage
+  CheckQSLImage;
+  FirstClose:=True;
 end;
 
 procedure TfrmNewQSO.FormKeyUp(Sender: TObject; var Key: Word;

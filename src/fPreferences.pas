@@ -107,6 +107,7 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkRotControlDebug: TCheckBox;
     chkUseRigPwr: TCheckBox;
     chkHamClock: TCheckBox;
     chkNewAlpha: TCheckBox;
@@ -454,6 +455,7 @@ type
     DateEditCall: TDateEdit;
     DateEditLoc: TDateEdit;
     dlgColor : TColorDialog;
+    edtPollTimeout: TEdit;
     edtHamClockUrl: TEdit;
     edtBackupFileName1: TEdit;
     edtBackupFileName2: TEdit;
@@ -678,6 +680,8 @@ type
     Label108: TLabel;
     Label12: TLabel;
     Label13: TLabel;
+    lblPollTimeout: TLabel;
+    lblRotDebug: TLabel;
     lblPwrFactor: TLabel;
     lblHamclock: TLabel;
     lblK3NGHex: TLabel;
@@ -1030,6 +1034,7 @@ type
     procedure chkHamClockChange(Sender: TObject);
     procedure chkHaUpEnabledChange(Sender: TObject);
     procedure chkHrUpEnabledChange(Sender: TObject);
+    procedure chkRotControlDebugChange(Sender: TObject);
     procedure chkUdUpEnabledChange(Sender: TObject);
     procedure chkIgnoreEditChange(Sender: TObject);
     procedure chkIgnoreLoTWChange(Sender: TObject);
@@ -1353,6 +1358,7 @@ begin
   ClearUnUsedRigs;  //rigs modes and cw are saved when editing. Just delete unused rigs (model=empty)
 
   cqrini.WriteString('ROT', 'RotCtldPath', edtRotCtldPath.Text);
+  cqrini.WriteBool('ROT','Debug', chkRotControlDebug.Checked);
 
   cqrini.WriteString('ROT1', 'device', edtRot1Device.Text);
   cqrini.WriteString('ROT1', 'model',  dmUtils.GetRigIdFromComboBoxItem(cmbModelRot1.Text));
@@ -2355,6 +2361,11 @@ begin
   cmbHrColor.Enabled    := chkHrUpEnabled.Checked
 end;
 
+procedure TfrmPreferences.chkRotControlDebugChange(Sender: TObject);
+begin
+  RotChanged := True;
+end;
+
 procedure TfrmPreferences.chkIgnoreEditChange(Sender: TObject);
 begin
   //Warn:
@@ -3198,7 +3209,7 @@ begin
     Application.MessageBox('rotctld binary not found, unable to load list of supported rotators!'+LineEnding+LineEnding+
                            'Fix path to rotctld in ROT control tab.', 'Error', mb_OK+ mb_IconError)
   end;
-
+  chkRotControlDebug.Checked := cqrini.ReadBool('ROT','Debug',false);
 
   edtRot1Device.Text := cqrini.ReadString('ROT1', 'device', '');
   edtRot1Poll.Text := cqrini.ReadString('ROT1', 'poll', '500');
@@ -3653,8 +3664,9 @@ Begin
   chkRPwrON.Checked := cqrini.ReadBool('TRX'+nr, 'RigPwrON', True);
   chkUTC2R.Checked := cqrini.ReadBool('TRX'+nr, 'UTC2Rig', False);
   chkCPollR.Checked:= cqrini.ReadBool('TRX'+nr, 'CPollR', True);
+  edtPollTimeout.Text:= cqrini.ReadString('TRX' + nr, 'PollTimeout', '15');
   chkVoiceR.Checked:= cqrini.ReadBool('TRX'+nr, 'RigVoice', True);
-  edtRHost.Text := cqrini.ReadString('TRX'+nr, 'host', 'localhost');
+  edtRHost.Text := cqrini.ReadString('TRX'+nr, 'host', '127.0.0.1');
   cmbSpeedR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'SerialSpeed', 0);
   cmbDataBitsR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'DataBits', 0);
   cmbStopBitsR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'StopBits', 0);
@@ -3696,6 +3708,7 @@ Begin
   cqrini.WriteBool('TRX'+nr, 'RigPwrON', chkRPwrON.Checked);
   cqrini.WriteBool('TRX'+nr, 'UTC2Rig', chkUTC2R.Checked);
   cqrini.WriteBool('TRX'+nr, 'CPollR',chkCPollR.Checked);
+  cqrini.WriteString('TRX' + nr, 'PollTimeout', edtPollTimeout.Text);
   cqrini.WriteBool('TRX'+nr, 'RigVoice', chkVoiceR.Checked);
   cqrini.WriteString('TRX'+nr, 'host', edtRHost.Text);
   cqrini.WriteInteger('TRX'+nr, 'SerialSpeed', cmbSpeedR.ItemIndex);

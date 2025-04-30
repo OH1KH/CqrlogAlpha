@@ -14,6 +14,7 @@ type
 
   TfrmChangeFreq = class(TForm)
     blCWEnd: TLabel;
+    btnHelp: TButton;
     btnOK: TButton;
     btnCancel: TButton;
     edtBegin: TEdit;
@@ -57,6 +58,7 @@ type
     pnlOldHelp: TPanel;
     pnlOld: TPanel;
     pnlNew: TPanel;
+    procedure btnHelpClick(Sender: TObject);
     procedure btnOKClick(Sender: TObject);
     procedure ChkKeyPress(Sender: TObject; var Key: char);
     procedure edtBeginEnter(Sender: TObject);
@@ -69,6 +71,7 @@ type
   private
     { private declarations }
     procedure NoModeUsed(Sender: TObject);
+    Procedure ThePicClose(Sender: TObject);
   public
     { public declarations }
     band   :String;
@@ -82,7 +85,7 @@ var
 implementation
 {$R *.lfm}
 
-uses uMyIni;
+uses fChangelog, uMyIni;
 
 { TfrmChangeFreq }
 
@@ -312,6 +315,7 @@ procedure TfrmChangeFreq.FormShow(Sender: TObject);
 
 begin
   pnlNew.Visible:= UseNew;
+  btnHelp.Visible:=UseNew;   //help picture refers to new grid
   pnlOld.Visible:= not UseNew;
   pnlOldHelp.Visible:= not UseNew;
   editErrors:=TStringList.Create();
@@ -337,6 +341,68 @@ begin
   ModalResult := mrOK;
 end;
 
+procedure TfrmChangeFreq.btnHelpClick(Sender: TObject);
+var
+ TheForm: TForm;
+ TheButton: TButton;
+ TheImage: TImage;
+ ThePanel: TPanel;
+
+Begin
+  TheForm:=TForm.Create(frmChangeFreq);
+  With TheForm do
+  Begin
+   SetBounds(1, 1, 564, 450);
+   TheForm.Caption:='Setting mode limits';
+   //TheForm.Position := poScreenCenter;
+   TheForm.FormStyle := fsSystemStayOnTop;
+   TheForm.Position:= poWorkAreaCenter;
+  end;
+  ThePanel:=TPanel.Create(TheForm);
+  With ThePanel do
+    Begin
+      Parent:=TheForm;
+      SetBounds(2,2,560,400);
+      Anchors := [akTop, akLeft, akRight];
+    end;
+
+  TheImage := TImage.Create(TheForm);
+  TheImage.Name := 'Help';
+  TheImage.Parent := ThePanel;
+
+  With TheImage do
+  Begin
+   SetBounds(1,1,559,398);
+   Anchors := [akTop, akLeft, akRight];
+   try
+     if (FileExists('/usr/share/cqrlog/help/img/h9b5.png')) then
+     begin
+       Picture.LoadFromFile('/usr/share/cqrlog/help/img/h9b5.png');
+     end;
+  finally
+  end;
+  end;
+
+  TheButton:=TButton.create(TheForm);
+   With TheButton do
+   Begin
+    Caption:='OK';
+    SetBounds(460, 410,75,25);
+    Anchors := [akBottom, akRight];
+    Parent:=TheForm;
+    OnClick:=@ThePicClose;
+   end;
+
+  TheForm.ShowModal;
+  FreeAndNil(TheForm)
+end;
+Procedure TfrmChangeFreq.ThePicClose(Sender: TObject);
+begin
+  if Sender is TButton then
+   Begin
+    TForm(TButton(Sender).Parent).close;
+   end;
+end;
 
 end.
 

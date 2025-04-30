@@ -154,7 +154,7 @@ object frmTRXControl: TfrmTRXControl
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object gbMode: TGroupBox
     AnchorSideLeft.Control = gbVfo
     AnchorSideTop.Control = gbVfo
@@ -914,6 +914,46 @@ object frmTRXControl: TfrmTRXControl
       Width = 1
       AutoSize = False
     end
+    object pnlTXPwr: TPanel
+      AnchorSideLeft.Control = lblHidAnch
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlRig
+      AnchorSideRight.Control = pnlRig
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = pnlRig
+      AnchorSideBottom.Side = asrBottom
+      Left = 143
+      Height = 28
+      Top = 1
+      Width = 132
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      AutoSize = True
+      BorderSpacing.Left = 3
+      BorderSpacing.Top = 1
+      BorderSpacing.Right = 3
+      BorderSpacing.Bottom = 1
+      ClientHeight = 28
+      ClientWidth = 132
+      TabOrder = 2
+      object lblTXPwr: TLabel
+        AnchorSideLeft.Control = pnlTXPwr
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = pnlTXPwr
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Side = asrCenter
+        Left = 59
+        Height = 17
+        Top = 6
+        Width = 15
+        Align = alCustom
+        Caption = 'W'
+        Font.Color = clRed
+        Font.Height = 14
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+      end
+    end
   end
   object tmrRadio: TTimer
     Enabled = False
@@ -936,6 +976,13 @@ object frmTRXControl: TfrmTRXControl
         Caption = 'Add/Modify memories'
       end
       object Separator2: TMenuItem
+        Caption = '-'
+      end
+      object mnuBclearXR: TMenuItem
+        Caption = 'BandClearsXitRit'
+        OnClick = mnuBclearXRClick
+      end
+      object Separator4: TMenuItem
         Caption = '-'
       end
       object mnuShowInfo: TMenuItem

@@ -11,7 +11,7 @@ object frmFreq: TfrmFreq
   ClientWidth = 803
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object dbgrdFreq: TDBGrid
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner

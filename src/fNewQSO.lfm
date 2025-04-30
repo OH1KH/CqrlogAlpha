@@ -4669,7 +4669,6 @@ object frmNewQSO: TfrmNewQSO
         AutoSize = True
         BorderSpacing.InnerBorder = 1
         Caption = 'Quit [CTRL+Q]'
-        ModalResult = 2
         TabOrder = 2
         OnClick = btnCancelClick
       end

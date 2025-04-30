@@ -12,7 +12,7 @@ object frmMonWsjtx: TfrmMonWsjtx
   OnDropFiles = FormDropFiles
   OnHide = FormHide
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object pnlMap: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom
@@ -137,7 +137,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       AnchorSideBottom.Side = asrCenter
       Left = 172
       Height = 23
-      Hint = 'Use text file based callsign filter.'#10'Put your list of callsigns to ~/.config/cqrlog/ctyfiles/filefilter.txt'#10'One call per line, no other texts. Use simple editor like ''nano'' for edit.'
+      Hint = 'Use text file based callsign filter.'#10'Put your list of callsigns to ~/.config/cqrlog/ctyfiles/filefilter.txt'#10'One call per line, no other texts. Use simple editor like ''nano'' for edit.'#10'.'#10'Right mouse click opens filefilter.txt with editor defined '#10'in "Preferences/external viewers/text files"'
       Top = 10
       Width = 51
       Anchors = [akLeft, akBottom]
@@ -148,6 +148,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       TabOrder = 5
       OnChange = chkFFltChange
       OnClick = chkFFltClick
+      OnMouseUp = chkFFltMouseUp
     end
   end
   object pnlAlert: TPanel

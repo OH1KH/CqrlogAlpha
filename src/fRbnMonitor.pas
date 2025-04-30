@@ -385,6 +385,7 @@ begin
   sgRbn.Cells[5,l] := 'Qsl';
   sgRbn.Cells[6,l] := 'DXCC';
   WaitMe:=false;
+  frmRbnMonitor.Caption:= 'RBN Monitor';
   NoScroll:=false;
 end;
 
@@ -448,6 +449,7 @@ end;
 
 procedure TfrmRbnMonitor.acScrollDownExecute(Sender : TObject);
 begin
+  frmRbnMonitor.Caption:= 'RBN Monitor';
   NoScroll:=false;
   sgRbn.Row := sgRbn.RowCount;
   btnEatFocus.SetFocus
@@ -464,6 +466,7 @@ begin
   SrcCalls.Clear;
   slDupeCheck.Clear;
   dmUtils.SaveWindowPos(self);
+  tmrUnfocus.Enabled:=false;
 end;
 
 procedure TfrmRbnMonitor.FormCreate(Sender: TObject);
@@ -664,6 +667,7 @@ begin
     DupeFiltUsed := cqrini.ReadBool('RBNMonitor','DupeFiltUsed', false);
 
     WaitMe:=false;
+    frmRbnMonitor.Caption:= 'RBN Monitor';
     NoScroll:=false;
   end;
 

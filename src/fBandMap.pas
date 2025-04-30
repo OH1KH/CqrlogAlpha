@@ -329,7 +329,8 @@ begin
         Writeln('BandMapItems[',i,'].Position:',BandMapItems[i].Position)
       end
     end
-  end
+  end;
+  ReleasePaused;
 end;
 
 procedure TfrmBandMap.SortBandMapArray(l,r : integer; Rev:boolean);

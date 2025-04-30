@@ -18,18 +18,21 @@ object frmContest: TfrmContest
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object edtCall: TEdit
     AnchorSideLeft.Control = lblContestName
     AnchorSideTop.Control = lblCall
     AnchorSideTop.Side = asrBottom
     Left = 6
     Height = 34
+    Hint = 'If checkbox s&&p is checked F1 sends CQ (text defined)'#10'once if call column is empty.'#10'.'#10'If checkbox s&&p is NOT checked and there is text in call column '#10'F1 sends it instead (partial call send).'#10'.'#10'1xESC stops sending.'
     Top = 127
     Width = 140
     AutoSelect = False
     CharCase = ecUppercase
     MaxLength = 20
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 1
     OnChange = edtCallChange
     OnExit = edtCallExit
@@ -385,6 +388,9 @@ object frmContest: TfrmContest
     Top = 6
     Width = 432
     Anchors = [akTop, akRight]
+    AutoComplete = True
+    AutoCompleteText = [cbactEnabled, cbactEndOfLineComplete, cbactSearchAscending]
+    AutoSelect = False
     BorderSpacing.Top = 6
     ItemHeight = 0
     Items.Strings = (
@@ -1017,7 +1023,7 @@ object frmContest: TfrmContest
       AnchorSideRight.Side = asrBottom
       Left = 205
       Height = 30
-      Hint = 'Start CQ (F1) timer.'#10'Shorcut key: Shift+F1'#10'Stop with same key, 1xESC or'#10'write to call column.'
+      Hint = 'Start/stop CQ (F1) timer.'#10'Shorcut key: Shift+F1'#10'Stop also with 1xESC or'#10'write to text to call column.'#10#10'Start with Shift+F1 works only'#10'when call column is empty.'#10#10'F1 sends CQ once if call column is empty.'#10'If there is text F1 sends it instead (partial call).'#10'1xESC stops sending'
       Top = 21
       Width = 80
       BorderSpacing.Left = 12

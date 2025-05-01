@@ -769,13 +769,6 @@ object frmMonWsjtx: TfrmMonWsjtx
     Left = 224
     Top = 144
   end
-  object tmrUSDB: TTimer
-    Enabled = False
-    Interval = 100
-    OnTimer = tmrUSDBTimer
-    Left = 104
-    Top = 144
-  end
   object tmrStartupDone: TTimer
     Enabled = False
     Interval = 2000

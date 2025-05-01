@@ -5,7 +5,7 @@ interface
 
 const
 
-  cVersionBase     ='Alpha_(136)_';
+  cVersionBase     ='Alpha_(137)_';
 
   {$IFDEF LCLGtk2}
   cVERSION    = cVersionBase+'Gtk2';
@@ -25,7 +25,7 @@ const
   cRELEAS     = 0;
   cBUILD      = 1;
 
-  cBUILD_DATE = '2025-04-30';
+  cBUILD_DATE = '2025-05-01';
 
 implementation
 

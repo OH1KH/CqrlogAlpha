@@ -8,7 +8,7 @@ object frmProgress: TfrmProgress
   ClientWidth = 340
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '2.0.4.0'
+  LCLVersion = '3.8.0.0'
   object p: TProgressBar
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
@@ -27,13 +27,19 @@ object frmProgress: TfrmProgress
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Owner
-    Left = 136
+    Left = 135
     Height = 17
     Top = 6
-    Width = 69
+    Width = 70
     Alignment = taCenter
     BorderSpacing.Top = 6
     Caption = 'Working....'
     ParentColor = False
+  end
+  object tmrUSDB: TTimer
+    Enabled = False
+    OnTimer = tmrUSDBTimer
+    Left = 305
+    Top = 48
   end
 end

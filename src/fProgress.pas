@@ -167,10 +167,10 @@ procedure  TfrmProgress.BuildUSDBState;
 var
   s,t,
   tmp  : string;
-  r,b  : longint;
+  b    : longint;
   l    : integer;
 begin
-  r:=0; b:=0; l:=0;
+  b:=0; l:=0;
   if not FileExists(dmData.HomeDir+C_STATE_SOURCE) then
    Begin  //failed download
     frmMonWsjtx.CanCloseUSDBProcess:=true;
@@ -195,16 +195,16 @@ begin
     try
         try
          //drop old table here
-          dmData.Qstate.SQL.Text := 'DROP INDEX IF EXISTS callsign ON cqrlog_common.states';
-          if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
-          dmData.Qstate.ExecSQL;
-          dmData.Qstate.SQL.Text := 'truncate table cqrlog_common.states';
-          if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
-          dmData.Qstate.ExecSQL;
-          dmData.Qstate.SQL.Text := 'CREATE UNIQUE INDEX callsign ON cqrlog_common.states(callsign)';
-          if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
-          dmData.Qstate.ExecSQL;
-          dmData.trQstate.Commit;
+          dmData.UpStat.SQL.Text := 'DROP INDEX IF EXISTS callsign ON cqrlog_common.states';
+          if LocalDbg then Writeln(dmData.UpStat.SQL.Text);
+          dmData.UpStat.ExecSQL;
+          dmData.UpStat.SQL.Text := 'truncate table cqrlog_common.states';
+          if LocalDbg then Writeln(dmData.UpStat.SQL.Text);
+          dmData.UpStat.ExecSQL;
+          dmData.UpStat.SQL.Text := 'CREATE UNIQUE INDEX callsign ON cqrlog_common.states(callsign)';
+          if LocalDbg then Writeln(dmData.UpStat.SQL.Text);
+          dmData.UpStat.ExecSQL;
+          dmData.trUpStat.Commit;
         except
          on E : Exception do
                         begin
@@ -214,7 +214,7 @@ begin
                         end
         end
     finally
-      if dmData.trQstate.Active then dmData.trQstate.Rollback;
+      if dmData.trUpStat.Active then dmData.trUpStat.Rollback;
     end;
     //unfortunately W1NR data has same duplicates as FCC's file l_amat.zip. We need use "replace" not "insert"
 
@@ -238,7 +238,7 @@ begin
         s:=StringReplace(s,'"',' ',[rfReplaceAll]);
         s:=StringReplace(s,'|',#39+#44+#39,[rfReplaceAll]);
         try
-           tmp := dmData.Qstate.SQL.Text
+           tmp := dmData.UpStat.SQL.Text
                                     +'('+#39+s+#39+')';
           }
 
@@ -248,58 +248,53 @@ begin
            tmp := tmp +'('+#39+ExtractWord(1,s,['|'])+#39+','+#39+ExtractWord(3,s,['|'])+#39+')';
          //}
 
-          inc(r);inc(l);
-          if l<500 then
+          inc(l);
+          if l<5000 then
                       Begin
                         tmp := tmp +',';
                       end
                 else
                       Begin
-                        l:=0;
-                        dmData.Qstate.SQL.Text := tmp;
-                        dmData.Qstate.ExecSQL;
+                        dmData.UpStat.SQL.Text := tmp;
+                        dmData.UpStat.ExecSQL;
                         //if you want also qth to database table release below and comment out other one
                         //tmp := 'replace into cqrlog_common.states (callsign,call_qth,call_state) values ';
-                        dmData.trQstate.Commit;
-                        if dmData.trQstate.Active then dmData.trQstate.Rollback;
+                        dmData.trUpStat.Commit;
+                        if dmData.trUpStat.Active then dmData.trUpStat.Rollback;
+                        b:=b+l;
+                        DoStep(IntToStr(b)+' lines read...');
+                        l:=0;
                         //just callsign and state to table
                         tmp := 'replace into cqrlog_common.states (callsign,call_state) values ';
-                        Application.ProcessMessages;
                       end;
 
         except
           on E : Exception do
           begin
             Application.MessageBox(PChar('Database cqrlog_common.states upgrade crashed with this error:'+LineEnding+E.Message),'Error',mb_ok+mb_IconError);
-            if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
+            if LocalDbg then Writeln(dmData.UpStat.SQL.Text);
             USDBProcessFailed;
             exit;
           end
         end
        end;  // if s
-       if r > 4999 then
-                    Begin
-                     b:=b+r;
-                     r:=0;
-                     DoStep(IntToStr(b)+' lines read...');
-                    end;
       end;   //while
       finally
             if l>0 then
                 Begin
                  tmp := copy(tmp,1,length(tmp)-1); //remove last comma
                  if LocalDbg then Writeln('Short block file end:'+lineEnding+tmp);
-                 dmData.Qstate.SQL.Text:=tmp;
-                 dmData.Qstate.ExecSQL;
-                 dmData.trQstate.Commit;
+                 dmData.UpStat.SQL.Text:=tmp;
+                 dmData.UpStat.ExecSQL;
+                 dmData.trUpStat.Commit;
                 end
               else
                 Begin
                   tmp:='';
                   if LocalDbg then Writeln('Even file end',tmp);
-                  dmData.trQstate.Commit;
+                  dmData.trUpStat.Commit;
                 end;
-            if dmData.trQstate.Active then dmData.trQstate.Rollback;
+            if dmData.trUpStat.Active then dmData.trUpStat.Rollback;
          end
    except
     on E: EInOutError do

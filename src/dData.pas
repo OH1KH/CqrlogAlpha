@@ -104,6 +104,7 @@ type
     trQstate: TSQLTransaction;
     trQCallInLogB: TSQLTransaction;
     trW: TSQLTransaction;
+    trUpStat: TSQLTransaction;
     trWorkedContests: TSQLTransaction;
     W1: TSQLQuery;
     trW1: TSQLTransaction;
@@ -136,6 +137,7 @@ type
     dsrImport: TDatasource;
     dsrQSOBefore: TDatasource;
     dsrMain: TDatasource;
+    UpStat: TSQLQuery;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure Q1BeforeOpen(DataSet: TDataSet);
@@ -209,6 +211,7 @@ type
     LogUploadCon : TSQLConnection;
     dbDXC        : TSQLConnection;
     WGMWCon      : TSQLConnection;
+    UpStatCon    : TSQLConnection;
 
     MySqlLocalRunning : boolean ;
     eQSLUsers : Array of ShortString;
@@ -554,6 +557,7 @@ begin
   if LogUploadCon.Connected then LogUploadCon.Connected := False;
   if RbnMonCon.Connected then  RbnMonCon.Connected := False;
   if WGMWCon.Connected then  WGMWCon.Connected := False;
+  if UpStatCon.Connected then  UpStatCon.Connected := False;
 
   MainCon.CharSet      :='UTF8';
   MainCon.HostName     := host;
@@ -615,6 +619,15 @@ begin
   //WGMWCon.LogEvents:=LogAllEvents;
   //WGMWCon.OnLog:=@GetLogEvent;
 
+  UpStatCon.CharSet      :='UTF8';
+  UpStatCon.HostName     := host;
+  UpStatCon.Params.Text  := 'Port='+port;
+  UpStatCon.UserName     := user;
+  UpStatCon.Password     := pass;
+  UpStatCon.DatabaseName := 'information_schema';
+
+  //UpStatCon.LogEvents:=LogAllEvents;
+  //UpStatCon.OnLog:=@GetLogEvent;
 
   try
     MainCon.Connected      := True;
@@ -623,6 +636,7 @@ begin
     BandMapCon.Connected   := True;
     RbnMonCon.Connected    := True;
     WGMWCon.Connected      := True;
+    UpStatCon.Connected    := True;
 
     sql := 'SET SESSION sql_mode=(SELECT REPLACE(@@sql_mode,'+QuotedStr('ONLY_FULL_GROUP_BY')+','+QuotedStr('')+'));';
 
@@ -631,7 +645,8 @@ begin
     LogUploadCon.ExecuteDirect(sql);
     BandMapCon.ExecuteDirect(sql);
     RbnMonCon.ExecuteDirect(sql);
-    WGMWCon.ExecuteDirect(sql)
+    WGMWCon.ExecuteDirect(sql);
+    UpStatCon.ExecuteDirect(sql);
 
   except
     on E : Exception do
@@ -1236,6 +1251,10 @@ begin
   CQ.DataBase              := WGMWCon;
   trCQ.DataBase            := WGMWCon;
 
+  UpStatCon.Transaction    := trUpStat;
+  UpStat.Transaction       := trUpStat;
+  UpStat.DataBase          := UpStatCon;
+
   FormatSettings.ShortDateFormat := 'yyyy-mm-dd';
 
   reg := TRegExpr.Create;
@@ -1287,6 +1306,7 @@ begin
   LogUploadCon.Connected:=False;
   RbnMonCon.Connected:=False;
   WGMWCon.Connected:=False;
+  UpStatCon.Connected:=False;
   BandMapCon.Connected := False;
   MainCon.Connected := False;
   KillMySQL(False)
@@ -1369,6 +1389,7 @@ begin
   mysql_ping(LogUploadCon.Handle);
   mysql_ping(dbDXC.Handle);
   mysql_ping(WGMWCon.Handle);
+  mysql_ping(UpStatCon.Handle);
 end;
 
 
@@ -4336,6 +4357,7 @@ begin
   LogUploadCon := getNewMySQLConnectionObject();
   dbDXC        := getNewMySQLConnectionObject();
   WGMWCon      := getNewMySQLConnectionObject();
+  UpStatCon    := getNewMySQLConnectionObject();
 end;
 
 

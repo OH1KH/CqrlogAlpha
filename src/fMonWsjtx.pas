@@ -892,8 +892,7 @@ var
   c                : integer=0;
 begin
   cqrini.WriteBool('MonWsjtx', 'UStates', chkUState.Checked);
-  if  not chkUState.Checked then exit;
-  if (Sender.ClassNameIs('TfrmMonWsjtx')) then   //user init
+  if (Sender.ClassNameIs('TfrmNewQso')) then   //user init
                                           c:= -1;
   if (chkUState.Checked or (c=-1)) then
     Begin
@@ -930,10 +929,10 @@ begin
        StateCallCount(c);
 
     end;
-  if c<500000 then
+  if (chkUState.Checked and (c<1000000)) then
        begin
         msg := 'Could it be that database does not have all US callsigns?'+#13+
-               'Found '+IntToStr(c)+' callsigns. '+#13+ 'Rebuild? (NO = use as is)';
+               'Found '+IntToStr(c)+' callsigns. '+#13+ 'Try to rebuild? (NO = use as is)';
         if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
            begin
             frmProgress.BuildUSDBState;
@@ -946,7 +945,7 @@ procedure TfrmMonWsjtx.chkUStateMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
     If (Button = mbRight) and (Shift=[ssShift]) then        //asks update DB by user event
-            chkUStateClick(Self);
+            chkUStateClick(frmNewQso);    //fake with form NewQso name
 end;
 procedure TfrmMonWsjtx.cbflwChange(Sender: TObject);
 begin

@@ -68,7 +68,7 @@ begin
   LocalDbg := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
         LocalDbg :=  LocalDbg or ((abs(dmData.DebugLevel) and 4) = 4 );
-  localDbg:=true;
+
 end;
 
 procedure TfrmProgress.FormCreate(Sender: TObject);
@@ -117,28 +117,19 @@ Var
   sz : integer;
 begin
    tmrUSDB.Enabled:=False;
+   tmrUSDB.Interval:=500;
    frmMonWsjtx.chkUState.Enabled:= false;
           //if DProcess <> nil then if LocalDbg then Writeln('Dprocess running');
 case  DPstarted of
           0:exit;
 
           1: begin
-             if FileExists(dmData.HomeDir+C_MYZIP) then
-              Begin
-                sz:=FileSize(dmData.HomeDir+C_MYZIP) div 1000000;
-                lblInfo.Caption:= 'Loading '+IntToStr(sz)+'M';
-                DoPos(sz);
-                Application.ProcessMessages;
-                if LocalDbg then Writeln('Loading file');
+             if LocalDbg then Writeln('Loading file');
                 tmrUSDB.Enabled:=True;
-              end
           end;
 
           2: begin
                if LocalDbg then Writeln('Doing gunzip ... ');
-               lblInfo.Caption:= 'Gunzip ...';
-               DoJump(1);
-               Application.ProcessMessages;
                tmrUSDB.Enabled:=True;
               end;
 
@@ -151,7 +142,6 @@ case  DPstarted of
           4: begin
                if LocalDbg then Writeln('DPstarted = 4');
                tmrUSDB.Enabled:=False;
-               lblInfo.Caption:= 'Done!';
                for sz:=0 to 100 do
                Begin
                  Self.ShowOnTop;
@@ -300,13 +290,14 @@ begin
     on E: EInOutError do
      writeln('File handling error occurred. Details: ', E.Message);
   end;
-  frmMonWsjtx.CanCloseUSDBProcess:=true;
   DPstarted:=4;
+  lblInfo.Caption:= 'Done!';
 end;
 
 procedure  TfrmProgress.USDBdownLoadInit;
 var
   f   :textfile;
+  sz : integer;
   begin
     frmMonWsjtx.CanCloseUSDBProcess:=false;
     USDB_Address:=cqrini.ReadString('MonWsjtx', 'USDB_Addr', C_URL);
@@ -342,24 +333,23 @@ var
                  Writeln('Saved USDB_Address:',USDB_Address);
                  Writeln('USDBdownLoadInit start');
                 end;
-    Self.Show;
+
     if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
                   begin
-                     DoInit(160,1);
+                     DoInit(180,1);
                      C_MYZIP := 'ctyfiles/l_amat.zip';
                   end
                 else
                   begin
-                     DoInit(10,1);
+                     DoInit(12,1);
                      C_MYZIP := 'ctyfiles/usdbraw.gz';
                   end;
 
     DoJump(0);
-    Application.ProcessMessages;
-
-
     DPstarted:=1;
     tmrUSDB.Enabled:=True;
+    Self.Show;
+    Application.ProcessMessages;
 
     DProcess := TProcess.Create(nil);
 
@@ -375,13 +365,18 @@ var
       DProcess.Parameters.Add('-O');
       DProcess.Parameters.Add(dmData.HomeDir+C_MYZIP);
       DProcess.Parameters.Add(trim(USDB_Address));
+      //DProcess.Options := DProcess.Options + [poWaitOnExit];
       if LocalDbg then Writeln('DProcess.Executable: ',DProcess.Executable,' Parameters: ',DProcess.Parameters.Text);
       DProcess.Execute;
       while DProcess.Running do
-         Begin
-            Application.ProcessMessages;
-            sleep(1000);
-         end;
+        Begin
+            if FileExists(dmData.HomeDir+C_MYZIP) then
+              Begin
+                sz:=FileSize(dmData.HomeDir+C_MYZIP) div 1000000;
+                lblInfo.Caption:= 'Loading '+IntToStr(sz)+'M';
+                DoPos(sz);
+              end
+        end;
     except
     on E :EExternal do
      begin
@@ -404,6 +399,7 @@ var
     if LocalDbg then Writeln('Next run gunzip');
     DProcess := TProcess.Create(nil);
     DPstarted:=2;
+    DoInit(180,1);
     DoPos(0);
 
     try
@@ -424,7 +420,10 @@ var
       if LocalDbg then Writeln('DProcess.Executable: ',DProcess.Executable,' Parameters: ',DProcess.Parameters.Text);
       DProcess.Execute;
       while DProcess.Running do
-            Application.ProcessMessages;
+           Begin
+            lblInfo.Caption:= 'Unzip ...';
+            DoJump(1);
+           end;
      finally
       FreeAndNil(Dprocess);
      end;
@@ -436,6 +435,8 @@ var
     if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
      begin
       DProcess := TProcess.Create(nil);
+      DoInit(180,1);
+      DoPos(0);
       try
        try
         DProcess.Executable  := '/bin/bash';
@@ -449,7 +450,10 @@ var
         if LocalDbg then Writeln('DProcess.Executable: ',DProcess.Executable,' Parameters: ',DProcess.Parameters.Text);
         DProcess.Execute;
         while DProcess.Running do
-              Application.ProcessMessages;
+             Begin
+              lblInfo.Caption:= 'Trim ...';
+              DoJump(1);
+             end;
        finally
         FreeAndNil(Dprocess);
        end;
@@ -459,9 +463,6 @@ var
       end;
      end;
 
-   Self.Hide;
-   Application.ProcessMessages;
-   frmMonWsjtx.CanCloseUSDBProcess:=true;
 end;
 procedure  TfrmProgress.CloseUSDBProcess;
 begin
@@ -492,7 +493,7 @@ Begin
    USDBdownLoadInit;
    if not FileExists(SourceFile) then  //when back here should have new SourceFile
     begin
-      frmMonWsjtx.chkUState.Checked := false;
+      USDBProcessFailed;
       exit;
     end
     else //populate database

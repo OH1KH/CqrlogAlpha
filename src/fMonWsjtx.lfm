@@ -611,7 +611,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       AnchorSideBottom.Side = asrCenter
       Left = 316
       Height = 23
-      Hint = 'Show station USA state by FCC '#10'(this may show different than Cqrlog''s prefix based state view)'
+      Hint = 'Show station USA state '#10'(this may show different than Cqrlog''s prefix based state view)'#10'State table update initiates when file ~/.config/cqrlog/ctyfiles/usdbraw'#10'is older than 90 days.'#10'You can initiate update when ever by pressing Shift key while clicking'#10'on mouse right button.'
       Top = 5
       Width = 49
       BorderSpacing.Right = 2

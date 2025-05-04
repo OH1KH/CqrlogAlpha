@@ -8049,6 +8049,9 @@ Begin
         frmAbout.PageControl1.ActivePage := frmAbout.tabUpgrade;
         frmAbout.lblVerze1.Caption := cVERSION + '  ' + cBUILD_DATE;
         frmAbout.Label8.Caption:='There is CqrlogAlpha version '+IntToStr(VerAvailNr)+' available!';
+        frmAbout.IsNewVersion:=True;
+        frmAbout.btnChangelog1.Font.Color:=clRed;
+        frmAbout.btnChangelog1.Font.Style:=[fsBold];
         frmAbout.ShowModal
       finally
         frmAbout.Free;

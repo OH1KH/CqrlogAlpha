@@ -107,6 +107,7 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkKeepAlive: TCheckBox;
     chkRotControlDebug: TCheckBox;
     chkUseRigPwr: TCheckBox;
     chkHamClock: TCheckBox;
@@ -680,6 +681,7 @@ type
     Label108: TLabel;
     Label12: TLabel;
     Label13: TLabel;
+    lblAliveMins: TLabel;
     lblPollTimeout: TLabel;
     lblRotDebug: TLabel;
     lblPwrFactor: TLabel;
@@ -846,7 +848,7 @@ type
     Label48: TLabel;
     Label49: TLabel;
     Label50: TLabel;
-    Label51: TLabel;
+    lblSendCommands: TLabel;
     lbl: TLabel;
     lblIntPasswd: TLabel;
     Label2: TLabel;
@@ -970,6 +972,7 @@ type
     edtRigCount: TSpinEdit;
     spePwrFactor: TSpinEdit;
     speRecentQSOs: TSpinEdit;
+    spnKeepAlive: TSpinEdit;
     tabExport: TTabSheet;
     tabExport1: TTabSheet;
     tabFont1: TTabSheet;
@@ -1440,9 +1443,12 @@ begin
   cqrini.WriteBool('DXCluster', 'DATA', chkDATA.Checked);
   cqrini.WriteString('DXCluster', 'NotShow', edtDoNotShow.Text);
   cqrini.WriteBool('DXCluster', 'ConAfterRun', chkConToDXC.Checked);
+  cqrini.WriteBool('DXCluster', 'KeepAlive', chkKeepAlive.Checked);
+  cqrini.WriteInteger('DXCluster', 'KeepAliveTime', spnKeepAlive.Value);
   cqrini.WriteBool('DXCluster','ShowDxcCountry',chkShowDxcCountry.Checked);
   cqrini.WriteString('DXCluster','AlertCmd', edtAlertCmd.Text);
   cqrini.WriteString('DXCluster','StartCmd', edtStartConCmd.Text);
+
 
   cqrini.WriteBool('Fonts', 'UseDefault', chkUseDefaultSEttings.Checked);
   cqrini.WriteString('Fonts', 'Buttons', lblbFont.Caption);
@@ -3300,6 +3306,8 @@ begin
   cmbNewMode.Selected := cqrini.ReadInteger('DXCluster', 'NewMode', 0);
   cmbQSLNeeded.Selected := cqrini.ReadInteger('DXCluster', 'NeedQSL', 0);
   chkConToDXC.Checked := cqrini.ReadBool('DXCluster', 'ConAfterRun', False);
+  chkKeepAlive.Checked := cqrini.ReadBool('DXCluster', 'KeepAlive', False);
+  spnKeepAlive.Value := cqrini.ReadInteger('DXCluster', 'KeepAliveTime', 30);
   chkShowDxcCountry.Checked := cqrini.ReadBool('DXCluster','ShowDxcCountry',False);
   edtAlertCmd.Text := cqrini.ReadString('DXCluster','AlertCmd','');
   edtStartConCmd.Text := cqrini.ReadString('DXCluster','StartCmd','');

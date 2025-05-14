@@ -193,7 +193,7 @@ Once you have source you need tools to compile. Using command termnal install th
 
 That will install FreePascal compiler and Lazarus GUI. Issuing that line results a long list of dependencies to install, just say Y (yes) to install them all.
 
-If your Lazarus is very old from package you find latest version from https://www.lazarus-ide.org It is always recommended to use latest version as package versions can be very old, as seen with Cqrlog packages. At the moment lazarus-ide version is 2.2.6
+If your Lazarus is very old from package you find latest version from https://www.lazarus-ide.org It is always recommended to use latest version as package versions can be very old, as seen with Cqrlog packages.
 
 When lazarus-ide is installed you need to change to source directory, either git cloned or extracted from zip. ("cd cqrlog")
 After that start the compile process, issue:

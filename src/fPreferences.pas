@@ -3224,7 +3224,7 @@ begin
   edtRot1RotCtldArgs.Text := cqrini.ReadString('ROT1', 'ExtraRotCtldArgs', '');
   chkRot1RunRotCtld.Checked := cqrini.ReadBool('ROT1', 'RunRotCtld', False);
   chkRot1AzMinMax.Checked := cqrini.ReadBool('ROT1', 'RotAzMinMax', False);
-  edtRot1Host.Text := cqrini.ReadString('ROT1', 'host', 'localhost');
+  edtRot1Host.Text := cqrini.ReadString('ROT1', 'host', '');
   cmbSpeedRot1.ItemIndex := cqrini.ReadInteger('ROT1', 'SerialSpeed', 0);
   cmbDataBitsRot1.ItemIndex := cqrini.ReadInteger('ROT1', 'DataBits', 0);
   cmbStopBitsRot1.ItemIndex := cqrini.ReadInteger('ROT1', 'StopBits', 0);
@@ -3240,7 +3240,7 @@ begin
   edtRot2RotCtldArgs.Text := cqrini.ReadString('ROT2', 'ExtraRotCtldArgs', '');
   chkRot2RunRotCtld.Checked := cqrini.ReadBool('ROT2', 'RunRotCtld', False);
   chkRot2AzMinMax.Checked := cqrini.ReadBool('ROT2', 'RotAzMinMax', False);
-  edtRot2Host.Text := cqrini.ReadString('ROT2', 'host', 'localhost');
+  edtRot2Host.Text := cqrini.ReadString('ROT2', 'host', '');
   cmbSpeedRot2.ItemIndex := cqrini.ReadInteger('ROT2', 'SerialSpeed', 0);
   cmbDataBitsRot2.ItemIndex := cqrini.ReadInteger('ROT2', 'DataBits', 0);
   cmbStopBitsRot2.ItemIndex := cqrini.ReadInteger('ROT2', 'StopBits', 0);
@@ -3674,7 +3674,7 @@ Begin
   chkCPollR.Checked:= cqrini.ReadBool('TRX'+nr, 'CPollR', True);
   edtPollTimeout.Text:= cqrini.ReadString('TRX' + nr, 'PollTimeout', '15');
   chkVoiceR.Checked:= cqrini.ReadBool('TRX'+nr, 'RigVoice', True);
-  edtRHost.Text := cqrini.ReadString('TRX'+nr, 'host', '127.0.0.1');
+  edtRHost.Text := cqrini.ReadString('TRX'+nr, 'host', '');
   cmbSpeedR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'SerialSpeed', 0);
   cmbDataBitsR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'DataBits', 0);
   cmbStopBitsR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'StopBits', 0);

@@ -163,19 +163,29 @@ For getting source code there are two ways:
 
 clone my whole Git reporsitory using command terminal:
 
-	git clone https://github.com/OH1KH/cqrlog.git
+	git clone https://github.com/OH1KH/CqrlogAlpha.git
 
-This will make folder "cqrlog" to your home directory if cloning is issued on that directory.
-After that, to get into Alpha branch, give command:
+If you start this command from your user home directory it creates CqrlogAlpha directory to your home directory.
 
-	git checkout loc_testing
+Or go to address:
 
-Now you have the Alpha source in hand.
-Good side with "git clone" is that on next time you like to upgrade you just open command console and change directory to "cqrlog" ("cd cqrlog") and issue command "git pull" and new updates are applied and you are ready to compile and install again.
+	https://github.com/OH1KH/CqrlogAlpha
 
-Other way is to download just the current version's source with web browser from https://github.com/OH1KH/cqrlog/tree/loc_testing At that page you see green button "Code". By pressing that you find "Download.zip" that allows to download the source code as zip file.
-Once downloaded and extracted you are at same point as after "git checkout loc_testing" above.
-How ever you can not do new uptates later with "git pull". You have to download the zip file again.
+and find green "Code" button. Press it and select "Download ZIP". Using this way you have to extract downloaded zip to somewhere on your computer.
+
+Difference with "git clone" and "Download ZIP" is that cloning downloads full history and also all branches where ZIP gives just the currently open view to source.
+
+Change your command console to CqrlogAlpha folder. If you used "git clone" you can change branch with checkout command.
+
+	git checkout main
+	git checkout devel
+
+Main holds the latest release. Devel holds coming next release, but may be unstable.
+
+Good side with "git clone" is that on next time you like to upgrade you just open command console and change directory to "CqrlogAlpha" ("cd CqrlogAlpha") and issue command "git pull" and new updates are applied and you are ready to compile and install again.
+
+Other way is to download just the current version's source with web browser  as ZIP
+How ever you can not do new uptates later with "git pull". You have to download the ZIP file web browser again.
 
 Once you have source you need tools to compile. Using command termnal install them.
 
@@ -183,30 +193,39 @@ Once you have source you need tools to compile. Using command termnal install th
 
 That will install FreePascal compiler and Lazarus GUI. Issuing that line results a long list of dependencies to install, just say Y (yes) to install them all.
 
-If your Lazarus is very old from package you find latest version from https://www.lazarus-ide.org It is always recommended to use latest version as package versions can be very old, as seen with Cqrlog packages. At the moment lazarus-ide version is 2.2.6
+If your Lazarus is very old from package you find latest version from https://www.lazarus-ide.org It is always recommended to use latest version as package versions can be very old, as seen with Cqrlog packages.
 
 When lazarus-ide is installed you need to change to source directory, either git cloned or extracted from zip. ("cd cqrlog")
 After that start the compile process, issue:
 
 	make
 	
-	In case you want QT5 version add cqrlog_qt5 after make.
+	In case you want QT5 version add cqrlog_qt5 after "make".
 	
 	make cqrlog_qt5
+
+	In case you want QT6 version add cqrlog_qt6 after "make".
+	
+	make cqrlog_qt6
 
 When compile has finished install the new Cqrlog with command
 
 	sudo make install
 
+
 That is all!
 
+
+Note that if you compile and use QT5 or QT6 vesions you need to install libqt5pas and libqt5pas-devel packets.
+and in case of QT6 packet naming changes to libqt6pas and libqt6pas-devel
+There may be differences in packet naming dependig on your Linux version.
 
 
 With some OS "make" result errors. Then usually using the lazarus-ide works.
 Start lazarus-ide typing that to command terminal, or start from startup menu icon "lazarus".
 At first start it goes through some settings. If all Tabs show OK you are ready to continue.
 
-Lazarus starts first to empty form. Use top menu "Project/Open Project" and navigate to your "cqrlog" source folder. There you see subfolder "src". Navigate to that folder and you see "cqrlog.lpi".  Open that.
+Lazarus starts first to empty form. Use top menu "Project/Open Project" and navigate to your "CqrlogAlpha" source folder. There you see subfolder "src". Navigate to that folder and you see "cqrlog.lpi".  Open that.
 
 Once opened select top menu "View/Messages" to see compiler messages. Then select top menu "Run/Compile".
 Wait and finally you should see a green line on Messages window. It means that compile is over.
@@ -214,7 +233,7 @@ Wait and finally you should see a green line on Messages window. It means that c
 You find new cqrlog from folder "src" as file "cqrlog"
 You can now try command terminal:
 
-	cd cqrlog  (this is the source root folder, as before)
+	cd CqrlogAlpha  (this is the source root folder, as before)
 	sudo make install
 
 If succeeded you have new version with new help installed. If not, you can just copy file "cqrlog" from folder "src" to "/usr/bin"
@@ -227,7 +246,7 @@ You need "sudo" for this copy.
 
 
 
-### Alpha version changes can be found from [Changelog](https://htmlpreview.github.io/?https://github.com/OH1KH/cqrlog/blob/loc_testing/src/changelog.html) 
+### Alpha version changes can be found from [Changelog](https://htmlpreview.github.io/?https://github.com/OH1KH/CqrlogAlpha/blob/main/src/changelog.html) 
  
 ### Some Cqrlog related videos can be found from  <https://www.youtube.com/channel/UC3yPCVYmfeBzDSwTosOe2fQ>
 

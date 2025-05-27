@@ -424,7 +424,7 @@ begin
   if b<>old_band then
    Begin
      old_band:=b;
-     if cqrini.ReadBool('TRX', 'BandModeClearsXitRit', True) then
+     if cqrini.ReadBool('TRX', 'BandClearsXitRit', True) then
                                                              DisableRitXit;
    end;
   ClearBandButtonsColor;

@@ -116,7 +116,7 @@ object frmDatabaseUpdate: TfrmDatabaseUpdate
   OnDestroy = FormDestroy
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '0.9.30'
+  LCLVersion = '3.8.0.0'
   object pnlQRZ: TPanel
     Left = 0
     Height = 48
@@ -133,14 +133,14 @@ object frmDatabaseUpdate: TfrmDatabaseUpdate
     Width = 75
     Anchors = [akTop, akLeft, akRight]
     Caption = 'Cancel'
-    OnClick = btnCancelClick
     TabOrder = 1
+    OnClick = btnCancelClick
   end
   object tmrQRZ: TTimer
     Enabled = False
     Interval = 2000
     OnTimer = tmrQRZTimer
-    left = 48
-    top = 320
+    Left = 48
+    Top = 320
   end
 end

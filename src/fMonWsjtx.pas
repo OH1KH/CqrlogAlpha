@@ -14,6 +14,7 @@ type
   { TfrmMonWsjtx }
 
   TfrmMonWsjtx = class(TForm)
+    chkDs: TCheckBox;
     chkFFlt: TCheckBox;
     chkCbCQ: TCheckBox;
     chkdB: TCheckBox;
@@ -78,6 +79,7 @@ type
     tmrFollow: TTimer;
     tmrCqPeriod: TTimer;
     procedure btFtxtNameClick(Sender: TObject);
+    procedure chkDsClick(Sender: TObject);
     procedure chkFFltChange(Sender: TObject);
     procedure chkFFltClick(Sender: TObject);
     procedure chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
@@ -171,6 +173,7 @@ type
     function getCurMode(sMode: String): String;
     procedure extcqprint;
     Procedure ReColorsgMonitor(Fc,Bc:tColor;Boff:Boolean);
+    Function DxccStatus(adif:word;CB,Cm:String):String;
     function UsCallState(call:string;var StatClr:TColor):string;
     { private declarations }
   public
@@ -815,6 +818,7 @@ begin
       chknoTxt.Visible := False;
       chknoTxt.Checked := False;
       chknoHistory.Checked := True;
+      chkDs.Visible:= True;
       chkCbCQ.Checked := cqrini.ReadBool('MonWsjtx', 'ColorBacCQkMap', False);
       chkdB.Checked   := cqrini.ReadBool('MonWsjtx', 'ShowdB', False);
       chkFlt.Checked  := cqrini.ReadBool('MonWsjtx', 'MapFilter', False);
@@ -841,6 +845,7 @@ begin
       cbflw.Visible := True;
       chknoTxt.Visible := True;
       chknoHistory.Visible := True;
+      chkDs.Visible:= False;
       sgMonitor.Columns.Items[0].Visible:= true;
       sgMonitor.Columns.Items[1].Visible:= true;
       sgMonitor.Columns.Items[7].Visible:= true;
@@ -1033,6 +1038,11 @@ begin
     else
     btFtxtName.Visible:=false;
   end;
+end;
+
+procedure TfrmMonWsjtx.chkDsClick(Sender: TObject);
+begin
+  cqrini.WriteBool('MonWsjtx', 'DxStatus',chkDs.Checked);
 end;
 
 procedure TfrmMonWsjtx.chkFFltChange(Sender: TObject);
@@ -1443,6 +1453,7 @@ begin
   tbFollow.Checked := cqrini.ReadBool('MonWsjtx', 'Follow', False);
   edtFollowCall.Text := uppercase(cqrini.ReadString('MonWsjtx', 'FollowCall', ''));
   chkMap.Checked := cqrini.ReadBool('MonWsjtx', 'MapMode', False);
+  chkDs.Checked := cqrini.ReadBool('MonWsjtx', 'DxStatus', False);
   if ((trim(edtFollowCall.Text) = '') and tbFollow.Checked) then
     tbFollow.Checked := False; //should not happen, chk it here
   LockFlw := False;
@@ -1554,11 +1565,12 @@ procedure TfrmMonWsjtx.AddOtherMessage(Time,Message, Reply: string;Df,Sr:integer
 var
   msgList: TStringList;
   index: integer;
-  ClLine : char;
+  ClLine : String = '';
   adif:integer;
   pfx:string = '';
   msgRes:string = '';
   StatClr: Tcolor;
+  dxinfo : string = '';
 begin
   Message := LineFilter(Message);
 
@@ -1666,12 +1678,18 @@ begin
               PrintLoc(msgLocator, timeToAlert, msgTime);
               if frmWorkedGrids.GridOK(msgLocator) then  AddXplanetList(msgCall,msgLocator);
             end;
+            adif:= dmDXCC.id_country(msgCall, Now(), pfx, msgRes);
+
+            if cqrini.ReadBool('MonWsjtx', 'DxStatus', False)  then
+             ClLine:=ClLine+DxccStatus(adif,CurBand,CurMode);
+
+
             //PCallColor closes parenthesis(not-CQ ind) with same color as it was opened with callsign
-            AddColorStr(ClLine, clBlack,6, sgMonitor.rowCount-1);//make in-qso indicator stop
+            AddColorStr(ClLine, clBlack,6,sgMonitor.rowCount-1);//make in-qso indicator stop
 
             //here
              if (chkUState.Checked) then
-              adif:= dmDXCC.id_country(msgCall, Now(), pfx, msgRes);
+
               case adif of
                 6,9,103,110,166,202,285,291:
                                                Begin
@@ -2418,43 +2436,54 @@ begin
           end;
          end;
 
-      if (chkMap.Checked and (StatClr<>clBlack))  then  //there is US state to print to Map
+      if chkMap.Checked then
        Begin
-        CqState:= copy(msgRes,5,2);
-         AddColorStr(CqState, StatClr,7,sgMonitor.rowCount-1);
+         if  (StatClr<>clBlack)  then  //there is US state to print to Map
+           Begin
+            CqState:= copy(msgRes,5,2);
+             AddColorStr(CqState, StatClr,7,sgMonitor.rowCount-1);
+           end;
+         if cqrini.ReadBool('MonWsjtx', 'DxStatus', False)  then
+            AddColorStr(' '+DxccStatus(dxcc_number_adif,CurBand,CurMode), clBlack,6,sgMonitor.rowCount-1);
        end;
-
      if LocalDbg then
        Writeln('My continent is:', mycont, '  His continent is:', cont);
 
       if CqDir <> '' then
-       if ((mycont <> '') and (cont <> '')) then
-         //we can do some comparisons of continents
-         begin
-         if not dmUtils.IsHeDx(msgCall,CqDir) then
-           //I'm not DX for caller: color to warn directed call
-           //CQ NOT directed to my continent: color to warn directed call
-           extcqprint;
-         end
-         else  // should be ok to answer this directed cq
-          if ((not chkMap.Checked) and (not chkCbCQ.Checked))  then
-           //AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
-           //space prefix is for what? forgot that
-           //AddColorStr(copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
+       begin
+             if ((mycont <> '') and (cont <> '')) then
+                 //we can do some comparisons of continents
+               begin
+               if not dmUtils.IsHeDx(msgCall,CqDir) then
+                 //I'm not DX for caller: color to warn directed call
+                 //CQ NOT directed to my continent: color to warn directed call
+                 extcqprint;
+               end
+             else  // should be ok to answer this directed cq
+              begin
+               if ((not chkMap.Checked) and (not chkCbCQ.Checked))  then
+                begin
+                 //AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
+                 //space prefix is for what? forgot that
+                 //AddColorStr(copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
 
-           AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', clBlack,6, sgMonitor.rowCount-1)
-       else
-        begin
-         // we can not compare continents, but it is directed cq. Best to warn with color anyway
-         extcqprint;
-        end
-     else
+                 AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', clBlack,6, sgMonitor.rowCount-1)
+                end
+               else
+                begin
+                 // we can not compare continents, but it is directed cq. Best to warn with color anyway
+                 extcqprint;
+                end
+              end
+      end
+     else    // CqDir <> ''
+      begin
        // should be ok to answer this is not directed cq
          if ((not chkMap.Checked) and (not chkCbCQ.Checked))  then
              Begin
               AddColorStr(copy(PadRight(msgRes, CountryLen), 1, CountryLen)+' ', StatClr,6, sgMonitor.rowCount-1);
              end;
-
+      end;
 
 
    if (not chkMap.Checked) then
@@ -2473,8 +2502,8 @@ begin
        else
          AddColorStr(msgRes, clBlack,7 ,sgMonitor.rowCount-1);     //something else...can't be
      end;
-   end //not Map mode
-     else
+    end //not Map mode
+   else
       if chkMap.Checked and chkSort.Checked  then
              Begin
                    sgMonitor.SortColRow(true,cqrini.ReadInteger('MonWsjtx', 'SortCol', 1),0,sgMonitor.RowCount-1);
@@ -2599,6 +2628,22 @@ begin
   end;
   sgMonitor.Repaint;
 end;
+Function TfrmMonWsjtx.DxccStatus(adif:word;CB,Cm:String):String;    //used in map mode
+var
+  index : integer = 0;
+
+Begin
+        dmData.RbnMonDXCCInfo(adif,CB,CM,True,index);
+        case index of
+          1 : Result := 'n'; //new country
+          2 : Result := 'b'; //new band
+          3 : Result := 'm'; //new mode
+          4 : Result := 'q'; //qsl needed
+          else Result:='';
+        end;
+end;
+
+
 
 //initialization
 

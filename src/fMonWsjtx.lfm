@@ -500,14 +500,14 @@ object frmMonWsjtx: TfrmMonWsjtx
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Owner
-    Left = 60
+    Left = 38
     Height = 32
     Top = 0
-    Width = 463
+    Width = 506
     AutoSize = True
     BorderWidth = 3
     ClientHeight = 32
-    ClientWidth = 463
+    ClientWidth = 506
     TabOrder = 3
     Visible = False
     OnClick = pnlSelectsClick
@@ -640,13 +640,13 @@ object frmMonWsjtx: TfrmMonWsjtx
       OnMouseUp = chkDxMouseUp
     end
     object lblMode: TLabel
-      AnchorSideLeft.Control = chkDx
+      AnchorSideLeft.Control = chkDs
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = pnlSelects
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 423
+      Left = 466
       Height = 17
       Top = 8
       Width = 36
@@ -670,6 +670,23 @@ object frmMonWsjtx: TfrmMonWsjtx
       Layout = tlBottom
       ParentColor = False
       OnClick = pnlSelectsClick
+    end
+    object chkDs: TCheckBox
+      AnchorSideLeft.Control = chkDx
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      Left = 411
+      Height = 23
+      Hint = 'Show DXCC status '#10'''n''=New country, ''b''=New band, ''m''=New mode, ''q''=Qsl needed'
+      Top = 5
+      Width = 43
+      Caption = 'Ds'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+      OnClick = chkDsClick
+      OnMouseUp = chkDxMouseUp
     end
   end
   object pnlTrigPop: TPanel

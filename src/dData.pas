@@ -180,6 +180,7 @@ type
     MySQLProcess : TProcess;
     fMySQLVersion : Currency;
     FreqMemCount  : integer;
+    RbnDxccLock   : Boolean;
 
     function  FindLib(const Path,LibName : String) : String;
     function  GetMysqldPath : String;
@@ -1294,6 +1295,7 @@ begin
 
   tmrDBPing.Interval := CDB_PING_INT*1000;
   tmrDBPing.Enabled  := True;
+  RbnDxccLock := false;
 end;
 
 procedure TdmData.DataModuleDestroy(Sender: TObject);
@@ -3942,8 +3944,17 @@ end;
 
 function TdmData.RbnMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean; var index : integer) : String;
 var
-  sAdif : String = '';
+  sAdif  : String = '';
+  timeout: integer = 1000;
 begin
+  while RbnDxccLock and (timeout > 0) do  //may not be called from different places when running. Is this needed?
+   Begin
+     dec(timeout);
+     sleep(5);
+     Application.ProcessMessages;
+   end;
+  RbnDxccLock :=true;
+
   // index : 0 - unknown country, no qsl needed
   // index : 1 - New country
   // index : 2 - New band country
@@ -4023,7 +4034,8 @@ begin
   finally
     qRbnMon.Close;
     trRbnMon.Rollback
-  end
+  end;
+  RbnDxccLock :=false;
 end;
 
 function TdmData.IsCallInLogB(callsign,band,mode,LastDate,LastTime : String) : Boolean;    //IsCallInLog Bandmap

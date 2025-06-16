@@ -654,6 +654,7 @@ var
 
 begin
   msg:='';
+  Hit:=false;
   while (( aSocket.GetMessage(msg) > 0 ) and (not fResponseTimeout)) do
   begin
     msg := StringReplace(upcase(trim(msg)),#$09,' ',[rfReplaceAll]); //note the char case upper for now on! Remove TABs
@@ -897,6 +898,7 @@ begin
      end; //max arg loop
    end; //other than init
   end;  //while rcvd
+
 end;
 
 procedure TRigControl.OnRigPollTimer(Sender: TObject);

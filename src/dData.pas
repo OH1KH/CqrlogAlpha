@@ -3945,14 +3945,15 @@ end;
 function TdmData.RbnMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean; var index : integer) : String;
 var
   sAdif  : String = '';
-  timeout: integer = 1000;
+  timeout: integer = 200;
 begin
+
   while RbnDxccLock and (timeout > 0) do  //may not be called from different places when running. Is this needed?
    Begin
      dec(timeout);
-     sleep(5);
-     Application.ProcessMessages;
+     sleep(1);
    end;
+
   RbnDxccLock :=true;
 
   // index : 0 - unknown country, no qsl needed

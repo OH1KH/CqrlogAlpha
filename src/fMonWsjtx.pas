@@ -1028,7 +1028,7 @@ var
 begin
   if frmNewQSO.edtName.Text <> '' then
   begin
-    My := Upcase('Tu ' + frmNewQSO.edtName.Text + ' 73');
+    My := Upcase('TU ' + copy(frmNewQSO.edtName.Text,1,7) + ' 73');
     if length(My) < 14 then
     begin
       SendFreeText(My);

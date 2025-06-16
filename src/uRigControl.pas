@@ -756,6 +756,8 @@ begin
            else
                AllowCommand:=0;
         end;
+       if Hit then
+             fPollCount :=  fPollTimeout;
      end //init
   else
      Begin
@@ -896,6 +898,8 @@ begin
         else  //Hit from first block (RF)
          Allowcommand:=1;
      end; //max arg loop
+    if Hit then
+             fPollCount :=  fPollTimeout;
    end; //other than init
   end;  //while rcvd
 

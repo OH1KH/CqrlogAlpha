@@ -173,7 +173,7 @@ type
     function getCurMode(sMode: String): String;
     procedure extcqprint;
     Procedure ReColorsgMonitor(Fc,Bc:tColor;Boff:Boolean);
-    Function DxccStatus(adif:word;CB,Cm:String):String;
+    Procedure DxccStatus(adif:word;CB,Cm:String;var R:String);
     function UsCallState(call:string;var StatClr:TColor):string;
     { private declarations }
   public
@@ -328,7 +328,7 @@ begin
              sgMonitor.Cells[c,r]:= s;  //trim ??
              sgMonitorAttributes[c,r].FG_Color:=col;
              sgMonitorAttributes[c,r].BG_Color:=clWhite;
-             if (chkMap.Checked) and (c in  [3,4,5]) then
+             if (chkMap.Checked) and (not ChkCbCq.Checked) and (c in  [3,4,5]) then   //CQ background printing fails if Cqs are colored back to wsjtx. There are none :)
                begin
                 sgMonitorAttributes[c,r].BG_Color:=UsedBkgCqCol; //global var
                 if (c=5) then UsedBkgCqCol:=clWhite;  //reset for next
@@ -1114,6 +1114,7 @@ end;
 procedure TfrmMonWsjtx.chkCbCQChange(Sender: TObject);
 begin
   cqrini.WriteBool('MonWsjtx', 'ColorBacCQkMap', chkCbCQ.Checked);
+  chkds.Enabled:=not chkCbCQ.Checked;     //DXCC status printing fails if Cqs are colored back to wsjtx
 end;
 
 procedure TfrmMonWsjtx.chknoTxtChange(Sender: TObject);
@@ -1680,8 +1681,8 @@ begin
             end;
             adif:= dmDXCC.id_country(msgCall, Now(), pfx, msgRes);
 
-            if cqrini.ReadBool('MonWsjtx', 'DxStatus', False)  then
-             ClLine:=ClLine+DxccStatus(adif,CurBand,CurMode);
+            if cqrini.ReadBool('MonWsjtx', 'DxStatus', False) and (not ChkCbCq.Checked) then
+                                           DxccStatus(adif,CurBand,CurMode,ClLine);
 
 
             //PCallColor closes parenthesis(not-CQ ind) with same color as it was opened with callsign
@@ -2345,7 +2346,8 @@ end;
 procedure TfrmMonWsjtx.PrintDecodedMessage;
 Var
    i      : integer;
-  freq,le : string;
+  freq,le,
+  tmp     : string;
 StatClr   : Tcolor;
 
 begin
@@ -2443,8 +2445,14 @@ begin
             CqState:= copy(msgRes,5,2);
              AddColorStr(CqState, StatClr,7,sgMonitor.rowCount-1);
            end;
-         if cqrini.ReadBool('MonWsjtx', 'DxStatus', False)  then
-            AddColorStr(' '+DxccStatus(dxcc_number_adif,CurBand,CurMode), clBlack,6,sgMonitor.rowCount-1);
+
+         if cqrini.ReadBool('MonWsjtx', 'DxStatus', False) and (not ChkCbCq.Checked)   then
+           Begin
+            tmp:=' ';
+            DxccStatus(dxcc_number_adif,CurBand,CurMode,tmp);
+            AddColorStr(tmp,clBlack,6,sgMonitor.rowCount-1);
+           end;
+
        end;
      if LocalDbg then
        Writeln('My continent is:', mycont, '  His continent is:', cont);
@@ -2628,18 +2636,17 @@ begin
   end;
   sgMonitor.Repaint;
 end;
-Function TfrmMonWsjtx.DxccStatus(adif:word;CB,Cm:String):String;    //used in map mode
+Procedure TfrmMonWsjtx.DxccStatus(adif:word;CB,Cm:String;var R:String);    //used in map mode
 var
   index : integer = 0;
 
 Begin
         dmData.RbnMonDXCCInfo(adif,CB,CM,True,index);
         case index of
-          1 : Result := 'n'; //new country
-          2 : Result := 'b'; //new band
-          3 : Result := 'm'; //new mode
-          4 : Result := 'q'; //qsl needed
-          else Result:='';
+          1 : R:= R+'n'; //new country
+          2 : R:= R+'b'; //new band
+          3 : R:= R+'m'; //new mode
+          4 : R:= R+'q'; //qsl needed
         end;
 end;
 

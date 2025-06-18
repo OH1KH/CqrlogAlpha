@@ -781,7 +781,12 @@ begin
               Hit:=true;
               fRfPwrMtrWtts:= trim(a[i+1]);
               if (fRfPwrMtrWtts<>'0') and (fRfPwrMtrWtts<>'') then
+                Begin
                   fMemRfPwrMtrWtts:= fRfPwrMtrWtts;
+                  fPtt:='1';
+                end
+               else
+                fPtt:='0';
              end;
 
            if (( not Hit ) and (pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
@@ -1108,18 +1113,17 @@ begin
                 end;
             end;
 
-       if fGetRFPower then   //if it is possible and allowed by user
+       if fGetRFPower and fGetLevel then   //if it is possible and allowed by user
            Begin
-             if fGetLevel and (Pos('RFPOWER ', fSupGetLevels)>0) then
-               rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
-
-             if fGetLevel and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
-               rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
-
-             rigCommand.Add('+\get_ptt'+VfoStr);  //PTT controls TRXCOntrol Power out display
+            //rigCommand.Add('+\get_ptt'+VfoStr);  //PTT controls TRXCOntrol Power out display
+            //PTT state created now from RFPOWER_METER_WATTS=0 or <>0  Makes less polling. See: Procedure OnReceivedRigctldConnect
+               if (Pos('RFPOWER ', fSupGetLevels)>0) then
+                       rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
+               if  (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
+                       rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
            end
         else
-          fPtt:='';
+           fPtt:='';
 
      AllowCommand:=-1; //waiting for reply
      fPollCount :=  fPollTimeout;

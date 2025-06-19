@@ -1948,6 +1948,8 @@ Begin
 end;
 
 function TfrmTRXControl.GetRigPower(var pwr:string): boolean;   //returns power meter reading during last TX period, otherwise 0 and false
+var
+   tmp : currency;
 Begin
  pwr:='0';
  Result:= false;
@@ -1956,6 +1958,11 @@ Begin
    if (radio.GetRFPower) and (radio.MemRfPwrMtrWtts<>'0') then
     begin
      pwr:=radio.MemRfPwrMtrWtts;
+     if tryStrToCurr(pwr,tmp) then
+      begin
+       if (radio.ModelName='IC-7300') and (dmUtils.GetBandFromFreq(frmTRXControl.lblFreq.Caption)='4M') then tmp:=tmp/2;  //fixes Hamlib power error with ic7300 and 4M band
+       pwr:= FloatToStrF(tmp*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1),ffFixed,3,1);
+      end;
      Result:=true;
     end;
   end;

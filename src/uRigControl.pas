@@ -51,6 +51,7 @@ type TRigControl = class
     fCompoundPoll   : Boolean;
     fVoice          : Boolean;
     fIsNewHamlib    : Boolean;
+    fModelName      : string;
     fGetSplitTX     : Boolean;
     fRigSplitActive : Boolean;
     fPollTimeout    : integer;
@@ -123,6 +124,7 @@ public
     property Voice      : Boolean read fVoice;                               //can rig launch voice memories
     property IsNewHamlib: Boolean read fIsNewHamlib;                         //Is Hamlib version date higer than 2023-06-01
                                                                              //not used internally, but can give info out
+    property ModelName  : string  read fModelName;                           //rig model
     property Power      : Boolean read fPower;                               //can rig switch power
     property PowerON      : Boolean write fPowerON;                          //may rig switch power on at start
     property CanGetVfo  : Boolean read fGetVfo;                              //can rig show vfo (many Icoms can not)
@@ -697,6 +699,13 @@ begin
             fMemGetRFP   := fGetRFPower; //this is to remember rig's answer
             fSetRFPower  := (pos('CAN GET MW2POWER: Y',  Imsg)>0);
             fMemSetRFP   := fSetRFPower; //this is to remember rig's answer
+            if pos('MODEL NAME:',Imsg)>0 then
+                                         begin
+                                          fModelName   := copy(Imsg,
+                                                               (pos('MODEL NAME:',Imsg)+12),
+                                                               ((pos('MFG NAME:',Imsg)-1)-(pos('MODEL NAME:',Imsg)+12))
+                                                               );
+                                         end;
 
           if fDebugMode then
                  Begin

@@ -2298,7 +2298,7 @@ begin
     
       if (cqrini.ReadBool('NewQSO', 'UseRigPwr', False) and frmTRXControl.GetRigPower(tmp)) then
          if tryStrToCurr(tmp,p) then  //conversion str->int->str is needed to allow power factor usage
-            edtPWR.Text:=FloatToStrF(p*cqrini.ReadInteger('NewQSO', 'PwrFactor', 1),ffFixed,3,1);
+            edtPWR.Text:=FloatToStrF(p,ffFixed,3,1);
 
       if cbOffline.Checked
         and ((mnuRemoteMode.Checked and (cqrini.ReadInteger('fldigi','freq',0) > 0))

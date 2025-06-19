@@ -19,6 +19,7 @@ type TVFO = (VFOA,VFOB);
 type
   TExplodeArray = Array of String;
 
+
 type TRigControl = class
     RigctldConnect : TLTCPComponent;
     rigProcess     : TProcess;
@@ -57,7 +58,7 @@ type TRigControl = class
     fPwrPcnt        : String;   //not actually %, but value 0.0 .. 1.0
     fPwrmW          : String;
     fRfPwrMtrWtts   : String;
-    fMemRfPwrMtrWtts: String;   //last TX value of meter.
+    fMemRfPwrMtrWtts: String;   //last TX value <>0W of meter
     fGetRFPower     : boolean;
     fMemGetRFP      : boolean;
     fSetRFPower     : boolean;
@@ -71,6 +72,7 @@ type TRigControl = class
     fSupGetLevels   : String;
     fSupGetFuncs    : String;
     fPtt            : String;
+    fPttTail        : integer;
     fResponseTimeout: Boolean;
     AllowCommand    : integer; //for command priority
     ErrorRigctldConnect : Boolean;
@@ -233,6 +235,7 @@ begin
   fRfPwrMtrWtts        := '';
   fMemRfPwrMtrWtts     := '0';
   fPtt                 := '';
+  fPttTail             := 0;
   tmrRigPoll.OnTimer       := @OnRigPollTimer;
   RigctldConnect.OnReceive := @OnReceivedRigctldConnect;
   RigctldConnect.OnConnect := @OnConnectRigctldConnect;
@@ -650,8 +653,7 @@ var
   f   : Double;
   Hit : boolean;
   tmp : string;
-  MaxArg: integer;
-
+  MaxArg : integer;
 begin
   msg:='';
   Hit:=false;
@@ -781,12 +783,9 @@ begin
               Hit:=true;
               fRfPwrMtrWtts:= trim(a[i+1]);
               if (fRfPwrMtrWtts<>'0') and (fRfPwrMtrWtts<>'') then
-                Begin
-                  fMemRfPwrMtrWtts:= fRfPwrMtrWtts;
-                  fPtt:='1';
-                end
-               else
-                fPtt:='0';
+                                                 // fMemRfPwrMtrWtts:= floattostr((strtofloat(fMemRfPwrMtrWtts)+ strtofloat(fRfPwrMtrWtts))/2);   //average of two
+               if strtofloat(fRfPwrMtrWtts)>strtofloat(fMemRfPwrMtrWtts) then
+                                                                       fMemRfPwrMtrWtts:=fRfPwrMtrWtts;      //peak value
              end;
 
            if (( not Hit ) and (pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
@@ -891,6 +890,12 @@ begin
 
               'PTT:'                  : Begin
                                          fPtt:= b[1];
+                                         if fPtt='1' then
+                                            fPttTail := 3;      //delay to zero RF-meter value
+                                         if fPttTail>0 then
+                                            dec(fPttTail)
+                                          else
+                                            fMemRfPwrMtrWtts:='0';
                                         end;
 
               'RPRT'                  : Begin
@@ -1115,11 +1120,10 @@ begin
 
        if fGetRFPower and fGetLevel then   //if it is possible and allowed by user
            Begin
-            //rigCommand.Add('+\get_ptt'+VfoStr);  //PTT controls TRXCOntrol Power out display
-            //PTT state created now from RFPOWER_METER_WATTS=0 or <>0  Makes less polling. See: Procedure OnReceivedRigctldConnect
-               if (Pos('RFPOWER ', fSupGetLevels)>0) then
+            rigCommand.Add('+\get_ptt'+VfoStr);  //PTT controls TRXCOntrol Power out display
+            if (fPtt='0') and (Pos('RFPOWER ', fSupGetLevels)>0) then
                        rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
-               if  (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
+            if (fPtt='1') and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
                        rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
            end
         else

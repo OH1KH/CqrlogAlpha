@@ -1423,7 +1423,7 @@ begin
     edtEndTime.Text   := FormatDateTime('hh:mm',date)
   end;
   tmrRadio.Enabled  := True;
-  if ShowRecentQSOs then
+  if ShowRecentQSOs or ShowB4call then
   begin
     since := dmUtils.MyDateToStr(now - RecentQSOCount);
     dmData.qQSOBefore.Close;

@@ -1,13 +1,13 @@
 object frmDXCluster: TfrmDXCluster
   Left = 116
-  Height = 425
+  Height = 428
   Top = 118
-  Width = 709
+  Width = 716
   HelpType = htKeyword
   HelpKeyword = 'help/h21.html#ah19'
   Caption = 'DXCluster'
-  ClientHeight = 425
-  ClientWidth = 709
+  ClientHeight = 428
+  ClientWidth = 716
   Icon.Data = {
     BE0C00000000010001002020000001001800A80C000016000000280000002000
     0000400000000100180000000000000C00006400000064000000000000000000
@@ -120,28 +120,36 @@ object frmDXCluster: TfrmDXCluster
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object pgDXCluster: TPageControl
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideBottom.Control = Owner
     Left = 0
-    Height = 425
+    Height = 428
     Top = 0
-    Width = 709
+    Width = 716
     ActivePage = tabTelnet
     Align = alClient
     TabIndex = 1
     TabOrder = 0
     object tabWeb: TTabSheet
+      AnchorSideLeft.Control = pgDXCluster
+      AnchorSideTop.Control = pgDXCluster
+      AnchorSideRight.Control = pgDXCluster
+      AnchorSideBottom.Control = pgDXCluster
       Caption = 'Web'
-      ClientHeight = 394
-      ClientWidth = 699
+      ClientHeight = 397
+      ClientWidth = 706
       object Panel4: TPanel
         Left = 0
         Height = 36
-        Top = 358
-        Width = 699
+        Top = 361
+        Width = 706
         Align = alBottom
         ClientHeight = 36
-        ClientWidth = 699
+        ClientWidth = 706
         TabOrder = 0
         object lblInfo: TLabel
           Left = 10
@@ -151,7 +159,7 @@ object frmDXCluster: TfrmDXCluster
           ParentColor = False
         end
         object btnWebConnect: TButton
-          Left = 610
+          Left = 617
           Height = 25
           Top = 8
           Width = 84
@@ -162,7 +170,7 @@ object frmDXCluster: TfrmDXCluster
           OnClick = btnWebConnectClick
         end
         object btnClear: TButton
-          Left = 528
+          Left = 535
           Height = 25
           Top = 6
           Width = 75
@@ -184,7 +192,7 @@ object frmDXCluster: TfrmDXCluster
           OnClick = btnHelpClick
         end
         object btnFont: TButton
-          Left = 448
+          Left = 455
           Height = 25
           Top = 6
           Width = 75
@@ -195,10 +203,14 @@ object frmDXCluster: TfrmDXCluster
         end
       end
       object pnlWeb: TPanel
+        AnchorSideLeft.Control = tabWeb
+        AnchorSideTop.Control = tabWeb
+        AnchorSideRight.Control = tabWeb
+        AnchorSideBottom.Control = tabWeb
         Left = 0
-        Height = 358
+        Height = 361
         Top = 0
-        Width = 699
+        Width = 706
         Align = alClient
         Alignment = taLeftJustify
         BevelInner = bvLowered
@@ -212,64 +224,82 @@ object frmDXCluster: TfrmDXCluster
       end
     end
     object tabTelnet: TTabSheet
+      AnchorSideLeft.Control = pgDXCluster
+      AnchorSideTop.Control = pgDXCluster
+      AnchorSideRight.Control = pgDXCluster
+      AnchorSideBottom.Control = pgDXCluster
       Caption = 'Telnet'
-      ClientHeight = 394
-      ClientWidth = 699
+      ClientHeight = 397
+      ClientWidth = 706
       OnMouseWheel = tabTelnetMouseWheel
-      object Panel1: TPanel
+      object pnlBottom: TPanel
         Left = 0
         Height = 34
-        Top = 360
-        Width = 699
+        Top = 363
+        Width = 706
         Align = alBottom
         BevelOuter = bvNone
         ClientHeight = 34
-        ClientWidth = 699
+        ClientWidth = 706
         TabOrder = 0
-        object Label1: TLabel
+        object lblCommand: TLabel
+          AnchorSideTop.Control = pnlBottom
+          AnchorSideTop.Side = asrCenter
           Left = 6
           Height = 17
-          Top = 11
+          Top = 9
           Width = 71
           Caption = 'Command:'
           ParentColor = False
         end
         object edtCommand: TEdit
-          AnchorSideLeft.Control = Label1
+          AnchorSideLeft.Control = lblCommand
           AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = pnlBottom
+          AnchorSideTop.Side = asrCenter
           Left = 79
           Height = 34
-          Top = 3
+          Top = 0
           Width = 266
           BorderSpacing.Left = 2
           TabOrder = 0
           OnKeyPress = edtCommandKeyPress
         end
-        object Button1: TButton
+        object btnHlp: TButton
           AnchorSideLeft.Side = asrBottom
-          Left = 610
+          AnchorSideRight.Control = pnlBottom
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = pnlBottom
+          AnchorSideBottom.Side = asrCenter
+          Left = 615
           Height = 25
-          Top = 3
+          Top = 4
           Width = 85
           Anchors = [akRight, akBottom]
+          BorderSpacing.Right = 6
           BorderSpacing.InnerBorder = 4
           Caption = 'Help'
           TabOrder = 1
           OnClick = btnHelpClick
         end
-        object Button2: TButton
-          Left = 528
+        object btnHiddenTest: TButton
+          AnchorSideTop.Control = pnlBottom
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = btnHlp
+          Left = 539
           Height = 25
-          Top = -8
-          Width = 75
-          Caption = 'Button2'
+          Top = 5
+          Width = 70
+          Anchors = [akTop, akRight]
+          BorderSpacing.Right = 6
+          Caption = 'btnHiddenTest'
           TabOrder = 2
           Visible = False
-          OnClick = Button2Click
+          OnClick = btnHiddenTestClick
         end
         object trChatSize: TTrackBar
           AnchorSideLeft.Control = edtCommand
-          AnchorSideTop.Control = Panel1
+          AnchorSideTop.Control = pnlBottom
           AnchorSideTop.Side = asrCenter
           AnchorSideBottom.Side = asrBottom
           Left = 79
@@ -287,48 +317,68 @@ object frmDXCluster: TfrmDXCluster
           Visible = False
         end
       end
-      object Panel2: TPanel
+      object pnlTop: TPanel
         Left = 0
-        Height = 30
+        Height = 40
         Top = 0
-        Width = 699
+        Width = 706
         Align = alTop
         BevelOuter = bvNone
-        ClientHeight = 30
-        ClientWidth = 699
+        ClientHeight = 40
+        ClientWidth = 706
         TabOrder = 1
         object edtTelAddress: TEdit
-          Left = 8
+          AnchorSideLeft.Control = pnlTop
+          AnchorSideTop.Control = pnlTop
+          AnchorSideTop.Side = asrCenter
+          Left = 6
           Height = 34
-          Top = 1
+          Top = 3
           Width = 189
+          BorderSpacing.Left = 6
+          BorderSpacing.Top = 3
           TabOrder = 0
         end
         object btnSelect: TButton
-          Left = 206
+          AnchorSideLeft.Control = edtTelAddress
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = pnlTop
+          AnchorSideTop.Side = asrCenter
+          Left = 207
           Height = 25
-          Top = 1
+          Top = 8
           Width = 75
+          BorderSpacing.Left = 12
           BorderSpacing.InnerBorder = 4
           Caption = 'Select'
           TabOrder = 1
           OnClick = btnSelectClick
         end
         object btnTelConnect: TButton
+          AnchorSideLeft.Control = btnSelect
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = pnlTop
+          AnchorSideTop.Side = asrCenter
           Left = 288
           Height = 25
-          Top = 1
+          Top = 8
           Width = 87
+          BorderSpacing.Left = 6
           BorderSpacing.InnerBorder = 4
           Caption = 'Connect'
           TabOrder = 2
           OnClick = btnTelConnectClick
         end
         object btnPreferences: TButton
-          Left = 384
+          AnchorSideLeft.Control = btnTelConnect
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = pnlTop
+          AnchorSideTop.Side = asrCenter
+          Left = 381
           Height = 25
-          Top = 1
+          Top = 8
           Width = 104
+          BorderSpacing.Left = 6
           Caption = 'Preferences'
           TabOrder = 3
           OnClick = btnPreferencesClick
@@ -336,20 +386,20 @@ object frmDXCluster: TfrmDXCluster
       end
       object pnlTelnet: TPanel
         Left = 0
-        Height = 330
-        Top = 30
-        Width = 699
+        Height = 323
+        Top = 40
+        Width = 706
         Align = alClient
         BevelOuter = bvNone
-        ClientHeight = 330
-        ClientWidth = 699
+        ClientHeight = 323
+        ClientWidth = 706
         ParentColor = False
         TabOrder = 2
         object pnlChat: TPanel
           Left = 0
           Height = 2
           Top = 0
-          Width = 699
+          Width = 706
           Align = alTop
           BevelOuter = bvNone
           ParentColor = False
@@ -358,9 +408,13 @@ object frmDXCluster: TfrmDXCluster
       end
     end
     object tabFkeys: TTabSheet
+      AnchorSideLeft.Control = pgDXCluster
+      AnchorSideTop.Control = pgDXCluster
+      AnchorSideRight.Control = pgDXCluster
+      AnchorSideBottom.Control = pgDXCluster
       Caption = 'F-keys'
-      ClientHeight = 394
-      ClientWidth = 699
+      ClientHeight = 397
+      ClientWidth = 706
       OnShow = tabFkeysShow
       object lblF1: TLabel
         AnchorSideLeft.Control = tabFkeys
@@ -613,25 +667,25 @@ object frmDXCluster: TfrmDXCluster
     Enabled = False
     Interval = 20000
     OnTimer = tmrSpotsTimer
-    Left = 440
-    Top = 368
+    Left = 384
+    Top = 240
   end
   object dlgDXfnt: TFontDialog
     MinFontSize = 0
     MaxFontSize = 0
-    Left = 488
-    Top = 368
+    Left = 456
+    Top = 304
   end
   object tmrAutoConnect: TTimer
     Enabled = False
     Interval = 3000
     OnTimer = tmrAutoConnectTimer
-    Left = 536
-    Top = 368
+    Left = 520
+    Top = 304
   end
   object popPreferences: TPopupMenu
     Left = 592
-    Top = 368
+    Top = 304
     object mnuCallalert: TMenuItem
       Caption = 'Callsign alert enabled'
       Checked = True
@@ -677,8 +731,8 @@ object frmDXCluster: TfrmDXCluster
     end
   end
   object acPreferences: TActionList
-    Left = 640
-    Top = 368
+    Left = 656
+    Top = 304
     object acFont: TAction
       Caption = 'Font'
       OnExecute = acFontExecute
@@ -700,7 +754,12 @@ object frmDXCluster: TfrmDXCluster
     Enabled = False
     Interval = 5000
     OnTimer = tmrStopScrollTimer
-    Left = 440
-    Top = 368
+    Left = 384
+    Top = 304
+  end
+  object tmrKeepAlive: TTimer
+    OnTimer = tmrKeepAliveTimer
+    Left = 456
+    Top = 240
   end
 end

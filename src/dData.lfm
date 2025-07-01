@@ -1162,4 +1162,19 @@ object dmData: TdmData
     Left = 392
     Top = 776
   end
+  object UpStat: TSQLQuery
+    FieldDefs = <>
+    BeforeOpen = WBeforeOpen
+    Transaction = trUpStat
+    Params = <>
+    Macros = <>
+    Left = 872
+    Top = 704
+  end
+  object trUpStat: TSQLTransaction
+    Active = False
+    Action = caNone
+    Left = 872
+    Top = 776
+  end
 end

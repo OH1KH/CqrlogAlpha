@@ -500,14 +500,14 @@ object frmMonWsjtx: TfrmMonWsjtx
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
     AnchorSideTop.Control = Owner
-    Left = 60
+    Left = 38
     Height = 32
     Top = 0
-    Width = 463
+    Width = 506
     AutoSize = True
     BorderWidth = 3
     ClientHeight = 32
-    ClientWidth = 463
+    ClientWidth = 506
     TabOrder = 3
     Visible = False
     OnClick = pnlSelectsClick
@@ -611,7 +611,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       AnchorSideBottom.Side = asrCenter
       Left = 316
       Height = 23
-      Hint = 'Show station USA state by FCC '#10'(this may show different than Cqrlog''s prefix based state view)'
+      Hint = 'Show station USA state '#10'(this may show different than Cqrlog''s prefix based state view)'#10'State table update initiates when file ~/.config/cqrlog/ctyfiles/usdbraw'#10'is older than 90 days.'#10'You can initiate update when ever by pressing Shift key while clicking'#10'on mouse right button.'
       Top = 5
       Width = 49
       BorderSpacing.Right = 2
@@ -640,13 +640,13 @@ object frmMonWsjtx: TfrmMonWsjtx
       OnMouseUp = chkDxMouseUp
     end
     object lblMode: TLabel
-      AnchorSideLeft.Control = chkDx
+      AnchorSideLeft.Control = chkDs
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = pnlSelects
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 423
+      Left = 466
       Height = 17
       Top = 8
       Width = 36
@@ -670,6 +670,23 @@ object frmMonWsjtx: TfrmMonWsjtx
       Layout = tlBottom
       ParentColor = False
       OnClick = pnlSelectsClick
+    end
+    object chkDs: TCheckBox
+      AnchorSideLeft.Control = chkDx
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = pnlSelects
+      AnchorSideTop.Side = asrCenter
+      Left = 411
+      Height = 23
+      Hint = 'Show DXCC status '#10'''n''=New country, ''b''=New band, ''m''=New mode, ''q''=Qsl needed'
+      Top = 5
+      Width = 43
+      Caption = 'Ds'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 7
+      OnClick = chkDsClick
+      OnMouseUp = chkDxMouseUp
     end
   end
   object pnlTrigPop: TPanel
@@ -767,13 +784,6 @@ object frmMonWsjtx: TfrmMonWsjtx
     Enabled = False
     OnTimer = tmrFollowTimer
     Left = 224
-    Top = 144
-  end
-  object tmrUSDB: TTimer
-    Enabled = False
-    Interval = 100
-    OnTimer = tmrUSDBTimer
-    Left = 104
     Top = 144
   end
   object tmrStartupDone: TTimer

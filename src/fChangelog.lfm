@@ -4,7 +4,7 @@ object frmChangelog: TfrmChangelog
   Top = 275
   Width = 798
   HorzScrollBar.Page = 174
-  VertScrollBar.Page = 429
+  VertScrollBar.Page = 90
   AutoScroll = True
   ClientHeight = 463
   ClientWidth = 798
@@ -15,14 +15,18 @@ object frmChangelog: TfrmChangelog
   Position = poScreenCenter
   LCLVersion = '3.8.0.0'
   object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 34
+    Height = 36
     Top = 0
     Width = 798
-    Align = alTop
+    Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
-    ClientHeight = 34
+    ClientHeight = 36
     ClientWidth = 798
     TabOrder = 0
     object Button1: TButton
@@ -38,11 +42,18 @@ object frmChangelog: TfrmChangelog
     end
   end
   object IpHtmlPanel1: TIpHtmlPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Panel1
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 2
-    Height = 425
-    Top = 36
+    Height = 423
+    Top = 38
     Width = 794
-    Align = alBottom
+    Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 2
     BorderSpacing.Top = 2
     BorderSpacing.Right = 2

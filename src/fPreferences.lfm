@@ -1,18 +1,18 @@
 object frmPreferences: TfrmPreferences
   Left = 230
-  Height = 609
+  Height = 695
   Top = 34
-  Width = 1041
+  Width = 1027
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1041
-  VertScrollBar.Page = 609
+  HorzScrollBar.Page = 1027
+  VertScrollBar.Page = 695
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 609
-  ClientWidth = 1041
+  ClientHeight = 695
+  ClientWidth = 1027
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   OnCloseQuery = FormCloseQuery
@@ -27,9 +27,9 @@ object frmPreferences: TfrmPreferences
     Height = 788
     Top = 0
     Width = 846
-    ActivePage = tabProgram
+    ActivePage = tabTRXcontrol
     Align = alClient
-    TabIndex = 0
+    TabIndex = 5
     TabOrder = 0
     OnChange = pgPreferencesChange
     object tabProgram: TTabSheet
@@ -2659,10 +2659,13 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 439
           Height = 34
+          Hint = 'When you define several rigs it is a good standard to define different TCP port to each rig.'#10'Like 4532, 4534, 4536 or 4532, 14532, 24532 etc.'
           Top = 73
           Width = 80
           MaxLength = 5
           NumbersOnly = True
+          ParentShowHint = False
+          ShowHint = True
           TabOrder = 7
           Text = '4532'
           OnChange = TRXParamsChange
@@ -3146,14 +3149,12 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 520
           Height = 23
-          Hint = 'When checked Power_ON command will be sent when initializing rig.'#10'This is done with extra rigctld command line argument "-C auto_power_on=1"'
+          Hint = 'When checked Power_ON command will be sent when initializing rig.'
           Top = 133
           Width = 131
           Caption = 'Rig pwr ON cmd'
-          Checked = True
           ParentShowHint = False
           ShowHint = True
-          State = cbChecked
           TabOrder = 14
           OnChange = TRXParamsChange
         end
@@ -5325,53 +5326,93 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Control = gbDXCAlert
         AnchorSideTop.Side = asrBottom
         Left = 6
-        Height = 100
+        Height = 148
         Top = 508
         Width = 600
         BorderSpacing.Left = 6
         BorderSpacing.Top = 1
         Caption = 'Connect'
-        ClientHeight = 98
+        ClientHeight = 146
         ClientWidth = 598
         TabOrder = 3
         object chkConToDXC: TCheckBox
           AnchorSideLeft.Control = gbDXCConnect
-          AnchorSideTop.Side = asrCenter
-          AnchorSideBottom.Control = gbDXCConnect
+          AnchorSideTop.Control = edtStartConCmd
+          AnchorSideTop.Side = asrBottom
           AnchorSideBottom.Side = asrBottom
           Left = 5
           Height = 23
-          Top = 75
+          Top = 97
           Width = 311
-          Anchors = [akLeft, akBottom]
           BorderSpacing.Left = 5
+          BorderSpacing.Top = 3
+          BorderSpacing.Bottom = 3
           Caption = 'Connect to DX cluster after program startup'
           TabOrder = 0
         end
         object edtStartConCmd: TEdit
           AnchorSideLeft.Control = gbDXCConnect
-          AnchorSideBottom.Control = chkConToDXC
+          AnchorSideTop.Control = lblSendCommands
+          AnchorSideTop.Side = asrBottom
           Left = 6
           Height = 34
-          Top = 40
+          Top = 60
           Width = 471
-          Anchors = [akLeft, akBottom]
           BorderSpacing.Left = 6
+          BorderSpacing.Top = 3
           BorderSpacing.Bottom = 1
           TabOrder = 1
         end
-        object Label51: TLabel
+        object lblSendCommands: TLabel
           AnchorSideLeft.Control = gbDXCConnect
-          AnchorSideTop.Control = gbDXCConnect
-          AnchorSideBottom.Control = edtStartConCmd
+          AnchorSideTop.Control = spnKeepAlive
+          AnchorSideTop.Side = asrBottom
           Left = 6
           Height = 17
-          Top = 19
+          Top = 40
           Width = 513
-          Anchors = [akLeft, akBottom]
           BorderSpacing.Left = 6
-          BorderSpacing.Bottom = 4
+          BorderSpacing.Top = 3
           Caption = 'Send these commands to telnet DXCluster when connected (use ; as delimiter)'
+        end
+        object chkKeepAlive: TCheckBox
+          AnchorSideLeft.Control = chkConToDXC
+          AnchorSideTop.Control = spnKeepAlive
+          AnchorSideTop.Side = asrCenter
+          Left = 5
+          Height = 23
+          Top = 9
+          Width = 169
+          BorderSpacing.Bottom = 4
+          Caption = 'Send <CR+LF> every'
+          TabOrder = 2
+        end
+        object lblAliveMins: TLabel
+          AnchorSideLeft.Control = spnKeepAlive
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = spnKeepAlive
+          AnchorSideTop.Side = asrCenter
+          Left = 240
+          Height = 17
+          Top = 12
+          Width = 262
+          BorderSpacing.Left = 3
+          Caption = 'minutes to keep telnet connection alive.'
+        end
+        object spnKeepAlive: TSpinEdit
+          AnchorSideLeft.Control = chkKeepAlive
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = gbDXCConnect
+          Left = 177
+          Height = 34
+          Top = 3
+          Width = 60
+          BorderSpacing.Left = 3
+          BorderSpacing.Top = 3
+          MaxValue = 60
+          MinValue = 5
+          TabOrder = 3
+          Value = 30
         end
       end
     end

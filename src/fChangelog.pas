@@ -22,6 +22,7 @@ type
   public
     { public declarations }
     Procedure ViewChangelog;
+    procedure ViewNewChangeLog;
     Procedure ViewEmptylog;
   end; 
 
@@ -33,7 +34,7 @@ implementation
 {$R *.lfm}
 
 { TfrmChangelog }
-uses dData;
+uses dData, dUtils;
 
 
 Procedure TfrmChangelog.ViewChangelog;
@@ -100,6 +101,17 @@ var
 Begin
   Self.Caption:='New log: Check settings!';
   IpHtmlPanel1.SetHtmlFromStr(e);
+end;
+procedure TfrmChangelog.ViewNewChangeLog;
+var
+    data : String;
+Begin
+     if dmUtils.GetDataFromHttp('https://raw.githubusercontent.com/OH1KH/CqrlogAlpha/refs/heads/main/src/changelog.html', data) then
+      begin
+        if (pos('NOT FOUND',upcase(data))<>0) then exit;
+        Self.Caption:='CqrlogAlpha - New version changelog';
+        IpHtmlPanel1.SetHtmlFromStr(data);
+      end;
 end;
 
 end.

@@ -89,6 +89,8 @@ var
   IgnoreQRZ : boolean = False;
   MvToRem   : boolean = True;
   County    : String;
+  tmp       : String;
+  CallCount : integer;
 
   procedure DoUpgrade;
   begin
@@ -156,7 +158,7 @@ var
     end;
 
     c_ErrMsg   := '';
-    c_SyncText := dbCall;
+    c_SyncText := IntToStr(CallCount)+': '+dbCall;
     Synchronize(@frmDatabaseUpdate.SynCallBook);
     c_callsign := dmUtils.GetIDCall(dbCall);
     dmUtils.GetCallBookData(c_callsign,c_nick,c_qth,c_address,c_zip,c_grid,c_state,c_county,c_qsl,c_iota,c_waz,c_itu,c_dok,c_ErrMsg);
@@ -263,23 +265,37 @@ var
     if (c_itu<>'') then
       dbITU := c_itu;
 
-    dmData.Q1.SQL.Text := 'update cqrlog_main set name=' + QuotedStr(
-      dbName) + ',qth=' + QuotedStr(dbQTH) + ',qsl_via=' +
-      QuotedStr(dbQSLVia) + ',county=' + QuotedStr(dbCounty) +
-      ',award=' + QuotedStr(dbAward) + ',state =' +
-      QuotedStr(dbState) + ',remarks=' + QuotedStr(dbRemQSO) +
-      ',iota='+QuotedStr(dbIota)+',waz='+QuotedStr(dbWAZ)+',itu='+QuotedStr(dbITU)+
-      ' where id_cqrlog_main = ' + IntToStr(dbId);
-    dmData.trQ1.StartTransaction;
-    if dmData.DebugLevel >= 1 then
-      Writeln(dmData.Q1.SQL.Text);
-    dmData.Q1.ExecSQL;
-    dmData.trQ1.Commit
+    tmp:='';
+    if   dbName      <>'' then tmp:='name='+QuotedStr(dbName);
+    if   dbQTH       <>'' then tmp:=tmp+',qth='+ QuotedStr(dbQTH);
+    if   dbQSLVia    <>'' then tmp:=tmp+',qsl_via='+ QuotedStr(dbQSLVia);
+    if   dbCounty    <>'' then tmp:=tmp+',county='+ QuotedStr(dbCounty);
+    if   dbAward     <>'' then tmp:=tmp+',award='+ QuotedStr(dbAward);
+    if   dbState     <>'' then tmp:=tmp+',state ='+ QuotedStr(dbState);
+    if   dbRemQSO    <>'' then tmp:=tmp+',remarks='+ QuotedStr(dbRemQSO);
+    if   dbIota      <>'' then tmp:=tmp+',iota='+QuotedStr(dbIota);
+    if   dbWAZ       <>'' then tmp:=tmp+',waz='+QuotedStr(dbWAZ);
+    if   dbITU       <>'' then tmp:=tmp+',itu='+QuotedStr(dbITU);
+
+    if tmp<>'' then
+     Begin
+      if tmp[1]=',' then tmp:=copy(tmp,2,length(tmp));  //starts always without comma
+      dmData.Q1.SQL.Text := 'update cqrlog_main set '
+      +tmp
+      +' where id_cqrlog_main = ' + IntToStr(dbId);
+      dmData.trQ1.StartTransaction;
+      if dmData.DebugLevel >= 1 then
+          Writeln(dmData.Q1.SQL.Text);
+      dmData.Q1.ExecSQL;
+      dmData.trQ1.Commit;
+      dmData.trQ1.Rollback;
+    end;
   end;
 
 begin
   FreeOnTerminate:= True;
   c_running := True;
+  CallCount:=0;
   try
     c_nick     := '';
     c_qth      := '';
@@ -294,13 +310,16 @@ begin
     MvToRem    := cqrini.ReadBool('NewQSO', 'MvToRem', True);
     c_SyncText := 'Working ...';
     Synchronize(@frmDatabaseUpdate.SynCallBook);
+    sleep(5100);
     while not dmData.qCallBook.EOF do
     begin
+      inc(CallCount);
       DoUpgrade;
       Sleep(1000);
       dmData.qCallBook.Next
     end;
     CloseW := True;
+    c_SyncText := 'Done!';
     Synchronize(@frmDatabaseUpdate.SynCallBook)
   finally
     c_running := False
@@ -352,8 +371,8 @@ begin
   if CanCancelAtStart then
    Begin
       c_running := False;
-      frmDatabaseUpdate.Close;
       dmData.RefreshMainDatabase();
+      Self.close;
    end
   else
    CancelUpdate := True;
@@ -366,24 +385,22 @@ begin
   QRZupdate;
   if not found then    //this should close cancelled update
    Begin
-      btnCancel.Click;
-      frmDatabaseUpdate.Close;
       c_running := False;
       dmData.RefreshMainDatabase();
+      Self.Close;
    end;
 end;
 
 procedure TfrmDatabaseUpdate.SynCallBook;
 begin
   try
-    pnlQRZ.Caption := 'Updating QSO with ' + c_SyncText;
+    pnlQRZ.Caption := 'Updating ' + c_SyncText;
     pnlQRZ.Repaint;
     if CloseW then
     begin
-      btnCancel.Click;
-      frmDatabaseUpdate.Close;
       c_running := False;
       dmData.RefreshMainDatabase();
+      Self.Close;
     end
   except
     on E: Exception do
@@ -435,7 +452,7 @@ begin
 
     found:=true;      //if id_cqrlog_main has been -1 make here true
     QRZ := TQRZThread.Create(True);
-    QRZ.Start
+    QRZ.Start;
   end
 end;
 

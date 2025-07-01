@@ -35,8 +35,8 @@ type
     btnSelect: TButton;
     btnTelConnect: TButton;
     btnWebConnect: TButton;
-    Button1: TButton;
-    Button2: TButton;
+    btnHlp: TButton;
+    btnHiddenTest: TButton;
     btnPreferences : TButton;
     dlgDXfnt: TFontDialog;
     edtCommand: TEdit;
@@ -51,7 +51,7 @@ type
     edtF8: TEdit;
     edtF9: TEdit;
     edtTelAddress: TEdit;
-    Label1: TLabel;
+    lblCommand: TLabel;
     lblShift: TLabel;
     lblF1: TLabel;
     lblF10: TLabel;
@@ -75,8 +75,8 @@ type
     MenuItem8: TMenuItem;
     mnuSkimAllowFreq: TMenuItem;
     mnuCallalert : TMenuItem;
-    Panel1: TPanel;
-    Panel2: TPanel;
+    pnlBottom: TPanel;
+    pnlTop: TPanel;
     pnlChat: TPanel;
     Panel4: TPanel;
     pgDXCluster: TPageControl;
@@ -86,6 +86,7 @@ type
     tabFkeys: TTabSheet;
     tabTelnet: TTabSheet;
     tabWeb: TTabSheet;
+    tmrKeepAlive: TTimer;
     tmrAutoConnect: TTimer;
     tmrSpots: TTimer;
     tmrStopScroll: TTimer;
@@ -94,7 +95,7 @@ type
     procedure acChatSizeExecute(Sender: TObject);
     procedure acFontExecute(Sender : TObject);
     procedure acProgPrefExecute(Sender : TObject);
-    procedure Button2Click(Sender: TObject);
+    procedure btnHiddenTestClick(Sender: TObject);
     procedure btnPreferencesClick(Sender : TObject);
     procedure edtF2Exit(Sender: TObject);
     procedure edtFExit(Sender: TObject);
@@ -117,6 +118,7 @@ type
     procedure tabTelnetMouseWheel(Sender: TObject; Shift: TShiftState;
       WheelDelta: Integer; MousePos: TPoint; var Handled: Boolean);
     procedure tmrAutoConnectTimer(Sender: TObject);
+    procedure tmrKeepAliveTimer(Sender: TObject);
     procedure tmrSpotsTimer(Sender: TObject);
     procedure tmrStopScrollTimer(Sender: TObject);
     procedure trChatSizeChange(Sender: TObject);
@@ -360,7 +362,7 @@ begin
   end;
 end;
 
-procedure TfrmDXCluster.Button2Click(Sender: TObject);  //this is debugger
+procedure TfrmDXCluster.btnHiddenTestClick(Sender: TObject);  //this is debugger
 var
   TelThread : TTelThread = nil;
 begin
@@ -475,7 +477,7 @@ begin
        trChatSize.Visible :=true;
        trChatSize.Cursor := crSizeWE;
        edtCommand.Visible := false;
-       label1.Caption := 'ChatSize';
+       lblCommand.Caption := 'ChatSize';
        if dmData.DebugLevel >=1 then Writeln('Chat sizing AC');
 end;
 
@@ -809,6 +811,15 @@ begin
   frmNewQSO.ReturnToNewQSO
 end;
 
+procedure TfrmDXCluster.tmrKeepAliveTimer(Sender: TObject);
+begin
+  tmrKeepAlive.Enabled:=False;
+  if (cqrini.ReadBool('DXCluster', 'KeepAlive', False) and (ConTelnet = True)) then
+   if lTelnet.Connected then
+    lTelnet.SendMessage(#13#10);
+  tmrKeepAlive.Enabled:=True;
+end;
+
 procedure TfrmDXCluster.lConnect(aSocket: TLSocket);
 begin
   btnTelConnect.Caption := 'Disconnect';
@@ -1023,7 +1034,7 @@ begin
       trChatSize.Visible := false;
       trChatSize.Cursor :=  crDefault;
       edtCommand.Visible := true;
-      label1.Caption := 'Command:';
+      lblCommand.Caption := 'Command:';
       cqrini.WriteInteger('DXCluster','ChatSize',trChatSize.Position);
       pnlChat.Height := trChatSize.Position;
       if dmData.DebugLevel >=1 then Writeln('Chat sizing Click');
@@ -1753,7 +1764,8 @@ begin
     gcfgIgnoreBandFreq := cqrini.ReadBool('BandMap','IgnoreBandFreq',True);
     gcfgUseDXCColors := cqrini.ReadBool('BandMap','UseDXCColors',False);
     gcfgClusterColor := cqrini.ReadInteger('BandMap','ClusterColor',clBlack);
-    gcfgNotShow := cqrini.ReadString('DXCluster','NotShow','')
+    gcfgNotShow := cqrini.ReadString('DXCluster','NotShow','');
+    tmrKeepAlive.Interval :=  cqrini.ReadInteger('DXCluster', 'KeepAliveTime', 30)*60*1000; //target is minutes
   finally
     LeaveCriticalSection(csDXCPref)
   end

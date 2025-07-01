@@ -19,6 +19,7 @@ type TVFO = (VFOA,VFOB);
 type
   TExplodeArray = Array of String;
 
+
 type TRigControl = class
     RigctldConnect : TLTCPComponent;
     rigProcess     : TProcess;
@@ -50,6 +51,7 @@ type TRigControl = class
     fCompoundPoll   : Boolean;
     fVoice          : Boolean;
     fIsNewHamlib    : Boolean;
+    fModelName      : string;
     fGetSplitTX     : Boolean;
     fRigSplitActive : Boolean;
     fPollTimeout    : integer;
@@ -57,7 +59,7 @@ type TRigControl = class
     fPwrPcnt        : String;   //not actually %, but value 0.0 .. 1.0
     fPwrmW          : String;
     fRfPwrMtrWtts   : String;
-    fMemRfPwrMtrWtts: String;   //last TX value of meter.
+    fMemRfPwrMtrWtts: String;   //last TX value <>0W of meter
     fGetRFPower     : boolean;
     fMemGetRFP      : boolean;
     fSetRFPower     : boolean;
@@ -71,6 +73,7 @@ type TRigControl = class
     fSupGetLevels   : String;
     fSupGetFuncs    : String;
     fPtt            : String;
+    fPttTail        : integer;
     fResponseTimeout: Boolean;
     AllowCommand    : integer; //for command priority
     ErrorRigctldConnect : Boolean;
@@ -121,6 +124,7 @@ public
     property Voice      : Boolean read fVoice;                               //can rig launch voice memories
     property IsNewHamlib: Boolean read fIsNewHamlib;                         //Is Hamlib version date higer than 2023-06-01
                                                                              //not used internally, but can give info out
+    property ModelName  : string  read fModelName;                           //rig model
     property Power      : Boolean read fPower;                               //can rig switch power
     property PowerON      : Boolean write fPowerON;                          //may rig switch power on at start
     property CanGetVfo  : Boolean read fGetVfo;                              //can rig show vfo (many Icoms can not)
@@ -233,6 +237,7 @@ begin
   fRfPwrMtrWtts        := '';
   fMemRfPwrMtrWtts     := '0';
   fPtt                 := '';
+  fPttTail             := 0;
   tmrRigPoll.OnTimer       := @OnRigPollTimer;
   RigctldConnect.OnReceive := @OnReceivedRigctldConnect;
   RigctldConnect.OnConnect := @OnConnectRigctldConnect;
@@ -650,10 +655,10 @@ var
   f   : Double;
   Hit : boolean;
   tmp : string;
-  MaxArg: integer;
-
+  MaxArg : integer;
 begin
   msg:='';
+  Hit:=false;
   while (( aSocket.GetMessage(msg) > 0 ) and (not fResponseTimeout)) do
   begin
     msg := StringReplace(upcase(trim(msg)),#$09,' ',[rfReplaceAll]); //note the char case upper for now on! Remove TABs
@@ -694,6 +699,13 @@ begin
             fMemGetRFP   := fGetRFPower; //this is to remember rig's answer
             fSetRFPower  := (pos('CAN GET MW2POWER: Y',  Imsg)>0);
             fMemSetRFP   := fSetRFPower; //this is to remember rig's answer
+            if pos('MODEL NAME:',Imsg)>0 then
+                                         begin
+                                          fModelName   := copy(Imsg,
+                                                               (pos('MODEL NAME:',Imsg)+12),
+                                                               ((pos('MFG NAME:',Imsg)-1)-(pos('MODEL NAME:',Imsg)+12))
+                                                               );
+                                         end;
 
           if fDebugMode then
                  Begin
@@ -755,6 +767,8 @@ begin
            else
                AllowCommand:=0;
         end;
+       if Hit then
+             fPollCount :=  fPollTimeout;
      end //init
   else
      Begin
@@ -778,7 +792,9 @@ begin
               Hit:=true;
               fRfPwrMtrWtts:= trim(a[i+1]);
               if (fRfPwrMtrWtts<>'0') and (fRfPwrMtrWtts<>'') then
-                  fMemRfPwrMtrWtts:= fRfPwrMtrWtts;
+                                                 // fMemRfPwrMtrWtts:= floattostr((strtofloat(fMemRfPwrMtrWtts)+ strtofloat(fRfPwrMtrWtts))/2);   //average of two
+               if strtofloat(fRfPwrMtrWtts)>strtofloat(fMemRfPwrMtrWtts) then
+                                                                       fMemRfPwrMtrWtts:=fRfPwrMtrWtts;      //peak value
              end;
 
            if (( not Hit ) and (pos('RFPOWER',a[i])>0) and (pos('RFPOWER_MET',a[i])=0) and (i+2 <= MaxArg)) then //must check that array a[] has i+2 members
@@ -883,6 +899,12 @@ begin
 
               'PTT:'                  : Begin
                                          fPtt:= b[1];
+                                         if fPtt='1' then
+                                            fPttTail := 3;      //delay to zero RF-meter value
+                                         if fPttTail>0 then
+                                            dec(fPttTail)
+                                          else
+                                            fMemRfPwrMtrWtts:='0';
                                         end;
 
               'RPRT'                  : Begin
@@ -895,8 +917,11 @@ begin
         else  //Hit from first block (RF)
          Allowcommand:=1;
      end; //max arg loop
+    if Hit then
+             fPollCount :=  fPollTimeout;
    end; //other than init
   end;  //while rcvd
+
 end;
 
 procedure TRigControl.OnRigPollTimer(Sender: TObject);
@@ -1102,18 +1127,16 @@ begin
                 end;
             end;
 
-       if fGetRFPower then   //if it is possible and allowed by user
+       if fGetRFPower and fGetLevel then   //if it is possible and allowed by user
            Begin
-             if fGetLevel and (Pos('RFPOWER ', fSupGetLevels)>0) then
-               rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
-
-             if fGetLevel and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
-               rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
-
-             rigCommand.Add('+\get_ptt'+VfoStr);  //PTT controls TRXCOntrol Power out display
+            rigCommand.Add('+\get_ptt'+VfoStr);  //PTT controls TRXCOntrol Power out display
+            if (fPtt='0') and (Pos('RFPOWER ', fSupGetLevels)>0) then
+                       rigCommand.Add('+\get_level'+VfoStr+' RFPOWER'+LineEnding);
+            if (fPtt='1') and (Pos('RFPOWER_METER_WATTS', fSupGetLevels)>0) then
+                       rigCommand.Add('+\get_level'+VfoStr+' RFPOWER_METER_WATTS'+LineEnding);
            end
         else
-          fPtt:='';
+           fPtt:='';
 
      AllowCommand:=-1; //waiting for reply
      fPollCount :=  fPollTimeout;

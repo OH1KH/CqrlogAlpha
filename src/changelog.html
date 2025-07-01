@@ -11,7 +11,27 @@
     <strong>CQRLOG α (Alpha)</strong><br>
     What is new:
     <ul style="list-style: square;text-align:left; color: green;" >
-    <li>(136) 2025-05-01</li><ul>
+    <li>(137)</li><ul>
+    <li>NewQSO:Program/Configuration storage settings/Column size/posistion/Localcomputer only:Show qso B4 with call:Fix:
+	<br>When Cqrlog started immediate opening of Wsjt-remote, or imeediate close caused column position/width settings disappear.
+	<br>(Tnx for bug report and fix: Stefan, DG0OAT)
+    <li>RigControl:Fix: Hamlib error with power reading from IC-7300 on 4M band (must divide by 2)</li>
+    <li>RigControl:Fix: Create PTT was not good idea. Ptt request, peak power and PttTail delay added</li>
+    <li>RigControl:Fix: Create PTT state from RF-Watts. (Zero means Ptt off)</li>
+    <li>WsjtxMonitor:Map:Fix: DXCC status of callsign, more fixes. </li>
+    <li>WsjtxMonitor:Map:Fix: DXCC status of callsign. RigConrol:Fix timeout resets </li>	
+    <li>Minor fixes</li>
+    <li>WsjtxMonitor:Map:Add: DXCC status of callsign with one letter n,b,m,q (like RBNmonitor has)</li>
+    <li>DatabaseUpdate:Fix: when dxcc_ref=! (call/MM) found does not halt </li>
+    <li>TRXControl:Fix: 'change of band clears XitRit' was always on regardless checkbox </li> 
+    <li>NewQSO:Fix: small fix to bottom layout </li>
+    <li>Preferences:Fix: set default rig and rotor "Host" to empty value (=no rig , no rotor then)
+    <li>DXCluster:Add: send CR+LF to keep telnet connection alive. Settings in preferences/DXCluster</li>
+    <li>About:Add when new version splash shows new version changelog from github</li>
+    <li>WSJT:Fix: some fixes to fProgress source  </li>
+    <li>WSJT:Fix: separated US state DB update to fProgress unit with own database connection </li>
+    <li>Changelog:Fix: layout fix (when resized) </li>
+    </ul><li>(136) 2025-05-01</li><ul>
     <li>WSJT:Add: added warning not to close remote during US state table update.
 	or receive decodes during it. Both will fail update. Fix this bug later...</li>
     <li>NewQso:Fix: close button text and hint text</li>

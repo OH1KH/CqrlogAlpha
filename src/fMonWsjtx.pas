@@ -14,6 +14,7 @@ type
   { TfrmMonWsjtx }
 
   TfrmMonWsjtx = class(TForm)
+    chkDs: TCheckBox;
     chkFFlt: TCheckBox;
     chkCbCQ: TCheckBox;
     chkdB: TCheckBox;
@@ -75,10 +76,10 @@ type
     tbFollow: TToggleBox;
     tbTCAlert: TToggleBox;
     tmrStartupDone: TTimer;
-    tmrUSDB: TTimer;
     tmrFollow: TTimer;
     tmrCqPeriod: TTimer;
     procedure btFtxtNameClick(Sender: TObject);
+    procedure chkDsClick(Sender: TObject);
     procedure chkFFltChange(Sender: TObject);
     procedure chkFFltClick(Sender: TObject);
     procedure chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
@@ -98,6 +99,7 @@ type
     procedure chknoHistoryChange(Sender: TObject);
     procedure chkStopTxChange(Sender: TObject);
     procedure chkUStateClick(Sender: TObject);
+    procedure StateCallCount(var c:integer);
     procedure chkUStateMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure cmAnyClick(Sender: TObject);
@@ -143,13 +145,8 @@ type
     procedure tbTCAlertChange(Sender: TObject);
     procedure tmrCqPeriodTimer(Sender: TObject);
     procedure tmrStartupDoneTimer(Sender: TObject);
-    procedure tmrUSDBTimer(Sender: TObject);
     procedure tmrFollowTimer(Sender: TObject);
   private
-    DPstarted : integer;     //fcc states download process status
-    DProcess  : TProcess;
-    tfIn      : TextFile;
-    C_MYZIP   : String;
     CqState   : string;  //use in map mode to join state and Cqdir
     FileFilter  : TStringList;
     procedure AddColorStr(s: string; const col: TColor = clBlack; c:integer =0;r:integer =-1);
@@ -175,9 +172,8 @@ type
     procedure PrintDecodedMessage;
     function getCurMode(sMode: String): String;
     procedure extcqprint;
-    procedure BuildUSDBState;
-    procedure USDBdownLoadInit;
     Procedure ReColorsgMonitor(Fc,Bc:tColor;Boff:Boolean);
+    Procedure DxccStatus(adif:word;CB,Cm:String;var R:String);
     function UsCallState(call:string;var StatClr:TColor):string;
     { private declarations }
   public
@@ -195,8 +191,6 @@ type
     procedure BufDebug(MyHeader,MyBuf:string);
     function HexStrToStr(const HexStr: string): string;
     function StrToHexStr(const S: string): string;
-    procedure CloseUSDBProcess;
-    procedure USDBProcessFailed;
     { public declarations }
   end;
 
@@ -210,16 +204,7 @@ const
   bmW = 10;
   bmH = 10;
 
-  //C_STATEFILE = 'ctyfiles/fcc_states.tab';
-  //C_STATE_SOURCE = 'ctyfiles/EN.dat';
-  //C_URL = 'ftp://wirelessftp.fcc.gov/pub/uls/complete/l_amat.zip';
-  //C_URL ='http://localhost/l_amat.zip'; //for testing;
-  //C_MYZIP = 'ctyfiles/l_amat.zip';
-
   C_STATE_SOURCE = 'ctyfiles/usdbraw';
-  C_URL = 'ftp://ftp.w1nr.net/usdbraw.gz';
-  C_MY_SCRIPT = 'ctyfiles/usdb_get.sh';
-
 
 type //DL7OAP: define type for grid coloring
  TsgMonitorAttributes = Record // saves the attributes textcolor, backgroundcolor for stringgrid
@@ -286,6 +271,7 @@ uses fNewQSO, dData, dUtils, dDXCC, fWorkedGrids, uMyIni, dDXCluster,fProgress;
 procedure TfrmMonWsjtx.RunVA(Afile: string);
 const
   cAlert = 'voice_keyer/voice_alert.sh';
+
 var
    AProcess: TProcess;
 begin
@@ -342,7 +328,7 @@ begin
              sgMonitor.Cells[c,r]:= s;  //trim ??
              sgMonitorAttributes[c,r].FG_Color:=col;
              sgMonitorAttributes[c,r].BG_Color:=clWhite;
-             if (chkMap.Checked) and (c in  [3,4,5]) then
+             if (chkMap.Checked) and (not ChkCbCq.Checked) and (c in  [3,4,5]) then   //CQ background printing fails if Cqs are colored back to wsjtx. There are none :)
                begin
                 sgMonitorAttributes[c,r].BG_Color:=UsedBkgCqCol; //global var
                 if (c=5) then UsedBkgCqCol:=clWhite;  //reset for next
@@ -832,6 +818,7 @@ begin
       chknoTxt.Visible := False;
       chknoTxt.Checked := False;
       chknoHistory.Checked := True;
+      chkDs.Visible:= True;
       chkCbCQ.Checked := cqrini.ReadBool('MonWsjtx', 'ColorBacCQkMap', False);
       chkdB.Checked   := cqrini.ReadBool('MonWsjtx', 'ShowdB', False);
       chkFlt.Checked  := cqrini.ReadBool('MonWsjtx', 'MapFilter', False);
@@ -858,6 +845,7 @@ begin
       cbflw.Visible := True;
       chknoTxt.Visible := True;
       chknoHistory.Visible := True;
+      chkDs.Visible:= False;
       sgMonitor.Columns.Items[0].Visible:= true;
       sgMonitor.Columns.Items[1].Visible:= true;
       sgMonitor.Columns.Items[7].Visible:= true;
@@ -877,6 +865,23 @@ begin
       if LocalDbg then Writeln('Reset 2click call: sTx unchecked');
     end;
 end;
+procedure TfrmMonWsjtx.StateCallCount(var c:integer);
+begin
+      if dmData.trQstate.Active then dmData.trQstate.Rollback;
+      dmData.trQstate.StartTransaction;
+      dmData.Qstate.SQL.Text := 'select count(callsign) as c from cqrlog_common.states';
+      if LocalDbg then  Writeln(dmData.Qstate.SQL.Text);
+      dmData.Qstate.open;
+      c:= dmData.Qstate.FieldByName('c').AsInteger;
+      dmData.trQstate.Rollback;
+      dmData.Qstate.Close;
+      sgMonitor.InsertRowWithValues(sgMonitor.rowcount , ['']);
+      AddColorStr(IntToStr(c),clBlack,3,sgMonitor.rowcount-1);
+      AddColorStr('ca',clBlack,4,sgMonitor.rowcount-1);
+      AddColorStr('ll',clBlack,5,sgMonitor.rowcount-1);
+      AddColorStr('in',clBlack,6,sgMonitor.rowcount-1);
+      AddColorStr('DB',clBlack,7,sgMonitor.rowcount-1);
+end;
 
 procedure TfrmMonWsjtx.chkUStateClick(Sender: TObject);
 
@@ -892,7 +897,7 @@ var
   c                : integer=0;
 begin
   cqrini.WriteBool('MonWsjtx', 'UStates', chkUState.Checked);
-  if (Sender.ClassNameIs('TfrmMonWsjtx')) then   //user init
+  if (Sender.ClassNameIs('TfrmNewQso')) then   //user init
                                           c:= -1;
   if (chkUState.Checked or (c=-1)) then
     Begin
@@ -916,15 +921,7 @@ begin
                     +#13+#13+'(More info: Help/Digital modes: wjstx/Checking "USt”)' ;
               if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
                 Begin
-                 if FileExists(SourceFile) then DeleteFile(SourceFile);
-                 USDBdownLoadInit;
-                 if not FileExists(SourceFile) then  //when back here should have new SourceFile
-                  begin
-                    chkUState.Checked := false;
-                    exit;
-                  end
-                  else //populate database
-                   BuildUSDBState;
+                 frmProgress.UpdateUSDBState(SourceFile); //direct this via NewQSO so that closing WSJT remote does not kill it's owner
                 end
                else
                    if (c=-2) then
@@ -934,36 +931,26 @@ begin
                           end
 
             end;
+       StateCallCount(c);
 
-      if dmData.trQstate.Active then dmData.trQstate.Rollback;
-      dmData.trQstate.StartTransaction;
-      dmData.Qstate.SQL.Text := 'select count(callsign) as c from cqrlog_common.states';
-      if LocalDbg then  Writeln(dmData.Qstate.SQL.Text);
-      dmData.Qstate.open;
-      c:= dmData.Qstate.FieldByName('c').AsInteger;
-      dmData.trQstate.Rollback;
-      dmData.Qstate.Close;
-      sgMonitor.InsertRowWithValues(sgMonitor.rowcount , ['']);
-      AddColorStr(IntToStr(c),clBlack,3,sgMonitor.rowcount-1);
-      AddColorStr('ca',clBlack,4,sgMonitor.rowcount-1);
-      AddColorStr('ll',clBlack,5,sgMonitor.rowcount-1);
-      AddColorStr('in',clBlack,6,sgMonitor.rowcount-1);
-      AddColorStr('DB',clBlack,7,sgMonitor.rowcount-1);
-      if c<500000 then
+    end;
+  if (chkUState.Checked and (c<1000000)) then
        begin
         msg := 'Could it be that database does not have all US callsigns?'+#13+
-               'Found '+IntToStr(c)+' callsigns. '+#13+ 'Rebuild? (NO = use as is)';
+               'Found '+IntToStr(c)+' callsigns. '+#13+ 'Try to rebuild? (NO = use as is)';
         if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
-            BuildUSDBState;
+           begin
+            frmProgress.BuildUSDBState;
+            StateCallCount(c);
+           end
        end;
-    end;
 end;
 
 procedure TfrmMonWsjtx.chkUStateMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
     If (Button = mbRight) and (Shift=[ssShift]) then        //asks update DB by user event
-            chkUStateClick(Self);
+            chkUStateClick(frmNewQso);    //fake with form NewQso name
 end;
 procedure TfrmMonWsjtx.cbflwChange(Sender: TObject);
 begin
@@ -1041,7 +1028,7 @@ var
 begin
   if frmNewQSO.edtName.Text <> '' then
   begin
-    My := Upcase('Tu ' + frmNewQSO.edtName.Text + ' 73');
+    My := Upcase('TU ' + copy(frmNewQSO.edtName.Text,1,7) + ' 73');
     if length(My) < 14 then
     begin
       SendFreeText(My);
@@ -1051,6 +1038,11 @@ begin
     else
     btFtxtName.Visible:=false;
   end;
+end;
+
+procedure TfrmMonWsjtx.chkDsClick(Sender: TObject);
+begin
+  cqrini.WriteBool('MonWsjtx', 'DxStatus',chkDs.Checked);
 end;
 
 procedure TfrmMonWsjtx.chkFFltChange(Sender: TObject);
@@ -1122,6 +1114,7 @@ end;
 procedure TfrmMonWsjtx.chkCbCQChange(Sender: TObject);
 begin
   cqrini.WriteBool('MonWsjtx', 'ColorBacCQkMap', chkCbCQ.Checked);
+  chkds.Enabled:=not chkCbCQ.Checked;     //DXCC status printing fails if Cqs are colored back to wsjtx
 end;
 
 procedure TfrmMonWsjtx.chknoTxtChange(Sender: TObject);
@@ -1403,7 +1396,7 @@ begin
   //DL7OAP
   setDefaultColorSgMonitorAttributes;
   sgMonitor.DefaultDrawing:= True; // setting to true to use DrawCell-Event for coloring
-  DPstarted :=0;
+
 end;
 
 procedure TfrmMonWsjtx.FormDropFiles(Sender: TObject;
@@ -1461,6 +1454,7 @@ begin
   tbFollow.Checked := cqrini.ReadBool('MonWsjtx', 'Follow', False);
   edtFollowCall.Text := uppercase(cqrini.ReadString('MonWsjtx', 'FollowCall', ''));
   chkMap.Checked := cqrini.ReadBool('MonWsjtx', 'MapMode', False);
+  chkDs.Checked := cqrini.ReadBool('MonWsjtx', 'DxStatus', False);
   if ((trim(edtFollowCall.Text) = '') and tbFollow.Checked) then
     tbFollow.Checked := False; //should not happen, chk it here
   LockFlw := False;
@@ -1572,11 +1566,12 @@ procedure TfrmMonWsjtx.AddOtherMessage(Time,Message, Reply: string;Df,Sr:integer
 var
   msgList: TStringList;
   index: integer;
-  ClLine : char;
+  ClLine : String = '';
   adif:integer;
   pfx:string = '';
   msgRes:string = '';
   StatClr: Tcolor;
+  dxinfo : string = '';
 begin
   Message := LineFilter(Message);
 
@@ -1684,12 +1679,18 @@ begin
               PrintLoc(msgLocator, timeToAlert, msgTime);
               if frmWorkedGrids.GridOK(msgLocator) then  AddXplanetList(msgCall,msgLocator);
             end;
+            adif:= dmDXCC.id_country(msgCall, Now(), pfx, msgRes);
+
+            if cqrini.ReadBool('MonWsjtx', 'DxStatus', False) and (not ChkCbCq.Checked) then
+                                           DxccStatus(adif,CurBand,CurMode,ClLine);
+
+
             //PCallColor closes parenthesis(not-CQ ind) with same color as it was opened with callsign
-            AddColorStr(ClLine, clBlack,6, sgMonitor.rowCount-1);//make in-qso indicator stop
+            AddColorStr(ClLine, clBlack,6,sgMonitor.rowCount-1);//make in-qso indicator stop
 
             //here
              if (chkUState.Checked) then
-              adif:= dmDXCC.id_country(msgCall, Now(), pfx, msgRes);
+
               case adif of
                 6,9,103,110,166,202,285,291:
                                                Begin
@@ -2345,7 +2346,8 @@ end;
 procedure TfrmMonWsjtx.PrintDecodedMessage;
 Var
    i      : integer;
-  freq,le : string;
+  freq,le,
+  tmp     : string;
 StatClr   : Tcolor;
 
 begin
@@ -2436,43 +2438,60 @@ begin
           end;
          end;
 
-      if (chkMap.Checked and (StatClr<>clBlack))  then  //there is US state to print to Map
+      if chkMap.Checked then
        Begin
-        CqState:= copy(msgRes,5,2);
-         AddColorStr(CqState, StatClr,7,sgMonitor.rowCount-1);
-       end;
+         if  (StatClr<>clBlack)  then  //there is US state to print to Map
+           Begin
+            CqState:= copy(msgRes,5,2);
+             AddColorStr(CqState, StatClr,7,sgMonitor.rowCount-1);
+           end;
 
+         if cqrini.ReadBool('MonWsjtx', 'DxStatus', False) and (not ChkCbCq.Checked)   then
+           Begin
+            tmp:=' ';
+            DxccStatus(dxcc_number_adif,CurBand,CurMode,tmp);
+            AddColorStr(tmp,clBlack,6,sgMonitor.rowCount-1);
+           end;
+
+       end;
      if LocalDbg then
        Writeln('My continent is:', mycont, '  His continent is:', cont);
 
       if CqDir <> '' then
-       if ((mycont <> '') and (cont <> '')) then
-         //we can do some comparisons of continents
-         begin
-         if not dmUtils.IsHeDx(msgCall,CqDir) then
-           //I'm not DX for caller: color to warn directed call
-           //CQ NOT directed to my continent: color to warn directed call
-           extcqprint;
-         end
-         else  // should be ok to answer this directed cq
-          if ((not chkMap.Checked) and (not chkCbCQ.Checked))  then
-           //AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
-           //space prefix is for what? forgot that
-           //AddColorStr(copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
+       begin
+             if ((mycont <> '') and (cont <> '')) then
+                 //we can do some comparisons of continents
+               begin
+               if not dmUtils.IsHeDx(msgCall,CqDir) then
+                 //I'm not DX for caller: color to warn directed call
+                 //CQ NOT directed to my continent: color to warn directed call
+                 extcqprint;
+               end
+             else  // should be ok to answer this directed cq
+              begin
+               if ((not chkMap.Checked) and (not chkCbCQ.Checked))  then
+                begin
+                 //AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
+                 //space prefix is for what? forgot that
+                 //AddColorStr(copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', StatClr,6, sgMonitor.rowCount-1);
 
-           AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', clBlack,6, sgMonitor.rowCount-1)
-       else
-        begin
-         // we can not compare continents, but it is directed cq. Best to warn with color anyway
-         extcqprint;
-        end
-     else
+                 AddColorStr(' ' + copy(PadRight(msgRes, CountryLen), 1, CountryLen) + ' ', clBlack,6, sgMonitor.rowCount-1)
+                end
+               else
+                begin
+                 // we can not compare continents, but it is directed cq. Best to warn with color anyway
+                 extcqprint;
+                end
+              end
+      end
+     else    // CqDir <> ''
+      begin
        // should be ok to answer this is not directed cq
          if ((not chkMap.Checked) and (not chkCbCQ.Checked))  then
              Begin
               AddColorStr(copy(PadRight(msgRes, CountryLen), 1, CountryLen)+' ', StatClr,6, sgMonitor.rowCount-1);
              end;
-
+      end;
 
 
    if (not chkMap.Checked) then
@@ -2491,8 +2510,8 @@ begin
        else
          AddColorStr(msgRes, clBlack,7 ,sgMonitor.rowCount-1);     //something else...can't be
      end;
-   end //not Map mode
-     else
+    end //not Map mode
+   else
       if chkMap.Checked and chkSort.Checked  then
              Begin
                    sgMonitor.SortColRow(true,cqrini.ReadInteger('MonWsjtx', 'SortCol', 1),0,sgMonitor.RowCount-1);
@@ -2601,389 +2620,6 @@ begin
    end;
 end;
 
-procedure TfrmMonWsjtx.tmrUSDBTimer(Sender: TObject);
-Var
-  sz : integer;
-begin
-  tmrUSDB.Enabled:=False;
-   chkUState.Enabled:= false;
-          //if DProcess <> nil then if LocalDbg then Writeln('Dprocess running');
-case  DPstarted of
-          0:exit;
-
-          1: begin
-             if FileExists(dmData.HomeDir+C_MYZIP) then
-              Begin
-                sz:=FileSize(dmData.HomeDir+C_MYZIP) div 1000000;
-                frmProgress.lblInfo.Caption:= 'Loading '+IntToStr(sz)+'M';
-                frmProgress.DoPos(sz);
-                Application.ProcessMessages;
-                //if LocalDbg then Writeln('Loading file');
-                tmrUSDB.Enabled:=True;
-              end
-          end;
-
-          2: begin
-               //if LocalDbg then Writeln('Doing gunzip ... ');
-               frmProgress.lblInfo.Caption:= 'Gunzip ...';
-               frmProgress.DoJump(1);
-               Application.ProcessMessages;
-               tmrUSDB.Enabled:=True;
-              end;
-
-          3: begin
-              // if LocalDbg then Writeln('Doing DB populate ... ');
-               tmrUSDB.Enabled:=True;
-             end;
-
-        else
-              begin
-              // if LocalDbg then Writeln('DPstarted > 3');
-               tmrUSDB.Enabled:=False;
-               frmProgress.lblInfo.Caption:= 'Done!';
-               for sz:=0 to 100 do
-               Begin
-                 frmProgress.ShowOnTop;
-                 sleep(10);
-                 Application.ProcessMessages;
-               end;
-               CloseUSDBProcess;
-              end;
-          end;
-end;
-
-procedure  TfrmMonWsjtx.BuildUSDBState;
-var
-  s,t: string;
-  p,r: longint;
-  l    :integer;
-begin
-  r:=0; p:=0; l:=0;
-  if not FileExists(dmData.HomeDir+C_STATE_SOURCE) then
-   Begin  //failed download
-    CanCloseUSDBProcess:=true;
-    CloseUSDBProcess;
-    chkUState.Checked := false;
-    exit;
-   end;
-
-  ShowMessage('Do not close WSJT remote while US state update is running!'+LineEnding+LineEnding
-               +'There is a known problem that update will fail if you receive decodes during update.'+LineEnding
-               +'Therefore set rig to frequency where there is nothing to decode or keep WSJT-X closed'+LineEnding
-               +'when entering to WSJT remote and start US state update.'+LineEnding
-               +'(this may be fixed later)');
-  CanCloseUSDBProcess:=false;
-  DPstarted:=3;
-  tmrUSDB.Enabled:=True;
-  frmProgress.ShowOnTop;
-  frmProgress.DoInit(350,1);
-  frmProgress.DoStep('Abt 1,5M calls takes a while...');
-  Application.ProcessMessages;
-  sleep(100);
-  AssignFile(tfIn,dmData.HomeDir+C_STATE_SOURCE);
-   try
-    reset(tfIn);
-    if LocalDbg then Writeln('Reading ',dmData.HomeDir+C_STATE_SOURCE,' ...');
-
-    try
-        try
-         //drop old table here
-          dmData.Qstate.SQL.Text := 'DROP INDEX IF EXISTS callsign ON cqrlog_common.states';
-          if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
-          dmData.Qstate.ExecSQL;
-          dmData.Qstate.SQL.Text := 'truncate table cqrlog_common.states';
-          if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
-          dmData.Qstate.ExecSQL;
-          dmData.Qstate.SQL.Text := 'CREATE UNIQUE INDEX callsign ON cqrlog_common.states(callsign)';
-          if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
-          dmData.Qstate.ExecSQL;
-          dmData.trQstate.Commit;
-        except
-         on E : Exception do
-                        begin
-                          Application.MessageBox(PChar('State table cleanup crashed with this error:'+LineEnding+E.Message),'Error',mb_ok+mb_IconError);
-                          USDBProcessFailed;
-                          exit;
-                        end
-        end
-    finally
-      if dmData.trQstate.Active then dmData.trQstate.Rollback;
-    end;
-    //unfortunately W1NR data has same duplicates as FCC's file l_amat.zip. We need use "replace" not "insert"
-
-    //if you want also qth to database table release below and comment out other one
-    //Adding also qth to table will increase loading time abt 20%
-     //dmData.Qstate.SQL.Text := 'replace into cqrlog_common.states (callsign,call_qth,call_state) values ';
-
-    //just callsign and state to table
-     dmData.Qstate.SQL.Text := 'replace into cqrlog_common.states (callsign,call_state) values ';
-
-    try
-     while not eof(tfIn) do
-     begin
-      readln(tfIn, s);
-      if s<>'' then
-      begin
-        //if you want also qth to database table release this below and comment out other one
-        {
-       //unfortunately qth names in file may contain ' or " chars, replace them with space
-        s:=StringReplace(s,#39,' ',[rfReplaceAll]);
-        s:=StringReplace(s,'"',' ',[rfReplaceAll]);
-        s:=StringReplace(s,'|',#39+#44+#39,[rfReplaceAll]);
-        try
-           dmData.Qstate.SQL.Text := dmData.Qstate.SQL.Text
-                                    +'('+#39+s+#39+')';
-          }
-
-         //{
-        //just callsign and state to table
-        try
-           dmData.Qstate.SQL.Text := dmData.Qstate.SQL.Text
-                                    +'('+#39+ExtractWord(1,s,['|'])+#39+','+#39+ExtractWord(3,s,['|'])+#39+')';
-         //}
-
-          inc(r);inc(l);
-          if l<500 then
-                      Begin
-                        dmData.Qstate.SQL.Text := dmData.Qstate.SQL.Text+',';
-                      end
-                else
-                      Begin
-                        l:=0;
-                        Application.ProcessMessages;
-                        dmData.Qstate.ExecSQL;
-                        //if you want also qth to database table release below and comment out other one
-                        //dmData.Qstate.SQL.Text := 'replace into cqrlog_common.states (callsign,call_qth,call_state) values ';
-                        dmData.trQstate.Commit;
-                        if dmData.trQstate.Active then dmData.trQstate.Rollback;
-                        //just callsign and state to table
-                        dmData.Qstate.SQL.Text := 'replace into cqrlog_common.states (callsign,call_state) values ';
-                      end;
-
-        except
-          on E : Exception do
-          begin
-            Application.MessageBox(PChar('Database cqrlog_common.states upgrade crashed with this error:'+LineEnding+E.Message),'Error',mb_ok+mb_IconError);
-            if LocalDbg then Writeln(dmData.Qstate.SQL.Text);
-            USDBProcessFailed;
-            exit;
-          end
-        end
-       end;  // if s
-       if r > 4999 then
-                    Begin
-                     p:=p+r;
-                     r:=0;
-                     frmProgress.DoStep(IntToStr(p)+' lines read...');
-                    end;
-      end;   //while
-      finally
-            if l>0 then
-                Begin
-                 dmData.Qstate.SQL.Text:= copy(dmData.Qstate.SQL.Text,1,length(dmData.Qstate.SQL.Text)-2); //remove last comma
-                 if LocalDbg then Writeln('Short block file end'+lineEnding+dmData.Qstate.SQL.Text);
-                 dmData.Qstate.ExecSQL;
-                 dmData.trQstate.Commit;
-                end
-              else
-                Begin
-                  dmData.Qstate.SQL.Text:='';
-                  if LocalDbg then Writeln('Even file end',dmData.Qstate.SQL.Text);
-                  dmData.trQstate.Commit;
-                end;
-            if dmData.trQstate.Active then dmData.trQstate.Rollback;
-         end
-   except
-    on E: EInOutError do
-     writeln('File handling error occurred. Details: ', E.Message);
-  end;
-  CanCloseUSDBProcess:=true;
-  DPstarted:=4;
-end;
-
-procedure  TfrmMonWsjtx.USDBdownLoadInit;
-var
-  f   :textfile;
-  begin
-    CanCloseUSDBProcess:=false;
-    USDB_Address:=cqrini.ReadString('MonWsjtx', 'USDB_Addr', C_URL);
-
-    //wget -qN ftp://ftp.w1nr.net/usdbraw.gz                              -> needed programs: wget and gunzip
-    //You can still use also FCC's l_amat.zip (lot bigger download)       -> needed programs: wget, unzip and awk
-     ///  https://data.fcc.gov/download/pub/uls/complete/l_amat.zip
-
-    //NOTE: Fedora 40 uses wget symlink to wget2 program. wget2 does not allow prefix "ftp://" on url.
-    //      Fortunately "old" wget works also without it,  so we just drop prefix. 2024-12-09 OH1KH
-
-     case QuestionDlg ('Caption','Use download address:'+
-                   LineEnding+'ftp.w1nr.net/usdbraw.gz'+ LineEnding
-                   +'  (~9M, fast to download)'+ LineEnding
-                   +'https://data.fcc.gov/download/pub/uls/complete/l_amat.zip' + LineEnding
-                   +'  (~160M, may be more up to date)'
-                   ,mtCustom,[20,'w1nr.net', 21, 'fcc.gov',22,'Manual input','IsDefault'],'') of
-      20: USDB_Address:= 'ftp.w1nr.net/usdbraw.gz';
-      21: USDB_Address:= 'https://data.fcc.gov/download/pub/uls/complete/l_amat.zip';
-      22: if not InputQuery('Download address check','Address suggestions:'+
-                   LineEnding+'ftp.w1nr.net/usdbraw.gz (~9M, fast to download)'+
-                   LineEnding+'https://data.fcc.gov/download/pub/uls/complete/l_amat.zip (~160M, may be more up to date)', USDB_Address) then
-                      begin
-                       USDBProcessFailed;
-                       exit;
-                     end;
-     end;
-
-
-    cqrini.WriteString('MonWsjtx', 'USDB_Addr',USDB_Address);
-    if LocalDbg then
-                begin
-                 Writeln('Saved USDB_Address:',USDB_Address);
-                 Writeln('USDBdownLoadInit start');
-                end;
-    frmProgress.Show;
-    if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
-                  begin
-                     frmProgress.DoInit(160,1);
-                     C_MYZIP := 'ctyfiles/l_amat.zip';
-                  end
-                else
-                  begin
-                     frmProgress.DoInit(10,1);
-                     C_MYZIP := 'ctyfiles/usdbraw.gz';
-                  end;
-
-    frmProgress.DoJump(0);
-    Application.ProcessMessages;
-
-
-    DPstarted:=1;
-    tmrUSDB.Enabled:=True;
-
-    DProcess := TProcess.Create(nil);
-
-    try
-     try
-      if LocalDbg then Writeln('Next DProcess run wget');
-      DProcess.Executable  := 'wget';
-      DProcess.Parameters.Add('-qN');
-      DProcess.Parameters.Add('--connect-timeout=10');
-      DProcess.Parameters.Add('--dns-timeout=10');
-      DProcess.Parameters.Add('--read-timeout=60');
-      DProcess.Parameters.Add('--tries=1');
-      DProcess.Parameters.Add('-O');
-      DProcess.Parameters.Add(dmData.HomeDir+C_MYZIP);
-      DProcess.Parameters.Add(trim(USDB_Address));
-      if LocalDbg then Writeln('DProcess.Executable: ',DProcess.Executable,' Parameters: ',DProcess.Parameters.Text);
-      DProcess.Execute;
-      while DProcess.Running do
-         Begin
-            Application.ProcessMessages;
-            sleep(1000);
-         end;
-    except
-    on E :EExternal do
-     begin
-      ShowMessage('Error Details: '+E.Message);
-      USDBProcessFailed;
-      exit;
-     end;
-    end;
-   finally
-    FreeAndNil(Dprocess);
-   end;
-
-
-    if not FileExists(dmData.HomeDir+C_MYZIP) then //download failed
-      Begin
-        USDBProcessFailed;
-        exit;
-      end;
-
-    if LocalDbg then Writeln('Next run gunzip');
-    DProcess := TProcess.Create(nil);
-    DPstarted:=2;
-    frmProgress.DoPos(0);
-
-    try
-     try
-      if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
-         DProcess.Executable  := 'unzip'
-      else
-         DProcess.Executable  := 'gunzip';
-      if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
-         DProcess.Parameters.Add('-o');
-      DProcess.Parameters.Add(dmData.HomeDir+C_MYZIP);
-      if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
-        begin
-         DProcess.Parameters.Add('EN.dat');
-         DProcess.Parameters.Add('-d');
-         DProcess.Parameters.Add(dmData.HomeDir+'ctyfiles');
-        end;
-      if LocalDbg then Writeln('DProcess.Executable: ',DProcess.Executable,' Parameters: ',DProcess.Parameters.Text);
-      DProcess.Execute;
-      while DProcess.Running do
-            Application.ProcessMessages;
-     finally
-      FreeAndNil(Dprocess);
-     end;
-    except
-    on E :EExternal do
-     writeln('Error Details: ', E.Message);
-    end;
-
-    if pos('l_amat.zip',USDB_Address)>0 then   //FFC data needs different process
-     begin
-      DProcess := TProcess.Create(nil);
-      try
-       try
-        DProcess.Executable  := '/bin/bash';
-        DProcess.Parameters.Add('-c');
-        DProcess.Parameters.Add('awk -F"|" '+#39+'{print$5"|"$17"|"$18}'+#39+' < '+dmData.HomeDir+'ctyfiles/EN.dat >'+dmData.HomeDir+'ctyfiles/usdbraw');
-        //DProcess.Parameters.Add(#39+'{print$5"|"$17"|"$18}'+#39);
-        //DProcess.Parameters.Add(dmData.HomeDir+'ctyfiles/EN.dat');
-        //DProcess.Parameters.Add('>');
-        //DProcess.Parameters.Add(dmData.HomeDir+'ctyfiles/usdbraw');
-
-        if LocalDbg then Writeln('DProcess.Executable: ',DProcess.Executable,' Parameters: ',DProcess.Parameters.Text);
-        DProcess.Execute;
-        while DProcess.Running do
-              Application.ProcessMessages;
-       finally
-        FreeAndNil(Dprocess);
-       end;
-      except
-      on E :EExternal do
-       writeln('Error Details: ', E.Message);
-      end;
-     end;
-
-   frmProgress.hide;
-   Application.ProcessMessages;
-   CanCloseUSDBProcess:=true;
-end;
-Procedure  TfrmMonWsjtx.CloseUSDBProcess;
-begin
-  if   CanCloseUSDBProcess then
-  begin
-  //here force close threads and others
-  if DProcess<>nil then FreeAndNil(DProcess);
-       try
-         CloseFile(tfin);
-       finally
-       end;
-  frmProgress.Hide;
-  DPstarted:=0;
-  tmrUSDB.Enabled:=False;
-  chkUState.Enabled:=True;
-  end;
-end;
-Procedure  TfrmMonWsjtx.USDBProcessFailed;
-begin
-  CanCloseUSDBProcess:=true;
-  frmProgress.Hide;
-  DPstarted:=0;
-  tmrUSDB.Enabled:=False;
-  chkUState.Checked:=False;
-end;
 Procedure  TfrmMonWsjtx.ReColorsgMonitor(Fc,Bc:tColor;Boff:Boolean);
 var
   i, j : integer;
@@ -3000,6 +2636,21 @@ begin
   end;
   sgMonitor.Repaint;
 end;
+Procedure TfrmMonWsjtx.DxccStatus(adif:word;CB,Cm:String;var R:String);    //used in map mode
+var
+  index : integer = 0;
+
+Begin
+        dmData.RbnMonDXCCInfo(adif,CB,CM,True,index);
+        case index of
+          1 : R:= R+'n'; //new country
+          2 : R:= R+'b'; //new band
+          3 : R:= R+'m'; //new mode
+          4 : R:= R+'q'; //qsl needed
+        end;
+end;
+
+
 
 //initialization
 

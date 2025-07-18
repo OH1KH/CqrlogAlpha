@@ -5,7 +5,7 @@ interface
 
 const
 
-  cVersionBase     ='Alpha_(137)_';
+  cVersionBase     ='Alpha_(138)_';
 
   {$IFDEF LCLGtk2}
   cVERSION    = cVersionBase+'Gtk2';

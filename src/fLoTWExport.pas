@@ -111,6 +111,8 @@ var
   suc  : Boolean = False;
   date : String = '';
   url  : String = '';
+  upl  : integer;
+  acc  : integer;
 begin
   btnUpload.Enabled:=false; //allow only one click
   btnExportSign.Enabled:=True;
@@ -147,7 +149,11 @@ begin
     if Res then
     begin
       l.LoadFromStream(HTTP.Document);
-      if Pos('<!-- .UPL.  accepted -->',l.Text) > 0 then
+      upl:= Pos('.UPL.',l.Text);
+      acc:= Pos('accepted',l.Text);
+
+      if ( (upl>0) and (acc>0) and ((acc-upl)<10) )  //should hit for same line "<!-- .UPL. accepted -->" even when they adjust space count between words
+      then
       begin
         mStat.Lines.Add('Uploading was successful');
         mStat.Lines.Add('---------');
@@ -167,6 +173,7 @@ begin
     end;
     if suc then
     begin
+      btnUpload.Enabled:=false;
       date := FormatDateTime('yyyy-mm-dd',now);
       dmData.Q1.Close();
       dmData.trQ1.Rollback;
@@ -203,7 +210,8 @@ begin
     l.Free;
     m.Free
   end;
-  btnUpload.Enabled:=true; //allow only one click
+  btnClose.Font.Style:=[fsBold];
+  btnClose.Repaint;
   mStat.SelStart:=length(mStat.Text);
   mStat.SelLength:=0;
   mStat.Refresh;

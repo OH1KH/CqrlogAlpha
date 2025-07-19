@@ -249,17 +249,17 @@ procedure TfrmTRXControl.HLTune(start : Boolean);
 begin
   if Assigned(radio) then
   begin
-    if pos('TUNER',radio.SupSetFuncs)>0 then //tune with rigctld cmds
+    if pos('TUNE',radio.SupGetVfoOp)>0 then //tune with rigctld cmds
      Begin
          if start then
           Begin
            if not Tuning then
                   Begin
-                       radio.ReSetTuner;   //this reset tuner settings (at least with IC7300)
+                       radio.SetTuner;   //this sets tuner (and starts tune at least with IC7300+LDG Z-100Plus)
                        sleep(300);
-                       radio.SetTuner;     //this initiates tuner that completes by itself no need to stop (at least with IC7300)
+                       radio.Tune;      //this initiates internal tuner that completes by itself no need to stop (at least with IC7300, without external tuner)
+                       Tuning := True;
                   end;
-           Tuning := True;
           end
          else
           begin

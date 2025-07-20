@@ -936,7 +936,7 @@ begin
     }
     begin
       inc(mindex);
-      if dmData.DebugLevel>=-65536 then Writeln(mindex,LineEnding,'RxSpot: ',tmp);
+      if dmData.DebugLevel>=1 then Writeln(mindex,LineEnding,'RxSpot: ',tmp);
       EnterCriticalsection(frmDXCluster.csTelnet);
       if dmData.DebugLevel>=1 then Writeln('Enter critical section On Receive');
       try
@@ -1478,7 +1478,7 @@ begin
         LeaveCriticalsection(frmDXCluster.csTelnet);
         if dmData.DebugLevel>=2 then Writeln('TelThread.Execute - leave critical section ');
       end;
-      if dmData.DebugLevel >= -65536 then Writeln('SpSpot: ',dx);
+      if dmData.DebugLevel >= 1 then Writeln('SpSpot: ',dx);
       if frmDXCluster.ShowSpot(dx,sColor, Country) then
       begin
         if cqrini.ReadBool('DXCluster','ShowDxcCountry',False) then
@@ -1487,7 +1487,7 @@ begin
           ThSpot := dx;
         ThColor   := sColor;
         ThInfo    := '';
-        if dmData.DebugLevel>=-65536 then
+        if dmData.DebugLevel>=1 then
         begin
           WriteLn('ThSpot: ',ThSpot);
           //Writeln('ThColor: ',ThColor)
@@ -1699,7 +1699,7 @@ begin
   //if dmData.DebugLevel>=1 then Writeln('TfrmDXCluster.SynTelnet - Before ]'yu
   if ConTelnet then
   begin
-    if dmData.DebugLevel>=-65536 then Writeln('SySpot: ',ThSpot,LineEnding);
+    if dmData.DebugLevel>=1 then Writeln('SySpot: ',ThSpot,LineEnding);
     TelSpots.DisableAutoRepaint(true);
     TelSpots.AddLine(ThSpot,ThColor,ThBckColor,0);
     TelSpots.DisableAutoRepaint(false)

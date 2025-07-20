@@ -4746,13 +4746,13 @@ begin
   if Assigned(CWint) then
   begin
     CWint.TuneStart;
-    dmUtils.ShowTheMessage('Message','Tuning started... '+LineEnding+LineEnding+'OK to abort',10000);
+    dmUtils.ShowTheMessage('Message','Tuning started...'+LineEnding+LineEnding+'OK to abort',frmTRXControl.TuneTimeout);
     CWint.TuneStop
   end
   else
    begin
     frmTRXControl.HLTune(true);
-    dmUtils.ShowTheMessage('Message','Tuning started... '+LineEnding+LineEnding+'OK to abort',10000);
+    dmUtils.ShowTheMessage('Message','Tuning started...'+LineEnding+LineEnding+'OK to abort',frmTRXControl.TuneTimeout);
     frmTRXControl.HLTune(false);
   end
 end;

@@ -773,6 +773,7 @@ begin
          if pos('VFO_OP',Imsg)>0 then
         Begin
            fSupGetVfoOp:= ExtractWord(2,Imsg,['|']);
+           //fSupGetVfoOp:='';               //release to debug non-hamlib tune with rig able to hamlib tune
            if fDebugMode then
                       Writeln(LineEnding,'VFO Ops: ',fSupGetVfoOp);
            Hit:=true;

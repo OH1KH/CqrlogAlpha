@@ -192,6 +192,7 @@ type
     RigInUse    : String;  //rig in use. Number as string
     IsNewHamlib : Boolean;
     StopPwrUpdate: integer;
+    TuneTimeout  : longint;
 
     procedure SynTRX;
 
@@ -255,6 +256,7 @@ begin
           Begin
            if not Tuning then
                   Begin
+                       TuneTimeout:=2000;
                        radio.SetTuner;   //this sets tuner (and starts tune at least with IC7300+LDG Z-100Plus)
                        sleep(300);
                        radio.Tune;      //this initiates internal tuner that completes by itself no need to stop (at least with IC7300, without external tuner)
@@ -272,7 +274,8 @@ begin
         begin
           if not Tuning then
           begin
-            ModeWas := GetActualMode;
+            TuneTimeout:=10000;
+            ModeWas := GetRawMode;
             BwWas := GetBandWidthForMode(ModeWas);
             SetMode('AM', 0);
             radio.PttOn;
@@ -280,9 +283,11 @@ begin
           end;
         end
         else begin
+          sleep(200);
+          Application.ProcessMessages;
           radio.PttOff;
-          sleep(500);
-          if Tuning then SetMode(ModeWas, BwWas);
+          if Tuning then
+             SetMode(ModeWas, BwWas);
           Tuning := False;
         end;
      end;

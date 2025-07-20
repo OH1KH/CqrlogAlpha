@@ -117,6 +117,7 @@ type
     SubmodeMode: TStringList;
     ImportMode : TStringlist;
     ExceptMode : TStringlist;
+    WaitTime   : longint;
 
     procedure LoadRigList(RigCtlBinaryPath : String;RigList : TStringList);
     procedure LoadRigListCombo(CurrentRigId : String; RigList : TStringList; RigComboBox : TComboBox);
@@ -246,7 +247,7 @@ type
     procedure DateHoursAgo(hours:integer;var Adate,Atime:string);
     procedure FillNewBandModeLimits; //upgrade new limits to modes table
     procedure GetUserMode(var mode : String);
-    procedure ShowTheMessage(Title:String; Message:String; Time:longint);
+    procedure ShowTheMessage(Title:String; Message:String; Tme:longint);
 
     function  UTF8UpperFirst(Value:UTF8String):UTF8String;
     function  IsNonAsciiChrs(s:string):Boolean;
@@ -5926,14 +5927,14 @@ Begin
   ADate := DateTimeToStr(DateOf(UnixTODateTime(DateTimeToUnix(Date)-(hours * 3600))));
   ATime := copy(TimeToStr(TimeOf(UnixTODateTime(DateTimeToUnix(Date)-(hours * 3600)))),1,5);
 end;
-procedure  TdmUtils.ShowTheMessage(Title:String; Message:String; Time:integer);   //time in milliseconds
+procedure  TdmUtils.ShowTheMessage(Title:String; Message:String; Tme:longint);   //time in milliseconds
 var
  TheForm: TForm;
  TheButton: TButton;
  TheLabel: Tlabel;
 
-
 Begin
+  WaitTime:=Tme;
   TheForm:=TForm.Create(nil);
   With TheForm do
   Begin
@@ -5946,7 +5947,7 @@ Begin
   TheButton:=TButton.create(TheForm);
   With TheButton do
   Begin
-   Caption:='OK    ('+IntToStr(Time div 1000)+')';
+   Caption:='OK    ('+IntToStr(WaitTime div 1000)+')';
    SetBounds(114, 114, 100, 30);
    Anchors := [akBottom, akRight];
    Parent:=TheForm;
@@ -5965,23 +5966,20 @@ Begin
 
   TheForm.Show;
 
-  While Time>0 do
+  While WaitTime>0 do
    Begin
     Application.ProcessMessages;
     sleep(100);
-    Time:=Time-100;
-    TheButton.Caption:='OK    ('+IntToStr(Time div 1000)+')';
+    WaitTime:=WaitTime-100;
+    TheButton.Caption:='OK    ('+IntToStr(WaitTime div 1000)+')';
    end;
-  TheButtonClick(TheButton);
-
+  TheForm.Close;
   FreeAndNil(TheForm);
-
 end;
 
 procedure TdmUtils.TheButtonClick(Sender: TObject);
 begin
-  if Sender is TButton then
-    TForm(TButton(Sender).Parent).Close;
+  WaitTime:=0;
 end;
 
 end.

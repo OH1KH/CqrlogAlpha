@@ -25,6 +25,7 @@ unit lsmtp;
 
 {$mode objfpc}{$H+}
 {$inline on}
+{$macro on}
 
 interface
 

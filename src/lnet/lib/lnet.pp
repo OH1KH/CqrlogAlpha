@@ -58,7 +58,7 @@ type
 
   { TLSocketState }
   TLSocketState = (ssServerSocket, ssBlocking, ssReuseAddress, ssCanSend,
-                   ssCanReceive, ssSSLActive{, ssNoDelay});
+                   ssCanReceive, ssSSLActive{$IFNDEF DARWIN}, ssNoDelay{$ENDIF});
 
   { TLSocketStates }
   TLSocketStates = set of TLSocketState;
@@ -113,7 +113,9 @@ type
     procedure SetOptions; virtual;
     procedure SetBlocking(const aValue: Boolean);
     procedure SetReuseAddress(const aValue: Boolean);
-//    procedure SetNoDelay(const aValue: Boolean);
+{$IFNDEF DARWIN}
+    procedure SetNoDelay(const aValue: Boolean);
+{$ENDIF}
 
     procedure HardDisconnect(const NoShutdown: Boolean = False);
     procedure SoftDisconnect;
@@ -467,7 +469,9 @@ begin
                             FSocketState := FSocketState - [aState];
     
     ssSSLActive         : raise Exception.Create('Can not turn SSL/TLS on in TLSocket instance');
-{    ssNoDelay           : SetNoDelay(TurnOn);}
+{$IFNDEF DARWIN}
+    ssNoDelay           : SetNoDelay(TurnOn);
+{$ENDIF}
   end;
   
   Result := True;
@@ -504,9 +508,19 @@ function TLSocket.GetPeerAddress: string;
 begin
   Result := '';
   if FSocketType = SOCK_STREAM then
-    Result := NetAddrtoStr(FAddress.IPv4.sin_addr)
+    begin
+     If FSocketNet = LAF_INET6 then
+          Result := NetAddrtoStr6(FAddress.IPv6.sin6_addr)
+       else
+          Result := NetAddrtoStr(FAddress.IPv4.sin_addr);
+    end
   else
-    Result := NetAddrtoStr(FPeerAddress.IPv4.sin_addr);
+    begin
+    if FSocketNet = LAF_INET6 then
+        Result :=  NetAddrtoStr6(FPeerAddress.IPv6.sin6_addr)
+      else
+        Result := NetAddrtoStr(FPeerAddress.IPv4.sin_addr);
+    end;
 end;
 
 function TLSocket.GetLocalAddress: string;
@@ -613,7 +627,8 @@ begin
   end;
 end;
 
-{procedure TLSocket.SetNoDelay(const aValue: Boolean);
+{$IFNDEF DARWIN}
+procedure TLSocket.SetNoDelay(const aValue: Boolean);
 begin
   if FHandle >= 0 then // we already set our socket
     if not lCommon.SetNoDelay(FHandle, aValue) then
@@ -624,7 +639,8 @@ begin
       else
         FSocketState := FSocketState - [ssNoDelay];
     end;
-end;}
+end;
+{$ENDIF}
 
 function TLSocket.GetMessage(out msg: string): Integer;
 begin
@@ -1124,7 +1140,17 @@ procedure TLUdp.Disconnect(const Forced: Boolean = True);
 begin
   if Assigned(FRootSock) then begin
     FRootSock.Disconnect(True);
-    FRootSock := nil; // even if the old one exists, eventer takes care of it
+    (*
+     * Apply Patch: https://github.com/almindor/lnet/issues/15
+     * This Issue is not solved yet.
+     * if disconnect is called within a socket event then FRootSock is not allowed to be freed
+     * if Disconnect is called outside a socket event then FRootSock needs to be freed otherwise
+     *   a memory leack is created.
+     *
+     * as the normal case is that disconnect is called from outside a socket event
+     * the free method is choosen.
+     *)
+    FreeAndNil(FRootSock); // even if the old one exists, eventer takes care of it
   end;
 end;
 
@@ -1307,13 +1333,13 @@ end;
 function TLTcp.Connect(const Address: string; const APort: Word): Boolean;
 begin
   Result := inherited Connect(Address, aPort);
-  //Writeln('Result0:',BoolToStr(Result,'Y','N'));
+  
   if Assigned(FRootSock) then
     Disconnect(True);
     
   FRootSock := InitSocket(SocketClass.Create);
   Result := FRootSock.Connect(Address, aPort);
-  //Writeln('Result1:',BoolToStr(Result,'Y','N'));
+  
   if Result then begin
     Inc(FCount);
     FIterator := FRootSock;
@@ -1322,7 +1348,6 @@ begin
     FreeAndNil(FRootSock); // one possible use, since we're not in eventer yet
     FIterator := nil;
   end;
-  //Writeln('Result2:',BoolToStr(Result,'Y','N'));
 end;
 
 function TLTcp.Listen(const APort: Word; const AIntf: string = LADDR_ANY): Boolean;

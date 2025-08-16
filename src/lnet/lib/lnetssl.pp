@@ -9,7 +9,11 @@ uses
   lNet, lEvents;
   
 type
-  TLSSLMethod = (msSSLv2or3, msSSLv2, msSSLv3, msTLSv1);
+  // Set preferred protocol order
+  // FreeBSD (12), macOS (10,12+) and Windows (10) choose TLS v1.3
+  // Linux (Ubuntu 21.10) chooses TLS v1.2
+  TLSSLMethod = (msTLS, msTLSv1_2);
+
   TLSSLStatus = (slNone, slConnect, slActivateTLS, slShutdown);
 
   TLPasswordCB = function(buf: pChar; num, rwflag: cInt; userdata: Pointer): cInt; cdecl;
@@ -466,23 +470,29 @@ procedure TLSSLSession.CreateSSLContext;
 var
   aMethod: PSSL_METHOD;
 begin
+  // To be sure, to be sure...
+  if not IsSSLloaded then
+    raise Exception.Create('Unable to initialize SSL library, check your LibreSSL or OpenSSL installation');
+
   if Assigned(FSSLContext) then
     SSLCTXFree(FSSLContext);
     
   if not FSSLActive then
     Exit;
 
+  // Preferred order is set in the type definition of TLSSLMethod above
   case FMethod of
-    msSSLv2or3 : aMethod := SslMethodV23;
-    msSSLv2    : aMethod := SslMethodV2;
-    msSSLv3    : aMethod := SslMethodV3;
-    msTLSv1    : aMethod := SslMethodTLSV1;
+    msTLSv1_2  : aMethod := SslMethodTLSV1_2;
+    msTLS      : aMethod := SslTLSMethod;
   end;
+
+  // old C programmer's debugging method
+  //WriteLn('TLS method: ', FMethod);
 
   FSSLContext := SSLCTXNew(aMethod);
   if not Assigned(FSSLContext) then
     raise Exception.Create('Error creating SSL CTX: SSLCTXNew');
-    
+
   if SSLCTXSetMode(FSSLContext, SSL_MODE_ENABLE_PARTIAL_WRITE) and SSL_MODE_ENABLE_PARTIAL_WRITE <> SSL_MODE_ENABLE_PARTIAL_WRITE then
     raise Exception.Create('Error setting partial write mode on CTX');
   if SSLCTXSetMode(FSSLContext, SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER) and SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER <> SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER then

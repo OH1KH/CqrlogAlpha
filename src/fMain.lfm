@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
   Left = 209
-  Height = 469
+  Height = 444
   Top = 44
   Width = 986
   HelpType = htKeyword
@@ -10,7 +10,7 @@ object frmMain: TfrmMain
   ActiveControl = Panel2
   AutoScroll = True
   Caption = 'CqrlogAlpha for Linux'
-  ClientHeight = 469
+  ClientHeight = 444
   ClientWidth = 986
   Constraints.MinHeight = 148
   Constraints.MinWidth = 536
@@ -167,7 +167,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 19
-    Top = 450
+    Top = 425
     Width = 986
     Panels = <    
       item
@@ -193,7 +193,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 40
-    Top = 404
+    Top = 379
     Width = 986
     Align = alBottom
     BorderSpacing.Bottom = 6
@@ -419,7 +419,7 @@ object frmMain: TfrmMain
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 247
+    Height = 222
     Top = 69
     Width = 986
     Align = alClient
@@ -725,7 +725,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 88
-    Top = 316
+    Top = 291
     Width = 986
     Align = alBottom
     BevelOuter = bvNone

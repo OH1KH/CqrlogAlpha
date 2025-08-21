@@ -1422,7 +1422,8 @@ var
   Response : TStrings;
   RespImg  : TFileStream;
   r        : integer;
-  AProcess: TProcess;
+  AProcess : TProcess;
+  ShowOk   : boolean;
   url,      //        https://www.eQSL.cc/qslcard/GeteQSL.cfm
   Username, //        The callsign of the recipient of the eQSL
   Password, //        The password of the user's account
@@ -1437,7 +1438,7 @@ var
   suff      //        FIlename suffix from URL. Expected 'png' or 'jpg'
   : String;
 begin
-
+        ShowOK:=true;
         Username := cqrini.ReadString('LoTW','eQSLName','');
         Password := cqrini.ReadString('LoTW','eQSLPass','');
         if (Username = '') or (Password='') then
@@ -1478,11 +1479,18 @@ begin
        if dmUtils.sImageExists(eQSLImageName)='' then //we have to get image from eQSL
         Begin
           Response:=TStringlist.Create;
+          try
           if HTTPGetText(url,Response) then
            Begin
               r:=0;
               while r<Response.Count do
               begin
+              if pos('ERROR:', UpperCase((Response[r])))>0 then
+               Begin
+                 ShowMessage(url+LineEnding+LineEnding+Response[r]);
+                 ShowOk:=False;
+                 break
+               end;
               if pos('<IMG SRC="',UpperCase((Response[r])))>0 then
                Begin
                  url:='https://www.eQSL.cc'+ExtractDelimited(2,Response[r],['"']);
@@ -1499,10 +1507,13 @@ begin
               inc(r);
               end;
            end;
-          Response.Free;
+          finally
+            Response.Free;
+          end;
         end;
       //view eqsl now
-      aceQSLImageExecute(Self);
+      if ShowOk then
+                aceQSLImageExecute(Self);
      end
     else
      begin

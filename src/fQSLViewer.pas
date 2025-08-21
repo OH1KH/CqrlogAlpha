@@ -21,12 +21,15 @@ type
     tabFront: TTabSheet;
     tabBack: TTabSheet;
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
+    procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure pgQSLPageChanged(Sender: TObject);
   private
-    fCall : String;
+    fCall    : String;
+    fAltImg  : String;
   public
-    property Call : String write fCall;
+    property Call   : String write fCall;
+    property AltImg : String write fAltImg;
     { public declarations }
   end; 
 
@@ -46,32 +49,47 @@ var
   a : String;
 begin
   dmUtils.LoadWindowPos(frmQSLViewer);
-  fCall := LowerCase(StringReplace(fCall,'/','_',[rfReplaceAll, rfIgnoreCase]));
-  a := dmUtils.QSLFrontImageExists(fCall);
-  if a <> '' then
-    imgFront.Picture.LoadFromFile(a)
+  if fAltImg<>'' then
+   Begin
+     a:=dmUtils.sImageExists(fAltImg);
+     if a <> '' then
+      begin
+       imgFront.Picture.LoadFromFile(a);
+       pgQSLPageChanged(Self);
+       Self.Caption:='eQSL card';
+      end;
+   end
   else
-    exit;
-  Height := imgFront.Picture.Height+Panel1.Height+35;
-  Width  := imgFront.Picture.Width;
+   begin
+    fCall := LowerCase(StringReplace(fCall,'/','_',[rfReplaceAll, rfIgnoreCase]));
 
-  a := dmUtils.QSLBackImageExists(fCall);
-  if a <> '' then
-    imgBack.Picture.LoadFromFile(a)
+    a := dmUtils.QSLFrontImageExists(fCall);
+    if a <> '' then
+      begin
+        imgFront.Picture.LoadFromFile(a);
+        pgQSLPageChanged(Self);
+      end;
+
+    a := dmUtils.QSLBackImageExists(fCall);
+    if a <> '' then
+     begin
+       imgBack.Picture.LoadFromFile(a);
+     end;
+   end;
 end;
 
 procedure TfrmQSLViewer.pgQSLPageChanged(Sender: TObject);
 begin
   if pgQSL.ActivePageIndex = 0 then
   begin
-    Height := imgFront.Picture.Height+Panel1.Height+35;
-    Width  := imgFront.Picture.Width
+    Self.Height := imgFront.Picture.Height+Panel1.Height+35;
+    Self.Width  := imgFront.Picture.Width+10;
   end
   else begin
     if dmUtils.QSLBackImageExists(fCall) <> '' then
     begin
-      Height := imgBack.Picture.Height+Panel1.Height+35;
-      Width  := imgBack.Picture.Width
+      Self.Height := imgBack.Picture.Height+Panel1.Height+35;
+      Self.Width  := imgBack.Picture.Width+10;
     end
   end
 end;
@@ -80,6 +98,14 @@ procedure TfrmQSLViewer.FormClose(Sender: TObject; var CloseAction: TCloseAction
   );
 begin
   dmUtils.SaveWindowPos(frmQSLViewer)
+end;
+
+procedure TfrmQSLViewer.FormCreate(Sender: TObject);
+begin
+  fAltImg:='';
+  fCall:='';
+  pgQSL.ActivePageIndex := 0;
+  Self.Caption:='QSL card';
 end;
 
 end.

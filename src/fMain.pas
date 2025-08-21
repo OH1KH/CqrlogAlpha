@@ -18,7 +18,7 @@ interface
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, Menus,
   ActnList, ExtCtrls, StdCtrls, ComCtrls, DBGrids, Buttons, LCLType, IniFiles, process,
-  Grids, DBCtrls, dLogUpload,db,synacode, FileUtil, LazFileUtils;
+  Grids, DBCtrls, dLogUpload,db,synacode, FileUtil, LazFileUtils, HTTPSend,StrUtils;
 
 type
 
@@ -87,6 +87,7 @@ type
     acAutoSizeColumns: TAction;
     acCreateLoadFilter: TAction;
     acCounty: TAction;
+    aceQSLImage: TAction;
     acUploadAllToLoTW: TAction;
     acUploadToAll: TAction;
     acUploadToHrdLog: TAction;
@@ -365,6 +366,7 @@ type
     procedure acSQLExecute(Sender: TObject);
     procedure acAutoSizeColumnsExecute(Sender: TObject);
     procedure acCountyExecute(Sender: TObject);
+    procedure aceQSLImageExecute(Sender: TObject);
     procedure acUploadAllToLoTWExecute(Sender: TObject);
     procedure acUploadToAllExecute(Sender: TObject);
     procedure acUploadToClubLogExecute(Sender: TObject);
@@ -476,6 +478,7 @@ type
   public
     ShowWidths : Boolean;
     idlist     :string;
+    eQSLImageName : String;
     procedure RefreshQSODXCCCount;
     procedure MarkQSLSend(symbol: string);
     procedure ShowFields;
@@ -1416,6 +1419,9 @@ begin
 end;
 procedure TfrmMain.eQSLView(QSODate,QSOTime,CallsignFrom,QSOBand,QSOMode:String);
 var
+  Response : TStrings;
+  RespImg  : TFileStream;
+  r        : integer;
   AProcess: TProcess;
   url,      //        https://www.eQSL.cc/qslcard/GeteQSL.cfm
   Username, //        The callsign of the recipient of the eQSL
@@ -1425,46 +1431,96 @@ var
   QSOMonth, //        MM format
   QSODay,   //        DD format
   QSOHour,  //        HH format (24-hour time)
-  QSOMinute //        MM format
+  QSOMinute,//        MM format
             //        20m, 80M, 70cm, etc. (case insensitive) band
             //        Must match exactly and should be an ADIF-compatible mode
+  suff      //        FIlename suffix from URL. Expected 'png' or 'jpg'
   : String;
 begin
-    Username := cqrini.ReadString('LoTW','eQSLName','');
-    Password := cqrini.ReadString('LoTW','eQSLPass','');
-    if (Username = '') or (Password='') then
-    begin
-      MessageDlg(Caption, ' eQSL Username or Password not set!'+#10+
-                          '(see: preferences|LoTW/eQSL support)', mtError, [mbOK], 0);
-      exit
-    end;
-    QSOYear := copy(QSODate,1,4);
-    QSOMonth:= copy(QSODate,6,2);
-    QSOday  := copy(QSODate,9,2);
-    QSOHour := copy(QSOTime,1,2);
-    QSOMinute:= copy(QSOTime,4,2);
-    url := cqrini.ReadString('LoTW', 'eQSViewAddr','https://www.eQSL.cc/qslcard/GeteQSL.cfm')+
-           '?UserName='+Username+
-           '&Password='+dmUtils.EncodeURLData(Password)+
-           '&CallsignFrom='+CallsignFrom+
-           '&QSOYear='+QSOYear+
-           '&QSOMonth='+QSOMonth +
-           '&QSODay='+QSODay+
-           '&QSOHour='+QSOHour +
-           '&QSOMinute='+QSOMinute+
-           '&QSOBand='+QSOBand+
-           '&QSOMode='+QSOMode;
 
-  if dmData.DebugLevel>=1 then Writeln(url);
-  AProcess := TProcess.Create(nil);
-  try
-    AProcess.Executable := cqrini.ReadString('Program', 'WebBrowser', dmUtils.MyDefaultBrowser);
-    AProcess.Parameters.Add(url);
-    if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
-    AProcess.Execute
-  finally
-    AProcess.Free
-  end
+        Username := cqrini.ReadString('LoTW','eQSLName','');
+        Password := cqrini.ReadString('LoTW','eQSLPass','');
+        if (Username = '') or (Password='') then
+        begin
+          MessageDlg(Caption, ' eQSL Username or Password not set!'+#10+
+                              '(see: preferences|LoTW/eQSL support)', mtError, [mbOK], 0);
+          exit
+        end;
+        QSOYear := copy(QSODate,1,4);
+        QSOMonth:= copy(QSODate,6,2);
+        QSOday  := copy(QSODate,9,2);
+        QSOHour := copy(QSOTime,1,2);
+        QSOMinute:= copy(QSOTime,4,2);
+        url := cqrini.ReadString('LoTW', 'eQSViewAddr','https://www.eQSL.cc/qslcard/GeteQSL.cfm')+
+               '?UserName='+Username+
+               '&Password='+dmUtils.EncodeURLData(Password)+
+               '&CallsignFrom='+CallsignFrom+
+               '&QSOYear='+QSOYear+
+               '&QSOMonth='+QSOMonth +
+               '&QSODay='+QSODay+
+               '&QSOHour='+QSOHour +
+               '&QSOMinute='+QSOMinute+
+               '&QSOBand='+QSOBand+
+               '&QSOMode='+QSOMode;
+
+      if dmData.DebugLevel>=1 then
+         Writeln('Request eQSL from: ', url);
+
+      eQSLImageName:=dmData.HomeDir + 'call_data' + PathDelim +'eqsl'+ PathDelim + CallsignFrom+'_'+QSOBand+'_'+QSOMode+'_'+QSOYear+QSOMonth +QSODay+'_'+QSOHour+QSOMinute;
+
+  //Check if we have image in call_data/eqsl folder already
+  if dmUtils.sImageExists(eQSLImageName)<>'' then
+    url := dmUtils.sImageExists(eQSLImageName);
+
+  //check what to use for view
+  if cqrini.ReadBool('ExtView','QSL',True) then
+     Begin
+       if dmUtils.sImageExists(eQSLImageName)='' then //we have to get image from eQSL
+        Begin
+          Response:=TStringlist.Create;
+          if HTTPGetText(url,Response) then
+           Begin
+              r:=0;
+              while r<Response.Count do
+              begin
+              if pos('<IMG SRC="',UpperCase((Response[r])))>0 then
+               Begin
+                 url:='https://www.eQSL.cc'+ExtractDelimited(2,Response[r],['"']);
+                 suff:=LowerCase(ExtractDelimited(4,url,['.']));
+                 if dmData.DebugLevel>=1 then
+                       Writeln('Download eQSLImg from: ', url);
+                 RespImg:=TFileStream.Create(eQSLImageName+'.'+suff, fmCreate);
+                 if HTTPGetBinary(url,RespImg) then
+                   if dmData.DebugLevel>=1 then
+                       Writeln('Saved eQSLImg as: ', eQSLImageName+'.'+suff);
+                 RespImg.Free;
+                 Break;
+               end;
+              inc(r);
+              end;
+           end;
+          Response.Free;
+        end;
+      //view eqsl now
+      aceQSLImageExecute(Self);
+     end
+    else
+     begin
+      //view in browser can do either from https:// or file:// without any external code
+      AProcess := TProcess.Create(nil);
+      try
+        AProcess.Executable := cqrini.ReadString('Program', 'WebBrowser', dmUtils.MyDefaultBrowser);
+        AProcess.Parameters.Add(url);
+        if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
+        AProcess.Execute
+      finally
+        AProcess.Free
+      end
+    end;
+
+  if cqrini.ReadBool('ExtView','DeleQSL',False)
+   and (dmUtils.sImageExists(eQSLImageName)<>'') then
+      DeleteFile(dmUtils.sImageExists(eQSLImageName));
 
 end;
 
@@ -1738,6 +1794,17 @@ begin
   finally
     FreeAndNil(frmCountyStat)
   end
+end;
+
+procedure TfrmMain.aceQSLImageExecute(Sender: TObject);
+begin
+   frmQSLViewer := TfrmQSLViewer.Create(self);
+    try
+      frmQSLViewer.AltImg :=   eQSLImageName;
+      frmQSLViewer.ShowModal
+    finally
+      frmQSLViewer.Free
+    end
 end;
 
 procedure TfrmMain.acUploadAllToLoTWExecute(Sender: TObject);

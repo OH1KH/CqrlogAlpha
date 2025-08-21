@@ -1,0 +1,45 @@
+view eQSL TODO
+
+program start :
+  -check folder dmData.HomeDir+'/call_data/eqsl'
+	-- if not exist then create  												(DONE in fDBConnect.FormShow)
+
+
+
+qso_list (frmMain):
+
+	- when right click qso and left click view eqsl
+		-- create hint to look at proferences/external viewers for setup 						(HINT does not work, Lazarus bug!)
+		-- first look if qso qsl exist in dmData.HomeDir+'/call_data/eqsl'						(DONE !)
+			--qsl image name format: call_band_mode_date_time.png or .jpg taken from web download link (prefer png) (DONE!)
+		-- if not in directory
+			-- if view in web browser open as before (DONE !)
+			-- if view in qslview then download and save image to dmData.HomeDir+'/call_data/eqsl' (		DONE!)
+			-- view in qslview
+				-- if selecetd delete after view; delete from dmData.HomeDir+'/call_data/eqsl' 			(DONE! deletes also if viewed by browser)
+
+preferences:
+	- add to external viewers:
+		-- radio: 	view in web browser (old way) 									(DONE! there is checkbox already)
+				view in qslview
+		-- checkbox	Delete after view (active if radio is: qslview) 						(DONE! added delete checkbox)
+
+
+new qso:
+	- icon call has qsl: activate as before, but also if call has image in dmData.HomeDir+'/call_data/eqsl'			(DONE!)
+	  -- if there is only one eQSL image open it immediately								(DONE!)
+		-- if there are several images (eQSL cards from differen t mode,, band...) then show FileOpen dialog 		(DONE!)
+	  		-- image is selected FileOpen dialog "open" views selected image 					(DONE!)
+
+
+QSLVIew:
+	- scale form by image widthxheight											(DONE!, and fixed layouts, too)
+
+
+HELP:
+	- fix help files													(DONE!)
+
+
+
+Test:
+	- test, test , test

@@ -220,7 +220,7 @@ type
     procedure RunOnBackground(path: string);
     procedure SaveWindowPos(a: TForm);
     procedure LoadWindowPos(a: TForm);
-    procedure ShowQSLWithExtViewer(Call: string);
+    procedure ShowQSLWithExtViewer(Call: string;AltImg:String='');
     procedure ShowQRZInBrowser(call: string);
     procedure ShowLocatorMapInBrowser(locator: string);
     procedure LoadBandsSettings;
@@ -319,6 +319,7 @@ type
     function  FindInMailCap(mime : String) : String;
     function  GetHomeDirectory : String;
     function  DateInRightFormat(date : TDateTime) : String;
+    function  sImageExists(s : String) : String;
     function  QSLFrontImageExists(fCall : String) : String;
     function  QSLBackImageExists(fCall : String) : String;
     function  GetCallForAttach(call : String) : String;
@@ -3893,50 +3894,55 @@ begin
   end;
 end;
 
-function TdmUtils.QSLFrontImageExists(fCall: string): string;
-var
-  s: string;
+function TdmUtils.sImageExists(s: string): string;
 begin
   Result := '';
-  s := GetCallAttachDir(fCall) + PathDelim + 'qsl_' + fCall + '_front';
-  if FileExists(s + '.png') then
+    if FileExists(s + '.png') then
     Result := s + '.png'
   else
   begin
     if FileExists(s + '.jpg') then
       Result := s + '.jpg';
   end;
+end;
+
+function TdmUtils.QSLFrontImageExists(fCall: string): string;
+var
+  s: string;
+begin
+  s := GetCallAttachDir(fCall) + PathDelim + 'qsl_' + fCall + '_front';
+  Result:= sImageExists(s);
 end;
 
 function TdmUtils.QSLBackImageExists(fCall: string): string;
 var
   s: string;
 begin
-  Result := '';
   s := GetCallAttachDir(fCall) + PathDelim + 'qsl_' + fCall + '_back';
-  if FileExists(s + '.png') then
-    Result := s + '.png'
-  else
-  begin
-    if FileExists(s + '.jpg') then
-      Result := s + '.jpg';
-  end;
+  Result:= sImageExists(s);
 end;
 
-procedure TdmUtils.ShowQSLWithExtViewer(Call: string);
+procedure TdmUtils.ShowQSLWithExtViewer(Call: string;AltImg:String='');
 var
   dir: string;
   prg: string;
   qsl: string;
 begin
-  call := GetCallForAttach(call);
-  qsl := QSLFrontImageExists(call);
+  if AltImg='' then
+    begin
+     call := GetCallForAttach(call);
+     qsl := QSLFrontImageExists(call);
+    end
+   else
+    qsl:=AltImg;
+
   if qsl = '' then
     exit;
   dir := GetCurrentDir;
   try
-    SetCurrentDir(dmData.HomeDir + 'call_data' + PathDelim + call + PathDelim);
-    prg := cqrini.ReadString('ExtView', 'img', 'eog');
+    if AltImg='' then
+       SetCurrentDir(dmData.HomeDir + 'call_data' + PathDelim + call + PathDelim);
+    prg := cqrini.ReadString('ExtView', 'img', '');
     if prg = '' then
       dmUtils.RunOnBackground(cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser) +
         ' ' + qsl)

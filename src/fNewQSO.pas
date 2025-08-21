@@ -340,6 +340,7 @@ type
     mnuNewQSO: TMenuItem;
     mnuFile: TMenuItem;
     mnuTRXControl: TMenuItem;
+    opEQSL: TOpenDialog;
     pnlSbtn2: TPanel;
     pnlSbtn0: TPanel;
     pnlOffline: TPanel;
@@ -739,6 +740,8 @@ type
     ModeBeforeChange      : String; //flush CW buffer after mode change
     CurrentMyLoc          : String; //currently valid my locator global var and public for other units.
     EditViewMyLoc         : String;  //this is needed for exeption when edit/viev myloc is not CurrentMyloc
+    QSLImgIsEQSL          : integer; //>0 if callsign has eQSL image(s);
+
 
     property EditQSO : Boolean read fEditQSO write fEditQSO default False;
     property ViewQSO : Boolean read fViewQSO write fViewQSO default False;
@@ -1465,6 +1468,7 @@ begin
   dmUtils.HamClockSetNewDE(CurrentMyloc,'','',UpperCase(cqrini.ReadString('Station', 'Call', '')));
   dmUtils.HamClockSetNewDX('','',CurrentMyloc);   //a way to clear SP/LP line (but draws vertical line instead)
   DetailsCMBColorDone:='';
+  QSLImgIsEQSL := 0;
 
   btnCancel.Hint:='';
   btnCancel.ShowHint:=False;
@@ -1886,6 +1890,7 @@ begin
   ChangeDXCC   := False;
 
   RemoteActive:='';
+  QSLImgIsEQSL := 0;
 
   CurrentMyLoc := cqrini.ReadString('Station','LOC','');
   ClearAll;
@@ -6313,18 +6318,50 @@ begin
 end;
 
 procedure TfrmNewQSO.sbtnQSLClick(Sender: TObject);
+
+procedure viewImg;
 begin
-  if not cqrini.ReadBool('ExtView','QSL',True) then
-    dmUtils.ShowQSLWithExtViewer(edtCall.Text)
-  else begin
-    frmQSLViewer := TfrmQSLViewer.Create(self);
-    try
-      frmQSLViewer.Call := edtCall.Text;
-      frmQSLViewer.ShowModal
-    finally
-      frmQSLViewer.Free
+ if not cqrini.ReadBool('ExtView','QSL',True) then
+         dmUtils.ShowQSLWithExtViewer('', dmData.HomeDir + 'call_data' + PathDelim +'eqsl'+ PathDelim + frmMain.eQSLImageName)
+        else
+         Begin
+          frmMain.eQSLImageName:= dmData.HomeDir + 'call_data' + PathDelim +'eqsl'+ PathDelim + ExtractFileNameWithoutExt(frmMain.eQSLImageName);
+          frmMain.aceQSLImageExecute(nil)
+         end
+end;
+
+begin
+  if QSLImgIsEQSL=0 then
+    begin
+    if not cqrini.ReadBool('ExtView','QSL',True) then
+      dmUtils.ShowQSLWithExtViewer(edtCall.Text)
+     else
+     begin
+      frmQSLViewer := TfrmQSLViewer.Create(self);
+      try
+        frmQSLViewer.Call := edtCall.Text;
+        frmQSLViewer.ShowModal
+      finally
+        frmQSLViewer.Free
+      end
+     end
     end
-  end
+  else
+   Begin
+     //only one image, open it directly
+    if QSLImgIsEQSL=1 then
+      viewImg
+    else
+      Begin
+         opEQSL.InitialDir := dmData.HomeDir + 'call_data' + PathDelim +'eqsl'+ PathDelim ;
+         opEQSL.Filter:='eQSL '+edtCall.Text+'|'+edtCall.Text +'*.*';
+         if opEQSL.Execute then
+          begin
+            if fileExists(opEQSL.Filename) then
+               viewImg
+          end
+      end;
+   end;
 end;
 
 procedure TfrmNewQSO.sbtnQRZClick(Sender: TObject);
@@ -7277,11 +7314,33 @@ begin
 end;
 
 procedure TfrmNewQSO.CheckQSLImage;
+var
+  res: byte;
+  SearchRec: TSearchRec;
 begin
+  QSLImgIsEQSL:=0;
   if dmUtils.QSLFrontImageExists(dmUtils.GetCallForAttach(edtCall.Text)) <> '' then
     sbtnQSL.Visible := True
   else
-    sbtnQSL.Visible := False
+   Begin
+    try
+      res := FindFirst(dmData.HomeDir + 'call_data' + PathDelim +'eqsl'+ PathDelim + edtCall.Text +'*.*',faAnyFile,SearchRec);
+      if res = 0 then
+       Begin
+        sbtnQSL.Visible := True;
+        frmMain.eQSLImageName := SearchRec.Name;
+        while res = 0 do
+         Begin
+           inc(QSLImgIsEQSL);
+           res := FindNext(SearchRec);
+         end;
+       end
+      else
+        sbtnQSL.Visible := False;
+     finally
+      FindClose(SearchRec);
+    end
+   end;
 end;
 
 procedure TfrmNewQSO.UpdateFKeyLabels;

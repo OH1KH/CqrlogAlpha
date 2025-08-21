@@ -537,7 +537,10 @@ begin
       dmData.StartMysqldProcess
   end;
   dlgOpen.InitialDir := dmData.HomeDir;
-  dlgSave.InitialDir := dmData.HomeDir
+  dlgSave.InitialDir := dmData.HomeDir;
+
+  if Not DirectoryExists(dmData.HomeDir + 'call_data' + PathDelim +'eqsl') then
+      CreateDir(dmData.HomeDir + 'call_data' + PathDelim +'eqsl');
 end;
 
 procedure TfrmDBConnect.mnuClearLogClick(Sender: TObject);

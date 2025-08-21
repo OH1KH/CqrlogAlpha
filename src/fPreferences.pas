@@ -107,6 +107,7 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkDeleteEqsl: TCheckBox;
     chkKeepAlive: TCheckBox;
     chkRotControlDebug: TCheckBox;
     chkUseRigPwr: TCheckBox;
@@ -751,9 +752,9 @@ type
     lbleQSLStartAddr: TLabel;
     lbleQSLViewAddr: TLabel;
     lblLoTWBkg: TLabel;
-    Label100: TLabel;
-    Label101: TLabel;
-    Label102: TLabel;
+    lblPdfFiles: TLabel;
+    lblImgFIles: TLabel;
+    lblHtmlFiles: TLabel;
     Label103: TLabel;
     Label104: TLabel;
     Label105: TLabel;
@@ -905,7 +906,7 @@ type
     lblCWWPM: TLabel;
     lblWinMinSpeed: TLabel;
     lblWinMaxSpeed: TLabel;
-    Label99: TLabel;
+    lblTxtFIles: TLabel;
     lbleFont: TLabel;
     lblgFont: TLabel;
     lblqFont: TLabel;
@@ -1607,6 +1608,7 @@ begin
   cqrini.WriteString('ExtView', 'html', edtHtmlFiles.Text);
 
   cqrini.WriteBool('ExtView', 'QSL', chkIntQSLViewer.Checked);
+  cqrini.WriteBool('ExtView', 'DeleQSL', chkDeleteEqsl.Checked);
 
   cqrini.WriteString('FirstClub', 'DateFrom', edtClub1Date.Text);
   cqrini.WriteString('SecondClub', 'DateFrom', edtClub2Date.Text);
@@ -3470,6 +3472,7 @@ begin
   edtImgFiles.Text := cqrini.ReadString('ExtView', 'img', '');
   edtHtmlFiles.Text := cqrini.ReadString('ExtView', 'html', dmUtils.MyDefaultBrowser);
   chkIntQSLViewer.Checked := cqrini.ReadBool('ExtView', 'QSL', True);
+  chkDeleteEqsl.Checked   := cqrini.ReadBool('ExtView', 'DeleQSL', False);
 
   edtClub1Date.Text := cqrini.ReadString('FirstClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);
   edtClub2Date.Text := cqrini.ReadString('SecondClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);

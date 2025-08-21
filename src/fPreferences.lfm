@@ -1,18 +1,18 @@
 object frmPreferences: TfrmPreferences
   Left = 230
-  Height = 695
+  Height = 669
   Top = 34
-  Width = 1027
+  Width = 1001
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1027
-  VertScrollBar.Page = 695
+  HorzScrollBar.Page = 1001
+  VertScrollBar.Page = 669
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 695
-  ClientWidth = 1027
+  ClientHeight = 669
+  ClientWidth = 1001
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   OnCloseQuery = FormCloseQuery
@@ -27,9 +27,9 @@ object frmPreferences: TfrmPreferences
     Height = 788
     Top = 0
     Width = 846
-    ActivePage = tabTRXcontrol
+    ActivePage = tabExtViewers
     Align = alClient
-    TabIndex = 5
+    TabIndex = 22
     TabOrder = 0
     OnChange = pgPreferencesChange
     object tabProgram: TTabSheet
@@ -2409,7 +2409,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 4
         Caption = ' rigctld '
-        ClientHeight = 70
+        ClientHeight = 86
         ClientWidth = 655
         TabOrder = 0
         object lblRigctdPath: TLabel
@@ -2680,7 +2680,7 @@ object frmPreferences: TfrmPreferences
           Width = 511
           BorderSpacing.Top = 3
           Caption = 'Radio one serial parameters'
-          ClientHeight = 130
+          ClientHeight = 146
           ClientWidth = 509
           TabOrder = 12
           object lblSerialRSpd: TLabel
@@ -4741,7 +4741,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 1
         Caption = 'Colors'
-        ClientHeight = 103
+        ClientHeight = 87
         ClientWidth = 598
         TabOrder = 0
         object Label41: TLabel
@@ -4852,7 +4852,7 @@ object frmPreferences: TfrmPreferences
         Width = 600
         BorderSpacing.Left = 6
         Caption = ' Show only spots'
-        ClientHeight = 254
+        ClientHeight = 238
         ClientWidth = 598
         TabOrder = 1
         object Label45: TLabel
@@ -4860,7 +4860,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Control = edtDoNotShow
           Left = 6
           Height = 17
-          Top = 176
+          Top = 160
           Width = 397
           Anchors = [akLeft, akBottom]
           BorderSpacing.Left = 6
@@ -5074,7 +5074,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Control = chkShow3CM
           Left = 188
           Height = 23
-          Top = 105
+          Top = 98
           Width = 73
           Anchors = [akLeft]
           Caption = '47 GHz'
@@ -5085,7 +5085,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Control = chkShow3CM
           Left = 283
           Height = 23
-          Top = 105
+          Top = 98
           Width = 73
           Anchors = [akLeft]
           Caption = '76 GHz'
@@ -5128,7 +5128,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 378
           Height = 23
-          Top = 128
+          Top = 121
           Width = 48
           Caption = 'CW'
           TabOrder = 24
@@ -5138,7 +5138,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Control = chkCW
           Left = 461
           Height = 23
-          Top = 128
+          Top = 121
           Width = 51
           Caption = 'SSB'
           TabOrder = 25
@@ -5148,7 +5148,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Control = chkShowDxcCountry
           Left = 6
           Height = 34
-          Top = 196
+          Top = 180
           Width = 471
           Anchors = [akLeft, akBottom]
           BorderSpacing.Left = 6
@@ -5214,7 +5214,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Side = asrBottom
           Left = 6
           Height = 23
-          Top = 230
+          Top = 214
           Width = 299
           Anchors = [akLeft, akBottom]
           BorderSpacing.Left = 6
@@ -5249,7 +5249,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 283
           Height = 23
-          Top = 128
+          Top = 121
           Width = 60
           Caption = 'DATA'
           TabOrder = 35
@@ -5266,7 +5266,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 1
         Caption = ' Callsign alert '
-        ClientHeight = 142
+        ClientHeight = 126
         ClientWidth = 598
         TabOrder = 2
         object btnAlertCallsigns: TButton
@@ -5332,7 +5332,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 1
         Caption = 'Connect'
-        ClientHeight = 146
+        ClientHeight = 130
         ClientWidth = 598
         TabOrder = 3
         object chkConToDXC: TCheckBox
@@ -5426,7 +5426,7 @@ object frmPreferences: TfrmPreferences
         Top = 3
         Width = 496
         Caption = ' Font settings '
-        ClientHeight = 350
+        ClientHeight = 334
         ClientWidth = 494
         TabOrder = 0
         object lblButtons: TLabel
@@ -5629,7 +5629,7 @@ object frmPreferences: TfrmPreferences
         Top = 11
         Width = 233
         Caption = 'WAZ colors '
-        ClientHeight = 228
+        ClientHeight = 212
         ClientWidth = 231
         TabOrder = 0
         object Label23: TLabel
@@ -5687,7 +5687,7 @@ object frmPreferences: TfrmPreferences
         Top = 11
         Width = 233
         Caption = 'ITU colors '
-        ClientHeight = 228
+        ClientHeight = 212
         ClientWidth = 231
         TabOrder = 1
         object Label54: TLabel
@@ -5766,7 +5766,7 @@ object frmPreferences: TfrmPreferences
         Top = 19
         Width = 249
         Caption = 'IOTA colors'
-        ClientHeight = 166
+        ClientHeight = 150
         ClientWidth = 247
         TabOrder = 0
         object Label57: TLabel
@@ -5825,7 +5825,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 18
         BorderSpacing.Top = 6
         Caption = 'First club'
-        ClientHeight = 98
+        ClientHeight = 82
         ClientWidth = 582
         TabOrder = 0
         object cmbFirstClub: TComboBox
@@ -5834,7 +5834,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 12
           Height = 33
-          Top = 33
+          Top = 25
           Width = 293
           BorderSpacing.Left = 12
           ItemHeight = 0
@@ -5878,7 +5878,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 317
           Height = 17
-          Top = 41
+          Top = 33
           Width = 39
           BorderSpacing.Left = 12
           Caption = 'Since:'
@@ -5890,7 +5890,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 368
           Height = 34
-          Top = 32
+          Top = 24
           Width = 96
           BorderSpacing.Left = 12
           TabOrder = 3
@@ -5906,7 +5906,7 @@ object frmPreferences: TfrmPreferences
         Width = 584
         BorderSpacing.Top = 6
         Caption = 'Second club'
-        ClientHeight = 98
+        ClientHeight = 82
         ClientWidth = 582
         TabOrder = 1
         object cmbSecondClub: TComboBox
@@ -5915,7 +5915,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 12
           Height = 33
-          Top = 33
+          Top = 25
           Width = 293
           BorderSpacing.Left = 12
           ItemHeight = 0
@@ -5959,7 +5959,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 317
           Height = 17
-          Top = 41
+          Top = 33
           Width = 39
           BorderSpacing.Left = 12
           Caption = 'Since:'
@@ -5971,7 +5971,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 368
           Height = 34
-          Top = 32
+          Top = 24
           Width = 96
           BorderSpacing.Left = 12
           TabOrder = 3
@@ -5987,7 +5987,7 @@ object frmPreferences: TfrmPreferences
         Width = 584
         BorderSpacing.Top = 6
         Caption = 'Third club'
-        ClientHeight = 98
+        ClientHeight = 82
         ClientWidth = 582
         TabOrder = 2
         object cmbThirdClub: TComboBox
@@ -5996,7 +5996,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 12
           Height = 33
-          Top = 33
+          Top = 25
           Width = 293
           BorderSpacing.Left = 12
           ItemHeight = 0
@@ -6040,7 +6040,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 317
           Height = 17
-          Top = 41
+          Top = 33
           Width = 39
           BorderSpacing.Left = 12
           Caption = 'Since:'
@@ -6052,7 +6052,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 368
           Height = 34
-          Top = 32
+          Top = 24
           Width = 96
           BorderSpacing.Left = 12
           TabOrder = 3
@@ -6068,7 +6068,7 @@ object frmPreferences: TfrmPreferences
         Width = 584
         BorderSpacing.Top = 6
         Caption = 'Fourth club'
-        ClientHeight = 98
+        ClientHeight = 82
         ClientWidth = 582
         TabOrder = 3
         object cmbFourthClub: TComboBox
@@ -6077,7 +6077,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 12
           Height = 33
-          Top = 33
+          Top = 25
           Width = 293
           BorderSpacing.Left = 12
           ItemHeight = 0
@@ -6121,7 +6121,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 317
           Height = 17
-          Top = 41
+          Top = 33
           Width = 39
           BorderSpacing.Left = 12
           Caption = 'Since:'
@@ -6133,7 +6133,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 368
           Height = 34
-          Top = 32
+          Top = 24
           Width = 96
           BorderSpacing.Left = 12
           TabOrder = 3
@@ -6149,7 +6149,7 @@ object frmPreferences: TfrmPreferences
         Width = 584
         BorderSpacing.Top = 6
         Caption = 'Fifth club'
-        ClientHeight = 98
+        ClientHeight = 82
         ClientWidth = 582
         TabOrder = 4
         object cmbFifthClub: TComboBox
@@ -6158,7 +6158,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 12
           Height = 33
-          Top = 33
+          Top = 25
           Width = 293
           BorderSpacing.Left = 12
           ItemHeight = 0
@@ -6202,7 +6202,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 317
           Height = 17
-          Top = 41
+          Top = 33
           Width = 39
           BorderSpacing.Left = 12
           Caption = 'Since:'
@@ -6214,7 +6214,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 368
           Height = 34
-          Top = 32
+          Top = 24
           Width = 96
           BorderSpacing.Left = 12
           TabOrder = 3
@@ -6284,7 +6284,7 @@ object frmPreferences: TfrmPreferences
         Top = 74
         Width = 572
         Caption = ' Color '
-        ClientHeight = 60
+        ClientHeight = 44
         ClientWidth = 570
         TabOrder = 1
         object Label61: TLabel
@@ -6353,7 +6353,7 @@ object frmPreferences: TfrmPreferences
         Top = 146
         Width = 572
         Caption = ' Band Map Entries Aging (in minutes) '
-        ClientHeight = 66
+        ClientHeight = 50
         ClientWidth = 570
         TabOrder = 7
         object Label62: TLabel
@@ -6408,7 +6408,7 @@ object frmPreferences: TfrmPreferences
         Top = 230
         Width = 369
         Caption = 'Band map entries (from dxcluster)'
-        ClientHeight = 90
+        ClientHeight = 74
         ClientWidth = 367
         TabOrder = 8
         object Label65: TLabel
@@ -6501,7 +6501,7 @@ object frmPreferences: TfrmPreferences
         Top = 232
         Width = 201
         Caption = 'Column widths'
-        ClientHeight = 87
+        ClientHeight = 71
         ClientWidth = 199
         TabOrder = 14
         object seFreqWidth: TSpinEdit
@@ -6599,7 +6599,7 @@ object frmPreferences: TfrmPreferences
         Width = 280
         BorderSpacing.Top = 6
         Caption = ' Window size && position'
-        ClientHeight = 103
+        ClientHeight = 87
         ClientWidth = 278
         TabOrder = 1
         object Label66: TLabel
@@ -6749,7 +6749,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 3
         BorderSpacing.Top = 6
         Caption = ' Refresh '
-        ClientHeight = 103
+        ClientHeight = 87
         ClientWidth = 278
         TabOrder = 4
         object Label70: TLabel
@@ -7018,7 +7018,7 @@ object frmPreferences: TfrmPreferences
         Top = 11
         Width = 545
         Caption = ' First '
-        ClientHeight = 102
+        ClientHeight = 86
         ClientWidth = 543
         TabOrder = 0
         object Label74: TLabel
@@ -7100,7 +7100,7 @@ object frmPreferences: TfrmPreferences
         Top = 123
         Width = 545
         Caption = ' Second '
-        ClientHeight = 102
+        ClientHeight = 86
         ClientWidth = 543
         TabOrder = 1
         object Label76: TLabel
@@ -7182,7 +7182,7 @@ object frmPreferences: TfrmPreferences
         Top = 235
         Width = 545
         Caption = ' Third '
-        ClientHeight = 102
+        ClientHeight = 86
         ClientWidth = 543
         TabOrder = 2
         object Label78: TLabel
@@ -7308,7 +7308,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 12
         BorderSpacing.Top = 3
         Caption = ' Data for access to ARRL LoTW website '
-        ClientHeight = 70
+        ClientHeight = 54
         ClientWidth = 514
         TabOrder = 2
         object lblLoUsr: TLabel
@@ -7410,7 +7410,7 @@ object frmPreferences: TfrmPreferences
         Width = 516
         BorderSpacing.Top = 6
         Caption = ' Data for access to eQSL website '
-        ClientHeight = 258
+        ClientHeight = 242
         ClientWidth = 514
         TabOrder = 6
         object lbleQSLUsr: TLabel
@@ -7620,7 +7620,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 18
         BorderSpacing.Top = 12
         Caption = ' WinKeyer'
-        ClientHeight = 158
+        ClientHeight = 142
         ClientWidth = 495
         TabOrder = 3
         object lblWinPort: TLabel
@@ -7786,7 +7786,7 @@ object frmPreferences: TfrmPreferences
         Width = 497
         BorderSpacing.Top = 6
         Caption = ' cwdaemon '
-        ClientHeight = 140
+        ClientHeight = 124
         ClientWidth = 495
         TabOrder = 4
         object lblCWAddr: TLabel
@@ -7971,7 +7971,7 @@ object frmPreferences: TfrmPreferences
         Width = 497
         BorderSpacing.Top = 6
         Caption = 'K3NG Key'
-        ClientHeight = 140
+        ClientHeight = 124
         ClientWidth = 495
         TabOrder = 5
         object lblK3NGPort: TLabel
@@ -8140,7 +8140,7 @@ object frmPreferences: TfrmPreferences
         Width = 497
         BorderSpacing.Top = 6
         Caption = 'HamLib'
-        ClientHeight = 140
+        ClientHeight = 124
         ClientWidth = 495
         TabOrder = 6
         object lblHamLibSpeed: TLabel
@@ -8389,7 +8389,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 6
         Caption = ' Reading data from fldigi'
-        ClientHeight = 326
+        ClientHeight = 310
         ClientWidth = 722
         TabOrder = 0
         object Label91: TLabel
@@ -8725,7 +8725,7 @@ object frmPreferences: TfrmPreferences
         Width = 724
         BorderSpacing.Top = 6
         Caption = 'Reading data from wsjtx'
-        ClientHeight = 298
+        ClientHeight = 282
         ClientWidth = 722
         TabOrder = 1
         object GroupBox52: TGroupBox
@@ -9322,73 +9322,108 @@ object frmPreferences: TfrmPreferences
       Caption = 'External viewers'
       ClientHeight = 757
       ClientWidth = 836
-      object Label99: TLabel
-        Left = 23
+      object lblTxtFIles: TLabel
+        AnchorSideLeft.Control = tabExtViewers
+        AnchorSideTop.Control = tabExtViewers
+        Left = 24
         Height = 17
-        Top = 30
+        Top = 22
         Width = 102
+        BorderSpacing.Left = 24
+        BorderSpacing.Top = 22
         Caption = 'Text files(*.txt):'
       end
-      object Label100: TLabel
-        Left = 23
+      object lblPdfFiles: TLabel
+        AnchorSideLeft.Control = edtTxtFiles
+        AnchorSideTop.Control = edtTxtFiles
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 17
-        Top = 86
+        Top = 85
         Width = 108
+        BorderSpacing.Top = 12
         Caption = 'PDF files (*.pdf):'
       end
-      object Label101: TLabel
-        Left = 23
+      object lblImgFIles: TLabel
+        AnchorSideLeft.Control = edtPdfFiles
+        AnchorSideTop.Control = edtPdfFiles
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 17
-        Top = 142
+        Top = 148
         Width = 160
+        BorderSpacing.Top = 12
         Caption = 'Images (*.jpg;*.png*.gif)'
       end
-      object Label102: TLabel
-        Left = 21
+      object lblHtmlFiles: TLabel
+        AnchorSideLeft.Control = chkDeleteEqsl
+        AnchorSideTop.Control = chkDeleteEqsl
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 17
-        Top = 240
+        Top = 269
         Width = 161
+        BorderSpacing.Top = 12
         Caption = 'HTML files(*.html;*.htm)'
       end
       object edtTxtFiles: TEdit
-        Left = 47
+        AnchorSideLeft.Control = lblTxtFIles
+        AnchorSideTop.Control = lblTxtFIles
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 34
-        Top = 49
+        Top = 39
         Width = 321
         TabOrder = 0
         OnExit = edtTxtFilesExit
       end
       object edtPdfFiles: TEdit
-        Left = 47
+        AnchorSideLeft.Control = lblPdfFiles
+        AnchorSideTop.Control = lblPdfFiles
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 34
-        Top = 105
+        Top = 102
         Width = 320
         TabOrder = 1
         OnExit = edtPdfFilesExit
       end
       object edtImgFiles: TEdit
-        Left = 47
+        AnchorSideLeft.Control = lblImgFIles
+        AnchorSideTop.Control = lblImgFIles
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 34
-        Top = 166
+        Top = 165
         Width = 320
         TabOrder = 2
         OnExit = edtImgFilesExit
       end
       object edtHtmlFiles: TEdit
-        Left = 45
+        AnchorSideLeft.Control = lblHtmlFiles
+        AnchorSideTop.Control = lblHtmlFiles
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 34
-        Top = 264
+        Top = 286
         Width = 320
         TabOrder = 3
         OnClick = edtHtmlFilesClick
         OnExit = edtHtmlFilesExit
       end
       object chkIntQSLViewer: TCheckBox
-        Left = 47
+        AnchorSideLeft.Control = edtImgFiles
+        AnchorSideTop.Control = edtImgFiles
+        AnchorSideTop.Side = asrBottom
+        Left = 24
         Height = 23
-        Top = 200
+        Hint = 'Open QSL and eQSL images with internal QSLview (else with default web browser)'#10'.'#10'NOTE: web browser view does not save eQSL image to '#10'~/.config/cqrlog/call_data/eqsl folder. Only internal QSLview saves it.'
+        Top = 211
         Width = 307
+        BorderSpacing.Top = 12
         Caption = 'Open QSL card images with internal viewer'
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 4
       end
       object lblExtViewErrorMsg: TLabel
@@ -9401,25 +9436,24 @@ object frmPreferences: TfrmPreferences
         ParentFont = False
       end
       object lblHamclock: TLabel
-        AnchorSideLeft.Control = Label102
+        AnchorSideLeft.Control = lblHtmlFiles
         AnchorSideTop.Control = edtHtmlFiles
         AnchorSideTop.Side = asrBottom
-        Left = 21
+        Left = 24
         Height = 17
-        Top = 307
+        Top = 332
         Width = 150
-        BorderSpacing.Top = 9
+        BorderSpacing.Top = 12
         Caption = 'Hamclock URL address'
       end
       object edtHamClockUrl: TEdit
         AnchorSideLeft.Control = edtHtmlFiles
         AnchorSideTop.Control = lblHamclock
         AnchorSideTop.Side = asrBottom
-        Left = 45
+        Left = 24
         Height = 34
-        Top = 330
+        Top = 349
         Width = 320
-        BorderSpacing.Top = 6
         TabOrder = 5
         OnExit = edtHamClockUrlExit
       end
@@ -9427,14 +9461,28 @@ object frmPreferences: TfrmPreferences
         AnchorSideLeft.Control = edtHamClockUrl
         AnchorSideTop.Control = edtHamClockUrl
         AnchorSideTop.Side = asrBottom
-        Left = 45
+        Left = 24
         Height = 23
-        Top = 367
+        Top = 386
         Width = 194
         BorderSpacing.Top = 3
         Caption = 'Enable HamClock support'
         TabOrder = 6
         OnChange = chkHamClockChange
+      end
+      object chkDeleteEqsl: TCheckBox
+        AnchorSideLeft.Control = chkIntQSLViewer
+        AnchorSideTop.Control = chkIntQSLViewer
+        AnchorSideTop.Side = asrBottom
+        Left = 24
+        Height = 23
+        Hint = 'Delete eQSL images after view. '#10'Do not collect them in folder: ~/.config/cqrlog/call_data/eqsl'#10'.'#10'NOTE: eQSL image is deleted ALWAYS after view not'#10'depending on internal QSLview or web browser used for view'
+        Top = 234
+        Width = 242
+        Caption = 'Delete eQSL from disk after view'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 7
       end
     end
     object tabCallbook: TTabSheet

@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
   Left = 209
-  Height = 669
+  Height = 469
   Top = 44
   Width = 986
   HelpType = htKeyword
@@ -10,7 +10,7 @@ object frmMain: TfrmMain
   ActiveControl = Panel2
   AutoScroll = True
   Caption = 'CqrlogAlpha for Linux'
-  ClientHeight = 644
+  ClientHeight = 469
   ClientWidth = 986
   Constraints.MinHeight = 148
   Constraints.MinWidth = 536
@@ -161,13 +161,13 @@ object frmMain: TfrmMain
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   ShowHint = True
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object sbMain: TStatusBar
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 19
-    Top = 625
+    Top = 450
     Width = 986
     Panels = <    
       item
@@ -193,7 +193,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 40
-    Top = 579
+    Top = 404
     Width = 986
     Align = alBottom
     BorderSpacing.Bottom = 6
@@ -419,7 +419,7 @@ object frmMain: TfrmMain
     AnchorSideTop.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 422
+    Height = 247
     Top = 69
     Width = 986
     Align = alClient
@@ -725,7 +725,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 88
-    Top = 491
+    Top = 316
     Width = 986
     Align = alBottom
     BevelOuter = bvNone
@@ -1955,56 +1955,6 @@ object frmMain: TfrmMain
       Caption = 'Edit details'
       OnExecute = acEditDetailsExecute
     end
-    object acQSLImage: TAction
-      ImageIndex = 27
-      OnExecute = acQSLImageExecute
-    end
-    object acQRZ: TAction
-      Caption = 'Search on qrz.com'
-      ImageIndex = 28
-      OnExecute = acQRZExecute
-    end
-    object acRebuildMembStat: TAction
-      Caption = 'Rebuild membership statistics'
-      OnExecute = acRebuildMembStatExecute
-    end
-    object acBigSquares: TAction
-      Caption = 'Big squares'
-      OnExecute = acBigSquaresExecute
-    end
-    object acHamQTH: TAction
-      Caption = 'Search on HamQTH.com'
-      ImageIndex = 30
-      OnExecute = acHamQTHExecute
-    end
-    object aceQSLUp: TAction
-      Caption = 'Upload QSO to eQSL.cc'
-      Hint = 'Upload QSO to eQSL.cc'
-      ImageIndex = 31
-      OnExecute = aceQSLUpExecute
-    end
-    object aceQSLDwn: TAction
-      Caption = 'Download QSO from eQSL.cc'
-      Hint = 'Download QSL from eQSL.cc'
-      ImageIndex = 32
-      OnExecute = aceQSLDwnExecute
-    end
-    object acSOTAExport: TAction
-      Caption = 'CSV for SOTA website'
-      OnExecute = acSOTAExportExecute
-    end
-    object acEDIExport: TAction
-      Caption = 'EDI for contests'
-      OnExecute = acEDIExportExecute
-    end
-    object acCabrilloExport: TAction
-      Caption = 'Cabrillo'
-      OnExecute = acCabrilloExportExecute
-    end
-    object acRemoveDupes: TAction
-      Caption = 'Remove dupes from the log'
-      OnExecute = acRemoveDupesExecute
-    end
     object acUploadToHamQTH: TAction
       Category = 'OnlineLog'
       Caption = 'Upload all changes'
@@ -2064,6 +2014,59 @@ object frmMain: TfrmMain
       Category = 'LoTW'
       Caption = 'Mark all QSO as uploded to LoTW'
       OnExecute = acUploadAllToLoTWExecute
+    end
+    object acQSLImage: TAction
+      ImageIndex = 27
+      OnExecute = acQSLImageExecute
+    end
+    object aceQSLImage: TAction
+      OnExecute = aceQSLImageExecute
+    end
+    object acQRZ: TAction
+      Caption = 'Search on qrz.com'
+      ImageIndex = 28
+      OnExecute = acQRZExecute
+    end
+    object acRebuildMembStat: TAction
+      Caption = 'Rebuild membership statistics'
+      OnExecute = acRebuildMembStatExecute
+    end
+    object acBigSquares: TAction
+      Caption = 'Big squares'
+      OnExecute = acBigSquaresExecute
+    end
+    object acHamQTH: TAction
+      Caption = 'Search on HamQTH.com'
+      ImageIndex = 30
+      OnExecute = acHamQTHExecute
+    end
+    object aceQSLUp: TAction
+      Caption = 'Upload QSO to eQSL.cc'
+      Hint = 'Upload QSO to eQSL.cc'
+      ImageIndex = 31
+      OnExecute = aceQSLUpExecute
+    end
+    object aceQSLDwn: TAction
+      Caption = 'Download QSO from eQSL.cc'
+      Hint = 'Download QSL from eQSL.cc'
+      ImageIndex = 32
+      OnExecute = aceQSLDwnExecute
+    end
+    object acSOTAExport: TAction
+      Caption = 'CSV for SOTA website'
+      OnExecute = acSOTAExportExecute
+    end
+    object acEDIExport: TAction
+      Caption = 'EDI for contests'
+      OnExecute = acEDIExportExecute
+    end
+    object acCabrilloExport: TAction
+      Caption = 'Cabrillo'
+      OnExecute = acCabrilloExportExecute
+    end
+    object acRemoveDupes: TAction
+      Caption = 'Remove dupes from the log'
+      OnExecute = acRemoveDupesExecute
     end
     object acAutoSizeColumns: TAction
       Caption = 'AutoSizeColumns'

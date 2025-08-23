@@ -55,6 +55,8 @@ uses fPreferences, dUtils, dData, fImportProgress, uMyini;
 
 procedure TfrmImportLoTWWeb.btnPreferencesClick(Sender: TObject);
 begin
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
   with TfrmPreferences.Create(self) do
   try
     pgPreferences.ActivePage := tabLoTW;
@@ -90,6 +92,8 @@ var
   Count : Word = 0;
 begin
   Done := False;
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
   FileSize := 0;
   mStat.Clear;
   Application.ProcessMessages;
@@ -202,6 +206,8 @@ begin
     m.Free;
     QSOList.Free;
     btnClose.Enabled       := True;
+    btnClose.Font.Style:=[fsBold];
+    btnClose.Repaint;
     btnDownload.Enabled    := True;
     btnPreferences.Enabled := True;
     edtDateFrom.Enabled    := True;
@@ -218,7 +224,9 @@ begin
   edtCall.Text       := cqrini.ReadString('LoTWImp','Call',
                         cqrini.ReadString('Station','Call',''));
   cbImports.Checked  := cqrini.ReadBool('LoTWImp','Import',True);
-  Done := False
+  Done := False;
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
 end;
 
 procedure TfrmImportLoTWWeb.FormCloseQuery(Sender: TObject;

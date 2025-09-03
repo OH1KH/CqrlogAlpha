@@ -629,7 +629,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       AnchorSideTop.Side = asrCenter
       Left = 367
       Height = 23
-      Hint = 'Show only DX (for you) stations.'#10'Continents to show are selected when checked, or rigth mouse click if already checked.'
+      Hint = 'Show only DX (for you) stations.'#10'Continents to show are selected when checked, or right mouse click if already checked.'
       Top = 5
       Width = 44
       Caption = 'Dx'

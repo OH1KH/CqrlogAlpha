@@ -150,7 +150,7 @@ object frmeQSLUpload: TfrmeQSLUpload
   }
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object grbWebExport: TGroupBox
     Left = 0
     Height = 88
@@ -252,10 +252,10 @@ object frmeQSLUpload: TfrmeQSLUpload
       Lines.Strings = (
         ''
       )
-      OnChange = mStatChange
       ReadOnly = True
       ScrollBars = ssAutoBoth
       TabOrder = 0
+      OnChange = mStatChange
     end
     object pnlUpload: TPanel
       AnchorSideRight.Side = asrBottom
@@ -278,8 +278,8 @@ object frmeQSLUpload: TfrmeQSLUpload
         Top = 13
         Width = 300
         Caption = 'Upload to eQSL.cc'
-        OnClick = btnUploadClick
         TabOrder = 0
+        OnClick = btnUploadClick
       end
       object btnClose: TButton
         AnchorSideTop.Control = pnlUpload
@@ -307,8 +307,8 @@ object frmeQSLUpload: TfrmeQSLUpload
         Width = 96
         BorderSpacing.Left = 6
         Caption = 'Preferences'
-        OnClick = btnPreferencesClick
         TabOrder = 2
+        OnClick = btnPreferencesClick
       end
     end
   end

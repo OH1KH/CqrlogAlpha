@@ -255,6 +255,8 @@ procedure TfrmeQSLUpload.btnUploadClick(Sender : TObject);
 var
   FileName : String;
 begin
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
   mStat.Clear;
   edtQTH.Text := trim(edtQTH.Text);
   if (edtQTH.Text = '') then
@@ -290,6 +292,8 @@ begin
     end
 
   finally
+    btnClose.Font.Style:=[fsBold];
+    btnClose.Repaint;
     if cqrini.ReadBool('OnlineLog','IgnoreLoTWeQSL',False) then
       dmLogUpload.EnableOnlineLogSupport(False)
   end

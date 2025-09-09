@@ -7928,6 +7928,7 @@ begin
                 end;
            end; //case remote type
 
+  cbOffline.Caption:='Remote';
   ClearAll;
   lblCall.Font.Color    := clRed;
   edtCall.Enabled       := False;
@@ -7988,6 +7989,7 @@ begin
   edtCall.Enabled           := True;
   cbOffline.Checked         := False;
   cbOffline.Enabled         := True;
+  cbOffline.Caption         := 'Offline';
   btnSave.Enabled           := True;
   ReturnToNewQSO;
   //clear TMPQSO mode on close. Otherwise it shows up on next remote mode (procedure ClearAll makes it)

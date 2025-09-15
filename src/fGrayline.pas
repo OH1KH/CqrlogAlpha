@@ -252,12 +252,10 @@ begin
   else begin
     if acConnect.Caption = 'Disconnect' then
     begin
-      if ltelnet <> nil then
+      if Assigned(ltelnet) then
        Begin
-         lTelnet.Disconnect;
-         sleep(100);
-         FreeAndNil(lTelnet);
-         rbn_status := 'Disconnected';
+         if lTelnet.Connected then
+            lTelnet.Disconnect;
        end;
     end
     else begin
@@ -285,6 +283,10 @@ var
 begin
   InitCriticalSection(csRBN);
   tmrSpotDots.Enabled:=false;
+  lTelnet := TLTelnetClientComponent.Create(nil);
+    lTelnet.OnConnect    := @lConnect;
+    lTelnet.OnDisconnect := @lDisconnect;
+    lTelnet.OnReceive    := @lReceive;
   for i:=1 to MAX_ITEMS do
    begin
     RBNSpotList[i].band    := '';
@@ -311,7 +313,7 @@ end;
 
 procedure TfrmGrayline.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmGrayline);
+  dmUtils.LoadWindowPos(Self);
   sbGrayLine.Visible        := cqrini.ReadBool('Grayline','Statusbar',True);
   pumShowShortPath.Checked  := cqrini.ReadBool('Grayline','ShortPath',False);
   pumShowLongPath.Checked   := cqrini.ReadBool('Grayline','LongPath',False);
@@ -333,24 +335,23 @@ begin
   tmrGrayLine.Enabled := False;
   tmrAutoConnect.Enabled:=False;
   tmrSpotDots.Enabled:=False;
-  if ltelnet <> nil then
-       Begin
-         lTelnet.Disconnect;
-         sleep(100);
-         FreeAndNil(lTelnet);
-       end;
+  if Assigned(lTelnet) then
+   if lTelnet.Connected then
+    lTelnet.Disconnect(true);
   RemoveOldSpots(0);
 end;
 
 procedure TfrmGrayline.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   cqrini.WriteBool('Grayline','Statusbar',sbGrayLine.Visible);
-  dmUtils.SaveWindowPos(frmGrayline)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmGrayline.FormDestroy(Sender: TObject);
 begin
   if LocalDbg then Writeln('Closing GrayLine window');
+  if Assigned(lTelnet) then
+     FreeAndNil(lTelnet);
   dispose(ob,done);
   DoneCriticalsection(csRBN)
 end;

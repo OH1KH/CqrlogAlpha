@@ -293,16 +293,8 @@ end;
 procedure TfrmLoTWExport.FormShow(Sender: TObject);
 begin
   dlgSave.InitialDir := dmData.HomeDir;
-  if not cqrini.ReadBool('LoTWExp','Max',False) then
-  begin
-    Height := cqrini.ReadInteger('LoTWExp','Height',Height);
-    Width  := cqrini.ReadInteger('LoTWExp','Width',Width);
-    Top    := cqrini.ReadInteger('LoTWExp','Top',top);
-    Left   := cqrini.ReadInteger('LoTWExp','Left',left)
-  end
-  else begin
-    WindowState := wsMaximized
-  end;
+  dmUtils.LoadWindowPos(Self);
+
   edtTqsl.Text := cqrini.ReadString('LoTWExp','cmd','/usr/bin/tqsl -d -l "your qth name" %f -x');
   if pgLoTWExport.ActivePageIndex = 1 then
     rbWebExportNotExported.SetFocus
@@ -315,18 +307,8 @@ begin
     CanClose := False;
     exit
   end;
+  dmUtils.SaveWindowPos(Self);
 
-  if not (WindowState = wsMaximized) then
-  begin
-    cqrini.WriteInteger('LoTWExp','Height',Height);
-    cqrini.WriteInteger('LoTWExp','Width',Width);
-    cqrini.WriteInteger('LoTWExp','Top',Top);
-    cqrini.WriteInteger('LoTWExp','Left',Left);
-    cqrini.WriteBool('LoTWExp','Max', False)
-  end
-  else begin
-    cqrini.WriteBool('LoTWExp','Max', True)
-  end;
   cqrini.WriteString('LoTWExp','cmd',edtTqsl.Text);
   AProcess.Free;
   dmData.Q1.Close

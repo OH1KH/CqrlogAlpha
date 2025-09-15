@@ -84,7 +84,9 @@ end;
 
 procedure TfrmReminder.FormShow(Sender: TObject);
 begin
-  //dmUtils.LoadWindowPos(frmReminder);    // this breaks big fonts and positions used in this form !!!!
+  dmUtils.LoadWindowPos(Self);
+  lblRemi1.Font.Size:=18;                //this is fixed label
+  lblRemi1.Font.Style:=[fsBold,fsItalic];
 end;
 
 procedure TfrmReminder.FormKeyUp(Sender : TObject; var Key : Word;
@@ -205,7 +207,7 @@ begin
    cqrini.WriteString('Reminder','RemindTimeSet',RemindTimeSet.EditText);
    cqrini.WriteString('Reminder','RemindUThour',RemindUThour.EditText);
    cqrini.WriteString('Reminder','RemiMemo',RemiMemo.Lines[0]);
-   //dmUtils.SaveWindowPos(frmReminder);
+   dmUtils.SaveWindowPos(Self);
 
   frmReminder.hide;
 end;

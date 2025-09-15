@@ -213,7 +213,7 @@ end;
 
 procedure TfrmeQSLUpload.FormShow(Sender : TObject);
 begin
-  dmUtils.LoadWindowPos(frmeQSLUpload);
+  dmUtils.LoadWindowPos(Self);
   edtQTH.Text := cqrini.ReadString('eQSL','QTH','');
   if dmData.IsFilter then
     begin
@@ -247,7 +247,7 @@ end;
 procedure TfrmeQSLUpload.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmeQSLUpload);
+  dmUtils.SaveWindowPos(Self);
   cqrini.WriteString('eQSL','QTH',edtQTH.Text)
 end;
 

@@ -1280,29 +1280,34 @@ begin
 end;
 
 procedure TRigControl.HamlibErrors(e:string);
+var
+  ErrorString :String;
 Begin
+  ErrorString:='';
   case e of
-     '-1' : Writeln('Invalid parameter');
-     '-2' : Writeln('Invalid configuration (serial,..)');
-     '-3' : Writeln('Memory shortage');
-     '-4' : Writeln('Function not implemented, but will be');
-     '-5' : Writeln('Communication timed out');
-     '-6' : Writeln('IO error, including open failed');
-     '-7' : Writeln('Internal Hamlib error, huh!');
-     '-8' : Writeln('Protocol error');
-     '-9' : Writeln('Command rejected by the rig');
-     '-10': Writeln('Command performed, but arg truncated');
-     '-11': Writeln('Function not available');
-     '-12': Writeln('VFO not targetable');
-     '-13': Writeln('Error talking on the bus');
-     '-14': Writeln('Collision on the bus');
-     '-15': Writeln('NULL RIG handle or any invalid pointer parameter in get arg');
-     '-16': Writeln('Invalid VFO');
-     '-17': Writeln('Argument out of domain of func');
-     '-18': Writeln('Function deprecated');
-     '-19': Writeln('Security error password not provided or crypto failure');
-     '-20': Writeln('Rig is not powered on');
+     '-1' : ErrorString:='Invalid parameter';
+     '-2' : ErrorString:='Invalid configuration (serial,..)';
+     '-3' : ErrorString:='Memory shortage';
+     '-4' : ErrorString:='Function not implemented, but will be';
+     '-5' : ErrorString:='Communication timed out';
+     '-6' : ErrorString:='IO error, including open failed';
+     '-7' : ErrorString:='Internal Hamlib error, huh!';
+     '-8' : ErrorString:='Protocol error';
+     '-9' : ErrorString:='Command rejected by the rig';
+     '-10': ErrorString:='Command performed, but arg truncated';
+     '-11': ErrorString:='Function not available';
+     '-12': ErrorString:='VFO not targetable';
+     '-13': ErrorString:='Error talking on the bus';
+     '-14': ErrorString:='Collision on the bus';
+     '-15': ErrorString:='NULL RIG handle or any invalid pointer parameter in get arg';
+     '-16': ErrorString:='Invalid VFO';
+     '-17': ErrorString:='Argument out of domain of func';
+     '-18': ErrorString:='Function deprecated';
+     '-19': ErrorString:='Security error password not provided or crypto failure';
+     '-20': ErrorString:='Rig is not powered on';
   end;
+  if fDebugMode and (ErrorString<>'') then
+                                      Writeln('Hamlib: ',ErrorString);
 end;
 
 

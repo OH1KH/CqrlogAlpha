@@ -517,7 +517,7 @@ begin
   LoadUsrButtonCaptions;
   LoadButtonCaptions;
   LoadBandButtons;
-  dmUtils.LoadWindowPos(frmTRXControl);
+  dmUtils.LoadWindowPos(Self);
   cmbRigGetItems(nil);
   //These two are needed here othewise rig selector has "None" even if rig is initialized at startup
   cmbRig.ItemIndex:=cqrini.ReadInteger('TRX', 'RigInUse', 1);
@@ -878,7 +878,7 @@ end;
 procedure TfrmTRXControl.FormClose(Sender : TObject; var CloseAction : TCloseAction);
 begin
   cqrini.WriteInteger('TRX', 'RigInUse', cmbRig.ItemIndex);
-  dmUtils.SaveWindowPos(frmTRXControl);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 function TfrmTRXControl.ListModeClose : Boolean;

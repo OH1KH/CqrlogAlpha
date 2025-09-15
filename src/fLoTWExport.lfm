@@ -5,8 +5,8 @@ object frmLoTWExport: TfrmLoTWExport
   Width = 520
   HelpType = htKeyword
   HelpKeyword = 'help/h7.html'
-  HorzScrollBar.Page = 448
-  VertScrollBar.Page = 364
+  HorzScrollBar.Page = 382
+  VertScrollBar.Page = 292
   ActiveControl = pgLoTWExport
   AutoScroll = True
   Caption = 'Export for LoTW'
@@ -17,7 +17,7 @@ object frmLoTWExport: TfrmLoTWExport
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object pgLoTWExport: TPageControl
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
@@ -124,8 +124,8 @@ object frmLoTWExport: TfrmLoTWExport
           Anchors = [akTop, akRight]
           BorderSpacing.Top = 3
           Caption = 'Browse'
-          OnClick = btnFileBrowseClick
           TabOrder = 1
+          OnClick = btnFileBrowseClick
         end
       end
       object GroupBox3: TGroupBox
@@ -183,8 +183,8 @@ object frmLoTWExport: TfrmLoTWExport
           Width = 300
           BorderSpacing.InnerBorder = 10
           Caption = 'Export to selected file'
-          OnClick = btnFileExportClick
           TabOrder = 0
+          OnClick = btnFileExportClick
         end
         object btnHelp1: TButton
           AnchorSideLeft.Control = pnlButtons1
@@ -196,8 +196,8 @@ object frmLoTWExport: TfrmLoTWExport
           Width = 96
           BorderSpacing.Left = 3
           Caption = 'Help'
-          OnClick = btnHelpClick
           TabOrder = 1
+          OnClick = btnHelpClick
         end
         object btnClose1: TButton
           AnchorSideTop.Control = pnlButtons1
@@ -334,10 +334,10 @@ object frmLoTWExport: TfrmLoTWExport
           Lines.Strings = (
             ''
           )
-          OnChange = mStatChange
           ReadOnly = True
           ScrollBars = ssAutoBoth
           TabOrder = 0
+          OnChange = mStatChange
         end
         object pnlUpload: TPanel
           AnchorSideTop.Control = mStat
@@ -379,8 +379,8 @@ object frmLoTWExport: TfrmLoTWExport
             Anchors = [akTop, akRight]
             BorderSpacing.Right = 2
             Caption = 'Export && sign'
-            OnClick = btnExportSignClick
             TabOrder = 0
+            OnClick = btnExportSignClick
           end
           object btnUpload: TButton
             AnchorSideLeft.Control = lblLotwUpNull
@@ -395,8 +395,8 @@ object frmLoTWExport: TfrmLoTWExport
             BorderSpacing.Left = 2
             Caption = 'Upload'
             Enabled = False
-            OnClick = btnUploadClick
             TabOrder = 1
+            OnClick = btnUploadClick
           end
           object btnHelp: TButton
             AnchorSideLeft.Control = pnlButtons
@@ -408,8 +408,8 @@ object frmLoTWExport: TfrmLoTWExport
             Width = 96
             BorderSpacing.Left = 3
             Caption = 'Help'
-            OnClick = btnHelpClick
             TabOrder = 2
+            OnClick = btnHelpClick
           end
           object btnClose: TButton
             AnchorSideTop.Control = lblLotwUpNull

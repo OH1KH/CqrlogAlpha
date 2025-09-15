@@ -99,6 +99,7 @@ procedure TfrmConfigStorage.FormShow(Sender: TObject);
 var
   Sections : String;
 begin
+  dmUtils.LoadWindowPos(Self);
   dmUtils.LoadFontSettings(self);
   Sections := cqrini.ReadString('ConfigStorage','Items','');
   if (Sections='') then exit;
@@ -132,7 +133,8 @@ end;
 procedure TfrmConfigStorage.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveDBGridInForm(self)
+  dmUtils.SaveDBGridInForm(self);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 procedure TfrmConfigStorage.btnSaveClick(Sender: TObject);

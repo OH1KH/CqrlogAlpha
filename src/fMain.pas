@@ -2382,7 +2382,7 @@ procedure TfrmMain.FormShow(Sender: TObject);
 begin
   dlgOpen.InitialDir := dmData.HomeDir;
   dlgSave.InitialDir := dmData.HomeDir;
-  dmUtils.LoadFontSettings(frmMain);
+  dmUtils.LoadFontSettings(Self);
   InRefresh      := False;
   sbMain.Visible := False;  //without this workaround statusbar was hidden
   sbMain.Visible := True;   // and after resize windows was visible again
@@ -2435,7 +2435,7 @@ begin
   pnlButtons.Visible := cqrini.ReadBool('Main', 'Buttons', True);
   pnlDetails.Visible := cqrini.ReadBool('Main', 'Details', True);
 
-  dmUtils.LoadWindowPos(frmMain);
+  dmUtils.LoadWindowPos(Self);
 
   CheckAttachment;
   mnuShowButtons.Checked := pnlButtons.Visible;

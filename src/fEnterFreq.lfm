@@ -1,7 +1,7 @@
 object frmEnterFreq: TfrmEnterFreq
-  Left = 945
+  Left = 463
   Height = 109
-  Top = 234
+  Top = 24
   Width = 261
   HorzScrollBar.Page = 260
   VertScrollBar.Page = 108
@@ -118,8 +118,8 @@ object frmEnterFreq: TfrmEnterFreq
   }
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  Position = poDesktopCenter
-  LCLVersion = '3.6.0.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner

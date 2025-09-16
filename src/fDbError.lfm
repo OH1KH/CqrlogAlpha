@@ -6,8 +6,8 @@ object frmDbError: TfrmDbError
   Caption = 'Database problem'
   ClientHeight = 208
   ClientWidth = 509
-  Position = poDesktopCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -34,8 +34,8 @@ object frmDbError: TfrmDbError
     Anchors = [akTop, akRight]
     BorderSpacing.Top = 3
     Caption = 'Open mysql.err file'
-    OnClick = btnOpenErrFileClick
     TabOrder = 0
+    OnClick = btnOpenErrFileClick
   end
   object Button2: TButton
     AnchorSideLeft.Control = Owner

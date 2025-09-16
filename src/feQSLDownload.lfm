@@ -1,7 +1,7 @@
 object frmeQSLDownload: TfrmeQSLDownload
-  Left = 703
+  Left = 212
   Height = 520
-  Top = 188
+  Top = 355
   Width = 520
   HorzScrollBar.Page = 469
   VertScrollBar.Page = 314

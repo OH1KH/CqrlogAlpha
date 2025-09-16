@@ -117,8 +117,8 @@ object frmCallbook: TfrmCallbook
   KeyPreview = True
   OnKeyPress = FormKeyPress
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.0.8.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object pnlCallsign: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -136,7 +136,7 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = edtCall
       AnchorSideTop.Side = asrCenter
       Left = 18
-      Height = 15
+      Height = 17
       Top = 15
       Width = 56
       BorderSpacing.Left = 18
@@ -148,15 +148,15 @@ object frmCallbook: TfrmCallbook
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = pnlCallsign
       Left = 80
-      Height = 33
+      Height = 34
       Top = 6
       Width = 153
       Anchors = [akTop, akLeft, akRight]
       BorderSpacing.Left = 6
       BorderSpacing.Top = 6
       CharCase = ecUppercase
-      OnKeyPress = edtCallKeyPress
       TabOrder = 0
+      OnKeyPress = edtCallKeyPress
     end
     object btnSearch: TButton
       AnchorSideLeft.Control = edtCall
@@ -164,13 +164,13 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Side = asrBottom
       Left = 80
       Height = 25
-      Top = 42
+      Top = 43
       Width = 75
       BorderSpacing.Top = 3
       BorderSpacing.InnerBorder = 4
       Caption = 'Search'
-      OnClick = btnSearchClick
       TabOrder = 1
+      OnClick = btnSearchClick
     end
     object btnClose: TButton
       AnchorSideLeft.Control = btnSearch
@@ -179,13 +179,13 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Side = asrBottom
       Left = 158
       Height = 25
-      Top = 42
+      Top = 43
       Width = 75
       BorderSpacing.Left = 3
       BorderSpacing.Top = 3
       Caption = 'Close'
-      OnClick = btnCloseClick
       TabOrder = 2
+      OnClick = btnCloseClick
     end
   end
   object gbAddress: TGroupBox
@@ -233,7 +233,7 @@ object frmCallbook: TfrmCallbook
       AnchorSideLeft.Control = gbOther
       AnchorSideTop.Control = gbOther
       Left = 8
-      Height = 15
+      Height = 17
       Top = 12
       Width = 31
       BorderSpacing.Left = 8
@@ -246,8 +246,8 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = lbGrid
       AnchorSideTop.Side = asrBottom
       Left = 8
-      Height = 15
-      Top = 45
+      Height = 17
+      Top = 47
       Width = 38
       BorderSpacing.Top = 18
       Caption = 'State:'
@@ -258,8 +258,8 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = lbCounty
       AnchorSideTop.Side = asrBottom
       Left = 8
-      Height = 15
-      Top = 111
+      Height = 17
+      Top = 117
       Width = 29
       BorderSpacing.Top = 18
       Caption = 'QSL:'
@@ -270,8 +270,8 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = lbState
       AnchorSideTop.Side = asrBottom
       Left = 8
-      Height = 15
-      Top = 78
+      Height = 17
+      Top = 82
       Width = 49
       BorderSpacing.Top = 18
       Caption = 'County:'
@@ -283,7 +283,7 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = lbGrid
       AnchorSideTop.Side = asrCenter
       Left = 60
-      Height = 15
+      Height = 17
       Top = 12
       Width = 124
       BorderSpacing.Left = 3
@@ -296,8 +296,8 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = lbState
       AnchorSideTop.Side = asrCenter
       Left = 60
-      Height = 15
-      Top = 45
+      Height = 17
+      Top = 47
       Width = 124
       BorderSpacing.Left = 3
       Caption = '                               '
@@ -309,8 +309,8 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = lbCounty
       AnchorSideTop.Side = asrCenter
       Left = 60
-      Height = 15
-      Top = 78
+      Height = 17
+      Top = 82
       Width = 124
       BorderSpacing.Left = 3
       Caption = '                               '
@@ -322,8 +322,8 @@ object frmCallbook: TfrmCallbook
       AnchorSideTop.Control = lbQsl
       AnchorSideTop.Side = asrCenter
       Left = 60
-      Height = 15
-      Top = 111
+      Height = 17
+      Top = 117
       Width = 124
       BorderSpacing.Left = 3
       Caption = '                               '

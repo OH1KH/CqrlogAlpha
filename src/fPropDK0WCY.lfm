@@ -14,7 +14,7 @@ object frmPropDK0WCY: TfrmPropDK0WCY
   OnDblClick = FormDblClick
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object lblBoulAidx: TLabel
     AnchorSideLeft.Control = lblInfoDate
     AnchorSideTop.Control = lblInfo

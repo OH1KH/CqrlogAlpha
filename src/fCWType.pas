@@ -131,7 +131,7 @@ procedure TfrmCWType.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 var f:integer;
 begin
   popCWmodeClose(nil);
-  dmUtils.SaveWindowPos(frmCWType)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmCWType.FormKeyDown(Sender: TObject; var Key: Word;
@@ -450,7 +450,7 @@ procedure TfrmCWType.FormShow(Sender: TObject);
 var
    n:string;
 begin
-  dmUtils.LoadWindowPos(frmCWType);
+  dmUtils.LoadWindowPos(Self);
   CWMode:=  cqrini.ReadInteger('CW','Mode',1);
   case CWMode of
    0: mnuLtr.Checked:=True;

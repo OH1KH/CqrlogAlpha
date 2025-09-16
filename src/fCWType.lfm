@@ -122,7 +122,7 @@ object frmCWType: TfrmCWType
   OnShow = FormShow
   PopupMenu = popCWmode
   Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object pnlBottom: TPanel
     Left = 0
     Height = 35
@@ -149,8 +149,8 @@ object frmCWType: TfrmCWType
       BorderSpacing.Right = 6
       Caption = 'Close'
       ModalResult = 2
-      OnClick = btnCloseClick
       TabOrder = 0
+      OnClick = btnCloseClick
     end
     object btnClear: TButton
       AnchorSideTop.Control = pnlBottom
@@ -163,8 +163,8 @@ object frmCWType: TfrmCWType
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 2
       Caption = 'Clear'
-      OnClick = btnClearClick
       TabOrder = 1
+      OnClick = btnClearClick
     end
     object lblToShowMouseOverText: TLabel
       AnchorSideLeft.Control = pnlBottom
@@ -185,13 +185,13 @@ object frmCWType: TfrmCWType
     Width = 870
     Align = alClient
     Anchors = [akLeft, akRight, akBottom]
+    ParentFont = False
+    ScrollBars = ssAutoBoth
+    TabOrder = 1
     OnChange = mChange
     OnKeyDown = FormKeyDown
     OnKeyPress = mKeyPress
     OnKeyUp = FormKeyUp
-    ParentFont = False
-    ScrollBars = ssAutoBoth
-    TabOrder = 1
   end
   inline fraCWKeys1: TfraCWKeys
     Height = 70

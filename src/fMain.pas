@@ -2052,8 +2052,8 @@ end;
 
 procedure TfrmMain.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
-  dmUtils.SaveDBGridInForm(frmMain);
-  dmUtils.SaveWindowPos(frmMain);
+  dmUtils.SaveDBGridInForm(Self);
+  dmUtils.SaveWindowPos(Self);
 
   cqrini.WriteBool('Main', 'Toolbar', toolMain.Visible);
   cqrini.WriteBool('Main', 'Buttons', pnlButtons.Visible);

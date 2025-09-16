@@ -36,7 +36,7 @@ uses dUtils,fNewQSO, uMyIni;
 
 procedure TfrmCWKeys.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmCWKeys)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmCWKeys.FormKeyDown(Sender: TObject; var Key: Word;
@@ -69,7 +69,7 @@ end;
 
 procedure TfrmCWKeys.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmCWKeys)
+  dmUtils.LoadWindowPos(Self)
 end;
 
 end.

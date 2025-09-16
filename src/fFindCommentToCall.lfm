@@ -9,7 +9,7 @@ object frmFindCommentToCall: TfrmFindCommentToCall
   ClientHeight = 83
   ClientWidth = 270
   OnShow = FormShow
-  Position = poOwnerFormCenter
+  Position = poWorkAreaCenter
   LCLVersion = '1.6.0.4'
   object Label1: TLabel
     Left = 8

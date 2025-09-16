@@ -299,7 +299,7 @@ procedure TfrmDXCluster.FormClose(Sender: TObject; var CloseAction: TCloseAction
 begin
   if not Assigned(cqrini) then
     exit;
-  dmUtils.SaveWindowPos(frmDXCluster);
+  dmUtils.SaveWindowPos(Self);
   cqrini.WriteInteger('DXCluster','Tab',pgDXCluster.ActivePageIndex);
   cqrini.WriteString('DXCluster','Desc',telDesc);
   cqrini.WriteString('DXCluster','Addr',telAddr);
@@ -639,8 +639,7 @@ begin
   finally
     f.Free
   end;
-  dmUtils.LoadFontSettings(frmDXCluster);
-  dmUtils.LoadWindowPos(frmDXCluster);
+  dmUtils.LoadWindowPos(Self);
   ReloadSettings;
   pgDXCluster.ActivePageIndex :=  cqrini.ReadInteger('DXCluster','Tab',1);;
   telDesc := cqrini.ReadString('DXCluster','Desc','');

@@ -51,14 +51,14 @@ uses dData, fChangeFreq, dUtils, fTRXControl, uMyIni;
 procedure TfrmFreq.FormShow(Sender: TObject);
 begin
   frmTRXControl.GetModeBand(mode,band);
-  dmUtils.LoadWindowPos(frmFreq);
+  dmUtils.LoadWindowPos(Self);
   chkNewModes.Checked:= cqrini.ReadBool('Bands', 'UseNewModeFreq',false);
   RefreshData()
 end;
 
 procedure TfrmFreq.FormClose(Sender : TObject; var CloseAction : TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmFreq);
+  dmUtils.SaveWindowPos(Self);
   if dmData.trFreqs.Active then
     dmData.trFreqs.Rollback
 end;

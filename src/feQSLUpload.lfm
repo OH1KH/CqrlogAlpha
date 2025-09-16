@@ -1,7 +1,7 @@
 object frmeQSLUpload: TfrmeQSLUpload
-  Left = 693
+  Left = 489
   Height = 520
-  Top = 166
+  Top = 273
   Width = 520
   HorzScrollBar.Page = 372
   VertScrollBar.Page = 308

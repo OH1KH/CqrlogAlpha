@@ -59,7 +59,8 @@ uses dUtils,dData, uMyIni, uVersion;
 procedure TfrmCountyStat.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveDBGridInForm(frmCountyStat);
+  dmUtils.SaveDBGridInForm(Self);
+  dmUtils.SaveWindowPos(Self);
   cqrini.WriteInteger('CountyStat','Band',cmbBands.ItemIndex);
   cqrini.WriteBool('CountyStat','QSL',chkQSL.Checked);
   cqrini.WriteBool('CountyStat','LoTW',chkLoTW.Checked);
@@ -261,7 +262,8 @@ end;
 procedure TfrmCountyStat.FormShow(Sender: TObject);
 begin
   TmpFile := GetTempFileNameUTF8(dmData.HomeDir,'county');
-  dmUtils.LoadDBGridInForm(frmCountyStat);
+  dmUtils.LoadWindowPos(Self);
+  dmUtils.LoadDBGridInForm(Self);
   dmUtils.FillBandCombo(cmbBands);
   cmbBands.Items.Insert(0,'ALL');
   if cqrini.ReadInteger('CountyStat','Band',0) > cmbBands.Items.Count-1 then

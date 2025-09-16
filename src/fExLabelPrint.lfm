@@ -13,8 +13,8 @@ object frmExLabelPrint: TfrmExLabelPrint
   ClientWidth = 424
   OnClose = FormClose
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     AnchorSideLeft.Control = gchkExport
     AnchorSideTop.Control = edtQSOsToLabel
@@ -116,8 +116,8 @@ object frmExLabelPrint: TfrmExLabelPrint
       Anchors = [akTop, akRight]
       BorderSpacing.Top = 3
       Caption = 'Browse'
-      OnClick = edtBrowseClick
       TabOrder = 0
+      OnClick = edtBrowseClick
     end
     object edtFile: TEdit
       AnchorSideLeft.Control = GroupBox1
@@ -139,9 +139,9 @@ object frmExLabelPrint: TfrmExLabelPrint
       Top = 43
       Width = 197
       Caption = 'Open exported file'
-      OnClick = btnOpenExpFileClick
       TabOrder = 2
       Visible = False
+      OnClick = btnOpenExpFileClick
     end
   end
   object edtQSOsToLabel: TEdit
@@ -157,11 +157,11 @@ object frmExLabelPrint: TfrmExLabelPrint
     BorderSpacing.Left = 3
     BorderSpacing.Top = 6
     NumbersOnly = True
-    OnExit = edtQSOsToLabelExit
     ParentShowHint = False
     ShowHint = True
     TabOrder = 2
     Text = '1'
+    OnExit = edtQSOsToLabelExit
   end
   object GroupBox2: TGroupBox
     AnchorSideLeft.Control = Label1
@@ -211,8 +211,8 @@ object frmExLabelPrint: TfrmExLabelPrint
       Top = 52
       Width = 376
       BorderSpacing.Top = 3
-      OnEnter = edtRemarksEnter
       TabOrder = 2
+      OnEnter = edtRemarksEnter
     end
     object chkRemoveSep: TCheckBox
       AnchorSideLeft.Control = rbOwnRemarks
@@ -250,8 +250,8 @@ object frmExLabelPrint: TfrmExLabelPrint
     BorderSpacing.Left = 6
     BorderSpacing.Top = 12
     Caption = 'Export'
-    OnClick = btnExportClick
     TabOrder = 5
+    OnClick = btnExportClick
   end
   object btnHelp: TButton
     AnchorSideLeft.Control = lblProgress
@@ -264,8 +264,8 @@ object frmExLabelPrint: TfrmExLabelPrint
     Width = 75
     BorderSpacing.Top = 12
     Caption = 'Help'
-    OnClick = btnHelpClick
     TabOrder = 6
+    OnClick = btnHelpClick
   end
   object Cancel: TButton
     AnchorSideTop.Control = lblProgress
@@ -294,8 +294,8 @@ object frmExLabelPrint: TfrmExLabelPrint
     BorderSpacing.Left = 5
     BorderSpacing.Top = 3
     Caption = 'Export all QSOs'
-    OnChange = chkAllQSOsChange
     TabOrder = 8
+    OnChange = chkAllQSOsChange
   end
   object btnExportFieldsPref: TButton
     AnchorSideLeft.Control = Label2
@@ -308,8 +308,8 @@ object frmExLabelPrint: TfrmExLabelPrint
     Width = 184
     BorderSpacing.Left = 16
     Caption = 'Choose fields for export'
-    OnClick = btnExportFieldsPrefClick
     TabOrder = 9
+    OnClick = btnExportFieldsPrefClick
   end
   object chkKeepCsvStructure: TCheckBox
     AnchorSideLeft.Control = GroupBox1

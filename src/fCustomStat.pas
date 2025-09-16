@@ -33,6 +33,7 @@ type
     Splitter1: TSplitter;
     grdStat: TStringGrid;
     grdSumStat: TStringGrid;
+    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
     procedure FormShow(Sender: TObject);
     procedure btnPrefClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -260,7 +261,13 @@ end;
 
 procedure TfrmCustomStat.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadFontSettings(self)
+  dmUtils.LoadWindowPos(Self);
+end;
+
+procedure TfrmCustomStat.FormClose(Sender: TObject;
+  var CloseAction: TCloseAction);
+begin
+   dmUtils.SaveWindowPos(Self);
 end;
 
 end.

@@ -54,7 +54,7 @@ uses dUtils, uMyIni;
 
 procedure TfrmBandMapFilter.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(self);
+  dmUtils.LoadWindowPos(Self);
   rbShowAll.Checked   := cqrini.ReadBool('BandMapFilter','ShowAll',True);
   rbNoWkdHour.Checked := cqrini.ReadBool('BandMapFilter','NoWkdHour',False);
   rbNoWkdDate.Checked := cqrini.ReadBool('BandMapFilter','NoWkdDate',False);
@@ -77,7 +77,7 @@ end;
 procedure TfrmBandMapFilter.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(self)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmBandMapFilter.btnOKClick(Sender: TObject);

@@ -116,7 +116,7 @@ object frmDXCCStat: TfrmDXCCStat
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object pnlStatSum: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom

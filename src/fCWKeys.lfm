@@ -13,7 +13,7 @@ object frmCWKeys: TfrmCWKeys
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   inline fraCWKeys: TfraCWKeys
     Height = 95
     Width = 821

@@ -10,7 +10,7 @@ object frmBandMapFilter: TfrmBandMapFilter
   OnClose = FormClose
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object GroupBox1: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -276,8 +276,8 @@ object frmBandMapFilter: TfrmBandMapFilter
     Anchors = [akTop, akRight]
     BorderSpacing.Right = 6
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 2
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     AnchorSideRight.Control = GroupBox1

@@ -220,7 +220,7 @@ end;
 procedure TfrmPropDK0WCY.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
   tmrProp.Enabled := False;
-  dmUtils.SaveWindowPos(frmPropDK0WCY);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 procedure TfrmPropDK0WCY.FormCreate(Sender: TObject);
@@ -264,8 +264,8 @@ const
   C_LOADING = 'Loading...';
 begin
   running := False;
-  dmUtils.LoadWindowPos(frmPropDK0WCY);
-  dmUtils.LoadFontSettings(frmPropDK0WCY);
+  dmUtils.LoadWindowPos(Self);
+  dmUtils.LoadFontSettings(Self);
   DBoulAidx.Caption := C_LOADING;
   DKielAidx.Caption := C_LOADING;
   DCurKidx.Caption := C_LOADING;

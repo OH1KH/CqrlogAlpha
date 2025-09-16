@@ -1,14 +1,14 @@
 object frmEDIExport: TfrmEDIExport
-  Left = 760
+  Left = 947
   Height = 457
-  Top = 254
+  Top = 144
   Width = 516
   Caption = 'EDI export'
   ClientHeight = 457
   ClientWidth = 516
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object lblFilename: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -46,8 +46,8 @@ object frmEDIExport: TfrmEDIExport
     Width = 80
     BorderSpacing.Left = 9
     Caption = 'Browse'
-    OnClick = btnBrowseClick
     TabOrder = 1
+    OnClick = btnBrowseClick
   end
   object btnClose: TButton
     AnchorSideTop.Side = asrCenter
@@ -78,8 +78,8 @@ object frmEDIExport: TfrmEDIExport
     Anchors = [akTop, akLeft, akRight]
     BorderSpacing.Right = 11
     Caption = 'Export'
-    OnClick = btnExportClick
     TabOrder = 12
+    OnClick = btnExportClick
   end
   object pbExport: TProgressBar
     AnchorSideLeft.Control = lblFilename
@@ -336,9 +336,9 @@ object frmEDIExport: TfrmEDIExport
     Anchors = [akRight, akBottom]
     BorderSpacing.Bottom = 6
     Caption = 'Open exported file'
-    OnClick = btnResultFileClick
     TabOrder = 13
     Visible = False
+    OnClick = btnResultFileClick
   end
   object chcSerialNr: TCheckBox
     AnchorSideLeft.Control = edtDigitalModes
@@ -364,8 +364,8 @@ object frmEDIExport: TfrmEDIExport
     Anchors = [akTop, akRight]
     BorderSpacing.Right = 6
     Caption = 'Frm Flt'
-    OnClick = btnFrmFltClick
     TabOrder = 3
+    OnClick = btnFrmFltClick
   end
   object btnFileNameClear: TButton
     AnchorSideLeft.Control = lblFilename
@@ -378,8 +378,8 @@ object frmEDIExport: TfrmEDIExport
     Width = 75
     BorderSpacing.Left = 9
     Caption = 'Clear'
-    OnClick = btnFileNameClearClick
     TabOrder = 16
+    OnClick = btnFileNameClearClick
   end
   object btnFileNameFrmFlt: TButton
     AnchorSideLeft.Control = btnFileNameClear
@@ -392,8 +392,8 @@ object frmEDIExport: TfrmEDIExport
     Width = 140
     BorderSpacing.Left = 9
     Caption = 'Name frm flt'
-    OnClick = btnFileNameFrmFltClick
     TabOrder = 17
+    OnClick = btnFileNameFrmFltClick
   end
   object dlgSave: TSaveDialog
     DefaultExt = '.edi'

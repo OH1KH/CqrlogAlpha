@@ -71,7 +71,7 @@ end;
 
 procedure TfrmDXClusterList.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadFontSettings(frmDXClusterList);
+  dmUtils.LoadFontSettings(Self);
   dbgrdDXClusterList.DataSource := dmData.dsrDXCluster;
   RefreshData();
   if OldDesc <> '' then

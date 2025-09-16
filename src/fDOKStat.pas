@@ -218,7 +218,6 @@ end;
 procedure TfrmDOKStat.FormCreate(Sender: TObject);
 begin
   dmUtils.LoadWindowPos(self);
-  dmUtils.LoadFontSettings(self)
 end;
 
 procedure TfrmDOKStat.FormShow(Sender: TObject);

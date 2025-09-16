@@ -1,7 +1,7 @@
 object frmEditDetails: TfrmEditDetails
-  Left = 635
+  Left = 788
   Height = 219
-  Top = 263
+  Top = 487
   Width = 294
   ActiveControl = edtQSLSDate
   BorderIcons = [biSystemMenu]
@@ -147,13 +147,13 @@ object frmEditDetails: TfrmEditDetails
     0000
   }
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '1.8.0.6'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 8
     Height = 17
     Top = 14
-    Width = 95
+    Width = 90
     Caption = 'QSL sent date'
     ParentColor = False
   end
@@ -161,7 +161,7 @@ object frmEditDetails: TfrmEditDetails
     Left = 152
     Height = 17
     Top = 14
-    Width = 123
+    Width = 118
     Caption = 'QSL received date'
     ParentColor = False
   end
@@ -169,7 +169,7 @@ object frmEditDetails: TfrmEditDetails
     Left = 8
     Height = 17
     Top = 72
-    Width = 134
+    Width = 126
     Caption = 'LoTWQSL sent date'
     ParentColor = False
   end
@@ -177,7 +177,7 @@ object frmEditDetails: TfrmEditDetails
     Left = 152
     Height = 17
     Top = 72
-    Width = 137
+    Width = 130
     Caption = 'LoTW QSL rcvd date'
     ParentColor = False
   end
@@ -187,8 +187,8 @@ object frmEditDetails: TfrmEditDetails
     Top = 184
     Width = 75
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 4
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     Left = 176
@@ -202,28 +202,28 @@ object frmEditDetails: TfrmEditDetails
   end
   object edtQSLSDate: TEdit
     Left = 8
-    Height = 27
+    Height = 34
     Top = 32
     Width = 112
     TabOrder = 0
   end
   object edtQSLRDate: TEdit
     Left = 152
-    Height = 27
+    Height = 34
     Top = 32
     Width = 112
     TabOrder = 1
   end
   object edtLoTWQSLSDate: TEdit
     Left = 8
-    Height = 27
+    Height = 34
     Top = 90
     Width = 112
     TabOrder = 2
   end
   object edtLoTWQSLRDate: TEdit
     Left = 152
-    Height = 27
+    Height = 34
     Top = 90
     Width = 112
     TabOrder = 3
@@ -232,7 +232,7 @@ object frmEditDetails: TfrmEditDetails
     Left = 8
     Height = 17
     Top = 128
-    Width = 103
+    Width = 98
     Caption = 'eQSL sent date'
     ParentColor = False
   end
@@ -240,20 +240,20 @@ object frmEditDetails: TfrmEditDetails
     Left = 152
     Height = 17
     Top = 128
-    Width = 103
+    Width = 98
     Caption = 'eQSL rcvd date'
     ParentColor = False
   end
   object edteQSLSDate: TEdit
     Left = 8
-    Height = 27
+    Height = 34
     Top = 146
     Width = 112
     TabOrder = 6
   end
   object edteQSLRDate: TEdit
     Left = 152
-    Height = 27
+    Height = 34
     Top = 146
     Width = 112
     TabOrder = 7

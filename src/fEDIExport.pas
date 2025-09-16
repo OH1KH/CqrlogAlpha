@@ -75,7 +75,7 @@ uses dData,dUtils,dDXCC,fWorkedGrids, uMyIni;
 procedure TfrmEDIExport.FormShow(Sender : TObject);
 begin
   btnResultFile.Visible:=false;
-  dmUtils.LoadWindowPos(self);
+  dmUtils.LoadWindowPos(Self);
   lblError.Visible := False;
   edtFileName.Text  := cqrini.ReadString('EdiExport','FileName','');
   if edtFileName.Text='' then
@@ -149,7 +149,7 @@ procedure TfrmEDIExport.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
   SaveSettings;
-  dmUtils.SaveWindowPos(self)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmEDIExport.btnBrowseClick(Sender : TObject);

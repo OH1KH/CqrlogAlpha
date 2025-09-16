@@ -100,7 +100,6 @@ var
   Sections : String;
 begin
   dmUtils.LoadWindowPos(Self);
-  dmUtils.LoadFontSettings(self);
   Sections := cqrini.ReadString('ConfigStorage','Items','');
   if (Sections='') then exit;
 

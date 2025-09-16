@@ -10,8 +10,8 @@ object frmAddRadioMemory: TfrmAddRadioMemory
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  Position = poOwnerFormCenter
-  LCLVersion = '3.4.0.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object lblFreq: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner

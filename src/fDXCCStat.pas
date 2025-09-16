@@ -208,7 +208,7 @@ end;
 procedure TfrmDXCCStat.FormClose(Sender: TObject; var CloseAction: TCloseAction
   );
 begin
-  dmUtils.SaveWindowPos(self)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmDXCCStat.ExportToHTML(FileName : String);
@@ -476,7 +476,7 @@ begin
 end;
 procedure TfrmDXCCStat.FormCreate(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(self)
+  dmUtils.LoadWindowPos(Self)
 end;
 
 function TfrmDXCCStat.GetFieldText(fone,cw,digi : String) : String;

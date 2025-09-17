@@ -115,8 +115,8 @@ object frmSort: TfrmSort
     FFFF
   }
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '1.6.4.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object btnDateTime: TButton
     Left = 16
     Height = 25
@@ -124,8 +124,8 @@ object frmSort: TfrmSort
     Width = 161
     BorderSpacing.InnerBorder = 4
     Caption = '&Date + time'
-    OnClick = btnDateTimeClick
     TabOrder = 3
+    OnClick = btnDateTimeClick
   end
   object btnDateTimeAsc: TButton
     Left = 16
@@ -134,8 +134,8 @@ object frmSort: TfrmSort
     Width = 160
     BorderSpacing.InnerBorder = 4
     Caption = 'Date + time &Ascending'
-    OnClick = btnDateTimeClickAsc
     TabOrder = 0
+    OnClick = btnDateTimeClickAsc
   end
   object btnCall: TButton
     Left = 16
@@ -144,8 +144,8 @@ object frmSort: TfrmSort
     Width = 160
     BorderSpacing.InnerBorder = 4
     Caption = '&Call'
-    OnClick = btnCallClick
     TabOrder = 1
+    OnClick = btnCallClick
   end
   object btnClose: TButton
     Left = 48

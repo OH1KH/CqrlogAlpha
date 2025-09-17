@@ -217,7 +217,7 @@ end;
 
 procedure TfrmImportLoTWWeb.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(self);
+  dmUtils.LoadWindowPos(Self);
   chkShowNew.Checked := cqrini.ReadBool('LoTWImp','ShowNewQSOs',True);
   chkChangeDate.Checked:=cqrini.ReadBool('LoTWImp','ChangeDate',False);
   edtDateFrom.Text   := cqrini.ReadString('LoTWImp','DateFrom','1990-01-01');
@@ -232,7 +232,7 @@ end;
 procedure TfrmImportLoTWWeb.FormCloseQuery(Sender: TObject;
   var CanClose: boolean);
 begin
-  dmUtils.SaveWindowPos(self)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmImportLoTWWeb.cbImportsChange(Sender: TObject);

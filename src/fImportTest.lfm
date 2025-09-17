@@ -13,8 +13,8 @@ object frmImportTest: TfrmImportTest
   ClientWidth = 898
   OnClose = FormClose
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '0.9.29'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 66
@@ -37,7 +37,7 @@ object frmImportTest: TfrmImportTest
       Left = 10
       Height = 17
       Top = 13
-      Width = 71
+      Width = 74
       Caption = 'QSO Count:'
       ParentColor = False
     end
@@ -45,7 +45,7 @@ object frmImportTest: TfrmImportTest
       Left = 88
       Height = 17
       Top = 13
-      Width = 81
+      Width = 82
       Caption = 'lblQSOCount'
       ParentColor = False
     end
@@ -63,7 +63,7 @@ object frmImportTest: TfrmImportTest
     end
     object edtContestName: TEdit
       Left = 328
-      Height = 26
+      Height = 34
       Top = 7
       Width = 368
       Anchors = [akTop, akLeft, akRight]
@@ -78,8 +78,8 @@ object frmImportTest: TfrmImportTest
       BorderSpacing.InnerBorder = 4
       Caption = 'Import'
       Enabled = False
-      OnClick = btnImportClick
       TabOrder = 2
+      OnClick = btnImportClick
     end
     object btnTest: TButton
       Left = 652
@@ -89,8 +89,8 @@ object frmImportTest: TfrmImportTest
       Anchors = [akTop, akRight]
       BorderSpacing.InnerBorder = 4
       Caption = 'Test QSO'
-      OnClick = btnTestClick
       TabOrder = 3
+      OnClick = btnTestClick
     end
     object btnEditQSO: TButton
       Left = 10
@@ -99,8 +99,8 @@ object frmImportTest: TfrmImportTest
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'Edit QSO'
-      OnClick = btnEditQSOClick
       TabOrder = 4
+      OnClick = btnEditQSOClick
     end
     object btnDeleteQSO: TButton
       Left = 95
@@ -109,8 +109,8 @@ object frmImportTest: TfrmImportTest
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'Delete QSO'
-      OnClick = btnDeleteQSOClick
       TabOrder = 5
+      OnClick = btnDeleteQSOClick
     end
     object pBarStat: TProgressBar
       Left = 176
@@ -133,4 +133,4 @@ object frmImportTest: TfrmImportTest
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     TabOrder = 1
   end
-end
+end

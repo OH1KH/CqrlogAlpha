@@ -116,8 +116,8 @@ object frmUpgrade: TfrmUpgrade
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnShow = FormShow
-  Position = poDesktopCenter
-  LCLVersion = '0.9.29'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 0
     Height = 17
@@ -140,7 +140,7 @@ object frmUpgrade: TfrmUpgrade
     Enabled = False
     Interval = 500
     OnTimer = tmrUpgradeTimer
-    left = 47
-    top = 11
+    Left = 47
+    Top = 11
   end
 end

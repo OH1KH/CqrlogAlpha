@@ -117,13 +117,13 @@ object frmMarkQSL: TfrmMarkQSL
     FFFF
   }
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '0.9.29'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 8
     Height = 17
     Top = 143
-    Width = 81
+    Width = 85
     Caption = 'Choose type:'
     ParentColor = False
   end
@@ -137,7 +137,7 @@ object frmMarkQSL: TfrmMarkQSL
   end
   object cmbQSLS: TComboBox
     Left = 118
-    Height = 28
+    Height = 34
     Top = 136
     Width = 75
     AutoComplete = True
@@ -162,8 +162,8 @@ object frmMarkQSL: TfrmMarkQSL
     Width = 75
     BorderSpacing.InnerBorder = 4
     Caption = '&Apply'
-    OnClick = btnApplyClick
     TabOrder = 1
+    OnClick = btnApplyClick
   end
   object chgQSL: TCheckGroup
     Left = 8
@@ -180,6 +180,8 @@ object frmMarkQSL: TfrmMarkQSL
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
+    ClientHeight = 86
+    ClientWidth = 193
     Items.Strings = (
       'First QSO'
       'First band QSO'
@@ -192,7 +194,7 @@ object frmMarkQSL: TfrmMarkQSL
   end
   object cmbType: TComboBox
     Left = 15
-    Height = 30
+    Height = 29
     Top = 10
     Width = 90
     AutoComplete = True
@@ -203,9 +205,9 @@ object frmMarkQSL: TfrmMarkQSL
       'QSO'
       'DXCC'
     )
-    OnChange = cmbTypeChange
     Style = csDropDownList
     TabOrder = 4
     Text = 'QSO'
+    OnChange = cmbTypeChange
   end
-end
+end

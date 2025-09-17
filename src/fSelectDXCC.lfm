@@ -12,8 +12,8 @@ object frmSelectDXCC: TfrmSelectDXCC
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '0.9.30.2'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 48
@@ -26,9 +26,9 @@ object frmSelectDXCC: TfrmSelectDXCC
     TabOrder = 0
     object Label1: TLabel
       Left = 8
-      Height = 16
+      Height = 17
       Top = 16
-      Width = 37
+      Width = 42
       Caption = 'Prefix:'
       ParentColor = False
     end
@@ -40,8 +40,8 @@ object frmSelectDXCC: TfrmSelectDXCC
       Anchors = [akTop, akRight]
       BorderSpacing.InnerBorder = 4
       Caption = 'Apply'
-      OnClick = btnApplyClick
       TabOrder = 0
+      OnClick = btnApplyClick
     end
     object btnCancel: TButton
       Left = 560
@@ -57,13 +57,13 @@ object frmSelectDXCC: TfrmSelectDXCC
     end
     object edtPrefix: TEdit
       Left = 56
-      Height = 25
+      Height = 34
       Top = 10
       Width = 80
       CharCase = ecUppercase
+      TabOrder = 2
       OnChange = edtPrefixChange
       OnKeyPress = edtPrefixKeyPress
-      TabOrder = 2
     end
   end
   object pgDXCC: TPageControl
@@ -77,13 +77,13 @@ object frmSelectDXCC: TfrmSelectDXCC
     TabOrder = 1
     object tabValid: TTabSheet
       Caption = 'Valid countries'
-      ClientHeight = 420
-      ClientWidth = 645
+      ClientHeight = 422
+      ClientWidth = 641
       object dbgrdValid: TDBGrid
         Left = 0
-        Height = 420
+        Height = 422
         Top = 0
-        Width = 645
+        Width = 641
         Align = alClient
         Color = clWindow
         Columns = <>
@@ -94,13 +94,13 @@ object frmSelectDXCC: TfrmSelectDXCC
     end
     object tabDeleted: TTabSheet
       Caption = 'Deleted countries'
-      ClientHeight = 420
-      ClientWidth = 645
+      ClientHeight = 422
+      ClientWidth = 641
       object dbgrdDeleted: TDBGrid
         Left = 0
-        Height = 420
+        Height = 422
         Top = 0
-        Width = 645
+        Width = 641
         Align = alClient
         Color = clWindow
         Columns = <>

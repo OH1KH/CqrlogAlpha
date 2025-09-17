@@ -155,7 +155,7 @@ uses dData, dUtils, uMyIni;
 
 procedure TfrmKeyTexts.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmKeyTexts);
+  dmUtils.LoadWindowPos(Self);
   edtF1.text     := cqrini.ReadString(C_INI_FILE_SECTION,'F1','cq cq de %mc %mc pse K');
   edtF2.text     := cqrini.ReadString(C_INI_FILE_SECTION,'F2','');
   edtF3.text     := cqrini.ReadString(C_INI_FILE_SECTION,'F3','');
@@ -207,7 +207,7 @@ end;
 
 procedure TfrmKeyTexts.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmKeyTexts);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 procedure TfrmKeyTexts.btnHelpClick(Sender: TObject);

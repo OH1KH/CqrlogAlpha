@@ -1648,7 +1648,7 @@ end;
 
 procedure TfrmTRXControl.SavePosition;
 begin
-  dmUtils.SaveWindowPos(frmTRXControl);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 procedure TfrmTRXControl.ClearBandButtonsColor;

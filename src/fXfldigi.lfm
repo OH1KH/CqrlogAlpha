@@ -10,7 +10,7 @@ object frmxfldigi: Tfrmxfldigi
   OnCreate = FormCreate
   OnHide = FormHide
   OnShow = FormShow
-  LCLVersion = '2.0.12.0'
+  LCLVersion = '3.8.0.0'
   object edtCall: TLabel
     AnchorSideLeft.Control = lblCall
     AnchorSideTop.Control = lblCall
@@ -21,7 +21,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 80
     AutoSize = False
     Caption = '-call'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -35,7 +34,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 70
     AutoSize = False
     Caption = '-Freq'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -49,7 +47,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 100
     AutoSize = False
     Caption = '-Mode'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -63,7 +60,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 43
     AutoSize = False
     Caption = '-rstS'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -79,7 +75,6 @@ object frmxfldigi: Tfrmxfldigi
     Anchors = [akTop, akRight]
     AutoSize = False
     Caption = '-rstR'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -93,7 +88,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 80
     AutoSize = False
     Caption = '-name'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -107,7 +101,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 150
     AutoSize = False
     Caption = '-qth'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -121,7 +114,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 64
     AutoSize = False
     Caption = '-grid'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -135,7 +127,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 35
     AutoSize = False
     Caption = '-st'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -149,7 +140,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 270
     AutoSize = False
     Caption = '-comment QSO'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -163,7 +153,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 75
     AutoSize = False
     Caption = '-county'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -177,7 +166,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 32
     AutoSize = False
     Caption = '-RX'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -205,10 +193,10 @@ object frmxfldigi: Tfrmxfldigi
     Caption = 'Save this QSO'
     Font.Color = clRed
     Font.Style = [fsBold]
-    OnClick = btSaveQSOClick
     ParentFont = False
     TabOrder = 0
     Visible = False
+    OnClick = btSaveQSOClick
   end
   object lblComment: TLabel
     AnchorSideLeft.Control = lblCall
@@ -418,7 +406,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 80
     AutoSize = False
     Caption = '-date'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -432,7 +419,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 70
     AutoSize = False
     Caption = '-timeon'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end
@@ -446,7 +432,6 @@ object frmxfldigi: Tfrmxfldigi
     Width = 70
     AutoSize = False
     Caption = '-timeoff'
-    Color = clDefault
     ParentColor = False
     Transparent = False
   end

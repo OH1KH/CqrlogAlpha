@@ -114,7 +114,8 @@ object frmLoadClub: TfrmLoadClub
   }
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 45
@@ -132,8 +133,8 @@ object frmLoadClub: TfrmLoadClub
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'Close'
-      OnClick = btnCloseClick
       TabOrder = 0
+      OnClick = btnCloseClick
     end
   end
   object mLoad: TMemo

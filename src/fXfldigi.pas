@@ -392,13 +392,13 @@ end;
 
 procedure Tfrmxfldigi.FormHide(Sender: TObject);
 begin
-  dmUtils.SaveWindowPos(frmxfldigi);
+  dmUtils.SaveWindowPos(Self);
   frmxfldigi.hide;
 end;
 
 procedure Tfrmxfldigi.FormShow(Sender: TObject);
 begin
-   dmUtils.LoadWindowPos(frmxfldigi);
+   dmUtils.LoadWindowPos(Self);
 end;
 
 procedure Tfrmxfldigi.btSaveQSOClick(Sender: TObject);
@@ -410,7 +410,7 @@ end;
 
 procedure Tfrmxfldigi.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-   dmUtils.SaveWindowPos(frmxfldigi);
+   dmUtils.SaveWindowPos(Self);
    frmNewQSO.DisableRemoteMode;
 end;
 

@@ -48,7 +48,7 @@ procedure TfrmQSLViewer.FormShow(Sender: TObject);
 var
   a : String;
 begin
-  dmUtils.LoadWindowPos(frmQSLViewer);
+  dmUtils.LoadWindowPos(Self);
   if fAltImg<>'' then
    Begin
      a:=dmUtils.sImageExists(fAltImg);
@@ -97,7 +97,7 @@ end;
 procedure TfrmQSLViewer.FormClose(Sender: TObject; var CloseAction: TCloseAction
   );
 begin
-  dmUtils.SaveWindowPos(frmQSLViewer)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmQSLViewer.FormCreate(Sender: TObject);

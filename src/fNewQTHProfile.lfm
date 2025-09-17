@@ -13,8 +13,8 @@ object frmNewQTHProfile: TfrmNewQTHProfile
   ClientWidth = 370
   OnCreate = FormCreate
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object lblLocator: TLabel
     AnchorSideLeft.Control = lblProfileNumber
     AnchorSideTop.Control = edtProfNr
@@ -85,11 +85,11 @@ object frmNewQTHProfile: TfrmNewQTHProfile
     Top = 79
     Width = 100
     MaxLength = 6
+    TabOrder = 2
     OnChange = edtLocatorChange
     OnEnter = edtLocatorEnter
     OnExit = edtLocatorExit
     OnKeyPress = edtLocatorKeyPress
-    TabOrder = 2
   end
   object mQTH: TMemo
     AnchorSideLeft.Control = lblProfileNumber
@@ -152,8 +152,8 @@ object frmNewQTHProfile: TfrmNewQTHProfile
     BorderSpacing.InnerBorder = 1
     Caption = 'Save'
     Constraints.MinWidth = 60
-    OnClick = btnSaveClick
     TabOrder = 6
+    OnClick = btnSaveClick
   end
   object btnCancel: TButton
     AnchorSideTop.Control = mRemarks
@@ -201,7 +201,7 @@ object frmNewQTHProfile: TfrmNewQTHProfile
     Width = 100
     CharCase = ecUppercase
     NumbersOnly = True
-    OnKeyDown = edtProfNrKeyDown
     TabOrder = 0
+    OnKeyDown = edtProfNrKeyDown
   end
 end

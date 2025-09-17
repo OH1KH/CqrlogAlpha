@@ -1494,7 +1494,7 @@ begin
   sbNewQSO.Panels[3].Width := 150;
   sbNewQSO.Panels[4].Width :=  50;
 
-  dmUtils.LoadWindowPos(frmNewQSO);
+  dmUtils.LoadWindowPos(Self);
 
   UseSpaceBar := cqrini.ReadBool('NewQSO','UseSpaceBar',False);
   dbgrdQSOBefore.Visible := cqrini.ReadBool('NewQSO','ShowGrd',True);
@@ -6900,7 +6900,7 @@ end;
 
 procedure TfrmNewQSO.SavePosition;
 begin
-  dmUtils.SaveWindowPos(frmNewQSO);
+  dmUtils.SaveWindowPos(Self);
   if frmContest.Showing then  frmContest.SaveSettings;
   cqrini.WriteBool('NewQSO','StatBar',sbNewQSO.Visible);
   cqrini.SaveToDisk

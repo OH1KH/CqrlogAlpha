@@ -9,18 +9,18 @@ object frmSOTAExport: TfrmSOTAExport
   ClientWidth = 516
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '1.4.4.0'
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 8
     Height = 17
     Top = 8
-    Width = 65
+    Width = 63
     Caption = 'Filename:'
     ParentColor = False
   end
   object edtFileName: TEdit
     Left = 8
-    Height = 27
+    Height = 34
     Top = 32
     Width = 421
     TabOrder = 0
@@ -31,8 +31,8 @@ object frmSOTAExport: TfrmSOTAExport
     Top = 34
     Width = 75
     Caption = 'Browse'
-    OnClick = Button1Click
     TabOrder = 1
+    OnClick = Button1Click
   end
   object btnClose: TButton
     Left = 433
@@ -50,22 +50,22 @@ object frmSOTAExport: TfrmSOTAExport
     Top = 368
     Width = 75
     Caption = 'Export'
-    OnClick = btnExportClick
     TabOrder = 2
+    OnClick = btnExportClick
   end
   object GroupBox1: TGroupBox
     Left = 8
     Height = 120
     Top = 64
     Width = 500
-    ClientHeight = 116
-    ClientWidth = 496
+    ClientHeight = 118
+    ClientWidth = 498
     TabOrder = 4
     object rbSotaLog: TRadioButton
       Left = 6
-      Height = 24
+      Height = 23
       Top = 7
-      Width = 251
+      Width = 247
       Caption = 'use SOTA reference number from '
       Checked = True
       ParentShowHint = False
@@ -74,7 +74,7 @@ object frmSOTAExport: TfrmSOTAExport
     end
     object cmbSota: TComboBox
       Left = 262
-      Height = 27
+      Height = 29
       Top = 3
       Width = 130
       ItemHeight = 0
@@ -84,16 +84,16 @@ object frmSOTAExport: TfrmSOTAExport
         'comment'
         'qth'
       )
-      OnSelect = cmbSotaSelect
       Style = csDropDownList
       TabOrder = 1
       Text = 'award'
+      OnSelect = cmbSotaSelect
     end
     object Label2: TLabel
       Left = 406
       Height = 17
       Top = 13
-      Width = 30
+      Width = 29
       Caption = 'field'
       ParentColor = False
     end
@@ -101,38 +101,38 @@ object frmSOTAExport: TfrmSOTAExport
       Left = 166
       Height = 17
       Top = 41
-      Width = 319
+      Width = 310
       Caption = 'as SOTA reference number for all exported QSO'
       ParentColor = False
     end
     object rbSotaEdt: TRadioButton
       Left = 6
-      Height = 24
+      Height = 23
       Top = 39
-      Width = 52
+      Width = 53
       Caption = 'use '
       TabOrder = 2
     end
     object edtSota: TEdit
       Left = 62
-      Height = 27
+      Height = 34
       Top = 36
       Width = 96
       CharCase = ecUppercase
-      OnEnter = edtSotaEnter
       TabOrder = 3
+      OnEnter = edtSotaEnter
     end
     object chkHisSota: TCheckBox
       Left = 6
-      Height = 24
+      Height = 23
       Top = 74
-      Width = 146
+      Width = 140
       Caption = 'Export data from '
       TabOrder = 4
     end
     object cmbHisSota: TComboBox
       Left = 168
-      Height = 27
+      Height = 29
       Top = 69
       Width = 120
       ItemHeight = 0
@@ -150,7 +150,7 @@ object frmSOTAExport: TfrmSOTAExport
       Left = 305
       Height = 17
       Top = 76
-      Width = 146
+      Width = 145
       Caption = 'into ''His summit'' field'
       ParentColor = False
     end
@@ -160,12 +160,12 @@ object frmSOTAExport: TfrmSOTAExport
     Height = 48
     Top = 200
     Width = 501
-    ClientHeight = 44
-    ClientWidth = 497
+    ClientHeight = 46
+    ClientWidth = 499
     TabOrder = 5
     object edtCallsign: TEdit
       Left = 191
-      Height = 27
+      Height = 34
       Top = 9
       Width = 128
       CharCase = ecUppercase
@@ -175,7 +175,7 @@ object frmSOTAExport: TfrmSOTAExport
       Left = 7
       Height = 17
       Top = 14
-      Width = 173
+      Width = 174
       Caption = 'Callsign used on SOTA hill:'
       ParentColor = False
     end
@@ -185,14 +185,14 @@ object frmSOTAExport: TfrmSOTAExport
     Height = 105
     Top = 256
     Width = 501
-    ClientHeight = 101
-    ClientWidth = 497
+    ClientHeight = 103
+    ClientWidth = 499
     TabOrder = 6
     object rbAddLogNote: TRadioButton
       Left = 7
-      Height = 24
+      Height = 23
       Top = 6
-      Width = 301
+      Width = 293
       Caption = 'add remarks from Comment to QSO field'
       Checked = True
       TabOrder = 0
@@ -200,15 +200,15 @@ object frmSOTAExport: TfrmSOTAExport
     end
     object rbAddEdtNote: TRadioButton
       Left = 7
-      Height = 24
+      Height = 23
       Top = 38
-      Width = 118
+      Width = 115
       Caption = 'add this note:'
       TabOrder = 1
     end
     object edtNotes: TEdit
       Left = 31
-      Height = 27
+      Height = 34
       Top = 62
       Width = 456
       TabOrder = 2
@@ -226,7 +226,7 @@ object frmSOTAExport: TfrmSOTAExport
     Left = 289
     Height = 17
     Top = 372
-    Width = 35
+    Width = 34
     Caption = 'Done'
     ParentColor = False
     Visible = False
@@ -234,7 +234,7 @@ object frmSOTAExport: TfrmSOTAExport
   object dlgSave: TSaveDialog
     DefaultExt = '.csv'
     Filter = 'CSV file|*.csv'
-    left = 449
-    top = 208
+    Left = 449
+    Top = 208
   end
 end

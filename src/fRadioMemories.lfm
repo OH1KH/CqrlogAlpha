@@ -9,7 +9,7 @@ object frmRadioMemories: TfrmRadioMemories
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '3.4.0.0'
+  LCLVersion = '3.8.0.0'
   object sgrdMem: TStringGrid
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner

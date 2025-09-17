@@ -82,7 +82,7 @@ uses dUtils, dData, uMyIni;
 
 procedure TfrmSQLConsole.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmSQLConsole);
+  dmUtils.LoadWindowPos(Self);
   mSQL.ClearAll;
   LoadSQLCommands
 end;
@@ -203,7 +203,7 @@ procedure TfrmSQLConsole.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
   dmData.qSQLConsole.Close;
-  dmUtils.SaveWindowPos(frmSQLConsole);
+  dmUtils.SaveWindowPos(Self);
   SaveSQLCommands
 end;
 

@@ -51,10 +51,9 @@ uses dUtils, dData, uMyIni;
 
 procedure TfrmQSLMgr.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadFontSettings(frmQSLMgr);
   dbgrdQSLMgr.DataSource := dmData.dsrQSLMgr;
-  dmUtils.LoadWindowPos(frmQSLMgr);
-  dmUtils.LoadDBGridInForm(frmQSLMgr);
+  dmUtils.LoadWindowPos(Self);
+  dmUtils.LoadDBGridInForm(Self);
   edtCallsign.SetFocus
 end;
 
@@ -90,8 +89,8 @@ end;
 procedure TfrmQSLMgr.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
 
-  dmUtils.SaveWindowPos(frmQSLMgr);
-  dmUtils.SaveDBGridInForm(frmQSLMgr)
+  dmUtils.SaveWindowPos(Self);
+  dmUtils.SaveDBGridInForm(Self)
 end;
 
 end.

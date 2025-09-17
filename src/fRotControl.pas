@@ -87,7 +87,7 @@ uses dUtils, dData, fGrayline;
 
 procedure TfrmRotControl.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmRotControl);
+  dmUtils.LoadWindowPos(Self);
   rbRotor1.Caption := cqrini.ReadString('ROT1','Desc','Rotor 1');
   rbRotor2.Caption := cqrini.ReadString('ROT2','Desc','Rotor 2');
   btnLeft.Visible:=cqrini.ReadBool('ROT','DirBtns',False);
@@ -164,7 +164,7 @@ end;
 procedure TfrmRotControl.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-   dmUtils.SaveWindowPos(frmRotControl);
+   dmUtils.SaveWindowPos(Self);
 end;
 
 procedure TfrmRotControl.FormDestroy(Sender: TObject);

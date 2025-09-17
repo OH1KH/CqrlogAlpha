@@ -46,6 +46,7 @@ end;
 
 procedure TfrmLongNote.FormShow(Sender: TObject);
 begin
+  dmUtils.LoadWindowPos(Self);
   mNote.SetFocus
 end;
 
@@ -54,7 +55,8 @@ begin
   cqrini.WriteInteger('LongNote','Height',ClientHeight);
   cqrini.WriteInteger('LongNote','Width',ClientWidth);
   cqrini.WriteInteger('LongNote','Top',Top);
-  cqrini.WriteInteger('LongNote','Left',Left)
+  cqrini.WriteInteger('LongNote','Left',Left);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 end.

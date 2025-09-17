@@ -648,7 +648,7 @@ end;
 
 procedure TfrmWorkedGrids.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmWorkedGrids);
+  dmUtils.LoadWindowPos(Self);
   FollowRig.Checked := cqrini.ReadBool('Worked_grids', 'FollowRig', False);
   ShoWkdOnly.Checked := cqrini.ReadBool('Worked_grids', 'ShowWkdOnly', False);
   AutoUpdate.Enabled := True;
@@ -665,7 +665,7 @@ begin
   AutoUpdate.Enabled := False;
   cqrini.WriteBool('Worked_grids', 'FollowRig', FollowRig.Checked);
   cqrini.WriteBool('Worked_grids', 'ShowWkdOnly', ShoWkdOnly.Checked);
-  dmUtils.SaveWindowPos(frmWorkedGrids);
+  dmUtils.SaveWindowPos(Self);
   frmWorkedGrids.hide;
 end;
 

@@ -42,7 +42,6 @@ uses dUtils, dData;
 
 procedure TfrmNewLog.FormShow(Sender: TObject);
 begin
-  //dmUtils.LoadWindowPos(self);
   if edtLogNR.Enabled then
     edtLogNR.Text := IntToStr(dmData.GetNewLogNumber);
 
@@ -51,7 +50,6 @@ end;
 
 procedure TfrmNewLog.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  //dmUtils.SaveWindowPos(self)
 end;
 
 procedure TfrmNewLog.btnOKClick(Sender: TObject);

@@ -8,8 +8,8 @@ object frmNewCommentToCall: TfrmNewCommentToCall
   ClientHeight = 263
   ClientWidth = 312
   OnShow = FormShow
-  Position = poOwnerFormCenter
-  LCLVersion = '1.6.0.4'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 8
     Height = 17
@@ -20,7 +20,7 @@ object frmNewCommentToCall: TfrmNewCommentToCall
   end
   object edtCallsign: TEdit
     Left = 8
-    Height = 27
+    Height = 34
     Top = 40
     Width = 136
     CharCase = ecUppercase
@@ -30,7 +30,7 @@ object frmNewCommentToCall: TfrmNewCommentToCall
     Left = 8
     Height = 17
     Top = 85
-    Width = 38
+    Width = 35
     Caption = 'Note:'
     ParentColor = False
   end
@@ -47,8 +47,8 @@ object frmNewCommentToCall: TfrmNewCommentToCall
     Top = 16
     Width = 75
     Caption = '&OK'
-    OnClick = btnOKClick
     TabOrder = 2
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     Left = 229

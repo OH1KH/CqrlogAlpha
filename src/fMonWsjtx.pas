@@ -464,7 +464,7 @@ begin
     SaveFormPos('Map')
   else
     SaveFormPos('Cq');  //to be same as intial save
-  dmUtils.SaveWindowPos(frmMonWsjtx);
+  dmUtils.SaveWindowPos(Self);
 end;
  
 procedure TfrmMonWsjtx.Setbitmap(bm: TBitmap; col: Tcolor);
@@ -1417,7 +1417,7 @@ begin
     SaveFormPos('Map')
   else
     SaveFormPos('Cq');  //to be same as intial save
-  dmUtils.SaveWindowPos(frmMonWsjtx);
+  dmUtils.SaveWindowPos(Self);
   writeln('------------- hide form');
   frmMonWsjtx.hide;
 end;
@@ -1425,8 +1425,7 @@ end;
 
 procedure TfrmMonWsjtx.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmMonWsjtx);
-  dmUtils.LoadFontSettings(frmMonWsjtx);
+  dmUtils.LoadWindowPos(Self);
   //overrides font loading
   sgMonitor.Font.Name := cqrini.ReadString('MonWsjtx', 'Font', 'Monospace');
   sgMonitor.Font.Size := cqrini.ReadInteger('MonWsjtx', 'FontSize', 10);

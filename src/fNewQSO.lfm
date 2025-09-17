@@ -1,16 +1,16 @@
 object frmNewQSO: TfrmNewQSO
   Left = 0
-  Height = 529
+  Height = 491
   Top = 0
-  Width = 1005
+  Width = 992
   HelpType = htKeyword
   HelpKeyword = 'help/index.html'
-  HorzScrollBar.Page = 1005
-  VertScrollBar.Page = 529
+  HorzScrollBar.Page = 992
+  VertScrollBar.Page = 491
   AutoScroll = True
   Caption = 'New QSO ... (CqrlogAlpha for Linux)'
-  ClientHeight = 529
-  ClientWidth = 1005
+  ClientHeight = 491
+  ClientWidth = 992
   Constraints.MinHeight = 200
   Constraints.MinWidth = 400
   Icon.Data = {

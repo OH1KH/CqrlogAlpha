@@ -329,20 +329,19 @@ end;
 procedure TfrmWAZITUStat.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
-  dmUtils.SaveWindowPos(self)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmWAZITUStat.FormCreate(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(self);
-  dmUtils.LoadFontSettings(self)
+  dmUtils.LoadWindowPos(Self);
 end;
 
 procedure TfrmWAZITUStat.FormShow(Sender: TObject);
 var
   w : Integer = 0;
 begin
-  dmUtils.LoadWindowPos(self);
+  dmUtils.LoadWindowPos(Self);
   gmode := '';
   dmUtils.InsertModes(cmbMode);
   cmbMode.Items.Insert(0,'ALL');

@@ -11,12 +11,12 @@ object frmRebuildMembStat: TfrmRebuildMembStat
   OnClose = FormClose
   OnShow = FormShow
   Position = poOwnerFormCenter
-  LCLVersion = '1.6.0.4'
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 8
     Height = 17
     Top = 8
-    Width = 51
+    Width = 49
     Caption = 'Rebuild'
     ParentColor = False
   end
@@ -72,13 +72,13 @@ object frmRebuildMembStat: TfrmRebuildMembStat
     Left = 376
     Height = 17
     Top = 8
-    Width = 121
+    Width = 119
     Caption = 'Rebuild QSO since'
     ParentColor = False
   end
   object edtSince1: TEdit
     Left = 392
-    Height = 27
+    Height = 34
     Top = 27
     Width = 96
     TabOrder = 5
@@ -86,7 +86,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
   end
   object edtSince2: TEdit
     Left = 392
-    Height = 27
+    Height = 34
     Top = 59
     Width = 96
     TabOrder = 6
@@ -94,7 +94,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
   end
   object edtSince3: TEdit
     Left = 392
-    Height = 27
+    Height = 34
     Top = 91
     Width = 96
     TabOrder = 7
@@ -102,7 +102,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
   end
   object edtSince4: TEdit
     Left = 392
-    Height = 27
+    Height = 34
     Top = 123
     Width = 96
     TabOrder = 8
@@ -110,7 +110,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
   end
   object edtSince5: TEdit
     Left = 392
-    Height = 27
+    Height = 34
     Top = 155
     Width = 96
     TabOrder = 9
@@ -128,8 +128,8 @@ object frmRebuildMembStat: TfrmRebuildMembStat
     Top = 200
     Width = 75
     Caption = 'Start'
-    OnClick = btnStartClick
     TabOrder = 10
+    OnClick = btnStartClick
   end
   object btnCancel: TButton
     Left = 408
@@ -145,7 +145,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
     Left = 344
     Height = 17
     Top = 36
-    Width = 34
+    Width = 32
     Caption = 'done'
     ParentColor = False
     Visible = False
@@ -154,7 +154,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
     Left = 344
     Height = 17
     Top = 68
-    Width = 34
+    Width = 32
     Caption = 'done'
     ParentColor = False
     Visible = False
@@ -163,7 +163,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
     Left = 344
     Height = 17
     Top = 100
-    Width = 34
+    Width = 32
     Caption = 'done'
     ParentColor = False
     Visible = False
@@ -172,7 +172,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
     Left = 344
     Height = 17
     Top = 132
-    Width = 34
+    Width = 32
     Caption = 'done'
     ParentColor = False
     Visible = False
@@ -181,7 +181,7 @@ object frmRebuildMembStat: TfrmRebuildMembStat
     Left = 344
     Height = 17
     Top = 164
-    Width = 34
+    Width = 32
     Caption = 'done'
     ParentColor = False
     Visible = False
@@ -195,9 +195,9 @@ object frmRebuildMembStat: TfrmRebuildMembStat
   end
   object chkIgnoreChanges: TCheckBox
     Left = 8
-    Height = 24
+    Height = 23
     Top = 240
-    Width = 278
+    Width = 274
     Caption = 'Do NOT upload changes to online logs'
     TabOrder = 12
   end

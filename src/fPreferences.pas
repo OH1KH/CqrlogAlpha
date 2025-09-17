@@ -3016,7 +3016,6 @@ procedure TfrmPreferences.FormShow(Sender: TObject);
 var
   i: integer;
 begin
-  dmUtils.LoadFontSettings(self);
   dmUtils.LoadWindowPos(self);
 
   dmUtils.InsertModes(cmbDefaultMode);

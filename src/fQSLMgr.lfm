@@ -114,7 +114,7 @@ object frmQSLMgr: TfrmQSLMgr
   }
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
-  LCLVersion = '0.9.30'
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 50
@@ -127,12 +127,12 @@ object frmQSLMgr: TfrmQSLMgr
     TabOrder = 0
     object edtCallsign: TEdit
       Left = 10
-      Height = 27
+      Height = 34
       Top = 15
       Width = 112
       CharCase = ecUppercase
-      OnKeyPress = edtCallsignKeyPress
       TabOrder = 0
+      OnKeyPress = edtCallsignKeyPress
     end
     object btnFind: TButton
       Left = 133
@@ -141,8 +141,8 @@ object frmQSLMgr: TfrmQSLMgr
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'Find'
-      OnClick = btnFindClick
       TabOrder = 1
+      OnClick = btnFindClick
     end
     object btnCancel: TButton
       Left = 416
@@ -179,4 +179,4 @@ object frmQSLMgr: TfrmQSLMgr
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
     TabOrder = 1
   end
-end
+end

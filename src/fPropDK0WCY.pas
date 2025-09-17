@@ -265,7 +265,6 @@ const
 begin
   running := False;
   dmUtils.LoadWindowPos(Self);
-  dmUtils.LoadFontSettings(Self);
   DBoulAidx.Caption := C_LOADING;
   DKielAidx.Caption := C_LOADING;
   DCurKidx.Caption := C_LOADING;

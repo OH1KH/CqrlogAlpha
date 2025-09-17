@@ -10,8 +10,8 @@ object frmNewLog: TfrmNewLog
   ClientWidth = 308
   OnClose = FormClose
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object lblLogNr: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -77,8 +77,8 @@ object frmNewLog: TfrmNewLog
     BorderSpacing.Top = 6
     BorderSpacing.Right = 12
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 2
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     AnchorSideLeft.Control = btnOK

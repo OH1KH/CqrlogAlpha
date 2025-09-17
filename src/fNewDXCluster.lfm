@@ -12,55 +12,56 @@ object frmNewDXCluster: TfrmNewDXCluster
   ClientHeight = 179
   ClientWidth = 303
   OnShow = FormShow
-  Position = poMainFormCenter
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 9
-    Height = 20
+    Height = 17
     Top = 8
-    Width = 77
+    Width = 78
     Caption = 'Description:'
     Color = clNone
     ParentColor = False
   end
   object Label2: TLabel
     Left = 9
-    Height = 20
+    Height = 17
     Top = 64
-    Width = 57
+    Width = 56
     Caption = 'Address:'
     Color = clNone
     ParentColor = False
   end
   object Label3: TLabel
     Left = 128
-    Height = 20
+    Height = 17
     Top = 64
-    Width = 31
+    Width = 30
     Caption = 'Port:'
     Color = clNone
     ParentColor = False
   end
   object Label4: TLabel
     Left = 9
-    Height = 20
+    Height = 17
     Top = 122
-    Width = 76
+    Width = 75
     Caption = 'User name:'
     Color = clNone
     ParentColor = False
   end
   object Label5: TLabel
     Left = 124
-    Height = 20
+    Height = 17
     Top = 122
-    Width = 64
+    Width = 66
     Caption = 'Password:'
     Color = clNone
     ParentColor = False
   end
   object edtDescription: TEdit
     Left = 9
-    Height = 25
+    Height = 34
     Top = 32
     Width = 193
     MaxLength = 100
@@ -68,28 +69,28 @@ object frmNewDXCluster: TfrmNewDXCluster
   end
   object edtAddress: TEdit
     Left = 9
-    Height = 25
+    Height = 34
     Top = 88
     Width = 104
     TabOrder = 1
   end
   object edtPort: TEdit
     Left = 122
-    Height = 25
+    Height = 34
     Top = 88
     Width = 80
     TabOrder = 2
   end
   object edtUserName: TEdit
     Left = 9
-    Height = 25
+    Height = 34
     Top = 144
     Width = 80
     TabOrder = 3
   end
   object edtPassword: TEdit
     Left = 122
-    Height = 25
+    Height = 34
     Top = 144
     Width = 80
     TabOrder = 4

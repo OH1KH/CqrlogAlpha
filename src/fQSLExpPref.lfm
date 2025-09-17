@@ -7,7 +7,8 @@ object frmQSLExpPref: TfrmQSLExpPref
   ClientHeight = 450
   ClientWidth = 530
   OnShow = FormShow
-  LCLVersion = '2.0.4.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object GroupBox1: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -27,7 +28,7 @@ object frmQSLExpPref: TfrmQSLExpPref
       Left = 14
       Height = 23
       Top = 68
-      Width = 79
+      Width = 78
       BorderSpacing.Top = 3
       Caption = 'Time on'
       Checked = True
@@ -121,7 +122,7 @@ object frmQSLExpPref: TfrmQSLExpPref
       Left = 14
       Height = 23
       Top = 241
-      Width = 82
+      Width = 83
       BorderSpacing.Top = 12
       Caption = 'RST Rec.'
       TabOrder = 7
@@ -207,7 +208,7 @@ object frmQSLExpPref: TfrmQSLExpPref
       Left = 166
       Height = 23
       Top = 198
-      Width = 56
+      Width = 57
       BorderSpacing.Top = 3
       Caption = 'IOTA'
       TabOrder = 14
@@ -219,7 +220,7 @@ object frmQSLExpPref: TfrmQSLExpPref
       Left = 166
       Height = 23
       Top = 224
-      Width = 66
+      Width = 67
       BorderSpacing.Top = 3
       Caption = 'Award'
       TabOrder = 15
@@ -327,27 +328,27 @@ object frmQSLExpPref: TfrmQSLExpPref
       Width = 60
       BorderSpacing.Left = 3
       Caption = 'Split'
-      OnClick = tgSplit_Click
       ParentShowHint = False
       ShowHint = True
       TabOrder = 22
+      OnClick = tgSplit_Click
     end
     object tgSplitRST_R: TToggleBox
       AnchorSideLeft.Control = chkRST_R
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = chkRST_R
       AnchorSideTop.Side = asrCenter
-      Left = 99
+      Left = 100
       Height = 32
       Hint = 'Split RST in three fields.'
       Top = 236
       Width = 60
       BorderSpacing.Left = 3
       Caption = 'Split'
-      OnClick = tgSplit_Click
       ParentShowHint = False
       ShowHint = True
       TabOrder = 23
+      OnClick = tgSplit_Click
     end
     object lblDateFormat: TLabel
       AnchorSideLeft.Control = GroupBox1
@@ -469,8 +470,8 @@ object frmQSLExpPref: TfrmQSLExpPref
     Anchors = [akTop, akRight]
     BorderSpacing.Right = 18
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 1
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     AnchorSideLeft.Control = btnOK

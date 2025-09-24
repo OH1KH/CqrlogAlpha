@@ -7628,6 +7628,7 @@ begin
           CWint.MinSpeed     := cqrini.ReadInteger('CW'+n, 'HamLib_min', 5);
           CWint.MaxSpeed     := cqrini.ReadInteger('CW'+n, 'HamLib_max', 60);
           CWint.HamlibBuffer := cqrini.ReadBool('CW'+n, 'UseHamlibBuffer', False);
+          CWint.ForceSpace   := cqrini.ReadBool('CW'+n, 'UseHamlibForceSpace', False);
           UseSpeed := cqrini.ReadInteger('CW'+n,'HamLibSpeed',30);
         end;
   end; //case

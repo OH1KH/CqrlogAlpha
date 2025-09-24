@@ -45,6 +45,12 @@ You get several lines, one with text: <strong><pre>Can send Morse:	Y</pre></stro
 Commands used for HamLib CW are:
 <li>L KEYSPD NN  (where NN is the keying speed in wpm)</li>
 <li>b TEXT       (TEXT is the text to be sent as CW)</li>
+</p><p>
+Some incompatible Hamlib emulators can do CW, but not properly.
+</br>If sending of CW memories give just ???? you can try to check <b>Force Space</b> checkbox.
+</br>That will force morse command to be separated from text "b hello".
+Otherwise command is sent as "bhello" if emulator is not reported itself as "new hamlib" (\dump_caps has line "Hamlib version")
+</br>If you get keying ok with short memories, but long ones still give ???? you can try to check <b>Use Hamlib 1k buffer</b>
 </p>
 <p align="center"><img src="img/line.png"></p>
 <table style="text-align: left; width: 100%;" border="0" cellpadding="2" cellspacing="2">

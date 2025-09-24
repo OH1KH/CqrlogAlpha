@@ -20,6 +20,7 @@ type
       fDebugMode : Boolean;
       fHamlibBuffer : Boolean;
       fIsNewHamlib  : Boolean; //Hamlib version date higer than 2023-06-01
+      fForceSpace : Boolean; //force new Halib version (for incompatible emulators)
       fMinSpeed  : Word;
       fMaxSpeed  : Word;
       fPortSpeed : dWord;
@@ -33,7 +34,8 @@ type
       property MaxSpeed  : Word read fMaxSpeed write fMaxSpeed;
       property PortSpeed : dWord read fPortSpeed write fPortSpeed;
       property HamlibBuffer : Boolean read  fHamlibBuffer write fHamlibBuffer;
-      property IsNewHamlib : Boolean read  fIsNewHamlib; //used internally, but can give info out
+      property IsNewHamlib : Boolean read  fIsNewHamlib write fIsNewHamlib;
+      property ForceSpace : Boolean read  fForceSpace write fForceSpace;
 
       constructor Create; virtual; abstract;
 
@@ -922,6 +924,7 @@ begin
           if DebugMode then
                Writeln('Hamlib is new');
          end;
+
      if (pos('OVERALL BACKEND WARNINGS:',Uppercase(Rmsg))>0) then //+\dump_caps end
          Begin
           WaitHamlib:=False;
@@ -1045,7 +1048,7 @@ var
 
                         while ((rpt > 0) and AllowCW) do
                           Begin
-                            if fIsNewHamlib then
+                            if fIsNewHamlib or fForceSpace then
                                                t:=' '+t;
                             if fDebugMode then
                                Writeln('HLsend MSG: |','b'+t+'|');

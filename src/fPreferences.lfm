@@ -1,18 +1,18 @@
 object frmPreferences: TfrmPreferences
   Left = 230
-  Height = 765
+  Height = 752
   Top = 34
-  Width = 1019
+  Width = 1006
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1019
-  VertScrollBar.Page = 765
+  HorzScrollBar.Page = 1006
+  VertScrollBar.Page = 752
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 765
-  ClientWidth = 1019
+  ClientHeight = 752
+  ClientWidth = 1006
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   OnCloseQuery = FormCloseQuery
@@ -7308,7 +7308,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 12
         BorderSpacing.Top = 3
         Caption = ' Data for access to ARRL LoTW website '
-        ClientHeight = 70
+        ClientHeight = 54
         ClientWidth = 514
         TabOrder = 2
         object lblLoUsr: TLabel
@@ -7410,7 +7410,7 @@ object frmPreferences: TfrmPreferences
         Width = 516
         BorderSpacing.Top = 6
         Caption = ' Data for access to eQSL website '
-        ClientHeight = 258
+        ClientHeight = 242
         ClientWidth = 514
         TabOrder = 6
         object lbleQSLUsr: TLabel
@@ -7596,7 +7596,6 @@ object frmPreferences: TfrmPreferences
       Caption = 'CW interface'
       ClientHeight = 757
       ClientWidth = 836
-      OnContextPopup = tabCWInterfaceContextPopup
       OnExit = tabCWInterfaceExit
       object lbIfaceType: TLabel
         AnchorSideLeft.Control = cmbCWRadio
@@ -8272,6 +8271,7 @@ object frmPreferences: TfrmPreferences
           ParentShowHint = False
           ShowHint = True
           TabOrder = 4
+          OnChange = cmbIfaceTypeChange
         end
       end
       object cbNoKeyerReset: TCheckBox

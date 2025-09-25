@@ -1087,8 +1087,6 @@ type
     procedure edtMinMaxSpeedChange(Sender: TObject);
     procedure edtHexExit(Sender: TObject);
     procedure RotorParamsChange(Sender: TObject);
-    procedure tabCWInterfaceContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
     procedure tabCWInterfaceExit(Sender: TObject);
     procedure tabModesExit(Sender: TObject);
     procedure tabTRXcontrolEnter(Sender: TObject);
@@ -2949,12 +2947,6 @@ end;
 procedure TfrmPreferences.RotorParamsChange(Sender: TObject);
 begin
   RotChanged := True;
-end;
-
-procedure TfrmPreferences.tabCWInterfaceContextPopup(Sender: TObject;
-  MousePos: TPoint; var Handled: Boolean);
-begin
-
 end;
 
 procedure TfrmPreferences.tabCWInterfaceExit(Sender: TObject);

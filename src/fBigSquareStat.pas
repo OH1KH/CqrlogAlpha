@@ -59,7 +59,8 @@ uses dUtils,dData, uMyIni, uVersion;
 procedure TfrmBigSquareStat.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveDBGridInForm(frmBigSquareStat);
+  dmUtils.SaveWindowPos(Self);
+  dmUtils.SaveDBGridInForm(Self);
   cqrini.WriteInteger('SquareStat','Band',cmbBands.ItemIndex);
   cqrini.WriteBool('SquareStat','QSL',chkQSL.Checked);
   cqrini.WriteBool('SquareStat','LoTW',chkLoTW.Checked);
@@ -320,8 +321,9 @@ end;
 
 procedure TfrmBigSquareStat.FormShow(Sender: TObject);
 begin
+  dmUtils.LoadWindowPos(Self);
   TmpFile := GetTempFileNameUTF8(dmData.HomeDir,'square');
-  dmUtils.LoadDBGridInForm(frmBigSquareStat);
+  dmUtils.LoadDBGridInForm(Self);
   dmUtils.FillBandCombo(cmbBands);
   cmbBands.Items.Insert(0,'ALL');
   if cqrini.ReadInteger('SquareStat','Band',0) > cmbBands.Items.Count-1 then

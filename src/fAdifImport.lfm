@@ -114,8 +114,8 @@ object frmAdifImport: TfrmAdifImport
   }
   OnCreate = FormCreate
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object pnlFilterDateRange: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = pnlAll
@@ -355,8 +355,8 @@ object frmAdifImport: TfrmAdifImport
       BorderSpacing.Bottom = 6
       BorderSpacing.InnerBorder = 4
       Caption = 'Import'
-      OnClick = btnImportClick
       TabOrder = 0
+      OnClick = btnImportClick
     end
     object edtRemarks: TEdit
       AnchorSideLeft.Control = lbFile
@@ -384,8 +384,8 @@ object frmAdifImport: TfrmAdifImport
       BorderSpacing.Bottom = 6
       Caption = 'Close'
       ModalResult = 2
-      OnClick = btnCloseClick
       TabOrder = 2
+      OnClick = btnCloseClick
     end
     object chkFilterDateRange: TCheckBox
       AnchorSideLeft.Control = lbFile
@@ -397,8 +397,8 @@ object frmAdifImport: TfrmAdifImport
       Width = 215
       BorderSpacing.Top = 6
       Caption = 'Filter: only import date range'
-      OnChange = chkFilterDateRangeChange
       TabOrder = 3
+      OnChange = chkFilterDateRangeChange
     end
     object lblFilteredOut: TLabel
       AnchorSideLeft.Control = lbFile

@@ -52,14 +52,14 @@ uses dData, dUtils, fNewCommentToCall, fFindCommentToCall;
 
 procedure TfrmCommentToCall.FormClose(Sender : TObject; var CloseAction : TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmCommentToCall);
+  dmUtils.SaveWindowPos(Self);
   if dmData.trComment.Active then
     dmData.trComment.Rollback
 end;
 
 procedure TfrmCommentToCall.dbgrdCommentColumnSized(Sender : TObject);
 begin
-  dmUtils.SaveDBGridInForm(frmCommentToCall)
+  dmUtils.SaveDBGridInForm(Self)
 end;
 
 procedure TfrmCommentToCall.dbgrdCommentDblClick(Sender : TObject);
@@ -134,8 +134,8 @@ end;
 
 procedure TfrmCommentToCall.FormShow(Sender : TObject);
 begin
-  dmUtils.LoadWindowPos(frmCommentToCall);
-  dmUtils.LoadDBGridInForm(frmCommentToCall);
+  dmUtils.LoadWindowPos(Self);
+  dmUtils.LoadDBGridInForm(Self);
   RefreshData()
 end;
 
@@ -168,7 +168,7 @@ begin
     end
   end;
 
-  dmUtils.LoadDBGridInForm(frmCommentToCall);
+  dmUtils.LoadDBGridInForm(Self);
   dbgrdComment.Columns[1].Title.Caption := 'Callsign';
   dbgrdComment.Columns[2].Title.Caption := 'Note'
 end;

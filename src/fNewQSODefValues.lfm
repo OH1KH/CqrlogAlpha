@@ -1,14 +1,14 @@
 object frmNewQSODefValues: TfrmNewQSODefValues
-  Left = 1347
+  Left = 346
   Height = 430
-  Top = 78
+  Top = 152
   Width = 420
   Caption = 'frmNewQSODefValues'
   ClientHeight = 430
   ClientWidth = 420
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '1.2.2.0'
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 50
@@ -51,7 +51,7 @@ object frmNewQSODefValues: TfrmNewQSODefValues
     TabOrder = 1
     object edtValue: TEdit
       Left = 9
-      Height = 27
+      Height = 34
       Top = 40
       Width = 157
       TabOrder = 0
@@ -61,7 +61,7 @@ object frmNewQSODefValues: TfrmNewQSODefValues
       Left = 9
       Height = 17
       Top = 23
-      Width = 49
+      Width = 48
       Caption = 'lblDesc'
       ParentColor = False
     end
@@ -71,8 +71,8 @@ object frmNewQSODefValues: TfrmNewQSODefValues
       Top = 72
       Width = 75
       Caption = 'Add ...'
-      OnClick = Button1Click
       TabOrder = 1
+      OnClick = Button1Click
     end
     object btnDelete: TButton
       Left = 9
@@ -80,8 +80,8 @@ object frmNewQSODefValues: TfrmNewQSODefValues
       Top = 132
       Width = 174
       Caption = 'Delete selected value'
-      OnClick = btnDeleteClick
       TabOrder = 2
+      OnClick = btnDeleteClick
     end
     object btnMoveUp: TButton
       Left = 9
@@ -89,8 +89,8 @@ object frmNewQSODefValues: TfrmNewQSODefValues
       Top = 216
       Width = 174
       Caption = 'Move up'
-      OnClick = btnMoveUpClick
       TabOrder = 3
+      OnClick = btnMoveUpClick
     end
     object btnMoveDwn: TButton
       Left = 9
@@ -98,8 +98,8 @@ object frmNewQSODefValues: TfrmNewQSODefValues
       Top = 248
       Width = 174
       Caption = 'Move down'
-      OnClick = btnMoveDwnClick
       TabOrder = 4
+      OnClick = btnMoveDwnClick
     end
     object Button2: TButton
       Left = 91
@@ -107,8 +107,8 @@ object frmNewQSODefValues: TfrmNewQSODefValues
       Top = 72
       Width = 75
       Caption = 'Change ...'
-      OnClick = Button2Click
       TabOrder = 5
+      OnClick = Button2Click
     end
     object Button3: TButton
       Left = 9
@@ -116,8 +116,8 @@ object frmNewQSODefValues: TfrmNewQSODefValues
       Top = 168
       Width = 174
       Caption = 'Set default values'
-      OnClick = Button3Click
       TabOrder = 6
+      OnClick = Button3Click
     end
   end
   object lbValues: TListBox

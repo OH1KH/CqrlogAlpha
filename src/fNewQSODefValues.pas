@@ -55,7 +55,7 @@ uses dUtils;
 procedure TfrmNewQSODefValues.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmNewQSODefValues)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmNewQSODefValues.Button1Click(Sender: TObject);
@@ -140,7 +140,7 @@ end;
 
 procedure TfrmNewQSODefValues.FormShow(Sender : TObject);
 begin
-  dmUtils.LoadWindowPos(frmNewQSODefValues);
+  dmUtils.LoadWindowPos(Self);
   Caption         := 'Change new QSO window default values - '+WhatChangeDesc;
   lblDesc.Caption := WhatChangeDesc;
   edtValue.Text   := '';

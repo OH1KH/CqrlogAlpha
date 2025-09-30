@@ -257,7 +257,7 @@ end;
 procedure TfrmRadioMemories.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmRadioMemories);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 procedure TfrmRadioMemories.FormCreate(Sender: TObject);
@@ -267,7 +267,7 @@ end;
 
 procedure TfrmRadioMemories.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmRadioMemories);
+  dmUtils.LoadWindowPos(Self);
   ShowMode := False;
   lblLines.Caption:=IntToStr(sgrdMem.RowCount-1);
   LastSearchLine := 1;

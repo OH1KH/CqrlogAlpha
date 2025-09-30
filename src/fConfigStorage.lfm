@@ -10,28 +10,28 @@ object frmConfigStorage: TfrmConfigStorage
   OnClose = FormClose
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '1.2.4.0'
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 16
-    Height = 18
+    Height = 17
     Top = 16
-    Width = 153
+    Width = 137
     Caption = 'Type of configuration'
     ParentColor = False
   end
   object Label2: TLabel
     Left = 258
-    Height = 18
+    Height = 17
     Top = 16
-    Width = 55
+    Width = 50
     Caption = 'Storage'
     ParentColor = False
   end
   object Label3: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 61
-    Width = 60
+    Width = 55
     Caption = 'Program'
     ParentColor = False
   end
@@ -43,31 +43,31 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label15: TLabel
     Left = 664
-    Height = 18
+    Height = 17
     Top = 16
-    Width = 55
+    Width = 50
     Caption = 'Storage'
     ParentColor = False
   end
   object Label16: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 16
-    Width = 153
+    Width = 137
     Caption = 'Type of configuration'
     ParentColor = False
   end
   object Label17: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 61
-    Width = 121
+    Width = 113
     Caption = 'ZIP code tracking'
     ParentColor = False
   end
   object cmbStoreProgram: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 56
     Width = 228
     ItemHeight = 0
@@ -82,7 +82,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreZipCode: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 56
     Width = 227
     ItemHeight = 0
@@ -97,23 +97,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label26: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 93
-    Width = 68
+    Width = 61
     Caption = 'New QSO'
     ParentColor = False
   end
   object Label29: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 93
-    Width = 141
+    Width = 126
     Caption = 'LoTW/eQSL support'
     ParentColor = False
   end
   object cmbStoreNewQSO: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 88
     Width = 227
     ItemHeight = 0
@@ -128,7 +128,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreLoTW: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 88
     Width = 227
     ItemHeight = 0
@@ -143,23 +143,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label30: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 125
-    Width = 109
+    Width = 103
     Caption = 'Visible columns'
     ParentColor = False
   end
   object Label31: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 125
-    Width = 91
+    Width = 84
     Caption = 'CW interface'
     ParentColor = False
   end
   object cmbStoreVisColumns: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 120
     Width = 227
     ItemHeight = 0
@@ -174,7 +174,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreCWInterface: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 120
     Width = 227
     ItemHeight = 0
@@ -189,23 +189,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label32: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 157
-    Width = 83
+    Width = 75
     Caption = 'TRX control'
     ParentColor = False
   end
   object Label33: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 157
-    Width = 139
+    Width = 126
     Caption = 'fldigi/wsjt Interface'
     ParentColor = False
   end
   object cmbStoreTRXControl: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 152
     Width = 227
     ItemHeight = 0
@@ -220,7 +220,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreFldigiInterface: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 152
     Width = 227
     ItemHeight = 0
@@ -235,23 +235,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label34: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 189
-    Width = 94
+    Width = 84
     Caption = 'Rotor control'
     ParentColor = False
   end
   object Label35: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 189
-    Width = 88
+    Width = 81
     Caption = 'Auto backup'
     ParentColor = False
   end
   object cmbStoreRotorControl: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 184
     Width = 227
     ItemHeight = 0
@@ -266,7 +266,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreAutoBackup: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 184
     Width = 227
     ItemHeight = 0
@@ -281,23 +281,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label36: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 221
-    Width = 47
+    Width = 43
     Caption = 'Modes'
     ParentColor = False
   end
   object Label37: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 221
-    Width = 118
+    Width = 109
     Caption = 'External viewers'
     ParentColor = False
   end
   object cmbStoreModes: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 216
     Width = 227
     ItemHeight = 0
@@ -312,7 +312,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreExtViewers: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 216
     Width = 227
     ItemHeight = 0
@@ -327,23 +327,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label38: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 253
-    Width = 47
+    Width = 42
     Caption = 'Export'
     ParentColor = False
   end
   object Label39: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 253
-    Width = 120
+    Width = 111
     Caption = 'CallBook support'
     ParentColor = False
   end
   object cmbStoreExport: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 248
     Width = 227
     ItemHeight = 0
@@ -358,7 +358,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreCalbook: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 248
     Width = 227
     ItemHeight = 0
@@ -373,23 +373,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label40: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 285
-    Width = 73
+    Width = 67
     Caption = 'DX cluster'
     ParentColor = False
   end
   object Label41: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 285
-    Width = 90
+    Width = 81
     Caption = 'RBN support'
     ParentColor = False
   end
   object cmbStoreCluster: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 280
     Width = 227
     ItemHeight = 0
@@ -404,7 +404,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreRbn: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 280
     Width = 227
     ItemHeight = 0
@@ -419,23 +419,23 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label42: TLabel
     Left = 19
-    Height = 18
+    Height = 17
     Top = 317
-    Width = 39
+    Width = 35
     Caption = 'Fonts'
     ParentColor = False
   end
   object Label43: TLabel
     Left = 416
-    Height = 18
+    Height = 17
     Top = 317
-    Width = 125
+    Width = 114
     Caption = 'Online log upload'
     ParentColor = False
   end
   object cmbStoreFonts: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 312
     Width = 227
     ItemHeight = 0
@@ -450,7 +450,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreOnlineLog: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 312
     Width = 227
     ItemHeight = 0
@@ -465,15 +465,15 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label44: TLabel
     Left = 19
-    Height = 18
+    Height = 17
     Top = 349
-    Width = 88
+    Width = 81
     Caption = 'Membership'
     ParentColor = False
   end
   object cmbStoreMembership: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 344
     Width = 227
     ItemHeight = 0
@@ -488,23 +488,26 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object Label45: TLabel
     Left = 19
-    Height = 18
+    Height = 17
     Top = 381
-    Width = 70
+    Width = 66
     Caption = 'Band map'
     ParentColor = False
   end
   object Label46: TLabel
     Left = 416
-    Height = 18
+    Height = 17
+    Hint = 'In addition to pos/size this inlcudes also ''Window was open''-state during last close'#10'for some windows and Grayline popup-menu settings.'
     Top = 381
-    Width = 158
+    Width = 145
     Caption = 'Windows size/position'
     ParentColor = False
+    ParentShowHint = False
+    ShowHint = True
   end
   object cmbStoreBandMap: TComboBox
     Left = 167
-    Height = 28
+    Height = 29
     Top = 376
     Width = 227
     ItemHeight = 0
@@ -519,7 +522,8 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreWindowSize: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
+    Hint = 'In addition to pos/size this inlcudes also ''Window was open''-state during last close'#10'for some windows and Grayline popup-menu settings.'
     Top = 376
     Width = 227
     ItemHeight = 0
@@ -528,29 +532,31 @@ object frmConfigStorage: TfrmConfigStorage
       'Common for all computers'
       'Local computer only'
     )
+    ParentShowHint = False
+    ShowHint = True
     Style = csDropDownList
     TabOrder = 20
     Text = 'Common for all computers'
   end
   object Label47: TLabel
     Left = 21
-    Height = 18
+    Height = 17
     Top = 413
-    Width = 53
+    Width = 49
     Caption = 'xPlanet'
     ParentColor = False
   end
   object Label48: TLabel
     Left = 418
-    Height = 18
+    Height = 17
     Top = 413
-    Width = 147
+    Width = 136
     Caption = 'Column size/position'
     ParentColor = False
   end
   object cmbStoreXplanet: TComboBox
     Left = 169
-    Height = 28
+    Height = 29
     Top = 408
     Width = 227
     ItemHeight = 0
@@ -565,7 +571,7 @@ object frmConfigStorage: TfrmConfigStorage
   end
   object cmbStoreColumnSize: TComboBox
     Left = 584
-    Height = 28
+    Height = 29
     Top = 408
     Width = 227
     ItemHeight = 0
@@ -584,8 +590,8 @@ object frmConfigStorage: TfrmConfigStorage
     Top = 472
     Width = 75
     Caption = 'Save'
-    OnClick = btnSaveClick
     TabOrder = 23
+    OnClick = btnSaveClick
   end
   object Shape2: TShape
     Left = 19

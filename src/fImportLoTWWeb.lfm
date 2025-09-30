@@ -120,7 +120,7 @@ object frmImportLoTWWeb: TfrmImportLoTWWeb
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object gbProgress: TGroupBox
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Side = asrBottom
@@ -149,9 +149,9 @@ object frmImportLoTWWeb: TfrmImportLoTWWeb
       BorderSpacing.Top = 1
       BorderSpacing.Right = 1
       BorderSpacing.Bottom = 1
-      OnChange = mStatChange
       ScrollBars = ssAutoBoth
       TabOrder = 0
+      OnChange = mStatChange
     end
   end
   object pnlSettings: TPanel
@@ -260,9 +260,9 @@ object frmImportLoTWWeb: TfrmImportLoTWWeb
         BorderSpacing.Top = 3
         Caption = 'Import station information from LoTW if it is not set during qso.'
         Checked = True
-        OnChange = cbImportsChange
         State = cbChecked
         TabOrder = 3
+        OnChange = cbImportsChange
       end
       object chkChangeDate: TCheckBox
         AnchorSideLeft.Control = lblReturnQsl
@@ -274,8 +274,8 @@ object frmImportLoTWWeb: TfrmImportLoTWWeb
         Width = 424
         BorderSpacing.Top = 6
         Caption = 'Set Rcvd date to be current date -1 after succesfull download'
-        OnChange = chkChangeDateChange
         TabOrder = 4
+        OnChange = chkChangeDateChange
       end
     end
   end
@@ -318,8 +318,8 @@ object frmImportLoTWWeb: TfrmImportLoTWWeb
       Width = 96
       BorderSpacing.Left = 6
       Caption = 'Preferences'
-      OnClick = btnPreferencesClick
       TabOrder = 1
+      OnClick = btnPreferencesClick
     end
     object btnDownload: TButton
       AnchorSideLeft.Control = pnlButtons
@@ -332,8 +332,8 @@ object frmImportLoTWWeb: TfrmImportLoTWWeb
       Top = 13
       Width = 300
       Caption = 'Download data from ARRL website'
-      OnClick = btnDownloadClick
       TabOrder = 2
+      OnClick = btnDownloadClick
     end
   end
 end

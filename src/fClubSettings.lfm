@@ -10,15 +10,16 @@ object frmClubSettings: TfrmClubSettings
   ClientHeight = 411
   ClientWidth = 821
   OnShow = FormShow
-  LCLVersion = '1.8.0.6'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object GroupBox1: TGroupBox
     Left = 9
     Height = 392
     Top = 8
     Width = 447
     Caption = ' Info '
-    ClientHeight = 373
-    ClientWidth = 443
+    ClientHeight = 374
+    ClientWidth = 445
     TabOrder = 0
     object GroupBox2: TGroupBox
       Left = 13
@@ -26,27 +27,27 @@ object frmClubSettings: TfrmClubSettings
       Top = 4
       Width = 416
       Caption = ' New '
-      ClientHeight = 52
-      ClientWidth = 412
+      ClientHeight = 53
+      ClientWidth = 414
       TabOrder = 0
       object Label7: TLabel
         Left = 301
         Height = 17
         Top = -1
-        Width = 37
+        Width = 34
         Caption = 'Color'
         ParentColor = False
       end
       object edtNewInfo: TEdit
         Left = 6
-        Height = 27
+        Height = 34
         Top = 21
         Width = 289
         TabOrder = 0
       end
       object cmbNewColor: TColorBox
         Left = 301
-        Height = 31
+        Height = 29
         Top = 17
         Width = 100
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
@@ -60,27 +61,27 @@ object frmClubSettings: TfrmClubSettings
       Top = 75
       Width = 416
       Caption = ' New band'
-      ClientHeight = 51
-      ClientWidth = 412
+      ClientHeight = 52
+      ClientWidth = 414
       TabOrder = 1
       object Label8: TLabel
         Left = 301
         Height = 17
         Top = -3
-        Width = 37
+        Width = 34
         Caption = 'Color'
         ParentColor = False
       end
       object edtNewBandInfo: TEdit
         Left = 6
-        Height = 27
+        Height = 34
         Top = 19
         Width = 289
         TabOrder = 0
       end
       object cmbBandColor: TColorBox
         Left = 301
-        Height = 31
+        Height = 29
         Top = 15
         Width = 100
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
@@ -94,27 +95,27 @@ object frmClubSettings: TfrmClubSettings
       Top = 146
       Width = 416
       Caption = ' New mode '
-      ClientHeight = 51
-      ClientWidth = 412
+      ClientHeight = 52
+      ClientWidth = 414
       TabOrder = 2
       object Label9: TLabel
         Left = 301
         Height = 17
         Top = -1
-        Width = 37
+        Width = 34
         Caption = 'Color'
         ParentColor = False
       end
       object edtNewModeInfo: TEdit
         Left = 6
-        Height = 27
+        Height = 34
         Top = 21
         Width = 289
         TabOrder = 0
       end
       object cmbModeColor: TColorBox
         Left = 301
-        Height = 31
+        Height = 29
         Top = 17
         Width = 100
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
@@ -128,27 +129,27 @@ object frmClubSettings: TfrmClubSettings
       Top = 219
       Width = 416
       Caption = ' QSL needed  '
-      ClientHeight = 52
-      ClientWidth = 412
+      ClientHeight = 53
+      ClientWidth = 414
       TabOrder = 3
       object Label10: TLabel
         Left = 301
         Height = 17
         Top = -2
-        Width = 37
+        Width = 34
         Caption = 'Color'
         ParentColor = False
       end
       object edtQSLNeededInfo: TEdit
         Left = 6
-        Height = 27
+        Height = 34
         Top = 20
         Width = 289
         TabOrder = 0
       end
       object cmbQSLColor: TColorBox
         Left = 301
-        Height = 31
+        Height = 29
         Top = 17
         Width = 100
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
@@ -162,27 +163,27 @@ object frmClubSettings: TfrmClubSettings
       Top = 294
       Width = 416
       Caption = ' Already confirmed  '
-      ClientHeight = 51
-      ClientWidth = 412
+      ClientHeight = 52
+      ClientWidth = 414
       TabOrder = 4
       object Label11: TLabel
         Left = 301
         Height = 17
         Top = -3
-        Width = 37
+        Width = 34
         Caption = 'Color'
         ParentColor = False
       end
       object edtAlreadyCmfInfo: TEdit
         Left = 6
-        Height = 27
+        Height = 34
         Top = 19
         Width = 289
         TabOrder = 0
       end
       object cmbAlreadyColor: TColorBox
         Left = 301
-        Height = 31
+        Height = 29
         Top = 17
         Width = 100
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
@@ -196,14 +197,14 @@ object frmClubSettings: TfrmClubSettings
     Height = 96
     Top = 8
     Width = 344
-    ClientHeight = 92
-    ClientWidth = 340
+    ClientHeight = 94
+    ClientWidth = 342
     TabOrder = 1
     object Label1: TLabel
       Left = 14
       Height = 17
       Top = 9
-      Width = 33
+      Width = 28
       Caption = 'Join '
       ParentColor = False
     end
@@ -211,7 +212,7 @@ object frmClubSettings: TfrmClubSettings
       Left = 176
       Height = 17
       Top = 9
-      Width = 145
+      Width = 140
       Caption = 'field in club database'
       ParentColor = False
     end
@@ -219,7 +220,7 @@ object frmClubSettings: TfrmClubSettings
       Left = 14
       Height = 17
       Top = 48
-      Width = 31
+      Width = 28
       Caption = 'with'
       ParentColor = False
     end
@@ -227,13 +228,13 @@ object frmClubSettings: TfrmClubSettings
       Left = 179
       Height = 17
       Top = 48
-      Width = 142
+      Width = 138
       Caption = 'field in main databse'
       ParentColor = False
     end
     object cmbClubFields: TComboBox
       Left = 57
-      Height = 27
+      Height = 29
       Top = 5
       Width = 100
       ItemHeight = 0
@@ -248,7 +249,7 @@ object frmClubSettings: TfrmClubSettings
     end
     object cmbMainFields: TComboBox
       Left = 57
-      Height = 27
+      Height = 29
       Top = 42
       Width = 100
       ItemHeight = 0
@@ -268,14 +269,14 @@ object frmClubSettings: TfrmClubSettings
     Height = 96
     Top = 112
     Width = 344
-    ClientHeight = 92
-    ClientWidth = 340
+    ClientHeight = 94
+    ClientWidth = 342
     TabOrder = 2
     object Label5: TLabel
       Left = 14
       Height = 17
       Top = 9
-      Width = 183
+      Width = 171
       Caption = 'Store this information into'
       ParentColor = False
     end
@@ -283,13 +284,13 @@ object frmClubSettings: TfrmClubSettings
       Left = 13
       Height = 17
       Top = 52
-      Width = 35
+      Width = 33
       Caption = 'field:'
       ParentColor = False
     end
     object cmbStoreFileds: TComboBox
       Left = 208
-      Height = 27
+      Height = 29
       Top = 3
       Width = 113
       ItemHeight = 0
@@ -309,7 +310,7 @@ object frmClubSettings: TfrmClubSettings
     end
     object edtStoreText: TEdit
       Left = 57
-      Height = 27
+      Height = 34
       Top = 48
       Width = 245
       TabOrder = 1
@@ -323,8 +324,8 @@ object frmClubSettings: TfrmClubSettings
     BorderSpacing.InnerBorder = 4
     Caption = 'OK'
     ModalResult = 1
-    OnClick = btnOKClick
     TabOrder = 3
+    OnClick = btnOKClick
   end
   object Button2: TButton
     Left = 608
@@ -344,7 +345,7 @@ object frmClubSettings: TfrmClubSettings
     Width = 75
     BorderSpacing.InnerBorder = 4
     Caption = 'Help'
-    OnClick = btnHelpClick
     TabOrder = 5
+    OnClick = btnHelpClick
   end
 end

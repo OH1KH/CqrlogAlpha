@@ -114,8 +114,8 @@ object frmWorking: TfrmWorking
     FFFF
   }
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '0.9.28'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object lblInfo: TLabel
     Left = 1
     Height = 25
@@ -132,7 +132,7 @@ object frmWorking: TfrmWorking
     Enabled = False
     Interval = 500
     OnTimer = tmrWorkingTimer
-    left = 3
-    top = 189
+    Left = 3
+    Top = 189
   end
 end

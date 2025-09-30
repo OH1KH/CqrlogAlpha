@@ -9,20 +9,20 @@ object frmBandMapWatch: TfrmBandMapWatch
   Caption = 'Band map watch'
   ClientHeight = 335
   ClientWidth = 399
-  Position = poMainFormCenter
-  LCLVersion = '1.2.4.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object GroupBox1: TGroupBox
     Left = 16
     Height = 65
     Top = 6
     Width = 361
     Caption = ' DXCC (use ; as delimiter)'
-    ClientHeight = 46
-    ClientWidth = 357
+    ClientHeight = 47
+    ClientWidth = 359
     TabOrder = 0
     object edtDXCC: TEdit
       Left = 6
-      Height = 27
+      Height = 34
       Top = 9
       Width = 336
       TabOrder = 0
@@ -34,12 +34,12 @@ object frmBandMapWatch: TfrmBandMapWatch
     Top = 73
     Width = 361
     Caption = ' WAZ zones (use ; as delimiter)'
-    ClientHeight = 45
-    ClientWidth = 357
+    ClientHeight = 46
+    ClientWidth = 359
     TabOrder = 1
     object edtWAZ: TEdit
       Left = 6
-      Height = 27
+      Height = 34
       Top = 7
       Width = 336
       TabOrder = 0
@@ -51,12 +51,12 @@ object frmBandMapWatch: TfrmBandMapWatch
     Top = 141
     Width = 361
     Caption = ' ITU zones (use ; as delimiter)'
-    ClientHeight = 46
-    ClientWidth = 357
+    ClientHeight = 47
+    ClientWidth = 359
     TabOrder = 2
     object edtITU: TEdit
       Left = 6
-      Height = 27
+      Height = 34
       Top = 7
       Width = 336
       TabOrder = 0
@@ -68,12 +68,12 @@ object frmBandMapWatch: TfrmBandMapWatch
     Top = 208
     Width = 361
     Caption = ' Continets '
-    ClientHeight = 37
-    ClientWidth = 357
+    ClientHeight = 38
+    ClientWidth = 359
     TabOrder = 3
     object chkEU: TCheckBox
       Left = 6
-      Height = 24
+      Height = 23
       Top = 3
       Width = 44
       Caption = 'EU'
@@ -81,23 +81,23 @@ object frmBandMapWatch: TfrmBandMapWatch
     end
     object chkAS: TCheckBox
       Left = 54
-      Height = 24
+      Height = 23
       Top = 3
-      Width = 44
+      Width = 43
       Caption = 'AS'
       TabOrder = 1
     end
     object chkNA: TCheckBox
       Left = 102
-      Height = 24
+      Height = 23
       Top = 3
-      Width = 47
+      Width = 45
       Caption = 'NA'
       TabOrder = 2
     end
     object chkSA: TCheckBox
       Left = 158
-      Height = 24
+      Height = 23
       Top = 3
       Width = 44
       Caption = 'SA'
@@ -105,34 +105,34 @@ object frmBandMapWatch: TfrmBandMapWatch
     end
     object chkAF: TCheckBox
       Left = 206
-      Height = 24
+      Height = 23
       Top = 3
-      Width = 44
+      Width = 43
       Caption = 'AF'
       TabOrder = 4
     end
     object chkOC: TCheckBox
       Left = 254
-      Height = 24
+      Height = 23
       Top = 3
-      Width = 46
+      Width = 45
       Caption = 'OC'
       TabOrder = 5
     end
     object chkAN: TCheckBox
       Left = 310
-      Height = 24
+      Height = 23
       Top = 3
-      Width = 47
+      Width = 45
       Caption = 'AN'
       TabOrder = 6
     end
   end
   object chkIOTA: TCheckBox
     Left = 16
-    Height = 24
+    Height = 23
     Top = 272
-    Width = 99
+    Width = 96
     Caption = 'Watch iota'
     TabOrder = 4
   end
@@ -155,4 +155,4 @@ object frmBandMapWatch: TfrmBandMapWatch
     ModalResult = 2
     TabOrder = 6
   end
-end
+end

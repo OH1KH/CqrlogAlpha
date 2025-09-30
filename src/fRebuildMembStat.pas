@@ -57,7 +57,7 @@ uses dUtils, dData, uMyIni, dLogUpload, dMembership;
 
 procedure TfrmRebuildMembStat.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmRebuildMembStat);
+  dmUtils.LoadWindowPos(Self);
   chkRebClub1.Caption := dmMembership.Club1.LongName;
   chkRebClub2.Caption := dmMembership.Club2.LongName;
   chkRebClub3.Caption := dmMembership.Club3.LongName;
@@ -91,7 +91,7 @@ end;
 procedure TfrmRebuildMembStat.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmRebuildMembStat)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmRebuildMembStat.btnStartClick(Sender: TObject);

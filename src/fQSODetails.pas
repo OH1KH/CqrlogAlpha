@@ -197,12 +197,12 @@ end;
 procedure TfrmQSODetails.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmQSODetails)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmQSODetails.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmQSODetails);
+  dmUtils.LoadWindowPos(Self);
   Details             := TColorMemo.Create(pnlDetails);
   Details.parent      := pnlDetails;
   Details.AutoScroll  := True;

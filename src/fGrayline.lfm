@@ -123,7 +123,7 @@ object frmGrayline: TfrmGrayline
   OnPaint = FormPaint
   OnShow = FormShow
   ShowHint = True
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object sbtnGrayLine: TSpeedButton
     Left = 400
     Height = 16

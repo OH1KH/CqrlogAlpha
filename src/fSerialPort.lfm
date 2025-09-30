@@ -11,43 +11,43 @@ object frmSerialPort: TfrmSerialPort
   Caption = 'Port settings'
   ClientHeight = 242
   ClientWidth = 245
-  Position = poMainFormCenter
-  LCLVersion = '0.9.28'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 11
-    Height = 18
+    Height = 17
     Top = 9
-    Width = 85
+    Width = 84
     Caption = 'Serial speed:'
     ParentColor = False
   end
   object Label2: TLabel
     Left = 11
-    Height = 18
+    Height = 17
     Top = 68
-    Width = 60
+    Width = 59
     Caption = 'Data bits'
     ParentColor = False
   end
   object Label3: TLabel
     Left = 133
-    Height = 18
+    Height = 17
     Top = 9
-    Width = 58
+    Width = 57
     Caption = 'Stop bits'
     ParentColor = False
   end
   object Label4: TLabel
     Left = 133
-    Height = 18
+    Height = 17
     Top = 68
-    Width = 74
+    Width = 72
     Caption = 'Handshake'
     ParentColor = False
   end
   object Label5: TLabel
     Left = 11
-    Height = 18
+    Height = 17
     Top = 136
     Width = 38
     Caption = 'Parity'
@@ -55,7 +55,7 @@ object frmSerialPort: TfrmSerialPort
   end
   object edtSpeed: TEdit
     Left = 11
-    Height = 27
+    Height = 34
     Top = 33
     Width = 80
     TabOrder = 0
@@ -63,7 +63,7 @@ object frmSerialPort: TfrmSerialPort
   end
   object edtDataBits: TEdit
     Left = 11
-    Height = 27
+    Height = 34
     Top = 96
     Width = 80
     TabOrder = 1
@@ -71,7 +71,7 @@ object frmSerialPort: TfrmSerialPort
   end
   object edtStopBits: TEdit
     Left = 133
-    Height = 27
+    Height = 34
     Top = 32
     Width = 80
     TabOrder = 2
@@ -95,7 +95,7 @@ object frmSerialPort: TfrmSerialPort
   end
   object cmbParity: TComboBox
     Left = 11
-    Height = 29
+    Height = 34
     Top = 160
     Width = 109
     ItemHeight = 0
@@ -115,8 +115,8 @@ object frmSerialPort: TfrmSerialPort
     Width = 75
     BorderSpacing.InnerBorder = 4
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 5
+    OnClick = btnOKClick
   end
   object Button2: TButton
     Left = 152
@@ -130,17 +130,17 @@ object frmSerialPort: TfrmSerialPort
   end
   object chkDTR: TCheckBox
     Left = 136
-    Height = 22
+    Height = 23
     Top = 136
-    Width = 51
+    Width = 53
     Caption = 'DTR'
     TabOrder = 7
   end
   object chkRTS: TCheckBox
     Left = 136
-    Height = 22
+    Height = 23
     Top = 163
-    Width = 48
+    Width = 51
     Caption = 'RTS'
     TabOrder = 8
   end

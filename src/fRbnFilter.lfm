@@ -8,7 +8,7 @@ object frmRbnFilter: TfrmRbnFilter
   ClientHeight = 731
   ClientWidth = 699
   OnShow = FormShow
-  Position = poOwnerFormCenter
+  Position = poWorkAreaCenter
   LCLVersion = '3.8.0.0'
   object grpDXStation: TGroupBox
     AnchorSideLeft.Control = Owner

@@ -76,20 +76,9 @@ implementation
   {$i lclgtkeventer.inc}
 {$endif}
 
-{$ifdef LCLGTK3}
+{$if Defined(LCLQT) or Defined(LCLQT5) or Defined(LCLQT6)}
+  // The gtkeventer works also for the QT widgetsets. No need to bring an own one.
   {$i lclgtkeventer.inc}
-{$endif}
-
-{$ifdef LCLQT}
-  {$i lclgtkeventer.inc} // identical code ;)
-{$endif}
-
-{$ifdef LCLQT5}
- {$i lclgtkeventer.inc} // identical code ;)
-{$endif}
-
-{$ifdef LCLQT6}
- {$i lclgtkeventer.inc} // identical code ;)
 {$endif}
 
 end.

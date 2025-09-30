@@ -66,7 +66,35 @@
     <br>Note that this file may contain also SWL eQSLs reportings of your qsos heard by SWLs.
     You can read more about import error file handling from <a href="qslimperr.html">LoTW/eQSL import errors</a>
     </p>
-
+    <p>
+    Once you have download confirmed eQSL qsos you can fetch eQSL card image(s).
+    <br>First select qso line from qso_list that has <b>E</b> in <b>qslr</b> column  (eQSL confirmed) with mouse right click. After that 
+    right click qso line and select <b>View eQSL</b> from popup menu.
+    <br><br>
+    <img src="img/eqsl3.png"><br><br>
+    eQSL is downloaded from eQSL.cc and displayed either with internal QSL viewer or with web browser depending on checkbox state in preferences/external viewers.
+    After view eQSL card image is deleted depending on checkbox state in preferences/external viewers.
+    If <b>NO delete</b> is selected then eQSL image remains in  <b>~/.config/cqrlog/call_data/eqsl</b> folder. Next time this qso's eQSL is viewed again it is first searched from that folder and if not found fetch again from eQSL.cc.
+    </p>
+    <p>
+    <br>You can save also qsl images received via Email to that same folder. Filename should start with callsign.
+    <br>If you want to connect image to certain qso in qso list you have to name the image with <b>call_band_mode_date_time</b> Extension may be ".png" or ".jpg".
+    <br>Example: <b>JA7CSS_6M_FT8_20250816_0608.png</b>  Filename with full path would then be <b>~/.config/cqrlog/call_data/eqsl/JA7CSS_6M_FT8_20250816_0608.png</b>
+    <br>
+    You are not able to show that image from qso_list unless you set <b>eQSL received</b> using <b>qso_list/Group edit</b> for that qso.
+    <br>
+    See help for Group edit from <a href="h25.html#grp">Operation/Group edit</a>
+    </p>
+    <p>
+    How ever all images starting with callsign and saved in <b>~/.config/cqrlog/call_data/eqsl</b> will show up when you start NewQSO.
+    <br>After you have entered a callsign and moved from call column known information for callsign is filled automated. Including that a QSL icon may appear if callsign has QSL image.
+    <br><br>
+    <img src="img/eqsl4.png"><br><br> 
+    Icon appear if there is QSL image for callsign. See: <a href="h21.html#ch21">Additional notes to callsign</a>
+    <br> 
+    Icon appears also now if callsign has saved eQSL image. If there is only one image it is opened by icon click, but if there are several of them (from different qsos) open dialog will show up for selecting the wanted eQSL image.   
+    
+    </p>
 
 
 <p align="center"><img src="img/line.png"></p>

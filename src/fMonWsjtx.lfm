@@ -40,7 +40,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       AnchorSideBottom.Side = asrCenter
       Left = 119
       Height = 23
-      Hint = 'Sort view by column.'#10'Column can be selected when checkbox is set, or rigth mouse click if already checked.'#10'Columns are:    dB   (  callsign  locator12  locator34  )*  state/cqdir '#10'Corresponding column numbers are 1..7'#10'NOTES:'#10'- Sort happen by dB (col1), if set,  even when it is not visible in monitor'#10'- dB sort output is as ascii sort order, not integer sort.'#10'- Sorting breaks color coding but worked print lowcase letters, never worked bold'
+      Hint = 'Sort view by column.'#10'Column can be selected when checkbox is set, or rigth mouse click if already checked.'#10'Columns are:    dB   (  callsign  locator12  locator34  )*  state/cqdir '#10'Corresponding column numbers are 1..7'#10'NOTES:'#10'- Sort happen by dB (col1), if set,  even when it is not visible in monitor'#10'- dB sort output is as ascii sort order, not integer sort.'#10'- Sorting breaks color coding but not worked print (lowcase letters) and never worked (bold)'
       Top = 10
       Width = 52
       Anchors = [akLeft, akBottom]
@@ -629,7 +629,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       AnchorSideTop.Side = asrCenter
       Left = 367
       Height = 23
-      Hint = 'Show only DX (for you) stations.'#10'Continents to show are selected when checked, or rigth mouse click if already checked.'
+      Hint = 'Show only DX (for you) stations.'#10'Continents to show are selected when checked, or right mouse click if already checked.'
       Top = 5
       Width = 44
       Caption = 'Dx'

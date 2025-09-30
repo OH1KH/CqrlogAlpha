@@ -117,8 +117,8 @@ object frmSearch: TfrmSearch
   }
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object GroupBox1: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -138,17 +138,17 @@ object frmSearch: TfrmSearch
       Top = 23
       Width = 248
       ItemHeight = 0
-      OnChange = cmbSearchChange
       TabOrder = 0
       Text = 'cmbSearch'
+      OnChange = cmbSearchChange
     end
     object edtText: TEdit
       Left = 8
       Height = 34
       Top = 79
       Width = 248
-      OnKeyPress = edtTextKeyPress
       TabOrder = 1
+      OnKeyPress = edtTextKeyPress
     end
     object Label1: TLabel
       Left = 8
@@ -233,8 +233,8 @@ object frmSearch: TfrmSearch
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'Search'
-      OnClick = btnSearchClick
       TabOrder = 0
+      OnClick = btnSearchClick
     end
     object btnCancel: TButton
       Left = 205

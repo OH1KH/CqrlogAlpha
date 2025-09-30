@@ -1,5 +1,5 @@
 object frmCustomStat: TfrmCustomStat
-  Left = 672
+  Left = 656
   Height = 523
   Top = 184
   Width = 780
@@ -7,9 +7,10 @@ object frmCustomStat: TfrmCustomStat
   Caption = 'Custom statistics'
   ClientHeight = 523
   ClientWidth = 780
+  OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '1.8.0.6'
+  LCLVersion = '3.8.0.0'
   object pnlsettings: TPanel
     Left = 0
     Height = 80
@@ -24,7 +25,7 @@ object frmCustomStat: TfrmCustomStat
       Left = 152
       Height = 17
       Top = 12
-      Width = 42
+      Width = 41
       Caption = 'DXCC:'
       ParentColor = False
     end
@@ -32,7 +33,7 @@ object frmCustomStat: TfrmCustomStat
       Left = 8
       Height = 17
       Top = 12
-      Width = 37
+      Width = 34
       Caption = 'Field:'
       ParentColor = False
     end
@@ -40,36 +41,36 @@ object frmCustomStat: TfrmCustomStat
       Left = 504
       Height = 17
       Top = 16
-      Width = 89
+      Width = 85
       Caption = 'QSL received'
       ParentColor = False
     end
     object chkMode: TCheckBox
       Left = 312
-      Height = 24
+      Height = 23
       Top = 15
-      Width = 65
+      Width = 62
       Caption = 'Mode'
       TabOrder = 0
     end
     object chkBand: TCheckBox
       Left = 312
-      Height = 24
+      Height = 23
       Top = 40
-      Width = 62
+      Width = 59
       Caption = 'Band'
       TabOrder = 1
     end
     object edtPfx: TEdit
       Left = 144
-      Height = 27
+      Height = 34
       Top = 33
       Width = 120
       TabOrder = 2
     end
     object cmbMode: TComboBox
       Left = 384
-      Height = 29
+      Height = 34
       Top = 12
       Width = 100
       ItemHeight = 0
@@ -77,7 +78,7 @@ object frmCustomStat: TfrmCustomStat
     end
     object cmbField: TComboBox
       Left = 8
-      Height = 29
+      Height = 34
       Top = 33
       Width = 128
       ItemHeight = 0
@@ -99,8 +100,8 @@ object frmCustomStat: TfrmCustomStat
       Width = 131
       Anchors = [akTop, akRight]
       Caption = 'Show statistics'
-      OnClick = btnShowClick
       TabOrder = 5
+      OnClick = btnShowClick
     end
     object btnPref: TButton
       Left = 264
@@ -108,12 +109,12 @@ object frmCustomStat: TfrmCustomStat
       Top = 33
       Width = 24
       Caption = '...'
-      OnClick = btnPrefClick
       TabOrder = 6
+      OnClick = btnPrefClick
     end
     object cmbQSLR: TComboBox
       Left = 504
-      Height = 29
+      Height = 34
       Top = 40
       Width = 100
       ItemHeight = 0

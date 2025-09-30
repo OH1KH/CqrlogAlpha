@@ -9,7 +9,8 @@ object frmDbSqlSel: TfrmDbSqlSel
   Color = clWhite
   OnClose = FormClose
   OnCreate = FormCreate
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object gbLocalUser: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = rbExternal
@@ -27,6 +28,7 @@ object frmDbSqlSel: TfrmDbSqlSel
     Caption = 'Define Local SQL user'
     ClientHeight = 71
     ClientWidth = 427
+    ParentBackground = False
     TabOrder = 6
     TabStop = True
     Visible = False
@@ -40,9 +42,9 @@ object frmDbSqlSel: TfrmDbSqlSel
       Width = 90
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 12
-      OnExit = edtUserNameExit
       TabOrder = 2
       Text = 'cqrlog'
+      OnExit = edtUserNameExit
     end
     object edtPassword: TEdit
       AnchorSideTop.Control = gbLocalUser
@@ -55,9 +57,9 @@ object frmDbSqlSel: TfrmDbSqlSel
       Width = 90
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 6
-      OnExit = edtPasswordExit
       TabOrder = 3
       Text = 'cqrlog'
+      OnExit = edtPasswordExit
     end
     object lblPass: TLabel
       AnchorSideLeft.Control = edtPassword
@@ -115,9 +117,9 @@ object frmDbSqlSel: TfrmDbSqlSel
       BorderSpacing.Left = 12
       MaxLength = 5
       NumbersOnly = True
-      OnExit = edtPortExit
       TabOrder = 1
       Text = '3306'
+      OnExit = edtPortExit
     end
     object edtIP: TEdit
       AnchorSideLeft.Control = gbLocalUser
@@ -128,9 +130,9 @@ object frmDbSqlSel: TfrmDbSqlSel
       Top = 18
       Width = 90
       BorderSpacing.Left = 6
-      OnExit = edtIPExit
       TabOrder = 0
       Text = 'localhost'
+      OnExit = edtIPExit
     end
   end
   object lblQuestion: TLabel
@@ -161,11 +163,11 @@ object frmDbSqlSel: TfrmDbSqlSel
     BorderSpacing.Top = 12
     Caption = 'your linux user folder (CQRLOG default)'
     Checked = True
-    OnClick = rbFolderClick
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
     TabStop = True
+    OnClick = rbFolderClick
   end
   object rbLocal: TRadioButton
     AnchorSideLeft.Control = rbFolder
@@ -178,11 +180,11 @@ object frmDbSqlSel: TfrmDbSqlSel
     Width = 202
     BorderSpacing.Top = 3
     Caption = 'local machine''s SQL server'
-    OnChange = rbLocalChange
     ParentShowHint = False
     ShowHint = True
     TabOrder = 2
     TabStop = True
+    OnChange = rbLocalChange
   end
   object rbExternal: TRadioButton
     AnchorSideLeft.Control = rbFolder
@@ -195,11 +197,11 @@ object frmDbSqlSel: TfrmDbSqlSel
     Width = 226
     BorderSpacing.Top = 3
     Caption = 'external networked SQL server'
-    OnChange = rbExternalChange
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
     TabStop = True
+    OnChange = rbExternalChange
   end
   object btnOK: TButton
     AnchorSideTop.Side = asrBottom
@@ -216,10 +218,10 @@ object frmDbSqlSel: TfrmDbSqlSel
     BorderSpacing.Right = 12
     BorderSpacing.Bottom = 12
     Caption = 'OK'
-    OnClick = btnOKClick
     ParentShowHint = False
     ShowHint = True
     TabOrder = 5
+    OnClick = btnOKClick
   end
   object pnlWelcome: TPanel
     AnchorSideLeft.Control = Owner
@@ -238,6 +240,7 @@ object frmDbSqlSel: TfrmDbSqlSel
     ClientHeight = 32
     ClientWidth = 381
     Color = clWhite
+    ParentBackground = False
     ParentColor = False
     TabOrder = 0
     object lblWelcome: TLabel
@@ -574,6 +577,7 @@ object frmDbSqlSel: TfrmDbSqlSel
     ClientHeight = 89
     ClientWidth = 381
     Color = clWhite
+    ParentBackground = False
     ParentColor = False
     TabOrder = 4
     Visible = False

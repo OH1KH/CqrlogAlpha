@@ -39,14 +39,14 @@ uses dUtils,dData, uMyini;
 
 procedure TfrmCallAttachment.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmCallAttachment);
+  dmUtils.LoadWindowPos(Self);
   flAttach.Mask := '*.pdf;*.jpg;*.png;*.gif;*.txt;*.html'
 end;
 
 procedure TfrmCallAttachment.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmCallAttachment)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmCallAttachment.btnViewClick(Sender: TObject);

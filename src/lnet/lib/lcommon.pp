@@ -15,7 +15,7 @@
   You should have received a Copy of the GNU Library General Public License
   along with This library; if not, Write to the Free Software Foundation,
   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-  
+
   This license has been modified. See File LICENSE.ADDON for more inFormation.
   Should you find these sources without a LICENSE File, please contact
   me at ales@chello.sk
@@ -64,7 +64,7 @@ const
         LMSG = 0;
       {$ENDIF}
     {$ENDIF}
-    
+
     {$IFDEF DARWIN}
     SO_NOSIGPIPE = $1022; // for fpc 2.0.4
     {$ENDIF}
@@ -106,7 +106,7 @@ type
       LAF_INET  : (IPv4: TInetSockAddr);
       LAF_INET6 : (IPv6: TInetSockAddr6);
   end;
-  
+
   { Base functions }
   {$IFNDEF UNIX}
   function fpSelect(const nfds: Integer; const readfds, writefds, exceptfds: PFDSet;
@@ -123,9 +123,11 @@ type
 
   function LStrError(const Ernum: Longint; const UseUTF8: Boolean = False): string;
   function LSocketError: Longint;
-  
+
   function SetBlocking(const aHandle: Integer; const aValue: Boolean): Boolean;
-//  function SetNoDelay(const aHandle: Integer; const aValue: Boolean): Boolean;
+{$IFNDEF DARWIN}
+  function SetNoDelay(const aHandle: Integer; const aValue: Boolean): Boolean;
+{$ENDIF}
 
   function IsBlockError(const anError: Integer): Boolean; inline;
   function IsNonFatalError(const anError: Integer): Boolean; inline;
@@ -137,20 +139,20 @@ type
   function HostAddrToStr(const Entry: Cardinal): string; inline;
   function StrToNetAddr(const IP: string): Cardinal; inline;
   function NetAddrToStr(const Entry: Cardinal): string; inline;
-  
+
   procedure FillAddressInfo(var aAddrInfo: TLSocketAddress; const aFamily: sa_family_t;
                             const Address: string; const aPort: Word);
-                            
+
 implementation
 
 uses
   StrUtils
-  
+
 {$IFNDEF UNIX}
 
 {$IFDEF WINDOWS}
-  , Windows, lws2tcpip;
-  
+  , Windows, lws2tcpip, ctypes;
+
 {$IFDEF WINCE}
 
 function LStrError(const Ernum: Longint; const UseUTF8: Boolean = False): string;
@@ -216,7 +218,7 @@ end;
 
 {$ELSE}
   ; // uses
-  
+
 function LStrError(const Ernum: Longint; const UseUTF8: Boolean = False): string;
 begin
   Result := IntToStr(Ernum); // TODO: fix for non-windows winsock users
@@ -363,7 +365,7 @@ end;
 
 // unix
 
-  ,Errors, UnixUtil;
+  ,Errors, Unix, UnixUtil;
 
 function LStrError(const Ernum: Longint; const UseUTF8: Boolean = False): string;
 begin
@@ -431,7 +433,7 @@ begin
   opt := fpfcntl(aHandle, F_GETFL);
   if opt = SOCKET_ERROR then
     Exit(False);
-    
+
   if aValue then
     opt := opt and not O_NONBLOCK
   else
@@ -461,23 +463,42 @@ end;
 
 function TZSeconds: Integer; inline;
 begin
+{$IF FPC_FULLVERSION >= 30301}
+  Result := TZInfo.Seconds;
+{$ELSE}
   Result := unixutil.TZSeconds;
+{$ENDIF}
 end;
+
+//Fix by Github/suve for: FPC 3.2.4 moves TZSeconds from the 'UnixUtil' unit to 'Unix'.
+//Take in use later if needed
+//
+//function TZSeconds: Integer; inline;
+//begin
+//{$IF FPC_FULLVERSION > 30202}
+//  Result := unix.TZSeconds;
+//{$ELSE}
+//  Result := unixutil.TZSeconds;
+//{$ENDIF}
+//end;
+
 
 {$ENDIF}
 
-{function SetNoDelay(const aHandle: Integer; const aValue: Boolean): Boolean;
+{$IFNDEF DARWIN}
+function SetNoDelay(const aHandle: Integer; const aValue: Boolean): Boolean;
 var
-  opt: cInt = 0;
+  opt: cbool = false;
 begin
   if aValue then
-    opt := 1;
+    opt := true;
 
-  if fpsetsockopt(aHandle, IPPROTO_TCP, TCP_NODELAY, opt, SizeOf(opt)) < 0 then
+  if fpsetsockopt(aHandle, IPPROTO_TCP, TCP_NODELAY, @opt, SizeOf(opt)) < 0 then
     Exit(False);
 
   Result := True;
-end;}
+end;
+{$ENDIF}
 
 function StrToHostAddr(const IP: string): Cardinal; inline;
 begin
@@ -512,25 +533,15 @@ end;
 procedure FillAddressInfo(var aAddrInfo: TLSocketAddress; const aFamily: sa_family_t;
   const Address: string; const aPort: Word);
 begin
-  {$ifdef ver2}
-  aAddrInfo.IPv4.family := aFamily;
-  aAddrInfo.IPv4.Port := htons(aPort);
-  {$else}
   aAddrInfo.IPv4.sin_family := aFamily;
-  aAddrInfo.IPv4.sin_port := htons(aPort);
-  {$endif}
+  aAddrInfo.IPv4.sin_Port := htons(aPort);
+
   case aFamily of
     LAF_INET  :
       begin
-      {$ifdef ver2}
-        aAddrInfo.IPv4.Addr := StrToNetAddr(Address);
-        if (Address <> LADDR_ANY) and (aAddrInfo.IPv4.Addr = 0) then
-          aAddrInfo.IPv4.Addr := StrToNetAddr(GetHostIP(Address));
-      {$else}
-        aAddrInfo.IPv4.sin_addr.s_addr := StrToNetAddr(Address);
-        if (Address <> LADDR_ANY) and (aAddrInfo.IPv4.sin_addr.s_addr = 0) then
-          aAddrInfo.IPv4.sin_addr.s_addr := StrToNetAddr(GetHostIP(Address));
-      {$endif}
+        aAddrInfo.IPv4.sin_Addr.s_addr := StrToNetAddr(Address);
+        if (Address <> LADDR_ANY) and (aAddrInfo.IPv4.sin_Addr.s_addr = 0) then
+          aAddrInfo.IPv4.sin_Addr.s_addr := StrToNetAddr(GetHostIP(Address));
       end;
     LAF_INET6 :
       begin

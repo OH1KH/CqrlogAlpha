@@ -213,7 +213,7 @@ end;
 
 procedure TfrmeQSLUpload.FormShow(Sender : TObject);
 begin
-  dmUtils.LoadWindowPos(frmeQSLUpload);
+  dmUtils.LoadWindowPos(Self);
   edtQTH.Text := cqrini.ReadString('eQSL','QTH','');
   if dmData.IsFilter then
     begin
@@ -247,7 +247,7 @@ end;
 procedure TfrmeQSLUpload.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmeQSLUpload);
+  dmUtils.SaveWindowPos(Self);
   cqrini.WriteString('eQSL','QTH',edtQTH.Text)
 end;
 
@@ -255,6 +255,8 @@ procedure TfrmeQSLUpload.btnUploadClick(Sender : TObject);
 var
   FileName : String;
 begin
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
   mStat.Clear;
   edtQTH.Text := trim(edtQTH.Text);
   if (edtQTH.Text = '') then
@@ -290,6 +292,8 @@ begin
     end
 
   finally
+    btnClose.Font.Style:=[fsBold];
+    btnClose.Repaint;
     if cqrini.ReadBool('OnlineLog','IgnoreLoTWeQSL',False) then
       dmLogUpload.EnableOnlineLogSupport(False)
   end

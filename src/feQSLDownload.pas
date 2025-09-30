@@ -53,11 +53,13 @@ uses dUtils, uMyIni, dData, fImportProgress, fPreferences;
 procedure TfrmeQSLDownload.FormShow(Sender : TObject);
 begin
   Done := False;
-  dmUtils.LoadWindowPos(frmeQSLDownload);
+  dmUtils.LoadWindowPos(Self);
   edtDateFrom.Text   := cqrini.ReadString('eQSLImp','DateFrom',edtDateFrom.Text);
   edtQTH.Text        := cqrini.ReadString('eQSL','QTH','');
   chkShowNew.Checked := cqrini.ReadBool('eQSLImp','ShowNewQSOs',True);
   chkChangeDate.Checked:=cqrini.ReadBool('eQSLImp','ChangeDate',False);
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
 end;
 
 procedure TfrmeQSLDownload.mStatChange(Sender: TObject);
@@ -78,7 +80,7 @@ procedure TfrmeQSLDownload.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
   cqrini.WriteString('eQSL','QTH',edtQTH.Text);
-  dmUtils.SaveWindowPos(frmeQSLDownload)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmeQSLDownload.SockCallBack (Sender: TObject; Reason:  THookSocketReason; const  Value: string);
@@ -112,6 +114,8 @@ var
   i     : integer;
 begin
   Done := False;
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
   mStat.Clear;
   if not dmUtils.IsDateOK(edtDateFrom.Text) then
   begin
@@ -265,6 +269,8 @@ begin
     QSOList.Free;
     l.Free;
     btnClose.Enabled    := True;
+    btnClose.Font.Style:=[fsBold];
+    btnClose.Repaint;
     btnDownload.Enabled := True;
     btnPreferences.Enabled := True;
     edtDateFrom.Enabled    := True
@@ -273,6 +279,8 @@ end;
 
 procedure TfrmeQSLDownload.btnPreferencesClick(Sender : TObject);
 begin
+  btnClose.Font.Style:=[];
+  btnClose.Repaint;
   cqrini.WriteInteger('Pref', 'ActPageIdx', 18);  //set lotw tab active. Number may change if preferences page change
   with TfrmPreferences.Create(self) do
   try

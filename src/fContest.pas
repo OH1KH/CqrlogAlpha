@@ -1071,7 +1071,7 @@ procedure TfrmContest.SaveSettings;
 var
   f       :integer;
 begin
-  dmUtils.SaveWindowPos(frmContest);
+  dmUtils.SaveWindowPos(Self);
   cqrini.WriteString('frmContest', 'ContestName', cmbContestName.Text);
 
   cqrini.WriteBool('frmContest', 'TabAll', chkTabAll.Checked);
@@ -1139,7 +1139,7 @@ end;
 procedure TfrmContest.FormHide(Sender: TObject);
 begin
   frmNewQSO.gbContest.Visible := false;
-  dmUtils.SaveWindowPos(frmContest);
+  dmUtils.SaveWindowPos(Self);
   tmrScore.Enabled:=false;
   tmrESC2.Enabled:=false;
   tmrCQ.Enabled:=false;
@@ -1152,7 +1152,7 @@ var
 
 begin
   frmNewQSO.gbContest.Visible := true;
-  dmUtils.LoadWindowPos(frmContest);
+  dmUtils.LoadWindowPos(Self);
 
   chkTabAll.Checked         := cqrini.ReadBool('frmContest', 'TabAll', False);
   chkHint.Checked           := cqrini.ReadBool('frmContest', 'ShowHint', True);

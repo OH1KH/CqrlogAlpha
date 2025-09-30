@@ -124,8 +124,8 @@ object frmFilter: TfrmFilter
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object lblProf: TLabel
     AnchorSideTop.Control = cmbProfile
     AnchorSideRight.Control = cmbProfile
@@ -197,8 +197,8 @@ object frmFilter: TfrmFilter
       BorderSpacing.Left = 8
       BorderSpacing.Top = 6
       CharCase = ecUppercase
-      OnChange = edtCallSignChange
       TabOrder = 0
+      OnChange = edtCallSignChange
     end
     object rbExactlyCall: TRadioButton
       AnchorSideLeft.Control = edtCallSign
@@ -238,8 +238,8 @@ object frmFilter: TfrmFilter
     Anchors = [akTop, akRight]
     BorderSpacing.InnerBorder = 4
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 1
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     AnchorSideLeft.Control = btnOK
@@ -254,8 +254,8 @@ object frmFilter: TfrmFilter
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
-    OnClick = btnCancelClick
     TabOrder = 2
+    OnClick = btnCancelClick
   end
   object gbDxcc: TGroupBox
     AnchorSideTop.Side = asrBottom
@@ -292,8 +292,8 @@ object frmFilter: TfrmFilter
       BorderSpacing.Top = 1
       BorderSpacing.InnerBorder = 4
       Caption = 'Select ...'
-      OnClick = btnSelectDXCCClick
       TabOrder = 1
+      OnClick = btnSelectDXCCClick
     end
   end
   object gbFreq: TGroupBox
@@ -492,8 +492,8 @@ object frmFilter: TfrmFilter
       Width = 95
       BorderSpacing.Left = 8
       BorderSpacing.Top = 6
-      OnChange = edtLocatorChange
       TabOrder = 0
+      OnChange = edtLocatorChange
     end
     object rbIncludeLoc: TRadioButton
       AnchorSideLeft.Control = edtLocator
@@ -1048,8 +1048,8 @@ object frmFilter: TfrmFilter
       Width = 95
       BorderSpacing.Left = 8
       BorderSpacing.Top = 6
-      OnChange = edtMyLocChange
       TabOrder = 0
+      OnChange = edtMyLocChange
     end
     object rbIncludeMyLoc: TRadioButton
       AnchorSideLeft.Control = edtMyLoc
@@ -1229,8 +1229,8 @@ object frmFilter: TfrmFilter
     BorderSpacing.Top = 6
     BorderSpacing.InnerBorder = 4
     Caption = 'Help'
-    OnClick = btnHelpClick
     TabOrder = 19
+    OnClick = btnHelpClick
   end
   object cmbGroupBy: TComboBox
     AnchorSideLeft.Control = cmbSort
@@ -1276,8 +1276,8 @@ object frmFilter: TfrmFilter
     BorderSpacing.Top = 6
     BorderSpacing.InnerBorder = 4
     Caption = 'Save filter'
-    OnClick = btnSaveClick
     TabOrder = 21
+    OnClick = btnSaveClick
   end
   object btnLoad: TButton
     AnchorSideLeft.Control = btnSave
@@ -1290,8 +1290,8 @@ object frmFilter: TfrmFilter
     BorderSpacing.Top = 6
     BorderSpacing.InnerBorder = 4
     Caption = 'Load filter'
-    OnClick = btnLoadClick
     TabOrder = 22
+    OnClick = btnLoadClick
   end
   object gbState: TGroupBox
     AnchorSideLeft.Control = gbContestEx
@@ -1437,8 +1437,8 @@ object frmFilter: TfrmFilter
       BorderSpacing.Left = 6
       BorderSpacing.Top = 6
       ItemHeight = 0
-      OnChange = cmbBandSelectorChange
       TabOrder = 0
+      OnChange = cmbBandSelectorChange
     end
     object Label20: TLabel
       AnchorSideLeft.Control = cmbBandSelector
@@ -1845,11 +1845,11 @@ object frmFilter: TfrmFilter
         'YUDXC'
       )
       MaxLength = 40
-      OnExit = cmbContestNameExit
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
       TabStop = False
+      OnExit = cmbContestNameExit
     end
     object cbIncConName: TCheckBox
       AnchorSideLeft.Control = cmbContestName
@@ -1874,8 +1874,8 @@ object frmFilter: TfrmFilter
     Width = 75
     BorderSpacing.Right = 3
     Caption = 'Clear filter'
-    OnClick = btClearClick
     TabOrder = 30
+    OnClick = btClearClick
   end
   object chkRemember: TCheckBox
     AnchorSideLeft.Control = cmbProfile
@@ -1887,8 +1887,8 @@ object frmFilter: TfrmFilter
     Width = 133
     BorderSpacing.Left = 6
     Caption = 'Remember filter'
-    OnChange = chkRememberChange
     TabOrder = 31
+    OnChange = chkRememberChange
   end
   object gbDarcDok: TGroupBox
     AnchorSideLeft.Control = gbIota
@@ -1991,8 +1991,8 @@ object frmFilter: TfrmFilter
       BorderSpacing.Left = 6
       BorderSpacing.Top = 6
       ItemHeight = 0
-      OnExit = cmbPropModeExit
       TabOrder = 2
+      OnExit = cmbPropModeExit
     end
   end
   object gbSatName: TGroupBox
@@ -2044,8 +2044,8 @@ object frmFilter: TfrmFilter
       BorderSpacing.Left = 6
       BorderSpacing.Top = 6
       ItemHeight = 0
-      OnExit = cmbSatNameExit
       TabOrder = 2
+      OnExit = cmbSatNameExit
     end
   end
   object dlgOpen: TOpenDialog

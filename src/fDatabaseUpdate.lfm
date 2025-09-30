@@ -115,7 +115,7 @@ object frmDatabaseUpdate: TfrmDatabaseUpdate
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  Position = poMainFormCenter
+  Position = poWorkAreaCenter
   LCLVersion = '3.8.0.0'
   object pnlQRZ: TPanel
     Left = 0

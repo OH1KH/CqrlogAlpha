@@ -1,7 +1,7 @@
 object frmShowStations: TfrmShowStations
-  Left = 430
+  Left = 411
   Height = 370
-  Top = 262
+  Top = 362
   Width = 457
   HorzScrollBar.Page = 456
   VertScrollBar.Page = 369
@@ -9,7 +9,8 @@ object frmShowStations: TfrmShowStations
   Caption = 'Station list'
   ClientHeight = 370
   ClientWidth = 457
-  LCLVersion = '0.9.30'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     Left = 0
     Height = 50
@@ -37,8 +38,8 @@ object frmShowStations: TfrmShowStations
       Top = 16
       Width = 75
       Caption = 'Save'
-      OnClick = btnSaveClick
       TabOrder = 1
+      OnClick = btnSaveClick
     end
   end
   object m: TMemo
@@ -54,7 +55,7 @@ object frmShowStations: TfrmShowStations
     TabOrder = 1
   end
   object dlgSave: TSaveDialog
-    left = 336
-    top = 112
+    Left = 336
+    Top = 112
   end
-end
+end

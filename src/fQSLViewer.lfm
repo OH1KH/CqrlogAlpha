@@ -4,50 +4,86 @@ object frmQSLViewer: TfrmQSLViewer
   Top = 251
   Width = 625
   ActiveControl = pgQSL
-  Caption = 'QSL card'
   ClientHeight = 422
   ClientWidth = 625
+  Constraints.MinHeight = 100
+  Constraints.MinWidth = 100
   OnClose = FormClose
+  OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '0.9.28'
+  LCLVersion = '3.8.0.0'
   object pgQSL: TPageControl
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Panel1
     Left = 0
     Height = 384
     Top = 0
     Width = 625
-    ActivePage = tabFront
+    ActivePage = tabBack
     Align = alClient
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
-    OnPageChanged = pgQSLPageChanged
+    OnChange = pgQSLPageChanged
     object tabFront: TTabSheet
+      AnchorSideLeft.Control = pgQSL
+      AnchorSideTop.Control = pgQSL
+      AnchorSideRight.Control = pgQSL
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = pgQSL
+      AnchorSideBottom.Side = asrBottom
       Caption = 'Front'
-      ClientHeight = 349
-      ClientWidth = 619
+      ClientHeight = 353
+      ClientWidth = 615
       object imgFront: TImage
+        AnchorSideLeft.Control = tabFront
+        AnchorSideTop.Control = tabFront
+        AnchorSideRight.Control = tabFront
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = tabFront
+        AnchorSideBottom.Side = asrBottom
         Left = 0
-        Height = 349
+        Height = 353
         Top = 0
-        Width = 619
+        Width = 615
         Align = alClient
         AutoSize = True
       end
     end
     object tabBack: TTabSheet
+      AnchorSideLeft.Control = pgQSL
+      AnchorSideTop.Control = pgQSL
+      AnchorSideRight.Control = pgQSL
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = pgQSL
+      AnchorSideBottom.Side = asrBottom
       Caption = 'Back'
-      ClientHeight = 349
-      ClientWidth = 619
+      ClientHeight = 353
+      ClientWidth = 615
       object imgBack: TImage
+        AnchorSideLeft.Control = tabBack
+        AnchorSideTop.Control = tabBack
+        AnchorSideRight.Control = tabBack
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = tabBack
+        AnchorSideBottom.Side = asrBottom
         Left = 0
-        Height = 349
+        Height = 353
         Top = 0
-        Width = 619
+        Width = 615
         Align = alClient
         AutoSize = True
       end
     end
   end
   object Panel1: TPanel
+    AnchorSideLeft.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
+    AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 38
     Top = 384
@@ -58,14 +94,20 @@ object frmQSLViewer: TfrmQSLViewer
     ClientWidth = 625
     TabOrder = 1
     object btnCancel: TButton
-      Left = 538
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      AnchorSideBottom.Control = Panel1
+      AnchorSideBottom.Side = asrBottom
+      Left = 544
       Height = 25
       Top = 7
       Width = 75
-      Anchors = [akTop, akRight]
+      Anchors = [akRight, akBottom]
+      BorderSpacing.Right = 6
+      BorderSpacing.Bottom = 6
       Cancel = True
-      Caption = 'Cancel'
-      ModalResult = 2
+      Caption = 'Close'
+      ModalResult = 11
       TabOrder = 0
     end
   end

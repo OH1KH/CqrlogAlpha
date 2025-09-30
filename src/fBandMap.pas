@@ -426,7 +426,7 @@ end;
 
 procedure TfrmBandMap.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmBandMap);
+  dmUtils.SaveWindowPos(Self);
   if cqrini.ReadBool('BandMap', 'Save', False) then
      frmBandMap.SaveBandMapItemsToFile(dmData.HomeDir+'bandmap.csv');
   BandMapThread.Terminate
@@ -557,7 +557,7 @@ end;
 
 procedure TfrmBandMap.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(frmBandMap);
+  dmUtils.LoadWindowPos(Self);
   ReleasePaused;
 end;
 

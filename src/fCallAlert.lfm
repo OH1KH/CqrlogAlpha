@@ -8,7 +8,8 @@ object frmCallAlert: TfrmCallAlert
   ClientWidth = 727
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '1.6.4.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object dbgrdCallAlert: TDBGrid
     Left = 0
     Height = 383
@@ -77,8 +78,8 @@ object frmCallAlert: TfrmCallAlert
     end
   end
   object ActionList1: TActionList
-    left = 382
-    top = 292
+    Left = 382
+    Top = 292
     object acNew: TAction
       Caption = '&New'
       OnExecute = acNewExecute
@@ -97,7 +98,7 @@ object frmCallAlert: TfrmCallAlert
     end
   end
   object dsrCallAlert: TDataSource
-    left = 247
-    top = 224
+    Left = 247
+    Top = 224
   end
 end

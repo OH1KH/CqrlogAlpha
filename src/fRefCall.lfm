@@ -10,24 +10,25 @@ object frmRefCall: TfrmRefCall
   ClientHeight = 68
   ClientWidth = 248
   OnShow = FormShow
-  Position = poMainFormCenter
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     Left = 8
-    Height = 20
+    Height = 17
     Top = 8
-    Width = 128
+    Width = 131
     Caption = 'Enter reference call:'
     Color = clNone
     ParentColor = False
   end
   object edtIdCall: TEdit
     Left = 8
-    Height = 25
+    Height = 34
     Top = 32
     Width = 128
     CharCase = ecUppercase
-    OnKeyPress = edtIdCallKeyPress
     TabOrder = 0
+    OnKeyPress = edtIdCallKeyPress
   end
   object btnOK: TButton
     Left = 166
@@ -36,8 +37,8 @@ object frmRefCall: TfrmRefCall
     Width = 75
     BorderSpacing.InnerBorder = 4
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 1
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     Left = 165

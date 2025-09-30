@@ -1,12 +1,12 @@
 object frmRotControl: TfrmRotControl
   Left = 282
-  Height = 200
+  Height = 180
   Top = 155
   Width = 184
   Anchors = []
   BorderIcons = [biSystemMenu]
   Caption = 'Rotor control'
-  ClientHeight = 200
+  ClientHeight = 180
   ClientWidth = 184
   Constraints.MinHeight = 180
   Constraints.MinWidth = 180
@@ -16,7 +16,7 @@ object frmRotControl: TfrmRotControl
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object gbAzimuth: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -164,7 +164,7 @@ object frmRotControl: TfrmRotControl
     AnchorSideBottom.Side = asrBottom
     Left = 6
     Height = 112
-    Top = 82
+    Top = 62
     Width = 172
     Anchors = [akLeft, akRight, akBottom]
     AutoSize = True

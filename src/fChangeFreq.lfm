@@ -10,7 +10,7 @@ object frmChangeFreq: TfrmChangeFreq
   ClientHeight = 255
   ClientWidth = 567
   OnShow = FormShow
-  Position = poScreenCenter
+  Position = poWorkAreaCenter
   LCLVersion = '3.8.0.0'
   object lblBBegin: TLabel
     AnchorSideLeft.Control = Owner

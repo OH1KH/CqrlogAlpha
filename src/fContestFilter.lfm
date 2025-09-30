@@ -119,8 +119,8 @@ object frmContestFilter: TfrmContestFilter
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  Position = poMainFormCenter
-  LCLVersion = '2.2.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object btnOK: TButton
     AnchorSideLeft.Control = btnCancel
     AnchorSideLeft.Side = asrBottom
@@ -134,8 +134,8 @@ object frmContestFilter: TfrmContestFilter
     BorderSpacing.Left = 20
     BorderSpacing.InnerBorder = 4
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 1
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     AnchorSideTop.Control = Owner
@@ -149,8 +149,8 @@ object frmContestFilter: TfrmContestFilter
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
-    OnClick = btnCancelClick
     TabOrder = 2
+    OnClick = btnCancelClick
   end
   object btnHelp: TButton
     AnchorSideTop.Control = btnCancel
@@ -164,8 +164,8 @@ object frmContestFilter: TfrmContestFilter
     BorderSpacing.Right = 20
     BorderSpacing.InnerBorder = 4
     Caption = 'Help'
-    OnClick = btnHelpClick
     TabOrder = 3
+    OnClick = btnHelpClick
   end
   object gbContName: TGroupBox
     AnchorSideLeft.Side = asrBottom
@@ -192,11 +192,11 @@ object frmContestFilter: TfrmContestFilter
       BorderSpacing.Left = 6
       ItemHeight = 0
       MaxLength = 40
-      OnEnter = cmbContestNameEnter
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
       TabStop = False
+      OnEnter = cmbContestNameEnter
     end
     object Label1: TLabel
       AnchorSideLeft.Control = cmbContestName

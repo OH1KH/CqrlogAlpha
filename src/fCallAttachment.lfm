@@ -9,7 +9,7 @@ object frmCallAttachment: TfrmCallAttachment
   ClientWidth = 385
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '0.9.28'
+  LCLVersion = '3.8.0.0'
   object flAttach: TFileListBox
     Left = 0
     Height = 248
@@ -17,9 +17,10 @@ object frmCallAttachment: TfrmCallAttachment
     Width = 385
     Align = alClient
     Directory = '/home/ok2cqr'
-    ItemHeight = 23
+    ItemHeight = 0
     OnDblClick = flAttachDblClick
     TabOrder = 0
+    TopIndex = -1
   end
   object Panel1: TPanel
     Left = 0
@@ -47,8 +48,8 @@ object frmCallAttachment: TfrmCallAttachment
       Top = 8
       Width = 75
       Caption = 'View'
-      OnClick = btnViewClick
       TabOrder = 1
+      OnClick = btnViewClick
     end
   end
 end

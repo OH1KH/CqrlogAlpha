@@ -138,6 +138,7 @@ type
     csDXCPref  : TRTLCriticalSection;
     ReloadDXCPref : Boolean;
     FirstWebGet : Boolean;
+    mindex      : LongInt;
 
     gcfgUseBackColor : Boolean;
     gcfgBckColor : TColor;
@@ -225,7 +226,6 @@ var
   WebSpots     : TColorMemo;
   TelSpots     : TColorMemo;
   ChatSpots    : TColorMemo;
-  mindex       : Integer;
   ThInfo       : String;
   ThSpot       : String;
   ThColor      : Integer;
@@ -299,7 +299,7 @@ procedure TfrmDXCluster.FormClose(Sender: TObject; var CloseAction: TCloseAction
 begin
   if not Assigned(cqrini) then
     exit;
-  dmUtils.SaveWindowPos(frmDXCluster);
+  dmUtils.SaveWindowPos(Self);
   cqrini.WriteInteger('DXCluster','Tab',pgDXCluster.ActivePageIndex);
   cqrini.WriteString('DXCluster','Desc',telDesc);
   cqrini.WriteString('DXCluster','Addr',telAddr);
@@ -525,7 +525,6 @@ begin
   Chats.Clear;
 
   Running := False;
-  mindex  := 1;
 
   TelThread := TTelThread.Create(True);
   TelThread.FreeOnTerminate := True;
@@ -640,8 +639,7 @@ begin
   finally
     f.Free
   end;
-  dmUtils.LoadFontSettings(frmDXCluster);
-  dmUtils.LoadWindowPos(frmDXCluster);
+  dmUtils.LoadWindowPos(Self);
   ReloadSettings;
   pgDXCluster.ActivePageIndex :=  cqrini.ReadInteger('DXCluster','Tab',1);;
   telDesc := cqrini.ReadString('DXCluster','Desc','');
@@ -662,6 +660,7 @@ begin
   pnlChat.Height := cqrini.ReadInteger('DXCluster','ChatSize',2);  //default now 2 = invisible
   LockScroll:=False;
   tabFkeysShow(nil);
+  mindex:=1;
 end;
 
 procedure TfrmDXCluster.btnClearClick(Sender: TObject);
@@ -853,8 +852,7 @@ begin
     sStop := Length(Buffer) + 1;
   while sStart <= Length(Buffer) do
   begin
-    tmp  := Copy(Buffer, sStart, sStop - sStart);
-    tmp  := trim(tmp);
+    tmp  := trim(Copy(Buffer, sStart, sStop - sStart));
     if dmData.DebugLevel >=1 then Writeln(tmp);
 
     if Pos(UpperCase(telUser) + ' DE', UpperCase(tmp)) > 0 then
@@ -936,6 +934,8 @@ begin
     OH1KH de OH1RCF  1-Apr-2023 1033Z dxspider >
     }
     begin
+      inc(mindex);
+      if dmData.DebugLevel>=1 then Writeln(mindex,LineEnding,'RxSpot: ',tmp);
       EnterCriticalsection(frmDXCluster.csTelnet);
       if dmData.DebugLevel>=1 then Writeln('Enter critical section On Receive');
       try
@@ -1477,7 +1477,7 @@ begin
         LeaveCriticalsection(frmDXCluster.csTelnet);
         if dmData.DebugLevel>=2 then Writeln('TelThread.Execute - leave critical section ');
       end;
-      if dmData.DebugLevel >= 2 then Writeln('Spot: ',dx);
+      if dmData.DebugLevel >= 1 then Writeln('SpSpot: ',dx);
       if frmDXCluster.ShowSpot(dx,sColor, Country) then
       begin
         if cqrini.ReadBool('DXCluster','ShowDxcCountry',False) then
@@ -1486,17 +1486,18 @@ begin
           ThSpot := dx;
         ThColor   := sColor;
         ThInfo    := '';
-        if dmData.DebugLevel>=2 then
+        if dmData.DebugLevel>=1 then
         begin
-          Writeln('Spot nr. ',mindex);
           WriteLn('ThSpot: ',ThSpot);
-          Writeln('ThColor: ',ThColor)
+          //Writeln('ThColor: ',ThColor)
         end;
         if dmData.DebugLevel>=1 then Writeln('TelThread.Execute - before Synchronize(@frmDXCluster.SynTelnet)');
         Synchronize(@frmDXCluster.SynTelnet);
         if dmData.DebugLevel>=1 then Writeln('TelThread.Execute - after Synchronize(@frmDXCluster.SynTelnet)')
       end
     end;
+     //here sSports should be clean but for sure...
+      Spots.Clear; //hunting a Spot flow stop with long connect times
 
     while Chats.Count > 0 do
     begin
@@ -1697,6 +1698,7 @@ begin
   //if dmData.DebugLevel>=1 then Writeln('TfrmDXCluster.SynTelnet - Before ]'yu
   if ConTelnet then
   begin
+    if dmData.DebugLevel>=1 then Writeln('SySpot: ',ThSpot,LineEnding);
     TelSpots.DisableAutoRepaint(true);
     TelSpots.AddLine(ThSpot,ThColor,ThBckColor,0);
     TelSpots.DisableAutoRepaint(false)

@@ -72,6 +72,7 @@ type TRigControl = class
     fSupSetFuncs    : String;
     fSupGetLevels   : String;
     fSupGetFuncs    : String;
+    fSupGetVfoOp    : String;
     fPtt            : String;
     fPttTail        : integer;
     fResponseTimeout: Boolean;
@@ -149,6 +150,7 @@ public
     property GetLevel  : boolean read fGetLevel;                             //can get Levels
     property SupSetLevels : String read fSupSetLevels;                       //list of supported Levels set
     property SupGetLevels : String read fSupGetLevels;                       //list of supported Levels get
+    property SupGetVfoOp  : String read fSupGetVfoOp;                        //list of supported  VFO operations
     property Ptt          : String read fPtt;                                //PTT state;
 
     property PwrPcnt :  String read fPwrPcnt write fPwrPcnt;                 //Set/Get the amount of Power level in %
@@ -196,6 +198,7 @@ public
     procedure SetPowerPercent(p:integer);
     procedure SetTuner;
     procedure ReSetTuner;
+    procedure Tune;
 end;
 
 implementation
@@ -234,6 +237,7 @@ begin
   fSupGetFuncs         := '';
   fSupSetLevels        := '';
   fSupGetLevels        := '';
+  fSupGetVfoOp         := '';
   fRfPwrMtrWtts        := '';
   fMemRfPwrMtrWtts     := '0';
   fPtt                 := '';
@@ -411,7 +415,6 @@ begin
   RigCommand.Add('+\set_freq'+VfoStr+' '+FloatToStr(freq*1000-TXOffset*1000000));
   Allowcommand:=1;
 end;
-
 procedure TRigControl.SetTuner;
 begin
   if fSetFunc and (Pos('TUNER', fSupSetFuncs)>0) then
@@ -423,6 +426,12 @@ procedure TRigControl.ReSetTuner;
 begin
   if fSetFunc and (Pos('TUNER', fSupSetFuncs)>0) then
     RigCommand.Add('+\set_func'+VfoStr+' TUNER 0');
+  Allowcommand:=1;
+end;
+procedure TRigControl.Tune;
+begin
+  if (Pos('TUNE', fSupGetVfoOp)>0) then
+    RigCommand.Add('+\vfo_op'+VfoStr+' TUNE');
   Allowcommand:=1;
 end;
 procedure TRigControl.ClearRit;
@@ -758,11 +767,24 @@ begin
           if fDebugMode then
                       Writeln(LineEnding,'Set Levels: ',fSupSetLevels);
            Hit:=true;
+           AllowCommand:=4; //next vfo_op
+         end;
+
+         if pos('VFO_OP',Imsg)>0 then
+        Begin
+           fSupGetVfoOp:= ExtractWord(2,Imsg,['|']);
+           //fSupGetVfoOp:='';               //release to debug non-hamlib tune with rig able to hamlib tune
+           if fDebugMode then
+                      Writeln(LineEnding,'VFO Ops: ',fSupGetVfoOp);
+           Hit:=true;
+
+           //this is the endpoint of getting rig properties
+
            RigCommand.Clear;
            tmrRigPoll.Interval := fRigPoll;  //set user poll speed
            InitDone:=true;
            if ((fRigId<10) and fPowerON and fPower) then
-               AllowCommand:=4 // if rigctld is remote it can not make auto_power_on as startup parameter
+               AllowCommand:=3 // if rigctld is remote it can not make auto_power_on as startup parameter
                                // then we should send set_powerstat 1 if power up is asked and rig can do it
            else
                AllowCommand:=0;
@@ -1010,6 +1032,14 @@ begin
                fPollCount :=  fPollTimeout;
           end;
       4:  Begin
+               cmd:=('+\vfo_op'+VfoStr+' ?'+LineEnding);
+               if fDebugMode then
+                     Write(LineEnding+'Sending: '+cmd);
+               if not SendPoll(cmd) then exit;
+               AllowCommand:=-1; //waiting for reply
+               fPollCount :=  fPollTimeout;
+          end;
+      3:  Begin
                cmd:= '+\set_powerstat 1'+LineEnding;
                if fDebugMode then
                      Write(LineEnding+'Sending: '+cmd);
@@ -1250,29 +1280,34 @@ begin
 end;
 
 procedure TRigControl.HamlibErrors(e:string);
+var
+  ErrorString :String;
 Begin
+  ErrorString:='';
   case e of
-     '-1' : Writeln('Invalid parameter');
-     '-2' : Writeln('Invalid configuration (serial,..)');
-     '-3' : Writeln('Memory shortage');
-     '-4' : Writeln('Function not implemented, but will be');
-     '-5' : Writeln('Communication timed out');
-     '-6' : Writeln('IO error, including open failed');
-     '-7' : Writeln('Internal Hamlib error, huh!');
-     '-8' : Writeln('Protocol error');
-     '-9' : Writeln('Command rejected by the rig');
-     '-10': Writeln('Command performed, but arg truncated');
-     '-11': Writeln('Function not available');
-     '-12': Writeln('VFO not targetable');
-     '-13': Writeln('Error talking on the bus');
-     '-14': Writeln('Collision on the bus');
-     '-15': Writeln('NULL RIG handle or any invalid pointer parameter in get arg');
-     '-16': Writeln('Invalid VFO');
-     '-17': Writeln('Argument out of domain of func');
-     '-18': Writeln('Function deprecated');
-     '-19': Writeln('Security error password not provided or crypto failure');
-     '-20': Writeln('Rig is not powered on');
+     '-1' : ErrorString:='Invalid parameter';
+     '-2' : ErrorString:='Invalid configuration (serial,..)';
+     '-3' : ErrorString:='Memory shortage';
+     '-4' : ErrorString:='Function not implemented, but will be';
+     '-5' : ErrorString:='Communication timed out';
+     '-6' : ErrorString:='IO error, including open failed';
+     '-7' : ErrorString:='Internal Hamlib error, huh!';
+     '-8' : ErrorString:='Protocol error';
+     '-9' : ErrorString:='Command rejected by the rig';
+     '-10': ErrorString:='Command performed, but arg truncated';
+     '-11': ErrorString:='Function not available';
+     '-12': ErrorString:='VFO not targetable';
+     '-13': ErrorString:='Error talking on the bus';
+     '-14': ErrorString:='Collision on the bus';
+     '-15': ErrorString:='NULL RIG handle or any invalid pointer parameter in get arg';
+     '-16': ErrorString:='Invalid VFO';
+     '-17': ErrorString:='Argument out of domain of func';
+     '-18': ErrorString:='Function deprecated';
+     '-19': ErrorString:='Security error password not provided or crypto failure';
+     '-20': ErrorString:='Rig is not powered on';
   end;
+  if fDebugMode and (ErrorString<>'') then
+                                      Writeln('Hamlib: ',ErrorString);
 end;
 
 

@@ -13,8 +13,8 @@ object frmChangeLocator: TfrmChangeLocator
   Caption = 'Change locator'
   ClientHeight = 108
   ClientWidth = 236
-  Position = poMainFormCenter
-  LCLVersion = '2.0.2.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object lblEnterLocator: TLabel
     Left = 8
     Height = 17
@@ -32,9 +32,9 @@ object frmChangeLocator: TfrmChangeLocator
     Width = 216
     BorderSpacing.Top = 2
     MaxLength = 6
+    TabOrder = 0
     OnChange = edtLocatorChange
     OnKeyPress = edtLocatorKeyPress
-    TabOrder = 0
   end
   object btnOK: TButton
     AnchorSideTop.Control = edtLocator
@@ -48,8 +48,8 @@ object frmChangeLocator: TfrmChangeLocator
     BorderSpacing.InnerBorder = 4
     Caption = 'OK'
     Constraints.MinWidth = 64
-    OnClick = btnOKClick
     TabOrder = 1
+    OnClick = btnOKClick
   end
   object btnStorno: TButton
     AnchorSideTop.Control = edtLocator

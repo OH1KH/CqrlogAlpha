@@ -8,7 +8,7 @@ object frmCommentToCall: TfrmCommentToCall
   ClientWidth = 860
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '3.6.0.0'
+  LCLVersion = '3.8.0.0'
   object Panel1: TPanel
     Left = 744
     Height = 583

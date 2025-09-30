@@ -107,6 +107,8 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkHamForceSpace: TCheckBox;
+    chkDeleteEqsl: TCheckBox;
     chkKeepAlive: TCheckBox;
     chkRotControlDebug: TCheckBox;
     chkUseRigPwr: TCheckBox;
@@ -751,9 +753,9 @@ type
     lbleQSLStartAddr: TLabel;
     lbleQSLViewAddr: TLabel;
     lblLoTWBkg: TLabel;
-    Label100: TLabel;
-    Label101: TLabel;
-    Label102: TLabel;
+    lblPdfFiles: TLabel;
+    lblImgFIles: TLabel;
+    lblHtmlFiles: TLabel;
     Label103: TLabel;
     Label104: TLabel;
     Label105: TLabel;
@@ -905,7 +907,7 @@ type
     lblCWWPM: TLabel;
     lblWinMinSpeed: TLabel;
     lblWinMaxSpeed: TLabel;
-    Label99: TLabel;
+    lblTxtFIles: TLabel;
     lbleFont: TLabel;
     lblgFont: TLabel;
     lblqFont: TLabel;
@@ -1085,8 +1087,6 @@ type
     procedure edtMinMaxSpeedChange(Sender: TObject);
     procedure edtHexExit(Sender: TObject);
     procedure RotorParamsChange(Sender: TObject);
-    procedure tabCWInterfaceContextPopup(Sender: TObject; MousePos: TPoint;
-      var Handled: Boolean);
     procedure tabCWInterfaceExit(Sender: TObject);
     procedure tabModesExit(Sender: TObject);
     procedure tabTRXcontrolEnter(Sender: TObject);
@@ -1607,6 +1607,7 @@ begin
   cqrini.WriteString('ExtView', 'html', edtHtmlFiles.Text);
 
   cqrini.WriteBool('ExtView', 'QSL', chkIntQSLViewer.Checked);
+  cqrini.WriteBool('ExtView', 'DeleQSL', chkDeleteEqsl.Checked);
 
   cqrini.WriteString('FirstClub', 'DateFrom', edtClub1Date.Text);
   cqrini.WriteString('SecondClub', 'DateFrom', edtClub2Date.Text);
@@ -2948,12 +2949,6 @@ begin
   RotChanged := True;
 end;
 
-procedure TfrmPreferences.tabCWInterfaceContextPopup(Sender: TObject;
-  MousePos: TPoint; var Handled: Boolean);
-begin
-
-end;
-
 procedure TfrmPreferences.tabCWInterfaceExit(Sender: TObject);
 begin
      SaveCWif(CWifLoaded);  //save currently open CW settings
@@ -3014,7 +3009,6 @@ procedure TfrmPreferences.FormShow(Sender: TObject);
 var
   i: integer;
 begin
-  dmUtils.LoadFontSettings(self);
   dmUtils.LoadWindowPos(self);
 
   dmUtils.InsertModes(cmbDefaultMode);
@@ -3470,6 +3464,7 @@ begin
   edtImgFiles.Text := cqrini.ReadString('ExtView', 'img', '');
   edtHtmlFiles.Text := cqrini.ReadString('ExtView', 'html', dmUtils.MyDefaultBrowser);
   chkIntQSLViewer.Checked := cqrini.ReadBool('ExtView', 'QSL', True);
+  chkDeleteEqsl.Checked   := cqrini.ReadBool('ExtView', 'DeleQSL', False);
 
   edtClub1Date.Text := cqrini.ReadString('FirstClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);
   edtClub2Date.Text := cqrini.ReadString('SecondClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);
@@ -3801,6 +3796,7 @@ Begin
   edtHamSpeed.Text       := IntToStr(cqrini.ReadInteger('CW'+nr,'HamLibSpeed',30));
   edtHamMinSpeed.Value   := cqrini.ReadInteger('CW'+nr, 'HamLib_min', 5);
   edtHamMaxSpeed.Value   := cqrini.ReadInteger('CW'+nr, 'HamLib_max', 60);
+  chkHamForceSpace.checked:=cqrini.ReadBool('CW'+nr, 'UseHamlibForceSpace', False);
 
 
   CWifLoaded := RigNr;
@@ -3844,6 +3840,7 @@ Begin
   cqrini.WriteInteger('CW'+nr,'HamLibSpeed',StrToInt(edtHamSpeed.Text));
   cqrini.WriteInteger('CW'+nr, 'HamLib_min', edtHamMinSpeed.Value);
   cqrini.WriteInteger('CW'+nr, 'HamLib_max', edtHamMaxSpeed.Value);
+  cqrini.WriteBool('CW'+nr, 'UseHamlibForceSpace', chkHamForceSpace.checked);
 end;
 
 procedure TfrmPreferences.InitRigCmb(SetUsedRig:boolean=false);    //initialize radio selectors in TRXControl, CW and Modes

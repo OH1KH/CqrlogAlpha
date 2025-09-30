@@ -62,7 +62,7 @@ uses dData,dUtils, uMyIni;
 
 procedure TfrmSOTAExport.FormShow(Sender : TObject);
 begin
-  dmUtils.LoadWindowPos(self);
+  dmUtils.LoadWindowPos(Self);
   edtFileName.Text  := cqrini.ReadString('SotaExport','FileName','');
   edtSota.Text      := cqrini.ReadString('SotaExport','Sota','');
   if cqrini.ReadBool('SotaExport','FromLog',True) then
@@ -103,7 +103,7 @@ procedure TfrmSOTAExport.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
   SaveSettings;
-  dmUtils.SaveWindowPos(self)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmSOTAExport.btnExportClick(Sender : TObject);

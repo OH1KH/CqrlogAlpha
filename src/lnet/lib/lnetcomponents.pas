@@ -30,7 +30,7 @@ interface
 
 uses
   Classes, SysUtils,
-  LCLNet, lNet, lTelnet;//, lFTP, lSMTP, lHTTP, lNetSSL;
+  LCLNet, lNet, lTelnet, lFTP, lSMTP, lHTTP, lNetSSL;
   
 type
 
@@ -83,7 +83,7 @@ type
     property LocalEcho;
     property Session;
   end;
-  {
+
   { TLFTPClientComponent }
 
   TLFTPClientComponent = class(TLFTPClient)
@@ -180,7 +180,7 @@ type
     property OnSSLConnect;
     property OnSSLAccept;
   end;
- }
+
 implementation
 
 var
@@ -209,7 +209,7 @@ begin
   inherited Create(aOwner);
   Connection.Eventer := LCLEventer;
 end;
-{
+
 { TLFTPClientComponent }
 
 constructor TLFTPClientComponent.Create(aOwner: TComponent);
@@ -250,7 +250,7 @@ begin
   if not (csDesigning in ComponentState) then
     inherited CreateSSLContext;
 end;
-}
+
 initialization
   LCLEventer := TLCLEventer.Create;
   

@@ -8,8 +8,8 @@ object frmExportPref: TfrmExportPref
   ClientHeight = 519
   ClientWidth = 931
   OnShow = FormShow
-  Position = poOwnerFormCenter
-  LCLVersion = '2.0.6.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object btnOK: TButton
     AnchorSideLeft.Side = asrBottom
     AnchorSideTop.Control = Owner
@@ -23,8 +23,8 @@ object frmExportPref: TfrmExportPref
     BorderSpacing.Top = 36
     BorderSpacing.Right = 12
     Caption = 'OK'
-    OnClick = btnOKClick
     TabOrder = 0
+    OnClick = btnOKClick
   end
   object btnCancel: TButton
     AnchorSideLeft.Control = btnOK
@@ -50,8 +50,8 @@ object frmExportPref: TfrmExportPref
     Width = 75
     BorderSpacing.Top = 12
     Caption = 'Re/Set All'
-    OnClick = btnReSetClick
     TabOrder = 2
+    OnClick = btnReSetClick
   end
   inline fraExportPref1: TfraExportPref
     Left = 8
@@ -65,6 +65,12 @@ object frmExportPref: TfrmExportPref
     end
     inherited chkAutoColumn: TCheckBox
       OnChange = chkAutoColumnChange
+    end
+    inherited edtWSatMode1: TEdit
+      Top = 365
+    end
+    inherited edtWSatMode: TEdit
+      Top = 365
     end
   end
 end

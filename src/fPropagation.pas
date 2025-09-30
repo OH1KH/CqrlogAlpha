@@ -299,7 +299,7 @@ procedure TfrmPropagation.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
   tmrProp.Enabled := False;
-  dmUtils.SaveWindowPos(frmPropagation)
+  dmUtils.SaveWindowPos(Self)
 end;
 
 procedure TfrmPropagation.FormDblClick(Sender: TObject);
@@ -322,7 +322,7 @@ const
   C_LOADING = 'Loading...';
 begin
   running := False;
-  dmUtils.LoadWindowPos(frmPropagation);
+  dmUtils.LoadWindowPos(Self);
   lblAIndex.Caption  := '';
   lblKIndex.Caption  := '';
   lblSFI.Caption     := '';

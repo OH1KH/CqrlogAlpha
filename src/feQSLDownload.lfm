@@ -1,7 +1,7 @@
 object frmeQSLDownload: TfrmeQSLDownload
-  Left = 703
+  Left = 212
   Height = 520
-  Top = 188
+  Top = 355
   Width = 520
   HorzScrollBar.Page = 469
   VertScrollBar.Page = 314
@@ -13,7 +13,7 @@ object frmeQSLDownload: TfrmeQSLDownload
   Constraints.MinWidth = 500
   OnClose = FormClose
   OnShow = FormShow
-  LCLVersion = '2.2.6.0'
+  LCLVersion = '3.8.0.0'
   object gbProgress: TGroupBox
     AnchorSideTop.Side = asrBottom
     AnchorSideRight.Side = asrBottom
@@ -36,9 +36,9 @@ object frmeQSLDownload: TfrmeQSLDownload
       BorderSpacing.Top = 1
       BorderSpacing.Right = 1
       BorderSpacing.Bottom = 1
-      OnChange = mStatChange
       ScrollBars = ssAutoBoth
       TabOrder = 0
+      OnChange = mStatChange
     end
   end
   object Panel1: TPanel
@@ -140,8 +140,8 @@ object frmeQSLDownload: TfrmeQSLDownload
         Width = 424
         BorderSpacing.Top = 6
         Caption = 'Set Rcvd date to be current date -1 after succesfull download'
-        OnChange = chkChangeDateChange
         TabOrder = 3
+        OnChange = chkChangeDateChange
       end
     end
   end
@@ -183,8 +183,8 @@ object frmeQSLDownload: TfrmeQSLDownload
       Width = 96
       BorderSpacing.Left = 6
       Caption = 'Preferences'
-      OnClick = btnPreferencesClick
       TabOrder = 1
+      OnClick = btnPreferencesClick
     end
     object btnDownload: TButton
       AnchorSideLeft.Control = pnlButtons
@@ -197,8 +197,8 @@ object frmeQSLDownload: TfrmeQSLDownload
       Width = 300
       BorderSpacing.Top = 6
       Caption = 'Download data from eQSL website'
-      OnClick = btnDownloadClick
       TabOrder = 2
+      OnClick = btnDownloadClick
     end
   end
 end

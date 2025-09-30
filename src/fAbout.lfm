@@ -4,7 +4,7 @@ object frmAbout: TfrmAbout
   Top = 58
   Width = 453
   BorderStyle = bsDialog
-  Caption = 'About CQRLOG'
+  Caption = 'About CqrlogAlpha'
   ClientHeight = 294
   ClientWidth = 453
   OnCreate = FormCreate

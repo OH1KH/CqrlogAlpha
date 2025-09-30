@@ -12,7 +12,8 @@ object frmDXClusterList: TfrmDXClusterList
   ClientHeight = 376
   ClientWidth = 515
   OnShow = FormShow
-  LCLVersion = '2.0.12.0'
+  Position = poWorkAreaCenter
+  LCLVersion = '3.8.0.0'
   object dbgrdDXClusterList: TDBGrid
     Left = 0
     Height = 334
@@ -44,8 +45,8 @@ object frmDXClusterList: TfrmDXClusterList
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'New'
-      OnClick = btnNewClick
       TabOrder = 0
+      OnClick = btnNewClick
     end
     object btnEdit: TButton
       Left = 95
@@ -54,8 +55,8 @@ object frmDXClusterList: TfrmDXClusterList
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'Edit'
-      OnClick = btnEditClick
       TabOrder = 1
+      OnClick = btnEditClick
     end
     object btnDelete: TButton
       Left = 181
@@ -64,8 +65,8 @@ object frmDXClusterList: TfrmDXClusterList
       Width = 75
       BorderSpacing.InnerBorder = 4
       Caption = 'Delete'
-      OnClick = btnDeleteClick
       TabOrder = 2
+      OnClick = btnDeleteClick
     end
     object btnCancel: TButton
       Left = 431

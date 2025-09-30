@@ -7,7 +7,7 @@ object frmException: TfrmException
   Caption = 'Oops something bad happened'
   ClientHeight = 429
   ClientWidth = 719
-  Position = poDesktopCenter
+  Position = poWorkAreaCenter
   LCLVersion = '1.8.0.6'
   object Panel1: TPanel
     Left = 633

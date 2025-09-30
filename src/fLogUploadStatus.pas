@@ -398,7 +398,7 @@ end;
 procedure TfrmLogUploadStatus.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
-  dmUtils.SaveWindowPos(frmLogUploadStatus);
+  dmUtils.SaveWindowPos(Self);
 end;
 
 procedure TfrmLogUploadStatus.FormCloseQuery(Sender: TObject;
@@ -430,7 +430,7 @@ begin
   mStatus.parent     := pnlLogStatus;
   mStatus.AutoScroll := True;
   mStatus.Align      := alClient;
-  dmUtils.LoadWindowPos(frmLogUploadStatus);
+  dmUtils.LoadWindowPos(Self);
   LoadFonts
 end;
 

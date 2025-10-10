@@ -3735,7 +3735,7 @@ begin
   end;
   if dmData.DebugLevel >= 1 then
   begin
-    Writeln('Section:',section);
+    Writeln('Writing section:',section,' Local only:',cqrini.LocalOnly('WindowSize'));
     Writeln('Saving window size a position (',a.Name,') (height|width|top|left):',
             a.height,'|',a.Width,'|',a.top,'|',a.left)
   end;
@@ -3761,9 +3761,9 @@ begin
   end;
   if dmData.DebugLevel >= 1 then
   begin
-    //Writeln('Section:',section);
-    //Writeln('Loading window size a position (',a.Name,') (height|width|top|left):',
-    //        a.height,'|',a.Width,'|',a.top,'|',a.left)
+    Writeln('Reading section:',section,' Local only:',cqrini.LocalOnly('WindowSize'));
+    Writeln('Loading window size a position (',a.Name,') (height|width|top|left):',
+            a.height,'|',a.Width,'|',a.top,'|',a.left)
   end;
 end;
 

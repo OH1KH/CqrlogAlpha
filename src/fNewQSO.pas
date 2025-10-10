@@ -1622,10 +1622,10 @@ begin
   //this have to be done here when log is selected (settings at database)
   frmReminder.chRemi.Checked := cqrini.ReadBool('Reminder','chRemi',False);
   frmReminder.chUTRemi.Checked := cqrini.ReadBool('Reminder','chUTRemi',False);
-  frmReminder.RemindTimeSet.EditText := cqrini.ReadString('Reminder','RemindTimeSet','000');
-  frmReminder.RemindUThour.EditText := cqrini.ReadString('Reminder','RemindUThour','00:00');
+  frmReminder.RemindTimeSet.Text := cqrini.ReadString('Reminder','RemindTimeSet','');
+  frmReminder.RemindUThour.Text := cqrini.ReadString('Reminder','RemindUThour','');
   frmReminder.RemiMemo.Lines.Clear;
-  frmReminder.RemiMemo.Lines.Add(cqrini.ReadString('Reminder','RemiMemo',''));
+  frmReminder.RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
   frmReminder.btCloseClick(nil);
 
   dmUtils.InsertQSL_S(cmbQSL_S);

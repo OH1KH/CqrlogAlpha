@@ -179,6 +179,7 @@ type
   public
     CanCloseUSDBProcess :boolean;
     DblClickCall  :string;      //callsign that is called by doubleclick
+    procedure IsItTimeToClearSgMonitor;
     procedure clearSgMonitor;
     procedure AddCqCallMessage(Time,mode,WsjtxBand,Message,Reply:string; Df,Sr:integer);
     procedure AddMyCallMessage(Time,mode,WsjtxBand,Message,Reply:string; Df,Sr:integer);
@@ -349,6 +350,19 @@ Begin
   if pos('    ',L) > 11 then L := copy(L,1,pos('    ',L));
   if LocalDbg then Writeln('F Message after filter is:', L);
   LineFilter := L;
+end;
+procedure TfrmMonWsjtx.IsItTimeToClearSgMonitor;
+begin
+     if (msgTime <> LastWsjtLineTime) then
+     Begin
+           if LocalDbg then
+                       Writeln('---O msgtime is:', msgTime,'  LastWsjtlinetime is:',LastWsjtLineTime);
+          if chkdB.Checked then sgMonitor.Columns.Items[1].Visible:= true
+                             else sgMonitor.Columns.Items[1].Visible:= false;
+          clearSgMonitor;
+          CqPeriodTimerStart(msgTime, LastWsjtLineTime);
+        end;
+     LastWsjtLineTime := msgTime;
 end;
 
 procedure TfrmMonWsjtx.clearSgMonitor;
@@ -1636,7 +1650,11 @@ begin
           if (chkDx.Checked) and (not dmUtils.IsHeDX(msgCall)) then exit;
           //print filter callsign drops here
           if chkFlt.Checked and (pos(edtFltMap.Text,msgCall)=0) then exit;
-          if cqrini.ReadBool('MonWsjtx', 'FileFilter', False) and (FileFilter.IndexOf(msgCall)=-1) then exit;
+          if cqrini.ReadBool('MonWsjtx', 'FileFilter', False) and (FileFilter.IndexOf(msgCall)=-1) then
+            begin
+             IsItTimeToClearSgMonitor;
+             exit;
+            end;
 
           if (not frmWorkedGrids.GridOK(msgLocator)) or (msgLocator = 'RR73') then //disble false used "RR73" being a loc
                   msgLocator := '';
@@ -1648,16 +1666,7 @@ begin
             AlertLine := '';
 
             //starts a row
-            if (msgTime <> LastWsjtLineTime) then
-               Begin
-                     if LocalDbg then
-                                 Writeln('---O msgtime is:', msgTime,'  LastWsjtlinetime is:',LastWsjtLineTime);
-                    if chkdB.Checked then sgMonitor.Columns.Items[1].Visible:= true
-                                       else sgMonitor.Columns.Items[1].Visible:= false;
-                    clearSgMonitor;
-                    CqPeriodTimerStart(msgTime, LastWsjtLineTime);
-                  end;
-            LastWsjtLineTime := msgTime;
+            IsItTimeToClearSgMonitor;
             sgMonitor.InsertRowWithValues(sgMonitor.rowcount , [msgtime]);
             //Snr
             //X if chkdB.Checked then sgMonitor.Columns.Items[1].Visible:= true
@@ -2313,6 +2322,7 @@ begin
         or (cqrini.ReadBool('MonWsjtx', 'FileFilter', False) and (FileFilter.IndexOf(msgCall)=-1)) ) then
            Begin
              UsedBkgCqCol :=clWhite;
+             IsItTimeToClearSgMonitor;
              exit;
            end;
      end;
@@ -2320,16 +2330,8 @@ begin
     if LocalDbg then
       Writeln('LOCATOR IS:', msgLocator);
 
-    if (chknoHistory.Checked or chkMap.Checked) and
-        (msgTime <> LastWsjtLineTime) then
-            Begin
-               if LocalDbg then
-                           Writeln('Msgtime is:', msgTime,'  LastWsjtlinetime is:',LastWsjtLineTime);
-              clearSgMonitor;
-              CqPeriodTimerStart(msgTime, LastWsjtLineTime);
-            end;
-
-      LastWsjtLineTime := msgTime;
+    if (chknoHistory.Checked or chkMap.Checked) then
+                                                IsItTimeToClearSgMonitor;
       RepBuf := Reply;
       PrintDecodedMessage;
       if LocalDbg then

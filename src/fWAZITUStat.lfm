@@ -134,8 +134,8 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideRight.Control = Panel1
       AnchorSideRight.Side = asrBottom
       Left = 580
-      Height = 25
-      Top = 9
+      Height = 30
+      Top = 6
       Width = 75
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 12
@@ -150,8 +150,8 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = btnClose
       Left = 429
-      Height = 25
-      Top = 9
+      Height = 30
+      Top = 6
       Width = 139
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 12
@@ -165,8 +165,8 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = btnHTMLExport
       Left = 246
-      Height = 25
-      Top = 9
+      Height = 30
+      Top = 6
       Width = 171
       Anchors = [akTop, akRight]
       BorderSpacing.Right = 12
@@ -207,7 +207,7 @@ object frmWAZITUStat: TfrmWAZITUStat
     FixedCols = 0
     Font.Name = 'dejavu sans mono [dejavu]'
     Font.Pitch = fpFixed
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goSmoothScroll, goCellHints]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goColSizing, goSmoothScroll, goCellHints]
     ParentFont = False
     ParentShowHint = False
     ShowHint = True
@@ -243,9 +243,10 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideTop.Control = lblProfile
       AnchorSideTop.Side = asrCenter
       Left = 255
-      Height = 34
-      Top = 3
+      Height = 30
+      Top = 5
       Width = 136
+      AutoSize = False
       BorderSpacing.Left = 9
       TabOrder = 0
     end
@@ -255,8 +256,8 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideTop.Control = edtProfiles
       AnchorSideTop.Side = asrCenter
       Left = 400
-      Height = 25
-      Top = 8
+      Height = 30
+      Top = 5
       Width = 120
       BorderSpacing.Left = 9
       Caption = 'Select profile'
@@ -281,21 +282,23 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideTop.Control = lblMode
       AnchorSideTop.Side = asrCenter
       Left = 55
-      Height = 33
-      Top = 4
+      Height = 30
+      Top = 5
       Width = 136
+      AutoSize = False
       BorderSpacing.Left = 9
       ItemHeight = 0
       Style = csDropDownList
       TabOrder = 2
+      OnChange = cmbModeChange
     end
     object btnRefresh: TButton
       AnchorSideLeft.Control = btnSelectProfile
       AnchorSideTop.Control = lblConfirm
       AnchorSideTop.Side = asrCenter
       Left = 400
-      Height = 25
-      Top = 45
+      Height = 30
+      Top = 41
       Width = 176
       Caption = 'Refresh statistics'
       TabOrder = 3
@@ -306,9 +309,10 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideTop.Control = cmbMode
       AnchorSideTop.Side = asrBottom
       Left = 55
-      Height = 29
-      Top = 43
+      Height = 30
+      Top = 41
       Width = 260
+      AutoSize = False
       BorderSpacing.Top = 6
       ItemHeight = 0
       ItemIndex = 6
@@ -324,6 +328,7 @@ object frmWAZITUStat: TfrmWAZITUStat
       Style = csDropDownList
       TabOrder = 4
       Text = 'paper QSL, LoTW and eQSL'
+      OnChange = cmbModeChange
     end
     object lblConfirm: TLabel
       AnchorSideLeft.Control = lblMode
@@ -331,7 +336,7 @@ object frmWAZITUStat: TfrmWAZITUStat
       AnchorSideTop.Side = asrCenter
       Left = 6
       Height = 17
-      Top = 49
+      Top = 48
       Width = 31
       Caption = 'Cfm:'
       ParentColor = False
@@ -359,6 +364,13 @@ object frmWAZITUStat: TfrmWAZITUStat
   object dlgSave: TSaveDialog
     FilterIndex = 0
     Left = 520
+    Top = 272
+  end
+  object tmrDelayRefresh: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = tmrDelayRefreshTimer
+    Left = 296
     Top = 272
   end
 end

@@ -51,7 +51,9 @@ type
     btnHTMLExport: TButton;
     btnRefresh : TButton;
     btnSelectProfile : TButton;
+    btnShowSationList: TButton;
     btnShowStationList: TButton;
+    cbAltView: TCheckBox;
     cbHideEmpty: TCheckBox;
     cmbCfmType : TComboBox;
     cmbMode : TComboBox;
@@ -60,14 +62,17 @@ type
     edtProfiles : TEdit;
     grdStat: TStringGrid;
     grdSumStat: TStringGrid;
-    Label1 : TLabel;
-    Label2 : TLabel;
-    Label3 : TLabel;
+    lblMode : TLabel;
+    lblProfile : TLabel;
+    lblConfirm : TLabel;
     Panel1: TPanel;
     Panel2 : TPanel;
+    tmrDelayRefresh: TTimer;
     procedure btnSelectProfileClick(Sender: TObject);
+    procedure cbAltViewChange(Sender: TObject);
     procedure cbChoosingDokTypeChange(Sender: TObject);
     procedure cbHideEmptyChange(Sender: TObject);
+    procedure cmbModeChange(Sender: TObject);
     procedure FormClose(Sender : TObject; var CloseAction : TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -75,14 +80,20 @@ type
     procedure btnHTMLExportClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnShowStationListClick(Sender: TObject);
+    procedure grdStatGetCellHint(Sender: TObject; ACol, ARow: Integer;
+      var HintText: String);
+    procedure tmrDelayRefreshTimer(Sender: TObject);
   private
     gmode : String;
     DOKsArray : Array of TDok;
+    FreeDelay : Boolean;
 
     procedure CreateDOKStat;
     procedure LoadBandsSettings;
     procedure CreateSummary;
     procedure ShowCharInGrid(QSL_R,LoTW,eQSL : String;BandPos,y : Integer);
+    procedure SetTotalWidth(Acol:integer);
+    procedure CheckStyle;
 
     function  GetStatTypeWhere(st : TStat) : String;
     function LoadDOKs : Boolean;
@@ -170,6 +181,7 @@ end;
 procedure TfrmDOKStat.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   dmUtils.SaveDBGridInForm(self);
+  cqrini.WriteBool('DOKStat','AltView',cbAltView.Checked);
   cqrini.WriteBool('DOKStat','hideEmpty',cbHideEmpty.Checked);
   cqrini.WriteInteger('DOKStat','whichDOKs',cbChoosingDokType.ItemIndex);
   cqrini.WriteString('DOKStat','profiles'+IntToStr(ord(StatType)),edtProfiles.Text);
@@ -199,6 +211,12 @@ begin
   end
 end;
 
+procedure TfrmDOKStat.cbAltViewChange(Sender: TObject);
+begin
+  cqrini.WriteBool('DOKStat','AltView',cbAltView.Checked);
+  CheckStyle;
+end;
+
 procedure TfrmDOKStat.cbChoosingDokTypeChange(Sender: TObject);
 begin
   btnRefresh.Click
@@ -207,6 +225,22 @@ end;
 procedure TfrmDOKStat.cbHideEmptyChange(Sender: TObject);
 begin
   btnRefresh.Click
+end;
+
+procedure TfrmDOKStat.cmbModeChange(Sender: TObject);
+var
+  Wdog : integer;
+begin
+  Wdog:=10;
+  While ((not FreeDelay) and (Wdog>0)) do
+        Begin
+          sleep(200);
+          dec(Wdog);
+        end;
+  if ((not FreeDelay) and (Wdog<=0)) then exit; //something is wrong
+
+  FreeDelay:=False;
+  tmrDelayRefresh.Enabled:=True;
 end;
 
 procedure TfrmDOKStat.FormClose(Sender : TObject;
@@ -218,6 +252,7 @@ end;
 procedure TfrmDOKStat.FormCreate(Sender: TObject);
 begin
   dmUtils.LoadWindowPos(self);
+  FreeDelay:=True;
 end;
 
 procedure TfrmDOKStat.FormShow(Sender: TObject);
@@ -235,44 +270,11 @@ begin
   cmbMode.ItemIndex := cqrini.ReadInteger('DOKStat','mode'+IntToStr(ord(StatType)),0);
   w                 := cqrini.ReadInteger('DOKStat','width'+IntToStr(ord(StatType)),0);
   cmbCfmType.ItemIndex := cqrini.ReadInteger('DOKStat','LastStat',6);
+  cbAltView.Checked := cqrini.ReadBool('DOKStat','AltView',False);
   grdStat.ColWidths[0] := 110;
   grdStat.ColWidths[1] := 200;
 
-  // Another grid style tom@dl7bj.de, 2014-06-20
-  if cqrini.ReadBool('Fonts','GridGreenBar',False) = True then
-  begin
-    grdSumStat.AlternateColor:=$00E7FFEB;
-    grdStat.AlternateColor:=$00E7FFEB;
-    grdSumStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine];
-    grdStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine];
-  end else begin
-    grdSumStat.AlternateColor:=clWindow;
-    grdStat.AlternateColor:=clWindow;
-    grdSumStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline];
-    grdStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline];
-  end;
-  if cqrini.ReadBool('Fonts','GridSmallRows',false) = True then
-  begin
-    grdSumStat.DefaultRowHeight:=grdSumStat.Canvas.Font.Size+8;
-    grdStat.DefaultRowHeight:=grdStat.Canvas.Font.Size+8;
-  end else begin
-    grdSumStat.DefaultRowHeight:=25;
-    grdStat.DefaultRowHeight:=25;
-  end;
-  if cqrini.ReadBool('Fonts','GridBoldTitle',false) = True then
-  begin
-    grdSumStat.TitleFont.Style:=[fsBold];
-    grdStat.TitleFont.Style:=[fsBold];
-  end else begin
-    grdSumStat.TitleFont.Style:=[];
-    grdStat.TitleFont.Style:=[];
-  end;
-  If not LoadDOKs then
-  begin
-    Application.MessageBox('DOK table is empty. Please make sure that the content of dok.csv and sdok.csv is valid.','Problem');
-    exit
-  end;
-  btnRefresh.Click
+  CheckStyle;
 end;
 
 procedure TfrmDOKStat.btnHTMLExportClick(Sender: TObject);
@@ -382,6 +384,21 @@ begin
     dmData.trQ.Rollback;
     l.Free
   end
+end;
+
+procedure TfrmDOKStat.grdStatGetCellHint(Sender: TObject; ACol, ARow: Integer;
+  var HintText: String);
+begin
+   if (ACol =  grdStat.ColCount-1 ) then
+          HintText := 'Summary count format:'+LineEnding+
+                      '"Confirmed"/"Need QSL" - "Worked"/"Total Bands"';
+end;
+
+procedure TfrmDOKStat.tmrDelayRefreshTimer(Sender: TObject);
+begin
+    tmrDelayRefresh.Enabled:=false;
+    btnRefreshClick(nil);
+    FreeDelay:=True;
 end;
 
 procedure TfrmDOKStat.ExportToHTML(htmlfile : String);
@@ -547,6 +564,10 @@ procedure TfrmDOKStat.CreateSummary;
 var
   wkd : Word = 0;
   cfm : Word = 0;
+  lw,
+  lx,
+  lc,
+  la  : Word;
   i,y : Integer;
 begin
   grdSumStat.Cells[0,1] := 'WKD';
@@ -568,30 +589,35 @@ begin
   end;
   grdStat.ColCount := grdStat.ColCount+1;
   grdStat.ColWidths[grdStat.ColCount-1]:= 100;
-  grdStat.Cells[grdStat.ColCount-1,0]:= 'TOTAL';
+  grdStat.Cells[grdStat.ColCount-1,0]:= 'Row summary';
   wkd := 0;
   cfm := 0;
   for y:=1 to grdStat.RowCount-1 do  //lines
   begin
-    for i:=2 to grdStat.ColCount-1 do
+    la:=0;lw:=0;lx:=0;lc:=0;     //summary: bands,worked,need cfm,confirmed
+    for i:=1 to grdStat.ColCount-1 do
     begin
-      if (grdStat.Cells[i,y] = 'Q') or (grdStat.Cells[i,y] = 'L') or (grdStat.Cells[i,y] = 'E')  then
-        grdStat.Cells[grdStat.ColCount-1,y] := 'Q'
-      else begin
-        if (grdStat.Cells[grdStat.ColCount-1,y] <> 'Q') and (grdStat.Cells[i,y] = 'X') then
-          grdStat.Cells[grdStat.ColCount-1,y] := 'X'
-      end
+      case  grdStat.Cells[i,y] of
+        'L','E','Q' : begin
+                        inc(la);inc(lw);inc(lc);
+                        inc(cfm);
+                        inc(wkd)
+                      end;
+        'X'        :  begin
+                        inc(la);inc(lw);inc(lx);
+                        inc(wkd)
+                      end;
+        else
+          inc(la);
+       end;
+      grdStat.Cells[grdStat.ColCount-1,y] := 'Q'+IntToStr(lc)+'/X'+IntToStr(lx)+' - W'+IntToStr(lw)+'/'+IntToStr(la);
     end;
-    if grdStat.Cells[grdStat.ColCount-1,y] = 'Q' then
-    begin
-      inc(cfm);
-      inc(wkd)
-    end
-    else begin
-      if grdStat.Cells[grdStat.ColCount-1,y] = 'X' then
-        inc(wkd)
-    end
+   SetTotalWidth(grdStat.ColCount-1)  //adjust 'Summary' column width
   end;
+  grdSumStat.ColCount := grdSumStat.ColCount+1;
+  grdSumStat.Cells[grdSumStat.ColCount-1,0] := 'TOTAL';
+  grdSumStat.Cells[grdSumStat.ColCount-1,1] := IntToStr(wkd);
+  grdSumStat.Cells[grdSumStat.ColCount-1,2] := IntToStr(cfm)
 end;
 
 function TfrmDOKStat.LoadDOKs : Boolean;
@@ -860,6 +886,62 @@ begin
                              '(qsl_r='+QuotedStr('Q')+'))'
                  end
     end; //case
+end;
+procedure  TfrmDOKStat.SetTotalWidth(Acol:integer);
+  var
+    I, Fix_Width, Col_Width: Integer;
+
+  begin
+    // check if string does not fit to default width of column
+     Fix_Width:=grdStat.ColWidths[0];
+     Col_Width:=0;
+     For i := 0 To grdStat.RowCount - 1 do
+     begin
+       // get the pixel width of the complete string
+       Col_Width := grdStat.Canvas.TextWidth(grdStat.Cells[Acol,i]);
+       // if its greater, then put it in Fix_width
+       If Col_width>Fix_width then Fix_width:=col_width+25; // +25 for margins. adjust if neccesary
+     end;
+     grdStat.ColWidths[Acol] := Fix_Width;
+  End;
+procedure TfrmDOKStat.CheckStyle;
+
+begin
+  // Another grid style tom@dl7bj.de, 2014-06-20
+   if cqrini.ReadBool('Fonts','GridGreenBar',False)OR cqrini.ReadBool('DOKStat','AltView',False) then
+   begin
+     grdSumStat.AlternateColor:=$00E7FFEB;
+     grdStat.AlternateColor:=$00E7FFEB;
+     grdSumStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine];
+     grdStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goCellHints];
+   end else begin
+     grdSumStat.AlternateColor:=clWindow;
+     grdStat.AlternateColor:=clWindow;
+     grdSumStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline];
+     grdStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline,goCellHints];
+   end;
+   if cqrini.ReadBool('Fonts','GridSmallRows',false) = True then
+   begin
+     grdSumStat.DefaultRowHeight:=grdSumStat.Canvas.Font.Size+8;
+     grdStat.DefaultRowHeight:=grdStat.Canvas.Font.Size+8;
+   end else begin
+     grdSumStat.DefaultRowHeight:=25;
+     grdStat.DefaultRowHeight:=25;
+   end;
+   if cqrini.ReadBool('Fonts','GridBoldTitle',false) = True then
+   begin
+     grdSumStat.TitleFont.Style:=[fsBold];
+     grdStat.TitleFont.Style:=[fsBold];
+   end else begin
+     grdSumStat.TitleFont.Style:=[];
+     grdStat.TitleFont.Style:=[];
+   end;
+   If not LoadDOKs then
+   begin
+     Application.MessageBox('DOK table is empty. Please make sure that the content of dok.csv and sdok.csv is valid.','Problem');
+     exit
+   end;
+   btnRefresh.Click
 end;
 
 end.

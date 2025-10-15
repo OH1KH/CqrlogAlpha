@@ -57,8 +57,10 @@ type
     lblConfirm : TLabel;
     Panel1: TPanel;
     Panel2 : TPanel;
+    tmrDelayRefresh: TTimer;
     procedure btnSelectProfileClick(Sender: TObject);
     procedure cbAltViewClick(Sender: TObject);
+    procedure cmbModeChange(Sender: TObject);
     procedure FormClose(Sender : TObject; var CloseAction : TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -68,9 +70,12 @@ type
     procedure btnShowSationListClick(Sender: TObject);
     procedure grdStatGetCellHint(Sender: TObject; ACol, ARow: Integer;
       var HintText: String);
+    procedure tmrDelayRefreshTimer(Sender: TObject);
   private
     gmode : String;
     aStates : Array [1..50] of String;
+    FreeDelay : Boolean;
+
     procedure CreateWAZStat;
     procedure CreateITUStat;
     procedure CreateWACStat;
@@ -342,6 +347,22 @@ begin
   CheckStyle;
 end;
 
+procedure TfrmWAZITUStat.cmbModeChange(Sender: TObject);
+var
+  Wdog : integer;
+begin
+  Wdog:=10;
+  While ((not FreeDelay) and (Wdog>0)) do
+        Begin
+          sleep(200);
+          dec(Wdog);
+        end;
+  if ((not FreeDelay) and (Wdog<=0)) then exit; //something is wrong
+
+  FreeDelay:=False;
+  tmrDelayRefresh.Enabled:=True;
+end;
+
 procedure TfrmWAZITUStat.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
@@ -351,6 +372,7 @@ end;
 procedure TfrmWAZITUStat.FormCreate(Sender: TObject);
 begin
   dmUtils.LoadWindowPos(Self);
+  FreeDelay := True;
 end;
 
 procedure TfrmWAZITUStat.FormShow(Sender: TObject);
@@ -560,6 +582,13 @@ begin
                       '"Confirmed"/"Need QSL" - "Worked"/"Total Bands"';
 end;
 
+procedure TfrmWAZITUStat.tmrDelayRefreshTimer(Sender: TObject);
+begin
+    tmrDelayRefresh.Enabled:=false;
+    btnRefreshClick(nil);
+    FreeDelay:=True;
+end;
+
 procedure TfrmWAZITUStat.ExportToHTML(htmlfile : String);
 var
   f      : TextFile;
@@ -744,21 +773,6 @@ begin
         inc(wkd);
       if (grdStat.Cells[y,i]='Q') or (grdStat.Cells[y,i]='L') or (grdStat.Cells[y,i]='E') then
         inc(cfm);
-{
-        case CfmType of
-        tcQSL : begin
-              if grdStat.Cells[y,i] = 'Q' then
-                inc(cfm)
-            end;
-        tcQSLLoTW : begin
-              if (grdStat.Cells[y,i] = 'Q') or (grdStat.Cells[y,i] = 'L') then
-                inc(cfm)
-            end;
-        tcLoTW : begin
-              if grdStat.Cells[y,i] = 'L' then
-                inc(cfm)
-            end
-       end; //case}
     end;
     grdSumStat.Cells[y,1] := IntToStr(wkd);
     grdSumStat.Cells[y,2] := IntToStr(cfm);
@@ -787,7 +801,7 @@ begin
        end;
       grdStat.Cells[grdStat.ColCount-1,y] := 'Q'+IntToStr(lc)+'/X'+IntToStr(lx)+' - W'+IntToStr(lw)+'/'+IntToStr(la);
     end;
-   SetTotalWidth(grdStat.ColCount-1)  //adjust 'Total' column width
+   SetTotalWidth(grdStat.ColCount-1)  //adjust 'Summary' column width
   end;
   grdSumStat.ColCount := grdSumStat.ColCount+1;
   grdSumStat.Cells[grdSumStat.ColCount-1,0] := 'TOTAL';

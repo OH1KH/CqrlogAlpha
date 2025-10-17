@@ -185,7 +185,7 @@ end;
 
 procedure TfrmRotControl.btnShortPClick(Sender: TObject);
 begin
-   if fNewQSO.Azimuth<>'' then
+   if ((fNewQSO.Azimuth<>'') and (Assigned(rotor))) then
       rotor.SetAzimuth(fNewQSO.Azimuth)
 end;
 procedure TfrmRotControl.btnLongPClick(Sender: TObject);
@@ -194,7 +194,7 @@ var
     SAz : Double = 0 ;
     LAz : Double = 0 ;
 begin
-   if fNewQSO.Azimuth<>'' then
+   if ((fNewQSO.Azimuth<>'') and (Assigned(rotor))) then
    begin
      SAz := StrToFloat(fNewQSO.Azimuth);
      if SAz >180 then
@@ -207,6 +207,8 @@ begin
 end;
 procedure TfrmRotControl.btnLeftClick(Sender: TObject);
 begin
+   if not (Assigned(rotor)) then
+                              exit;
    rotor.StopRot;
    tmrStopRot.Enabled:=False;
    sleep(100);
@@ -223,6 +225,8 @@ end;
 
 procedure TfrmRotControl.btnRightClick(Sender: TObject);
 begin
+   if not (Assigned(rotor)) then
+                              exit;
    rotor.StopRot;
    tmrStopRot.Enabled:=False;
    sleep(100);
@@ -239,6 +243,8 @@ end;
 
 procedure TfrmRotControl.btnStopClick(Sender: TObject);
 begin
+   if not (Assigned(rotor)) then
+                              exit;
   btnStop.Font.Color:=clRed;
   btnStop.Font.Style:=btnStop.Font.Style+[fsBold];
   btnStop.Repaint;
@@ -282,7 +288,7 @@ begin
    if Key = VK_Return then
    Begin
     MouseWheelUsed:=false;
-    if edtAzimuth.Text<>'' then
+    if ((edtAzimuth.Text<>'') and (Assigned(rotor))) then
       rotor.SetAzimuth(edtAzimuth.Text);
     edtAzimuth.Visible:=False;
    end;

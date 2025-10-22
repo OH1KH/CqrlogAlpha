@@ -7,9 +7,7 @@ See file src/changelog.html for changes
 
 ----------------------------------------------------------------------------------------------------
 
-From folder "compiled" you find ready compiled binary files to replace against official Cqrlog.
-There is also "newupdate.zip" that includes "newupdate.sh", a script that does Cqrlog backup and then updating for you with selected binary file.
-Same folder has also README.md that holds further informations and some other general information files.
+# NOTE: This "devel" branch contains source that is under testing before release. You may find more bugs here than in released version at "main" branch.
 
 ----------------------------------------------------------------------------------------------------
 

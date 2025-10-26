@@ -1,7 +1,7 @@
 object frmCWType: TfrmCWType
-  Left = 324
+  Left = 304
   Height = 407
-  Top = 8
+  Top = 116
   Width = 870
   AllowDropFiles = True
   BorderIcons = [biSystemMenu]
@@ -126,7 +126,7 @@ object frmCWType: TfrmCWType
   object pnlBottom: TPanel
     Left = 0
     Height = 35
-    Hint = 'Right click to select CW mode.'
+    Hint = 'Right click to select CW mode or press Alt+N to scroll through CW modes'
     Top = 372
     Width = 870
     Align = alBottom
@@ -284,7 +284,7 @@ object frmCWType: TfrmCWType
     Left = 880
     Top = 16
     object mnuHead: TMenuItem
-      Caption = 'Send CW using mode:'
+      Caption = 'Send CW using mode (Alt+N):'
     end
     object Separator1: TMenuItem
       Caption = '-'
@@ -303,6 +303,11 @@ object frmCWType: TfrmCWType
       Caption = 'word'
       RadioItem = True
       OnClick = mnuWordClick
+    end
+    object mnuLine: TMenuItem
+      Caption = 'Line'
+      RadioItem = True
+      OnClick = mnuLineClick
     end
   end
 end

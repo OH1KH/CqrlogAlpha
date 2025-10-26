@@ -34,7 +34,7 @@
     Set up your CW messages via Preferences/CW inteface/CW messages button.
     <br> You can also access CW messages from the top menu of the New QSO window.
     Click on the 'File' item and select CW Messages.<br><br>
-    <img src=img/h96b.png>&nbsp;&nbsp;<img src=img/h96.png><br><br>
+    <img src=img/h95.png>&nbsp;&nbsp;<img src=img/h96.png><br><br>
     CW messages  will be sent when you press the corresponding <strong>F</strong>-key(s) or click message buttons in <b> Memory keys </b> or <b> CW type </b> windows.
     You can set up to 10 predefined messages in two sets.<br>
     Set1 <b>"S&P"</b> is always default. Set2 <b>"Run"</b> is active when contest window is opened and checkbox "S&P" is <b>NOT</b> checked.<br>
@@ -93,20 +93,23 @@
    <br>You can select what happens when <strong>Memory keys</strong>-form is active and <strong>ENTER</strong> (also called Return) key is pressed, <strong>repeat last clicked memory</strong> (send focused button text)
    , <strong>ignore it</strong> (do nothing) or <strong>save qso</strong>, by selecting that with ENTER section radio buttons in <strong> CW Messages</strong> definition form.</p>
     <a name=mk2><img src=img/h98.png></a><br>
-    Another form <strong>CW type</strong> is a powerful keyboard keyer with 3 operation modes selected by right mouse click over memory buttons or bottom panel<br></p>
+    Another form <strong>CW type</strong> is a powerful keyboard keyer with 4 operation modes selected by right mouse click over bottom panel<br>
+    A quick scroll through sending modes is also possible using Alt+N key when CW type form is active</p>
     <ul>
         <li><strong>letter mode</strong> - the character of the corresponding keyboard key is sent immediately when pressing the key
         <li><strong>first word using letter mode, next words using word mode</strong> - 
             The keyer begins in letter mode to avoid unneccessary delays. After spacebar is pressed it switches to word mode
         </li>
         <li><strong>word mode</strong> - when a whole word is typed sending starts when pressing the spacebar
+        <li><strong>line mode</strong> - when a whole line is typed sending starts when pressing the enter key. It makes easy to prepare your next over while listening.
     </ul>
-    These modes are common on professional keyboard keyers.<br><br>
+    <br>
     CWTyping area allows paste (copy in editor/paste to CWType) and drop (select in editor and drag with mouse left button pressed and drop on CWType area).<br><br>
-    <strong>NOTE!</strong> CW sending has limited buffer space depending keyer type and rig model. Be aware that pasting a very long text to CWType area may lead to CW keyer buffer overflow. When Hamlib keying is in use it will send words under 10 characters as one command, but if text to be sent is longer it will send all letter by letter (1 chr per one command).
+    <strong>NOTE!: </strong> CW sending has limited buffer space depending keyer type and rig model. Be aware that pasting a very long text to CWType area may lead to CW keyer buffer overflow. When Hamlib keying is in use it will send words under 10 characters as one command, but if text to be sent is longer it will send all letter by letter (1 chr per one command).
      This is tested to work with IC7300. Same should happen with Kenwoodother rigs and HamLib keying, but this is not tested and may not work in same way.
       
-      <br><br> <strong>Same warning  </strong>with manual typing in word mode: If your typing speed is faster than cw sending you may hit send buffer limit sooner or later.
+      <br><br> <strong>Warning with manual typing in word mode:</strong> If your typing speed is faster than cw sending you may hit send buffer limit sooner or later.
+      <br><strong>Warning with line mode:</strong> It is very easy to fill send buffer with this mode. In case of Hamlib keyer consider to use Hamlib 1k buffer if you use this mode. <a href="h1.html#ch1">Preferences/CWinterface/Hamlib keyer</a>
       <br><br> <strong>Switching radios </strong>while CW sending is going on can cause unexpected results !
       <br><strong>Always wait</strong> that CW message has finshed before switching radios as it will also switch CW keyers.
       <br><strong>Always wait</strong> that selected radio shows frequency in TRXControl before sending a CW message or start using CW Type.

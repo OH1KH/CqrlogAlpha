@@ -466,6 +466,10 @@ begin
              HexStrToStr(sgMonitor.Cells[8,sgMonitor.row]));
   end;
   SendQsoInit(HexStrToStr(sgMonitor.Cells[8,sgMonitor.row]));
+  //send qso init twice with wsjt-x Map mode to get TX1 selected on WSJT-X improvedplus 3.0.0. with oh1kh mods.
+  if (sgMonitor.Cells[2,sgMonitor.row]='(') and chkMap.Checked then
+     SendQsoInit(HexStrToStr(sgMonitor.Cells[8,sgMonitor.row]));
+  //this should make no harm to other users
   frmNewQSO.GetCallInfo(DblClickCall,CurMode,sgMonitor.Cells[1,sgMonitor.row]);
   frmNewQSO.SendToBack;
 end;

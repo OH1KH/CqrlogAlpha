@@ -2706,7 +2706,9 @@ begin
           case cqrini.ReadInteger('wsjt','mode',1) of
             0 : begin
                   if not frmTRXControl.GetModeFreqNewQSO(TXmode,mhz) then
-                    TXmode :='';
+                    TXmode :=''
+                   else
+                    RigCmd2DataMode(TXmode);
                 end;
             1 : TXmode := trim(StrBuf(index));
             2 : TXmode := cqrini.ReadString('wsjt','defmode','JT65')
@@ -3003,13 +3005,15 @@ begin
           end;
           if dmData.DebugLevel>=1 then Writeln('Band :', WsjtxBand);
           //----------------------------------------------------
+          mode:= trim(StrBuf(index));
           case cqrini.ReadInteger('wsjt','mode',1) of
             0 : begin
                   if frmTRXControl.GetModeFreqNewQSO(mode,mhz) then
-                    cmbMode.Text := mode
+                   Begin
+                    cmbMode.Text := RigCmd2DataMode(mode);
+                   end;
                 end;
             1 : begin
-                  mode:= trim(StrBuf(index));
                   if dmData.DebugLevel>=1 then Writeln('Mode :', mode);
                   cmbMode.Text := mode
                 end;

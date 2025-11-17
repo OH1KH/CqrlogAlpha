@@ -13,7 +13,6 @@ type
   { TfrmRbnFilter }
 
   TfrmRbnFilter = class(TForm)
-    Bevel1: TBevel;
     btnCancel: TButton;
     btnDxBandsAll: TButton;
     btnDXCCnty: TButton;
@@ -24,10 +23,10 @@ type
     btnSrcContAll: TButton;
     btnSrcCallAll: TButton;
     chkDupFilt: TCheckBox;
-    chkToBandMap: TCheckBox;
     chkNewDXConly: TCheckBox;
     chkOnlyeQSL: TCheckBox;
     chkOnlyLoTW: TCheckBox;
+    chkToBandMap: TCheckBox;
     edtDate: TEdit;
     edtLastHours: TEdit;
     edtSrcCall: TEdit;
@@ -40,6 +39,8 @@ type
     edtDXOnlyExpres: TEdit;
     edtSrcCont: TEdit;
     edtTime: TEdit;
+    grpDuplicate: TGroupBox;
+    grpMisc: TGroupBox;
     grpCallsignFrom: TGroupBox;
     grpDXStation: TGroupBox;
     grpCallisgn: TGroupBox;
@@ -60,8 +61,8 @@ type
     Label9: TLabel;
     lblModeFrom: TLabel;
     lblNotCountry: TLabel;
-    rgIgnore: TRadioGroup;
     rgDupe: TRadioGroup;
+    rgIgnore: TRadioGroup;
     rbAllDx: TRadioButton;
     rbOnlyCall: TRadioButton;
     rbOnlyCallReg: TRadioButton;

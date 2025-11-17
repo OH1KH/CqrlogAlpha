@@ -1,12 +1,12 @@
 object frmRbnFilter: TfrmRbnFilter
-  Left = 433
-  Height = 731
-  Top = 48
-  Width = 699
+  Left = 436
+  Height = 789
+  Top = 0
+  Width = 684
   BorderStyle = bsDialog
   Caption = 'RBN filter criteria'
-  ClientHeight = 731
-  ClientWidth = 699
+  ClientHeight = 789
+  ClientWidth = 684
   OnShow = FormShow
   Position = poWorkAreaCenter
   LCLVersion = '3.8.0.0'
@@ -15,44 +15,48 @@ object frmRbnFilter: TfrmRbnFilter
     AnchorSideTop.Control = Owner
     AnchorSideRight.Control = Owner
     AnchorSideRight.Side = asrBottom
+    AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
     Left = 3
-    Height = 709
+    Height = 783
     Top = 3
-    Width = 693
-    Anchors = [akTop, akLeft, akRight]
+    Width = 678
+    Anchors = [akTop, akLeft, akRight, akBottom]
     BorderSpacing.Left = 3
     BorderSpacing.Top = 3
     BorderSpacing.Right = 3
-    Caption = 'DX station '
-    ClientHeight = 691
-    ClientWidth = 691
+    BorderSpacing.Bottom = 3
+    Caption = 'DXspots filtering '
+    ClientHeight = 765
+    ClientWidth = 676
     TabOrder = 0
     object grpCallisgn: TGroupBox
-      AnchorSideLeft.Control = grpSource
+      AnchorSideLeft.Control = grpDXStation
       AnchorSideTop.Control = rgIgnore
       AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = grpCallsignFrom
+      AnchorSideRight.Control = grpDXStation
       AnchorSideRight.Side = asrBottom
       Left = 6
-      Height = 137
-      Top = 259
-      Width = 682
+      Height = 125
+      Top = 355
+      Width = 664
       Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 6
       BorderSpacing.Top = 3
-      Caption = ' Callsign '
-      ClientHeight = 119
-      ClientWidth = 680
+      BorderSpacing.Right = 6
+      Caption = ' DX callsign '
+      ClientHeight = 107
+      ClientWidth = 662
       TabOrder = 1
       object rbAllDx: TRadioButton
         AnchorSideLeft.Control = grpCallisgn
         AnchorSideTop.Control = grpCallisgn
         Left = 6
         Height = 23
-        Top = 12
+        Top = 3
         Width = 43
         BorderSpacing.Left = 6
-        BorderSpacing.Top = 12
+        BorderSpacing.Top = 3
         Caption = 'All'
         Checked = True
         TabOrder = 0
@@ -64,8 +68,9 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 6
         Height = 23
-        Top = 42
+        Top = 32
         Width = 161
+        BorderSpacing.Top = 6
         Caption = 'Only these callsigns:'
         TabOrder = 1
       end
@@ -75,32 +80,33 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 6
         Height = 23
-        Top = 82
+        Top = 69
         Width = 199
         Caption = 'Only these by expression: '
         TabOrder = 3
       end
       object edtDXOnlyCall: TEdit
-        AnchorSideBottom.Control = edtDXOnlyExpres
-        Left = 240
+        AnchorSideTop.Control = rbAllDx
+        AnchorSideTop.Side = asrBottom
+        Left = 241
         Height = 34
-        Top = 36
+        Top = 26
         Width = 272
-        Anchors = [akLeft, akBottom]
-        BorderSpacing.Bottom = 6
+        BorderSpacing.Bottom = 3
         CharCase = ecUppercase
         TabOrder = 2
         Text = 'EDTDXONLYCALL'
       end
       object edtDXOnlyExpres: TEdit
-        AnchorSideBottom.Control = grpCallisgn
+        AnchorSideLeft.Control = edtDXOnlyCall
+        AnchorSideTop.Control = edtDXOnlyCall
+        AnchorSideTop.Side = asrBottom
         AnchorSideBottom.Side = asrBottom
         Left = 241
         Height = 34
-        Top = 76
+        Top = 63
         Width = 272
-        Anchors = [akBottom]
-        BorderSpacing.Bottom = 9
+        BorderSpacing.Top = 3
         CharCase = ecUppercase
         TabOrder = 4
         Text = 'EDTDXONLYEXPRES'
@@ -110,9 +116,9 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = edtDXOnlyCall
         AnchorSideTop.Side = asrCenter
-        Left = 518
+        Left = 519
         Height = 17
-        Top = 45
+        Top = 35
         Width = 89
         BorderSpacing.Left = 6
         Caption = 'K1B, K1N etc.'
@@ -122,49 +128,13 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideLeft.Control = Label9
         AnchorSideTop.Control = edtDXOnlyExpres
         AnchorSideTop.Side = asrCenter
-        Left = 518
+        Left = 519
         Height = 17
-        Top = 85
+        Top = 72
         Width = 68
         Caption = 'K[0..9]A?Z'
         ParentColor = False
       end
-    end
-    object chkOnlyeQSL: TCheckBox
-      AnchorSideLeft.Control = grpCallsignFrom
-      AnchorSideTop.Control = chkOnlyLoTW
-      AnchorSideTop.Side = asrBottom
-      Left = 6
-      Height = 23
-      Top = 624
-      Width = 169
-      BorderSpacing.Top = 6
-      Caption = 'Show only eQSL users'
-      TabOrder = 4
-    end
-    object chkOnlyLoTW: TCheckBox
-      AnchorSideLeft.Control = grpCallsignFrom
-      AnchorSideTop.Control = grpCallsignFrom
-      AnchorSideTop.Side = asrBottom
-      Left = 6
-      Height = 23
-      Top = 595
-      Width = 172
-      BorderSpacing.Top = 11
-      Caption = 'Show only LoTW users'
-      TabOrder = 3
-    end
-    object chkNewDXConly: TCheckBox
-      AnchorSideLeft.Control = chkOnlyeQSL
-      AnchorSideTop.Control = Bevel1
-      AnchorSideTop.Side = asrBottom
-      Left = 6
-      Height = 23
-      Top = 670
-      Width = 431
-      BorderSpacing.Top = 9
-      Caption = 'Show only spots that are "New one"/"New band"/"New mode" '
-      TabOrder = 5
     end
     object grpSource: TGroupBox
       AnchorSideLeft.Control = grpDXStation
@@ -172,12 +142,12 @@ object frmRbnFilter: TfrmRbnFilter
       Left = 6
       Height = 105
       Top = 3
-      Width = 576
+      Width = 568
       BorderSpacing.Left = 6
       BorderSpacing.Top = 3
-      Caption = ' Source data from '
+      Caption = ' Source data (spotters) from'
       ClientHeight = 87
-      ClientWidth = 574
+      ClientWidth = 566
       TabOrder = 0
       object lblContent: TLabel
         AnchorSideLeft.Control = grpSource
@@ -286,21 +256,22 @@ object frmRbnFilter: TfrmRbnFilter
       end
     end
     object grpCallsignFrom: TGroupBox
-      AnchorSideLeft.Control = grpCallisgn
+      AnchorSideLeft.Control = grpDXStation
       AnchorSideTop.Control = grpCallisgn
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Control = grpDXStation
       AnchorSideRight.Side = asrBottom
       Left = 6
-      Height = 185
-      Top = 399
-      Width = 682
+      Height = 173
+      Top = 483
+      Width = 664
       Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 6
       BorderSpacing.Top = 3
-      BorderSpacing.Right = 3
-      Caption = 'Callsign From'
-      ClientHeight = 167
-      ClientWidth = 680
+      BorderSpacing.Right = 6
+      Caption = 'DX callsign from'
+      ClientHeight = 155
+      ClientWidth = 662
       TabOrder = 2
       object lblContinentFrom: TLabel
         AnchorSideLeft.Control = grpCallsignFrom
@@ -353,12 +324,13 @@ object frmRbnFilter: TfrmRbnFilter
       end
       object edtDXBand: TEdit
         AnchorSideLeft.Control = edtDXCont
-        AnchorSideTop.Control = btnDxBandsAll
-        AnchorSideTop.Side = asrCenter
+        AnchorSideTop.Control = edtDXCont
+        AnchorSideTop.Side = asrBottom
         Left = 94
         Height = 34
         Top = 40
         Width = 368
+        BorderSpacing.Top = 3
         CharCase = ecUppercase
         TabOrder = 2
         Text = 'EDTDXBAND'
@@ -378,12 +350,13 @@ object frmRbnFilter: TfrmRbnFilter
       end
       object edtDXMode: TEdit
         AnchorSideLeft.Control = edtDXBand
-        AnchorSideTop.Control = btnDxModeAll
-        AnchorSideTop.Side = asrCenter
+        AnchorSideTop.Control = edtDXBand
+        AnchorSideTop.Side = asrBottom
         Left = 94
         Height = 34
-        Top = 76
+        Top = 77
         Width = 344
+        BorderSpacing.Top = 3
         CharCase = ecUppercase
         TabOrder = 4
         Text = 'EDTDXMODE'
@@ -394,7 +367,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 3
         Height = 17
-        Top = 85
+        Top = 86
         Width = 47
         Caption = 'Modes:'
         ParentColor = False
@@ -405,20 +378,20 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 521
         Height = 17
-        Top = 85
+        Top = 86
         Width = 126
         Caption = 'CW,  RTTY, RIG etc.'
         ParentColor = False
       end
       object edtDXCnty: TEdit
         AnchorSideLeft.Control = edtDXMode
-        AnchorSideTop.Control = btnDxModeAll
+        AnchorSideTop.Control = edtDXMode
         AnchorSideTop.Side = asrBottom
         Left = 94
         Height = 34
-        Top = 113
+        Top = 114
         Width = 184
-        BorderSpacing.Top = 6
+        BorderSpacing.Top = 3
         CharCase = ecUppercase
         TabOrder = 6
         Text = 'EDTDXCNTY'
@@ -429,7 +402,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 3
         Height = 17
-        Top = 122
+        Top = 123
         Width = 66
         Caption = 'Countries:'
         ParentColor = False
@@ -450,24 +423,24 @@ object frmRbnFilter: TfrmRbnFilter
       end
       object btnDxBandsAll: TButton
         AnchorSideLeft.Control = btnDxContAll
-        AnchorSideTop.Control = btnDxContAll
-        AnchorSideTop.Side = asrBottom
+        AnchorSideTop.Control = edtDXBand
+        AnchorSideTop.Side = asrCenter
         Left = 465
         Height = 28
         Top = 43
         Width = 44
-        BorderSpacing.Top = 9
+        BorderSpacing.Top = 6
         Caption = 'All'
         TabOrder = 3
         OnClick = btnDxBandsAllClick
       end
       object btnDxModeAll: TButton
         AnchorSideLeft.Control = btnDxBandsAll
-        AnchorSideTop.Control = btnDxBandsAll
-        AnchorSideTop.Side = asrBottom
+        AnchorSideTop.Control = edtDXMode
+        AnchorSideTop.Side = asrCenter
         Left = 465
         Height = 27
-        Top = 80
+        Top = 81
         Width = 44
         BorderSpacing.Top = 9
         Caption = 'All'
@@ -481,7 +454,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 281
         Height = 25
-        Top = 118
+        Top = 119
         Width = 30
         BorderSpacing.Left = 3
         Caption = '...'
@@ -495,7 +468,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 314
         Height = 17
-        Top = 122
+        Top = 123
         Width = 49
         BorderSpacing.Left = 3
         Caption = 'or NOT '
@@ -508,7 +481,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 366
         Height = 34
-        Top = 113
+        Top = 114
         Width = 175
         BorderSpacing.Left = 3
         CharCase = ecUppercase
@@ -522,7 +495,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 544
         Height = 25
-        Top = 118
+        Top = 119
         Width = 30
         BorderSpacing.Left = 3
         Caption = '...'
@@ -530,26 +503,11 @@ object frmRbnFilter: TfrmRbnFilter
         OnClick = btnDXCNotCntyClick
       end
     end
-    object Bevel1: TBevel
-      AnchorSideLeft.Control = grpCallsignFrom
-      AnchorSideTop.Control = chkOnlyeQSL
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = grpCallsignFrom
-      AnchorSideRight.Side = asrBottom
-      Left = 12
-      Height = 5
-      Top = 656
-      Width = 670
-      Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Left = 6
-      BorderSpacing.Top = 9
-      BorderSpacing.Right = 6
-    end
     object btnOK: TButton
       AnchorSideTop.Control = grpSource
       AnchorSideRight.Control = grpDXStation
       AnchorSideRight.Side = asrBottom
-      Left = 607
+      Left = 592
       Height = 25
       Top = 15
       Width = 75
@@ -557,14 +515,14 @@ object frmRbnFilter: TfrmRbnFilter
       BorderSpacing.Top = 12
       BorderSpacing.Right = 9
       Caption = 'OK'
-      TabOrder = 6
+      TabOrder = 3
       OnClick = btnOKClick
     end
     object btnCancel: TButton
       AnchorSideLeft.Control = btnOK
       AnchorSideTop.Control = btnOK
       AnchorSideTop.Side = asrBottom
-      Left = 607
+      Left = 592
       Height = 25
       Top = 46
       Width = 75
@@ -573,83 +531,39 @@ object frmRbnFilter: TfrmRbnFilter
       Cancel = True
       Caption = 'Cancel'
       ModalResult = 2
-      TabOrder = 7
-    end
-    object chkToBandMap: TCheckBox
-      AnchorSideLeft.Control = chkDupFilt
-      AnchorSideTop.Control = chkOnlyeQSL
-      AnchorSideTop.Side = asrCenter
-      Left = 238
-      Height = 23
-      Hint = 'When selected and BandMap is open spots that have DXCC N,M,B '#10'(New DXCC, New Mode, New Band) are sent to BandMap.'#10'BandMap spot uses DXCLuster spot color settings (set them there)'
-      Top = 624
-      Width = 263
-      Caption = 'Send N,B,M DXCC spots to BandMap'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 8
-    end
-    object rgDupe: TRadioGroup
-      AnchorSideLeft.Control = rgIgnore
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = rgIgnore
-      AnchorSideRight.Control = btnCancel
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = rgIgnore
-      AnchorSideBottom.Side = asrBottom
-      Left = 546
-      Height = 145
-      Hint = 'Set frequecy check resolution for finding duplicate spots'
-      Top = 111
-      Width = 136
-      Anchors = [akTop, akLeft, akRight, akBottom]
-      AutoFill = True
-      BorderSpacing.Left = 3
-      Caption = 'DupeFreqRes'
-      ChildSizing.LeftRightSpacing = 6
-      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-      ChildSizing.EnlargeVertical = crsHomogenousChildResize
-      ChildSizing.ShrinkHorizontal = crsScaleChilds
-      ChildSizing.ShrinkVertical = crsScaleChilds
-      ChildSizing.Layout = cclLeftToRightThenTopToBottom
-      ChildSizing.ControlsPerLine = 1
-      ClientHeight = 127
-      ClientWidth = 134
-      Items.Strings = (
-        '100Hz'
-        '1kHz'
-        '10kHz'
-      )
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 9
+      TabOrder = 4
     end
     object rgIgnore: TRadioGroup
-      AnchorSideLeft.Control = grpSource
-      AnchorSideTop.Control = grpSource
+      AnchorSideLeft.Control = grpDXStation
+      AnchorSideTop.Control = grpDuplicate
       AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = grpDXStation
+      AnchorSideRight.Side = asrBottom
       Left = 6
-      Height = 145
-      Top = 111
-      Width = 537
+      Height = 137
+      Top = 215
+      Width = 664
+      Anchors = [akTop, akLeft, akRight]
       AutoFill = True
+      BorderSpacing.Left = 6
       BorderSpacing.Top = 3
-      Caption = 'Ignore callsign'
+      BorderSpacing.Right = 6
+      Caption = 'Ignore DX callsign'
       ChildSizing.LeftRightSpacing = 6
-      ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
-      ChildSizing.EnlargeVertical = crsHomogenousChildResize
+      ChildSizing.EnlargeHorizontal = crsScaleChilds
+      ChildSizing.EnlargeVertical = crsScaleChilds
       ChildSizing.ShrinkHorizontal = crsScaleChilds
       ChildSizing.ShrinkVertical = crsScaleChilds
       ChildSizing.Layout = cclLeftToRightThenTopToBottom
       ChildSizing.ControlsPerLine = 1
-      ClientHeight = 127
-      ClientWidth = 535
+      ClientHeight = 119
+      ClientWidth = 662
       Items.Strings = (
         'Ignore none'
         'Ignore worked on last '
         'Ignore worked after'
       )
-      TabOrder = 10
+      TabOrder = 5
       object lblIgnoreHours: TLabel
         AnchorSideLeft.Control = edtLastHours
         AnchorSideLeft.Side = asrBottom
@@ -657,7 +571,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 227
         Height = 17
-        Top = 55
+        Top = 51
         Width = 226
         BorderSpacing.Left = 3
         Caption = 'hours on the same band and mode'
@@ -670,7 +584,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrCenter
         Left = 363
         Height = 17
-        Top = 97
+        Top = 88
         Width = 150
         BorderSpacing.Left = 6
         Caption = '(YYYY-MM-DD, HH:MM)'
@@ -682,7 +596,7 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Control = edtDate
         Left = 293
         Height = 34
-        Top = 88
+        Top = 79
         Width = 64
         AutoSize = False
         AutoSelect = False
@@ -696,11 +610,11 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideTop.Side = asrBottom
         Left = 190
         Height = 34
-        Top = 88
+        Top = 79
         Width = 97
         AutoSize = False
         AutoSelect = False
-        BorderSpacing.Top = 8
+        BorderSpacing.Top = 3
         TabOrder = 1
         Text = '2000-10-10'
       end
@@ -711,31 +625,157 @@ object frmRbnFilter: TfrmRbnFilter
         AnchorSideRight.Side = asrCenter
         Left = 190
         Height = 34
-        Top = 46
+        Top = 42
         Width = 34
         AutoSize = False
         AutoSelect = False
         BorderSpacing.Left = 190
+        BorderSpacing.Top = 16
         BorderSpacing.Right = 3
         TabOrder = 2
         Text = '48'
       end
     end
-    object chkDupFilt: TCheckBox
-      AnchorSideLeft.Control = chkOnlyLoTW
-      AnchorSideLeft.Side = asrBottom
-      AnchorSideTop.Control = chkOnlyLoTW
-      AnchorSideTop.Side = asrCenter
-      Left = 238
-      Height = 23
-      Hint = 'This drops even 2/3 of incoming spots before RBN filters.'#10'How ever "Source data from" filtering is done before duplication check. '
-      Top = 595
-      Width = 209
-      BorderSpacing.Left = 60
-      Caption = 'Use duplicate spots filtering'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 11
+    object grpDuplicate: TGroupBox
+      AnchorSideLeft.Control = grpDXStation
+      AnchorSideTop.Control = grpSource
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = grpDXStation
+      AnchorSideRight.Side = asrBottom
+      Left = 6
+      Height = 101
+      Top = 111
+      Width = 664
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 3
+      BorderSpacing.Right = 6
+      Caption = 'Frequency range of DXspot within which it is counted as duplicate'
+      ClientHeight = 83
+      ClientWidth = 662
+      TabOrder = 6
+      object rgDupe: TRadioGroup
+        AnchorSideLeft.Control = grpDuplicate
+        AnchorSideTop.Control = grpDuplicate
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Control = grpDuplicate
+        AnchorSideBottom.Side = asrBottom
+        Left = 3
+        Height = 77
+        Hint = 'Set frequecy check resolution for finding duplicate spots'
+        Top = 3
+        Width = 125
+        Anchors = [akTop, akLeft, akBottom]
+        AutoFill = True
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 3
+        BorderSpacing.Bottom = 3
+        ChildSizing.EnlargeHorizontal = crsScaleChilds
+        ChildSizing.EnlargeVertical = crsScaleChilds
+        ChildSizing.ShrinkHorizontal = crsScaleChilds
+        ChildSizing.ShrinkVertical = crsScaleChilds
+        ChildSizing.Layout = cclLeftToRightThenTopToBottom
+        ChildSizing.ControlsPerLine = 1
+        ClientHeight = 75
+        ClientWidth = 123
+        Items.Strings = (
+          '100Hz'
+          '1kHz'
+          '10kHz'
+        )
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 1
+      end
+      object chkDupFilt: TCheckBox
+        AnchorSideLeft.Control = grpDuplicate
+        AnchorSideLeft.Side = asrCenter
+        AnchorSideTop.Control = grpDuplicate
+        AnchorSideTop.Side = asrCenter
+        Left = 217
+        Height = 23
+        Hint = 'This drops even 2/3 of incoming spots before RBN filters.'#10'How ever "Source data from" filtering is done before duplication check. '
+        Top = 30
+        Width = 228
+        BorderSpacing.Left = 3
+        Caption = 'Use duplicate DXspots filtering'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 0
+      end
+    end
+    object grpMisc: TGroupBox
+      AnchorSideLeft.Control = grpDXStation
+      AnchorSideTop.Control = grpCallsignFrom
+      AnchorSideTop.Side = asrBottom
+      AnchorSideRight.Control = grpDXStation
+      AnchorSideRight.Side = asrBottom
+      Left = 6
+      Height = 85
+      Top = 659
+      Width = 664
+      Anchors = [akTop, akLeft, akRight]
+      BorderSpacing.Left = 6
+      BorderSpacing.Top = 3
+      BorderSpacing.Right = 6
+      Caption = 'Misc settings'
+      ClientHeight = 67
+      ClientWidth = 662
+      TabOrder = 7
+      object chkOnlyeQSL: TCheckBox
+        AnchorSideLeft.Control = grpMisc
+        AnchorSideTop.Control = chkOnlyLoTW
+        AnchorSideTop.Side = asrBottom
+        Left = 3
+        Height = 23
+        Top = 29
+        Width = 169
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 3
+        Caption = 'Show only eQSL users'
+        TabOrder = 0
+      end
+      object chkOnlyLoTW: TCheckBox
+        AnchorSideLeft.Control = grpMisc
+        AnchorSideTop.Control = grpMisc
+        Left = 3
+        Height = 23
+        Top = 3
+        Width = 172
+        BorderSpacing.Left = 3
+        BorderSpacing.Top = 3
+        Caption = 'Show only LoTW users'
+        TabOrder = 1
+      end
+      object chkNewDXConly: TCheckBox
+        AnchorSideLeft.Side = asrBottom
+        AnchorSideTop.Control = chkOnlyLoTW
+        AnchorSideTop.Side = asrCenter
+        AnchorSideRight.Control = grpMisc
+        AnchorSideRight.Side = asrBottom
+        Left = 228
+        Height = 23
+        Top = 3
+        Width = 431
+        Anchors = [akTop, akRight]
+        BorderSpacing.Right = 3
+        Caption = 'Show only spots that are "New one"/"New band"/"New mode" '
+        TabOrder = 2
+      end
+      object chkToBandMap: TCheckBox
+        AnchorSideLeft.Control = chkNewDXConly
+        AnchorSideTop.Control = chkOnlyeQSL
+        AnchorSideTop.Side = asrCenter
+        Left = 228
+        Height = 23
+        Hint = 'When selected and BandMap is open spots that have DXCC N,M,B '#10'(New DXCC, New Mode, New Band) are sent to BandMap.'#10'BandMap spot uses DXCLuster spot color settings (set them there)'
+        Top = 29
+        Width = 263
+        Caption = 'Send N,B,M DXCC spots to BandMap'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 3
+      end
     end
   end
 end

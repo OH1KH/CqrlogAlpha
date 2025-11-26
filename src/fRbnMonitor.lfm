@@ -11,13 +11,13 @@ object frmRbnMonitor: TfrmRbnMonitor
   Constraints.MinHeight = 170
   Constraints.MinWidth = 250
   KeyPreview = True
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnDeactivate = FormDeactivate
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object sbRbn: TStatusBar
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom
@@ -31,7 +31,7 @@ object frmRbnMonitor: TfrmRbnMonitor
     Panels = <    
       item
         Width = 135
-      end
+      end    
       item
         Width = 150
       end>

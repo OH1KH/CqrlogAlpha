@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
   ComCtrls, ActnList, StdCtrls, Grids, lNetComponents, lNet, lclType, ExtCtrls,
-  RegExpr;
+  RegExpr, StrUtils;
 
 const
   C_MAX_ROWS = 1000;     //max lines in the list of RBN spots (800 rows + 200 rows overhead for pausing)
@@ -119,6 +119,9 @@ type
     fil_AllowAllCall          : Boolean;
     fil_AllowOnlyCall         : Boolean;
     fil_AllowOnlyCallValue    : String;
+    fil_AllowOnlyPref         : Boolean;
+    fil_AllowOnlyPrefValue    : String;
+    fil_PrefList              : array of string;
     fil_AllowOnlyCallReg      : Boolean;
     fil_AllowOnlyCallRegValue : String;
     fil_AllowCont             : String;
@@ -488,8 +491,8 @@ begin
   // bit 6, %100000,  ---> -32 for routines in this form
   DebugThis := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-      DebugThis :=  DebugThis or ((abs(dmData.DebugLevel) and 32) = 32 );
-
+      DebugThis :=  ((abs(dmData.DebugLevel) and 32) = 32 );
+  writeln(DebugThis);
 end;
 
 
@@ -638,6 +641,20 @@ begin
     fil_AllowAllCall          := cqrini.ReadBool('RBNFilter','AllowAllCall',True);
     fil_AllowOnlyCall         := cqrini.ReadBool('RBNFilter','AllowOnlyCall',False);
     fil_AllowOnlyCallValue    := cqrini.ReadString('RBNFilter','AllowOnlyCallValue','');
+    fil_AllowOnlyPref         := cqrini.ReadBool('RBNFilter','AllowOnlyPref',False);
+    fil_AllowOnlyPrefValue    := cqrini.ReadString('RBNFilter','AllowOnlyPrefValue','');
+    if fil_AllowOnlyPref then
+     Begin
+      if  fil_AllowOnlyPrefValue='' then
+       Begin
+        fil_AllowOnlyPref:=false;
+        fil_AllowAllCall:=true;
+       end
+       else
+       Begin
+        fil_PrefList:= SplitString(fil_AllowOnlyPrefValue,',');
+       end;
+     end;
     fil_AllowOnlyCallReg      := cqrini.ReadBool('RBNFilter','AllowOnlyCallReg',False);
     fil_AllowOnlyCallRegValue := cqrini.ReadString('RBNFilter','AllowOnlyCallRegValue','');
 
@@ -771,8 +788,9 @@ var
   adif     : Word;
   index    : Integer;
   f        : Double;
-  i        : integer;
-  SpotterOk: Boolean;
+  i,c      : integer;
+  SpotterOk,
+  PrefixOk : Boolean;
 
 begin
   Result := False;
@@ -814,6 +832,21 @@ begin
       if DebugThis then Writeln('RBNMonitor: ','Station is not between allowed callsigns - ',dxstn);
       exit
     end
+  end;
+  if fil_AllowOnlyPref then
+  begin
+     for c:=0 to length(fil_PrefList)-1 do
+      Begin
+         PrefixOk:=pos(fil_PrefList[c],dxstn)=1;
+         if PrefixOk then
+                       break;
+      end;
+     if not PrefixOk then
+        Begin
+           if DebugThis then
+                        Writeln('RBNMonitor: ','Station is not in prefix list - ',dxstn);
+           exit
+        end;
   end;
   if fil_AllowOnlyCallReg then
    begin

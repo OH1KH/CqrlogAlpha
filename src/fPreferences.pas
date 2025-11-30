@@ -107,6 +107,8 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkNewQsoUdp: TCheckBox;
+    chkProfile: TCheckBox;
     chkHamForceSpace: TCheckBox;
     chkDeleteEqsl: TCheckBox;
     chkKeepAlive: TCheckBox;
@@ -458,6 +460,7 @@ type
     DateEditCall: TDateEdit;
     DateEditLoc: TDateEdit;
     dlgColor : TColorDialog;
+    edtNewQsoUdpAddrPort: TEdit;
     edtPollTimeout: TEdit;
     edtHamClockUrl: TEdit;
     edtBackupFileName1: TEdit;
@@ -1225,6 +1228,8 @@ begin
   cqrini.Writebool('NewQSO', 'ShowB4call', chkShowB4call.Checked);
   cqrini.WriteInteger('NewQSO', 'RecQSOsNum', speRecentQSOs.Value);
   cqrini.WriteBool('NewQSO', 'IgnoreQRZ', chkIgnoreQRZQSL.Checked);
+  cqrini.WriteBool('NewQSO', 'NewQsoUdp', chkNewQsoUdp.Checked);
+  cqrini.WriteString('NewQSO', 'NewQsoUdpAddrPort', edtNewQsoUdpAddrPort.Text);
   cqrini.WriteBool('NewQSO', 'MvToRem', chkMvToRem.Checked);
   cqrini.WriteBool('NewQSO', 'AutoQSLS', chkAutoQSLS.Checked);
   cqrini.WriteBool('NewQSO', 'AutoDQSLS', chkAutoDQSLS.Checked);
@@ -1287,6 +1292,7 @@ begin
   cqrini.WriteBool('Columns', 'MyLoc', chkMyLoc.Checked);
   cqrini.WriteBool('Columns', 'Operator', chkOperator.Checked);
   cqrini.WriteBool('Columns', 'Distance', chkDistance.Checked);
+  cqrini.WriteBool('Columns', 'Profile', chkProfile.Checked);
   cqrini.WriteBool('Columns', 'IOTA', chkIOTA.Checked);
   cqrini.WriteBool('Columns', 'Award', chkAward.Checked);
   cqrini.WriteBool('Columns', 'Power', chkPower.Checked);
@@ -3060,6 +3066,8 @@ begin
   chkShowB4call.Checked := cqrini.ReadBool('NewQSO', 'ShowB4call', False);
   speRecentQSOs.Value:= cqrini.ReadInteger('NewQSO', 'RecQSOsNum', 5);
   chkIgnoreQRZQSL.Checked := cqrini.ReadBool('NewQSO', 'IgnoreQRZ', False);
+  chkNewQsoUdp.Checked := cqrini.ReadBool('NewQSO', 'NewQsoUdp', False);
+  edtNewQsoUdpAddrPort.Text :=  cqrini.ReadString('NewQSO', 'NewQsoUdpAddrPort', '127.0.0.1:60073');
   chkMvToRem.Checked := cqrini.ReadBool('NewQSO', 'MvToRem', True);
   chkAutoQSLS.Checked := cqrini.ReadBool('NewQSO', 'AutoQSLS', True);
   chkAutoDQSLS.Checked := cqrini.ReadBool('NewQSO', 'AutoDQSLS', False);
@@ -3126,6 +3134,7 @@ begin
   chkMyLoc.Checked := cqrini.ReadBool('Columns', 'MyLoc', False);
   chkOperator.Checked := cqrini.ReadBool('Columns', 'Operator', False);
   chkDistance.Checked := cqrini.ReadBool('Columns', 'Distance', False);
+  chkProfile.Checked := cqrini.ReadBool('Columns', 'Profile', False);
   chkIOTA.Checked := cqrini.ReadBool('Columns', 'IOTA', False);
   chkAward.Checked := cqrini.ReadBool('Columns', 'Award', False);
   chkCounty.Checked := cqrini.ReadBool('Columns', 'County', False);

@@ -305,9 +305,10 @@ begin
 
   //set debug rules for this form
   // bit 5, %10000,  ---> -16 for routines in this form
-  LocalDbg := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-      LocalDbg :=  LocalDbg or ((abs(dmData.DebugLevel) and 16) = 16 );
+      LocalDbg := ((abs(dmData.DebugLevel) and 16) = 16 )
+     else
+      LocalDbg := dmData.DebugLevel >= 1 ;
 
 end;
 

@@ -491,8 +491,9 @@ begin
   // bit 6, %100000,  ---> -32 for routines in this form
   DebugThis := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-      DebugThis :=  ((abs(dmData.DebugLevel) and 32) = 32 );
-  writeln(DebugThis);
+      DebugThis :=  ((abs(dmData.DebugLevel) and 32) = 32 )
+     else
+      DebugThis := dmData.DebugLevel >= 1 ;
 end;
 
 

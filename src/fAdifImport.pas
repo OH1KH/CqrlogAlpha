@@ -988,9 +988,10 @@ begin
   btnImportClicked:=false;
   //set debug rules for this form
   // bit 1, %1,  ---> -2 for routines in this form
-  LocalDbg := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-      LocalDbg :=  LocalDbg or ((abs(dmData.DebugLevel) and 2) = 2 );
+      LocalDbg := ((abs(dmData.DebugLevel) and 2) = 2 )
+     else
+      LocalDbg := dmData.DebugLevel >= 1 ;
 end;
 
 procedure TfrmAdifImport.chkFilterDateRangeChange(Sender: TObject);

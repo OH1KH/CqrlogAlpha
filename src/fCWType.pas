@@ -480,9 +480,10 @@ begin
   WasMemoLen := length(m.lines.text);
   n:=IntToStr(frmTRXControl.cmbRig.ItemIndex);
    //set debug rules for this form
-  LocalDbg := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-        LocalDbg :=  LocalDbg or ((abs(dmData.DebugLevel) and 8) = 8 );
+        LocalDbg := ((abs(dmData.DebugLevel) and 8) = 8 )
+       else
+        LocalDbg := dmData.DebugLevel >= 1 ;
 end;
 
 procedure TfrmCWType.btnCloseClick(Sender: TObject);

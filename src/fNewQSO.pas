@@ -5570,6 +5570,10 @@ var
   i          : integer;
   tmp        : string;
   p          : currency;
+  QSOdata    : TStringList;
+  Resp       : String;
+  Result     : integer;
+
 begin
   mode := '';
   freq := '';
@@ -5760,6 +5764,21 @@ begin
     end;
      edtGridExit(nil); //enables LocMap button if grid ok
      FreqBefChange := frmTRXControl.GetFreqMHz;
+
+     //send qso info to external program with UDP  (preferences/NewQSO
+     if cqrini.ReadBool('NewQSO', 'NewQsoUdp', False) then
+      Begin
+        QSOdata := TStringList.Create;
+        QSOData.Clear;
+        QSOdata.Add('Address='+cqrini.ReadString('NewQSO', 'NewQsoUdpAddrPort', '127.0.0.1:60073'));
+        QSOdata.Add('Callsign='+edtCall.Text);
+        QSOdata.Add('Band='+dmUtils.GetBandFromFreq(freq));
+        QSOdata.Add('Mode='+mode);
+        if not dmLogUpload.UploadLogDataUDP('', QSOdata, Resp, Result) then
+                                                                       if dmData.DebugLevel>=1 then
+                                                                                               Writeln('UDP send failed: ',Result,'  ',Resp);
+        QSOdata.Free;
+      end;
   end;
 
 
@@ -7574,9 +7593,10 @@ begin
   case  KeyerType of
     1 : begin
           CWint := TCWWinKeyerUSB.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
-          if dmData.DebugLevel < 0 then
-                  CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
+        if dmData.DebugLevel < 0 then
+               CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+              else
+               CWint.DebugMode := dmData.DebugLevel>=1;
           CWint.Port      := cqrini.ReadString('CW'+n,'wk_port','');
           CWint.Device    := cqrini.ReadString('CW'+n,'wk_port','');
           CWint.MinSpeed  := cqrini.ReadInteger('CW'+n, 'wk_min', 5);
@@ -7592,9 +7612,10 @@ begin
         end;
     2 : begin
           CWint    := TCWDaemon.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
           if dmData.DebugLevel < 0 then
-                 CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
+                 CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+                else
+                 CWint.DebugMode := dmData.DebugLevel>=1;
           CWint.Port      := cqrini.ReadString('CW'+n,'cw_port','');
           CWint.Device    := cqrini.ReadString('CW'+n,'cw_address','');
           CWint.MinSpeed  := cqrini.ReadInteger('CW'+n, 'cw_min', 5);
@@ -7609,9 +7630,10 @@ begin
         end;
     3 : begin
           CWint := TCWK3NG.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
           if dmData.DebugLevel < 0 then
-                 CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
+                 CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+                else
+                 CWint.DebugMode := dmData.DebugLevel>=1;
           CWint.Port      := cqrini.ReadString('CW'+n,'K3NGPort'+n,'');
           CWint.Device    := cqrini.ReadString('CW'+n,'K3NGPort'+n,'');
           CWint.MinSpeed  := cqrini.ReadInteger('CW'+n, 'K3NG_min', 5);
@@ -7624,9 +7646,10 @@ begin
         end;
     4 : begin
           CWint        := TCWHamLib.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
           if dmData.DebugLevel < 0 then
-                 CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
+                 CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+                else
+                 CWint.DebugMode := dmData.DebugLevel>=1;
           CWint.Port         := cqrini.ReadString('TRX'+n,'RigCtldPort','4532');
           CWint.Device       := cqrini.ReadString('TRX'+n,'host','localhost');
           CWint.MinSpeed     := cqrini.ReadInteger('CW'+n, 'HamLib_min', 5);

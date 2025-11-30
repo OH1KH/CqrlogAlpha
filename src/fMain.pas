@@ -121,10 +121,12 @@ type
     Image1:     TImage;
     imgMain:    TImageList;
     imgMain1:   TImageList;
+    lblProfile: TLabel;
     lblDist: TLabel;
     lblDistance: TLabel;
     lblLongest: TLabel;
     lblLongestDist: TLabel;
+    lblProf: TLabel;
     lblQSOInLog:     TLabel;
     lblDXCCWorked:     TLabel;
     lblCommentForQSO:    TLabel;
@@ -295,11 +297,15 @@ type
     dlgOpen:    TOpenDialog;
     Panel1:     TPanel;
     Panel3: TPanel;
+    pnlCounts: TPanel;
     pnlDistance: TPanel;
     pnlDetails: TPanel;
     pnlButtons: TPanel;
     Panel2:     TPanel;
     dlgSave:    TSaveDialog;
+    pnlProfile: TPanel;
+    pnlLoTW: TPanel;
+    pnlQSL: TPanel;
     popWebSearch: TPopupMenu;
     sbMain:     TStatusBar;
     Timer1:     TTimer;
@@ -1887,6 +1893,8 @@ begin
   dmUtils.SaveDBGridInForm(frmMain)
 end;
 
+
+
 procedure TfrmMain.dbgrdMainKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
@@ -2434,6 +2442,10 @@ begin
   toolMain.Visible   := cqrini.ReadBool('Main', 'Toolbar', True);
   pnlButtons.Visible := cqrini.ReadBool('Main', 'Buttons', True);
   pnlDetails.Visible := cqrini.ReadBool('Main', 'Details', True);
+  pnlProfile.Visible := cqrini.ReadBool('Main', 'Profile', True);
+
+  if pnlProfile.Visible then
+    lblProf.Constraints.MaxWidth:=Self.Width - lblProfile.Width -20;
 
   dmUtils.LoadWindowPos(Self);
 
@@ -2593,7 +2605,13 @@ procedure TfrmMain.ShowFields;
   end;
 
 begin
+  pnlDetails.Height:=56;
   pnlDistance.Visible := cqrini.ReadBool('Columns', 'Distance', False);
+  if pnlDistance.Visible then
+                           pnlDetails.Height:=pnlDetails.Height+pnlDistance.Height+1;
+  pnlProfile.Visible := cqrini.ReadBool('Columns', 'Profile', False);
+  if pnlProfile.Visible then
+                           pnlDetails.Height:=pnlDetails.Height+pnlProfile.Height+1;
 
   dbgrdMain.DataSource := dmData.dsrMain;
   dbgrdMain.ResetColWidths;
@@ -2749,8 +2767,16 @@ begin
     if dmUtils.QSLFrontImageExists(dmUtils.GetCallForAttach(dmData.qCQRLOG.Fields[4].AsString)) <> '' then
       acQSLImage.Enabled := True
     else
-      acQSLImage.Enabled := False
-  end;
+      acQSLImage.Enabled := False;                                                                  
+    if dmData.qCQRLOG.Fields[26].AsInteger > -1 then
+      qrb:=dmData.GetCompleteProfileText(dmData.qCQRLOG.Fields[26].AsInteger);        // dmData.GetCompleteProfileText(
+      lblProf.Caption:=qrb;
+    end;
+
+  if pnlProfile.Visible then
+    if dmData.qCQRLOG.Fields[26].AsInteger > -1 then
+      qrb:=dmData.GetCompleteProfileText(dmData.qCQRLOG.Fields[26].AsInteger);        // dmData.GetCompleteProfileText(
+      lblProf.Caption:=qrb;
 
   if pnlDistance.Visible then
    begin

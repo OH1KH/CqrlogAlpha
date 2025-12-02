@@ -5772,8 +5772,8 @@ begin
         QSOData.Clear;
         QSOdata.Add('Address='+cqrini.ReadString('NewQSO', 'NewQsoUdpAddrPort', '127.0.0.1:60073'));
         QSOdata.Add('Callsign='+edtCall.Text);
-        QSOdata.Add('Band='+dmUtils.GetBandFromFreq(freq));
-        QSOdata.Add('Mode='+mode);
+        QSOdata.Add('Band='+dmUtils.GetBandFromFreq(cmbFreq.Caption));
+        QSOdata.Add('Mode='+cmbMode.Caption);
         if not dmLogUpload.UploadLogDataUDP('', QSOdata, Resp, Result) then
                                                                        if dmData.DebugLevel>=1 then
                                                                                                Writeln('UDP send failed: ',Result,'  ',Resp);

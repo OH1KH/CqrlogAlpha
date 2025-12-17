@@ -180,6 +180,7 @@ type
     MySQLProcess : TProcess;
     fMySQLVersion : Currency;
     FreqMemCount  : integer;
+    DebugThis     : boolean;
 
     function  FindLib(const Path,LibName : String) : String;
     function  GetMysqldPath : String;
@@ -551,6 +552,11 @@ function TdmData.OpenConnections(host,port,user,pass : String) : Boolean;
 var
   sql : String;
 begin
+  //set debug rules
+  // bit 7, %1000000,  ---> -64 for sql routines
+  if dmData.DebugLevel < 0 then
+      DebugThis :=  ((abs(dmData.DebugLevel) and 64) = 64 );
+
   Result := True;
 
   if MainCon.Connected then  MainCon.Connected := False;
@@ -567,8 +573,11 @@ begin
   MainCon.Password     := pass;
   MainCon.DatabaseName := 'information_schema';
 
-  //MainCon.LogEvents:=LogAllEvents;
-  // MainCon.OnLog:=@GetLogEvent;
+  if DebugThis then
+     Begin
+       MainCon.LogEvents:=LogAllEvents;
+       MainCon.OnLog:=@GetLogEvent;
+     end;
 
   BandMapCon.CharSet      :='UTF8';
   BandMapCon.HostName     := host;
@@ -577,8 +586,11 @@ begin
   BandMapCon.Password     := pass;
   BandMapCon.DatabaseName := 'information_schema';
 
-  //BandMapCon.LogEvents:=LogAllEvents;
-  // BandMapCon.OnLog:=@GetLogEvent;
+  if DebugThis then
+     Begin
+       BandMapCon.LogEvents:=LogAllEvents;
+       BandMapCon.OnLog:=@GetLogEvent;
+     end;
 
   RbnMonCon.CharSet      :='UTF8';
   RbnMonCon.HostName     := host;
@@ -587,8 +599,11 @@ begin
   RbnMonCon.Password     := pass;
   RbnMonCon.DatabaseName := 'information_schema';
 
-  // RbnMonCon.LogEvents:=LogAllEvents;
-  // RbnMonCon.OnLog:=@GetLogEvent;
+  if DebugThis then
+     Begin
+       RbnMonCon.LogEvents:=LogAllEvents;
+       RbnMonCon.OnLog:=@GetLogEvent;
+     end;
 
   dbDXC.CharSet      :='UTF8';
   dbDXC.HostName     := host;
@@ -597,8 +612,11 @@ begin
   dbDXC.Password     := pass;
   dbDXC.DatabaseName := 'information_schema';
 
-  // dbDXC.LogEvents:=LogAllEvents;
-  // dbDXC.OnLog:=@GetLogEvent;
+  if DebugThis then
+     Begin
+       dbDXC.LogEvents:=LogAllEvents;
+       dbDXC.OnLog:=@GetLogEvent;
+     end;
 
   LogUploadCon.CharSet      :='UTF8';
   LogUploadCon.HostName     := host;
@@ -607,8 +625,11 @@ begin
   LogUploadCon.Password     := pass;
   LogUploadCon.DatabaseName := 'information_schema';
 
-  //LogUploadCon.LogEvents:=LogAllEvents;
-  //LogUploadCon.OnLog:=@GetLogEvent;
+  if DebugThis then
+     Begin
+       LogUploadCon.LogEvents:=LogAllEvents;
+       LogUploadCon.OnLog:=@GetLogEvent;
+     end;
 
   WGMWCon.CharSet      :='UTF8';
   WGMWCon.HostName     := host;
@@ -617,8 +638,11 @@ begin
   WGMWCon.Password     := pass;
   WGMWCon.DatabaseName := 'information_schema';
 
-  //WGMWCon.LogEvents:=LogAllEvents;
-  //WGMWCon.OnLog:=@GetLogEvent;
+  if DebugThis then
+     Begin
+       WGMWCon.LogEvents:=LogAllEvents;
+       WGMWCon.OnLog:=@GetLogEvent;
+     end;
 
   UpStatCon.CharSet      :='UTF8';
   UpStatCon.HostName     := host;
@@ -627,8 +651,11 @@ begin
   UpStatCon.Password     := pass;
   UpStatCon.DatabaseName := 'information_schema';
 
-  //UpStatCon.LogEvents:=LogAllEvents;
-  //UpStatCon.OnLog:=@GetLogEvent;
+  if DebugThis then
+     Begin
+       UpStatCon.LogEvents:=LogAllEvents;
+       UpStatCon.OnLog:=@GetLogEvent;
+     end;
 
   try
     MainCon.Connected      := True;
@@ -4526,13 +4553,13 @@ procedure TdmData.GetLogEvent(Sender: TSQLConnection;
    Source: string;
  begin
    case EventType of
-     detCustom:   Source:='Custom:  ';
-     detPrepare:  Source:='Prepare: ';
-     detExecute:  Source:='Execute: ';
-     detFetch:    Source:='Fetch:   ';
-     detCommit:   Source:='Commit:  ';
-     detRollBack: Source:='Rollback:';
-     else Source:='Unknown event. Please fix program code.';
+     detCustom:   Source:=' Custom:  ';
+     detPrepare:  Source:=' Prepare: ';
+     detExecute:  Source:=' Execute: ';
+     detFetch:    Source:=' Fetch:   ';
+     detCommit:   Source:=' Commit:  ';
+     detRollBack: Source:=' Rollback:';
+     else Source:=' Unknown event. Please fix program code.';
    end;
       Writeln(Source + ' ' + Msg);
  end;

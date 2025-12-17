@@ -91,6 +91,7 @@ begin
         Writeln('    -8  CW keying & TRXControl debug messages');
         Writeln('   -16  Grayline map RBN debug messages');
         Writeln('   -32  RBNmonitor debug messages');
+        Writeln('   -64  SQL action debug messages');
         Writeln;
         Exit;
      end;

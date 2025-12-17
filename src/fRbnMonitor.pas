@@ -717,11 +717,11 @@ procedure TfrmRbnMonitor.ParseSpots(spot : String; var InSpot : TRBNSpot);
    spotter := b[2];
    i := pos('-', spotter);
    if i > 0 then
-     spotter := copy(spotter, 1, i-1);
-   dxstn := b[4];
-   freq  := b[3];
-   mode  := b[5];
-   stren := b[6]
+   spotter := dmUtils.CallTrim(copy(spotter, 1, i-1));
+   dxstn   := dmUtils.CallTrim(b[4]);
+   freq    := trim(b[3]);
+   mode    := dmUtils.CallTrim(b[5]);
+   stren   := trim(b[6])
  end;
 end;
 function TfrmRbnMonitor.OkSource(var ASpot:TRBNSpot) : Boolean;

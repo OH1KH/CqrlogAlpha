@@ -2647,7 +2647,7 @@ var
   index : integer = 0;
 
 Begin
-        dmData.RbnMonDXCCInfo(adif,CB,CM,True,index);
+        dmData.WsjtMonDXCCInfo(adif,CB,CM,True,index);
         case index of
           1 : R:= R+'n'; //new country
           2 : R:= R+'b'; //new band

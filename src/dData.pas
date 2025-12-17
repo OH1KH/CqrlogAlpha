@@ -289,6 +289,7 @@ type
     function  TriggersExistsOnCqrlog_main : Boolean;
     function  GetLastAllertCallId(const callsign,band,mode : String) : Integer;
     function  RbnMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean;  var index : integer) : String;
+    function  WsjtMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean;  var index : integer) : String;
     function  IsCallInLogB(callsign,band,mode,LastDate,LastTime : String) : Boolean;
     function  IsCallInLogR(callsign,band,mode,LastDate,LastTime : String) : Boolean;
     function  CallNoteExists(Callsign : String) : Boolean;
@@ -3964,14 +3965,11 @@ begin
 
   try try
     if DxccWithLoTW then
-      qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+
-                    sAdif+' AND band='+QuotedStr(band)+' AND ((qsl_r='+
-                    QuotedStr('Q')+') OR (lotw_qslr='+QuotedStr('L')+')) AND mode='+
-                    QuotedStr(mode)+' LIMIT 1'
+      qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                          ' AND band='+QuotedStr(band)+' AND ((qsl_r="Q") OR (lotw_qslr="L")) AND mode='+QuotedStr(mode)+' LIMIT 1'
     else
-      qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+
-                     sAdif+' AND band='+QuotedStr(band)+' AND qsl_r='+
-                     QuotedStr('Q')+ ' AND mode='+QuotedStr(mode)+' LIMIT 1';
+      qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                          ' AND band='+QuotedStr(band)+' AND qsl_r="Q" AND mode='+QuotedStr(mode)+' LIMIT 1';
     trRbnMon.StartTransaction;
     qRbnMon.Open;
     if qRbnMon.Fields[0].AsInteger > 0 then
@@ -3981,9 +3979,8 @@ begin
     end
     else begin
       qRbnMon.Close;
-      qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+
-                     sAdif+' AND band='+QuotedStr(band)+' AND mode='+
-                     QuotedStr(mode)+' LIMIT 1';
+      qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                          ' AND band='+QuotedStr(band)+' AND mode='+QuotedStr(mode)+' LIMIT 1';
       qRbnMon.Open;
       if qRbnMon.Fields[0].AsInteger > 0 then
       begin
@@ -3992,8 +3989,8 @@ begin
       end
       else begin
         qRbnMon.Close;
-        qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+
-                       sAdif+' AND band='+QuotedStr(band)+' LIMIT 1';
+        qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                            ' AND band='+QuotedStr(band)+' LIMIT 1';
         qRbnMon.Open;
         if qRbnMon.Fields[0].AsInteger > 0 then
         begin
@@ -4002,8 +3999,7 @@ begin
         end
         else begin
           qRbnMon.Close;
-          qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+
-                         sAdif+' LIMIT 1';
+          qRbnMon.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+' LIMIT 1';
           qRbnMon.Open;
           if qRbnMon.Fields[0].AsInteger>0 then
           begin
@@ -4024,6 +4020,87 @@ begin
   finally
     qRbnMon.Close;
     trRbnMon.Rollback
+  end;
+end;
+function TdmData.WsjtMonDXCCInfo(adif : Word; band, mode : String;DxccWithLoTW:Boolean; var index : integer) : String;
+var
+  sAdif  : String = '';
+begin
+
+  // index : 0 - unknown country, no qsl needed
+  // index : 1 - New country
+  // index : 2 - New band country
+  // index : 3 - New mode country
+  // index : 4 - QSL needed
+  if (adif = 0) then
+  begin
+    Result := 'Unknown country';
+    index  := 0;
+    exit
+  end;
+  index := 1;
+  sAdif := IntToStr(adif);
+
+  if trQstate.Active then
+    trQstate.Rollback;
+
+  try try
+    if DxccWithLoTW then
+      Qstate.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                          ' AND band='+QuotedStr(band)+' AND ((qsl_r="Q") OR (lotw_qslr="L")) AND mode='+QuotedStr(mode)+' LIMIT 1'
+    else
+      Qstate.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                          ' AND band='+QuotedStr(band)+' AND qsl_r="Q" AND mode='+QuotedStr(mode)+' LIMIT 1';
+    trQstate.StartTransaction;
+    Qstate.Open;
+    if Qstate.Fields[0].AsInteger > 0 then
+    begin
+      Result := 'Confirmed country!!';
+      index  := 0
+    end
+    else begin
+      Qstate.Close;
+      Qstate.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                          ' AND band='+QuotedStr(band)+' AND mode='+QuotedStr(mode)+' LIMIT 1';
+      Qstate.Open;
+      if Qstate.Fields[0].AsInteger > 0 then
+      begin
+        Result := 'QSL needed !!';
+        index := 4
+      end
+      else begin
+        Qstate.Close;
+        Qstate.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+
+                            ' AND band='+QuotedStr(band)+' LIMIT 1';
+        Qstate.Open;
+        if Qstate.Fields[0].AsInteger > 0 then
+        begin
+          Result := 'New mode country!!';
+          index  := 3
+        end
+        else begin
+          Qstate.Close;
+          Qstate.SQL.Text := 'SELECT id_cqrlog_main FROM '+dmData.DBName+'.cqrlog_main WHERE adif='+sAdif+' LIMIT 1';
+          Qstate.Open;
+          if Qstate.Fields[0].AsInteger>0 then
+          begin
+            Result := 'New band country!!';
+            index  := 2
+          end
+          else begin
+            Result := 'New country!!';
+            index  := 1
+          end
+        end
+      end
+    end
+  except
+    on E : Exception do
+      Writeln(E.Message)
+  end
+  finally
+    Qstate.Close;
+    trQstate.Rollback
   end;
 end;
 

@@ -553,6 +553,7 @@ var
   sql : String;
 begin
   //set debug rules
+  DebugThis := dmData.DebugLevel >= 1 ;
   // bit 7, %1000000,  ---> -64 for sql routines
   if dmData.DebugLevel < 0 then
       DebugThis :=  ((abs(dmData.DebugLevel) and 64) = 64 );

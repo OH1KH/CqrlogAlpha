@@ -477,6 +477,10 @@ type
     edtHamMaxSpeed: TSpinEdit;
     edtK3NMinSpeed: TSpinEdit;
     edtK3NMaxSpeed: TSpinEdit;
+    edtRot1Host: TEdit;
+    edtRot2Host: TEdit;
+    edtRotor1: TEdit;
+    edtRotor2: TEdit;
     edtUdAddress: TEdit;
     edtOperator: TEdit;
     edtCondxTextUrl: TEdit;
@@ -509,9 +513,6 @@ type
     edteQSLDnlAddr: TEdit;
     edteQSLStartAddr: TEdit;
     edteQSLViewAddr: TEdit;
-    edtRot1Host: TEdit;
-    edtRot2Host: TEdit;
-    edtRotor2: TEdit;
     edtMailingAddress: TEdit;
     edtSpdStep: TSpinEdit;
     edtWinHex: TEdit;
@@ -547,7 +548,6 @@ type
     edtRot2Device: TEdit;
     edtRot2RotCtldArgs: TEdit;
     edtRot2RotCtldPort: TEdit;
-    edtRotor1: TEdit;
     edtRigCtldPath: TEdit;
     edtAM: TSpinEdit;
     edtClub1Date: TEdit;
@@ -686,8 +686,12 @@ type
     Label108: TLabel;
     Label12: TLabel;
     Label13: TLabel;
+    lblRot2Host: TLabel;
+    lblRot1Name: TLabel;
+    lblRot1Host: TLabel;
     lblAliveMins: TLabel;
     lblPollTimeout: TLabel;
+    lblRot2Name: TLabel;
     lblRotDebug: TLabel;
     lblPwrFactor: TLabel;
     lblHamclock: TLabel;
@@ -942,8 +946,6 @@ type
     lbPreferences: TListBox;
     dlgOpen: TOpenDialog;
     odFindBrowser: TOpenDialog;
-    pnl2Host: TPanel;
-    pnlHost1: TPanel;
     pgPreferences: TPageControl;
     Panel1: TPanel;
     pgROTControl: TPageControl;

@@ -58,6 +58,7 @@ type
     procedure btnHelpClick(Sender: TObject);
     procedure btnUploadClick(Sender: TObject);
     procedure mStatChange(Sender: TObject);
+    procedure tabLocalFileEnter(Sender: TObject);
     procedure tmrLoTWTimer(Sender: TObject);
   private
     FileName  : String;
@@ -210,8 +211,10 @@ begin
     l.Free;
     m.Free
   end;
-  btnClose.Font.Style:=[fsBold];
+  btnClose.Font.Style:=[fsBold,fsItalic];
   btnClose.Repaint;
+  btnUpload.Font.Style:=[];
+  btnUpload.Repaint;
   mStat.SelStart:=length(mStat.Text);
   mStat.SelLength:=0;
   mStat.Refresh;
@@ -230,6 +233,12 @@ begin
       //added
       VertScrollBar.Position:=100000;
      end;
+end;
+
+procedure TfrmLoTWExport.tabLocalFileEnter(Sender: TObject);
+begin
+  btnClose1.Font.Style:=[];
+  btnClose1.Repaint;
 end;
 
 procedure TfrmLoTWExport.tmrLoTWTimer(Sender: TObject);
@@ -254,6 +263,8 @@ begin
        mStat.Lines.Add('If you did not see any errors, you can send signed file to LoTW website by' +
                       ' pressing Upload button');
        btnUpload.Enabled := True;
+       btnUpload.Font.Style:=[fsBold,fsItalic];
+       btnUpload.Repaint;
       end
      else
       Begin
@@ -266,7 +277,7 @@ begin
     grbWebExport.Enabled := True;
     grbTqsl.Enabled      := True;
     pnlUpload.Enabled    := True;
-    btnClose.Enabled     := True;
+    pnlUpload.Repaint;
     tmrLoTW.Enabled      := False;
     mStat.SelStart:=length(mStat.Text);
     mStat.SelLength:=0;
@@ -288,6 +299,8 @@ begin
   btnClose1.Enabled:=false;
   ExportToAdif;
   btnClose1.Enabled:=true;
+  btnClose1.Font.Style:=[fsBold,fsItalic];
+  btnClose1.Repaint;
 end;
 
 procedure TfrmLoTWExport.FormShow(Sender: TObject);
@@ -321,6 +334,10 @@ var
   index,
   res : Integer;
 begin
+  grbWebExport.Enabled := False;
+  grbTqsl.Enabled      := False;
+  pnlUpload.Enabled    := False;
+
   MarkAfter := False;
   mStat.Clear;
   FileName := dmData.HomeDir + 'lotw'+PathDelim+FormatDateTime('yyyy-mm-dd_hh-mm-ss',now)+'.adi';
@@ -372,10 +389,6 @@ begin
   mStat.Lines.Add(AProcess.Parameters.Text);
   AProcess.Execute;
 
-  grbWebExport.Enabled := False;
-  grbTqsl.Enabled      := False;
-  pnlUpload.Enabled    := False;
-  btnClose.Enabled     := False;
   tmrLoTW.Enabled      := True
 end;
 

@@ -5,19 +5,18 @@ object frmLoTWExport: TfrmLoTWExport
   Width = 520
   HelpType = htKeyword
   HelpKeyword = 'help/h7.html'
-  HorzScrollBar.Page = 382
-  VertScrollBar.Page = 292
-  ActiveControl = pgLoTWExport
+  HorzScrollBar.Page = 448
+  VertScrollBar.Page = 364
   AutoScroll = True
   Caption = 'Export for LoTW'
   ClientHeight = 520
   ClientWidth = 520
   Constraints.MinHeight = 500
   Constraints.MinWidth = 500
+  LCLVersion = '4.4.0.0'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object pgLoTWExport: TPageControl
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
@@ -35,6 +34,7 @@ object frmLoTWExport: TfrmLoTWExport
       Caption = 'Export to local file'
       ClientHeight = 489
       ClientWidth = 510
+      OnEnter = tabLocalFileEnter
       object GroupBox1: TGroupBox
         AnchorSideLeft.Control = tabLocalFile
         AnchorSideTop.Control = tabLocalFile

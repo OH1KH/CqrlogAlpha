@@ -199,6 +199,7 @@
         <Filename Value="fSelectDXCC.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmSelectDXCC"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit14>
       <Unit15>

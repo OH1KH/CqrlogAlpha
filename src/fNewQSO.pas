@@ -7417,9 +7417,10 @@ end;
 
 procedure TfrmNewQSO.SendSpot;
 var
-  call,rst_s,stx,stx_str,srx,srx_str,HisName,HelloMsg : String;
+  call,mode,rst_s,rst_r,stx,stx_str,srx,srx_str,HisName,HelloMsg,MyLoc,HisLoc,Prop : String;
   tmp  : String;
   ModRst,
+  ModRst2,
   HMLoc :String;
   f    : Currency;
   freq : String;
@@ -7430,18 +7431,23 @@ begin
     if TryStrToCurr(cmbFreq.Text,f) then
     begin
       if (cqrini.ReadBool('DXCluster','SpotRX',False)) then
-        f := StrToCurr(edtRXFreq.Text);
-      f := f*1000;
-      call:=  edtCall.Text;
-      rst_s := edtHisRST.Text;
-      stx :=  edtContestSerialSent.Text;
-      stx_str:=edtContestExchangeMessageSent.Text;
-      srx :=  edtContestSerialReceived.Text;
-      srx_str:=edtContestExchangeMessageReceived.Text;
-      HisName:= edtName.Text;
-      tmp := 'DX ' + FloatToStrF(f,ffFixed,8,1) + ' ' + call;
-      ModRst := cmbMode.Text+' '+ rst_s;
-      HMLoc := CurrentMyLoc+'<'+dmSatellite.GetPropShortName(cmbPropagation.Text)+'>'+edtGrid.Text;
+                                                       f := StrToCurr(edtRXFreq.Text);
+      f       := f*1000;
+      mode    := cmbMode.Text;
+      call    := edtCall.Text;
+      rst_s   := edtHisRST.Text;
+      rst_r   := edtMyRST.Text;
+      stx     := edtContestSerialSent.Text;
+      stx_str := edtContestExchangeMessageSent.Text;
+      srx     := edtContestSerialReceived.Text;
+      srx_str := edtContestExchangeMessageReceived.Text;
+      HisName := edtName.Text;
+      tmp     := 'DX ' + FloatToStrF(f,ffFixed,8,1) + ' ' + call;
+      MyLoc   := CurrentMyLoc;
+      HisLoc  := edtGrid.Text;
+      Prop    := dmSatellite.GetPropShortName(cmbPropagation.Text);
+
+
 
     end;
   end
@@ -7459,21 +7465,24 @@ begin
       freq := FloatToStrF(dmData.Q.Fields[2].AsCurrency*1000,ffFixed,8,1);
     dmData.Q.Close();
     dmData.trQ.Rollback;
-    tmp  := 'DX ' + freq + ' ' + call;
+    tmp  := trim('DX ' + freq + ' ' + call);
 
-    dmData.Q.SQL.Text := 'SELECT mode,rst_s,loc,prop_mode,my_loc,stx,stx_string,srx,srx_string,name FROM cqrlog_main ORDER BY qsodate DESC, time_on DESC LIMIT 1';
+    dmData.Q.SQL.Text := 'SELECT mode,rst_s,loc,prop_mode,my_loc,stx,stx_string,srx,srx_string,name,rst_r FROM cqrlog_main ORDER BY qsodate DESC, time_on DESC LIMIT 1';
     dmData.trQ.StartTransaction;
     if dmData.DebugLevel >=1 then
       Writeln(dmData.Q.SQL.Text);
     dmData.Q.Open();
-    ModRst  := dmData.Q.Fields[0].AsString+' '+dmData.Q.Fields[1].AsString;
-    HMLoc   := dmData.Q.Fields[4].AsString+'<'+dmData.Q.Fields[3].AsString+'>'+dmData.Q.Fields[2].AsString;
-    rst_s := dmData.Q.Fields[1].AsString;
-    stx :=  dmData.Q.Fields[5].AsString;
-    stx_str:=dmData.Q.Fields[6].AsString;
-    srx :=  dmData.Q.Fields[7].AsString;
-    srx_str:=dmData.Q.Fields[8].AsString;
-    HisName:= dmData.Q.Fields[9].AsString;
+    mode    := dmData.Q.Fields[0].AsString;
+    MyLoc   := dmData.Q.Fields[4].AsString;
+    Prop    := dmData.Q.Fields[3].AsString;
+    HisLoc  := dmData.Q.Fields[2].AsString;
+    rst_s   := dmData.Q.Fields[1].AsString;
+    stx     := dmData.Q.Fields[5].AsString;
+    stx_str := dmData.Q.Fields[6].AsString;
+    srx     := dmData.Q.Fields[7].AsString;
+    srx_str := dmData.Q.Fields[8].AsString;
+    HisName := dmData.Q.Fields[9].AsString;
+    rst_r   := dmData.Q.Fields[10].AsString;
     dmData.Q.Close();
     dmData.trQ.Rollback;
 
@@ -7481,19 +7490,31 @@ begin
   if (call = '') then
   exit;
 
+  ModRst  := mode+' '+ rst_s;
+  if    ((pos('-',rst_s)>0) or (pos('+',rst_s)>0))           //dB reports like FT8 and FT4
+   and  ((pos('-',rst_r)>0) or (pos('+',rst_r)>0)) then
+        ModRst2 := mode+' S'+ rst_s +'/R'+rst_r
+     else
+        ModRst2 := mode+' S.'+ rst_s +'/R.'+rst_r;    //usual 599 type reports
+
+  HMLoc   := MyLoc+'<'+Prop+'>'+HisLoc;
+
+
   with TfrmSendSpot.Create(self) do
   try
     edtSpot.Text := tmp + ' ';
-    ModeRst      :=' '+ModRst;
-    HisMyLoc     :=' '+HMLoc;
-    Scall := call;
-    Srst_s := rst_s;
-    Sstx := stx ;
-    Sstx_str:=stx_str;
-    Ssrx := srx ;
-    Ssrx_str:=srx_str;
-    SHisName:= HisName;
-    SHelloMsg:=HelloMsg;
+    ModeRst      := ModRst;
+    ModeRst2     := ModRst2;
+    HisMyLoc     := ' '+HMLoc;
+    Scall        := call;
+    Srst_s       := rst_s;
+    Srst_r       := rst_r;
+    Sstx         := stx ;
+    Sstx_str     := stx_str;
+    Ssrx         := srx ;
+    Ssrx_str     := srx_str;
+    SHisName     := HisName;
+    SHelloMsg    := HelloMsg;
     ShowModal;
     if ModalResult = mrOK then
     begin

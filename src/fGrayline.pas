@@ -451,14 +451,21 @@ end;
 
 procedure TfrmGrayline.tmrAutoConnectTimer(Sender : TObject);
 begin
-    if (rbn_status='Connected') or (rbn_status='Linked to RBNMonitor' ) then exit;
+    if (rbn_status='Connected') or (rbn_status='Linked to RBNMonitor' ) then
+                                                                            exit;
     if cqrini.ReadBool('RBN','AutoLink',false) then
         Begin
          acLinkToRbnMonitorExecute(nil);
          exit;
         end;
+
+   writeln(  cqrini.ReadBool('RBN','AutoConnect',False));
+   writeln((cqrini.ReadString('RBN','login','') <> ''));
+   writeln((lTelnet.Connected));
+
     if cqrini.ReadBool('RBN','AutoConnect',False) and (cqrini.ReadString('RBN','login','') <> '')
-       and (lTelnet = nil) then  acConnect.Execute;
+       and (not lTelnet.Connected) then
+                           acConnect.Execute;
 
     tmrAutoConnect.Enabled:=False; //job is done, nex initiate when FormShow run
 end;

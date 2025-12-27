@@ -114,6 +114,8 @@ object frmGrayline: TfrmGrayline
     FFFF
   }
   KeyPreview = True
+  ShowHint = True
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -122,8 +124,6 @@ object frmGrayline: TfrmGrayline
   OnKeyUp = FormKeyUp
   OnPaint = FormPaint
   OnShow = FormShow
-  ShowHint = True
-  LCLVersion = '3.8.0.0'
   object sbtnGrayLine: TSpeedButton
     Left = 400
     Height = 16
@@ -240,7 +240,7 @@ object frmGrayline: TfrmGrayline
   end
   object tmrAutoConnect: TTimer
     Enabled = False
-    Interval = 2000
+    Interval = 3000
     OnTimer = tmrAutoConnectTimer
     Left = 158
     Top = 32

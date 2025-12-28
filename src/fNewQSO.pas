@@ -7655,8 +7655,8 @@ begin
                  CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
                 else
                  CWint.DebugMode := dmData.DebugLevel>=1;
-          CWint.Port      := cqrini.ReadString('CW'+n,'K3NGPort'+n,'');
-          CWint.Device    := cqrini.ReadString('CW'+n,'K3NGPort'+n,'');
+          CWint.Port      := cqrini.ReadString('CW'+n,'K3NGPort','');
+          CWint.Device    := cqrini.ReadString('CW'+n,'K3NGPort','');
           CWint.MinSpeed  := cqrini.ReadInteger('CW'+n, 'K3NG_min', 5);
           CWint.MaxSpeed  := cqrini.ReadInteger('CW'+n, 'K3NG_max', 60);
           CWint.PortSpeed := cqrini.ReadInteger('CW'+n,'K3NGSerSpeed',115200);

@@ -459,10 +459,6 @@ begin
          exit;
         end;
 
-   writeln(  cqrini.ReadBool('RBN','AutoConnect',False));
-   writeln((cqrini.ReadString('RBN','login','') <> ''));
-   writeln((lTelnet.Connected));
-
     if cqrini.ReadBool('RBN','AutoConnect',False) and (cqrini.ReadString('RBN','login','') <> '')
        and (not lTelnet.Connected) then
                            acConnect.Execute;

@@ -7491,11 +7491,16 @@ begin
   exit;
 
   ModRst  := mode+' '+ rst_s;
-  if    ((pos('-',rst_s)>0) or (pos('+',rst_s)>0))           //dB reports like FT8 and FT4
-   and  ((pos('-',rst_r)>0) or (pos('+',rst_r)>0)) then
-        ModRst2 := mode+' S'+ rst_s +'/R'+rst_r
-     else
-        ModRst2 := mode+' S.'+ rst_s +'/R.'+rst_r;    //usual 599 type reports
+  ModRst2 := mode;
+  if    ((pos('-',rst_s)>0) or (pos('+',rst_s)>0))   then    //dB reports like FT8 and FT4
+       ModRst2 := ModRst2+' S'+ rst_s
+    else
+       ModRst2 := ModRst2+' S.'+ rst_s;
+
+  if ((pos('-',rst_r)>0) or (pos('+',rst_r)>0)) then
+       ModRst2 := ModRst2+'/R'+ rst_r
+    else
+       ModRst2 := ModRst2+'/R.'+ rst_r;          //usual 599 type reports
 
   HMLoc   := MyLoc+'<'+Prop+'>'+HisLoc;
 

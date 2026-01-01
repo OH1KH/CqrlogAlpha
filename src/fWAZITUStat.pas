@@ -17,7 +17,7 @@ interface
 
 uses
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, inifiles,
-  ExtCtrls, Grids, Buttons, StdCtrls;
+  ExtCtrls, Grids, Buttons, StdCtrls, Types;
 
 type
   TStatType = (tsWAZ,tsITU,tsWAC,tsWAS);
@@ -45,18 +45,22 @@ type
     btnRefresh : TButton;
     btnSelectProfile : TButton;
     btnShowSationList: TButton;
+    cbAltView: TCheckBox;
     cmbCfmType : TComboBox;
     cmbMode : TComboBox;
     dlgSave: TSaveDialog;
     edtProfiles : TEdit;
     grdStat: TStringGrid;
     grdSumStat: TStringGrid;
-    Label1 : TLabel;
-    Label2 : TLabel;
-    Label3 : TLabel;
+    lblMode : TLabel;
+    lblProfile : TLabel;
+    lblConfirm : TLabel;
     Panel1: TPanel;
     Panel2 : TPanel;
+    tmrDelayRefresh: TTimer;
     procedure btnSelectProfileClick(Sender: TObject);
+    procedure cbAltViewClick(Sender: TObject);
+    procedure cmbModeChange(Sender: TObject);
     procedure FormClose(Sender : TObject; var CloseAction : TCloseAction);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormCreate(Sender: TObject);
@@ -64,9 +68,14 @@ type
     procedure btnHTMLExportClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
     procedure btnShowSationListClick(Sender: TObject);
+    procedure grdStatGetCellHint(Sender: TObject; ACol, ARow: Integer;
+      var HintText: String);
+    procedure tmrDelayRefreshTimer(Sender: TObject);
   private
     gmode : String;
     aStates : Array [1..50] of String;
+    FreeDelay : Boolean;
+
     procedure CreateWAZStat;
     procedure CreateITUStat;
     procedure CreateWACStat;
@@ -77,6 +86,8 @@ type
     procedure ShowCharInGrid(QSL_R,LoTW,eQSL : String;BandPos,y : Integer);
 
     function  GetStatTypeWhere(st : TStat) : String;
+    procedure SetTotalWidth(Acol:integer);
+    procedure CheckStyle;
   public
     StatType : TStatType;
     CfmType  : TStat;
@@ -189,6 +200,7 @@ var
   QSL_R    : String;
   LoTW     : String;
   eQSL     : String;
+  r,c      : integer;
 begin
   for i:=0 to grdStat.RowCount-1 do
     for y:=0 to grdStat.ColCount-1 do
@@ -197,6 +209,7 @@ begin
   LoadBandsSettings;
   Caption := 'WAZ statistic';
   grdStat.Cells[0,0] := 'WAZ';
+  grdSumStat.Cells[0,0] := 'WAZ';
   grdStat.RowCount := 41;
   for i:=1 to 40 do
   grdStat.Cells[0,i] := IntToStr(i);
@@ -256,6 +269,7 @@ begin
   LoadBandsSettings;
   Caption := 'ITU statistic';
   grdStat.Cells[0,0] := 'ITU';
+  grdSumStat.Cells[0,0] := 'ITU';
   grdStat.RowCount := 78;
   for i:=1 to 75 do
     grdStat.Cells[0,i] := IntToStr(i);
@@ -299,6 +313,7 @@ end;
 procedure TfrmWAZITUStat.FormCloseQuery(Sender: TObject; var CanClose: boolean);
 begin
   dmUtils.SaveDBGridInForm(self);
+  cqrini.WriteBool('WAZITUStat','AltView',cbAltView.Checked);
   cqrini.WriteString('WAZITUStat','profiles'+IntToStr(ord(StatType)),edtProfiles.Text);
   cqrini.WriteInteger('WAZITUStat','mode'+IntToStr(ord(StatType)),cmbMode.ItemIndex);
   cqrini.WriteInteger('WAZITUStat','width'+IntToStr(ord(StatType)),grdStat.ColWidths[0])
@@ -326,6 +341,28 @@ begin
   end
 end;
 
+procedure TfrmWAZITUStat.cbAltViewClick(Sender: TObject);
+begin
+  cqrini.WriteBool('WAZITUStat','AltView',cbAltView.Checked);
+  CheckStyle;
+end;
+
+procedure TfrmWAZITUStat.cmbModeChange(Sender: TObject);
+var
+  Wdog : integer;
+begin
+  Wdog:=10;
+  While ((not FreeDelay) and (Wdog>0)) do
+        Begin
+          sleep(200);
+          dec(Wdog);
+        end;
+  if ((not FreeDelay) and (Wdog<=0)) then exit; //something is wrong
+
+  FreeDelay:=False;
+  tmrDelayRefresh.Enabled:=True;
+end;
+
 procedure TfrmWAZITUStat.FormClose(Sender : TObject;
   var CloseAction : TCloseAction);
 begin
@@ -335,6 +372,7 @@ end;
 procedure TfrmWAZITUStat.FormCreate(Sender: TObject);
 begin
   dmUtils.LoadWindowPos(Self);
+  FreeDelay := True;
 end;
 
 procedure TfrmWAZITUStat.FormShow(Sender: TObject);
@@ -350,6 +388,7 @@ begin
   cmbMode.ItemIndex := cqrini.ReadInteger('WAZITUStat','mode'+IntToStr(ord(StatType)),0);
   w                 := cqrini.ReadInteger('WAZITUStat','width'+IntToStr(ord(StatType)),0);
   cmbCfmType.ItemIndex := cqrini.ReadInteger('WAZITU','LastStat',6);
+  cbAltView.Checked :=cqrini.ReadBool('WAZITUStat','AltView',False);
   if w = 0 then
   begin
     if StatType = tsWAS then
@@ -360,36 +399,7 @@ begin
   else
     grdStat.ColWidths[0] := w;
 
-  // Another grid style tom@dl7bj.de, 2014-06-20
-  if cqrini.ReadBool('Fonts','GridGreenBar',False) = True then
-  begin
-    grdSumStat.AlternateColor:=$00E7FFEB;
-    grdStat.AlternateColor:=$00E7FFEB;
-    grdSumStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine];
-    grdStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine];
-  end else begin
-    grdSumStat.AlternateColor:=clWindow;
-    grdStat.AlternateColor:=clWindow;
-    grdSumStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline];
-    grdStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline];
-  end;
-  if cqrini.ReadBool('Fonts','GridSmallRows',false) = True then
-  begin
-    grdSumStat.DefaultRowHeight:=grdSumStat.Canvas.Font.Size+8;
-    grdStat.DefaultRowHeight:=grdStat.Canvas.Font.Size+8;
-  end else begin
-    grdSumStat.DefaultRowHeight:=25;
-    grdStat.DefaultRowHeight:=25;
-  end;
-  if cqrini.ReadBool('Fonts','GridBoldTitle',false) = True then
-  begin
-    grdSumStat.TitleFont.Style:=[fsBold];
-    grdStat.TitleFont.Style:=[fsBold];
-  end else begin
-    grdSumStat.TitleFont.Style:=[];
-    grdStat.TitleFont.Style:=[];
-  end;
-  btnRefresh.Click
+  CheckStyle;
 end;
 
 procedure TfrmWAZITUStat.btnHTMLExportClick(Sender: TObject);
@@ -440,7 +450,7 @@ begin
     tsITU   : CreateITUStat;
     tsWAC   : CreateWACStat;
     tsWAS   : CreateWASStat
-  end
+  end;
 end;
 
 procedure TfrmWAZITUStat.btnShowSationListClick(Sender: TObject);
@@ -562,6 +572,21 @@ begin
     dmData.trQ.Rollback;
     l.Free
   end
+end;
+
+procedure TfrmWAZITUStat.grdStatGetCellHint(Sender: TObject; ACol,
+  ARow: Integer; var HintText: String);
+begin
+  if (ACol =  grdStat.ColCount-1 ) then
+          HintText := 'Summary count format:'+LineEnding+
+                      '"Confirmed"/"Need QSL" - "Worked"/"Total Bands"';
+end;
+
+procedure TfrmWAZITUStat.tmrDelayRefreshTimer(Sender: TObject);
+begin
+    tmrDelayRefresh.Enabled:=false;
+    btnRefreshClick(nil);
+    FreeDelay:=True;
 end;
 
 procedure TfrmWAZITUStat.ExportToHTML(htmlfile : String);
@@ -729,6 +754,10 @@ procedure TfrmWAZITUStat.CreateSummary;
 var
   wkd : Word = 0;
   cfm : Word = 0;
+  lw,
+  lx,
+  lc,
+  la  : Word;
   i,y : Integer;
 begin
   grdSumStat.Cells[0,1] := 'WKD';
@@ -744,49 +773,35 @@ begin
         inc(wkd);
       if (grdStat.Cells[y,i]='Q') or (grdStat.Cells[y,i]='L') or (grdStat.Cells[y,i]='E') then
         inc(cfm);
-{
-        case CfmType of
-        tcQSL : begin
-              if grdStat.Cells[y,i] = 'Q' then
-                inc(cfm)
-            end;
-        tcQSLLoTW : begin
-              if (grdStat.Cells[y,i] = 'Q') or (grdStat.Cells[y,i] = 'L') then
-                inc(cfm)
-            end;
-        tcLoTW : begin
-              if grdStat.Cells[y,i] = 'L' then
-                inc(cfm)
-            end
-       end; //case}
     end;
     grdSumStat.Cells[y,1] := IntToStr(wkd);
     grdSumStat.Cells[y,2] := IntToStr(cfm);
   end;
   grdStat.ColCount := grdStat.ColCount+1;
-  grdStat.Cells[grdStat.ColCount-1,0]:= 'TOTAL';
+  grdStat.Cells[grdStat.ColCount-1,0]:= 'Row summary';
   wkd := 0;
   cfm := 0;
   for y:=1 to grdStat.RowCount-1 do  //lines
   begin
+    la:=0;lw:=0;lx:=0;lc:=0;     //summary: bands,worked,need cfm,confirmed
     for i:=1 to grdStat.ColCount-1 do
     begin
-      if (grdStat.Cells[i,y] = 'Q') or (grdStat.Cells[i,y] = 'L') or (grdStat.Cells[i,y] = 'E')  then
-        grdStat.Cells[grdStat.ColCount-1,y] := 'Q'
-      else begin
-        if (grdStat.Cells[grdStat.ColCount-1,y] <> 'Q') and (grdStat.Cells[i,y] = 'X') then
-          grdStat.Cells[grdStat.ColCount-1,y] := 'X'
-      end
+      case  grdStat.Cells[i,y] of
+        'L','E','Q' : begin
+                        inc(la);inc(lw);inc(lc);
+                        inc(cfm);
+                        inc(wkd)
+                      end;
+        'X'        :  begin
+                        inc(la);inc(lw);inc(lx);
+                        inc(wkd)
+                      end;
+        else
+          inc(la);
+       end;
+      grdStat.Cells[grdStat.ColCount-1,y] := 'Q'+IntToStr(lc)+'/X'+IntToStr(lx)+' - W'+IntToStr(lw)+'/'+IntToStr(la);
     end;
-    if grdStat.Cells[grdStat.ColCount-1,y] = 'Q' then
-    begin
-      inc(cfm);
-      inc(wkd)
-    end
-    else begin
-      if grdStat.Cells[grdStat.ColCount-1,y] = 'X' then
-        inc(wkd)
-    end
+   SetTotalWidth(grdStat.ColCount-1)  //adjust 'Summary' column width
   end;
   grdSumStat.ColCount := grdSumStat.ColCount+1;
   grdSumStat.Cells[grdSumStat.ColCount-1,0] := 'TOTAL';
@@ -846,6 +861,7 @@ begin
   LoadBandsSettings;
   Caption := 'WAC statistic';
   grdStat.Cells[0,0]:= 'Cont';
+  grdSumStat.Cells[0,0] := 'Cont';
 
   grdStat.RowCount := 8;
   grdStat.Cells[0,pAF] := 'AF';
@@ -974,6 +990,7 @@ begin
   grdStat.RowCount := 51;
 
   grdStat.Cells[0,0]  := 'State';
+  grdSumStat.Cells[0,0] := 'State';
 
   for i:=1 to 50 do
     grdStat.Cells[0,i] := dmUtils.USstates[i];
@@ -1095,6 +1112,58 @@ begin
                  end
     end; //case
 end;
+procedure  TfrmWAZITUStat.SetTotalWidth(Acol:integer);
+  var
+    I, Fix_Width, Col_Width: Integer;
+
+  begin
+    // check if string does not fit to default width of column
+     Fix_Width:=grdStat.ColWidths[0];
+     Col_Width:=0;
+     For i := 0 To grdStat.RowCount - 1 do
+     begin
+       // get the pixel width of the complete string
+       Col_Width := grdStat.Canvas.TextWidth(grdStat.Cells[Acol,i]);
+       // if its greater, then put it in Fix_width
+       If Col_width>Fix_width then Fix_width:=col_width+25; // +25 for margins. adjust if neccesary
+     end;
+     grdStat.ColWidths[Acol] := Fix_Width;
+  End;
+procedure TfrmWAZITUStat.CheckStyle;
+
+begin
+// Another grid style tom@dl7bj.de, 2014-06-20
+ if cqrini.ReadBool('Fonts','GridGreenBar',False) OR cqrini.ReadBool('WAZITUStat','AltView',False) then
+ begin
+   grdSumStat.AlternateColor:=$00E7FFEB;
+   grdStat.AlternateColor:=$00E7FFEB;
+   grdSumStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine];
+   grdStat.Options:=[goRowSelect,goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goCellHints];
+ end else begin
+   grdSumStat.AlternateColor:=clWindow;
+   grdStat.AlternateColor:=clWindow;
+   grdSumStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline];
+   grdStat.Options:=[goRangeSelect,goSmoothScroll,goVertLine,goFixedVertLine,goFixedHorzLine,goHorzline,goCellHints];
+ end;
+ if cqrini.ReadBool('Fonts','GridSmallRows',false) then
+ begin
+   grdSumStat.DefaultRowHeight:=grdSumStat.Canvas.Font.Size+8;
+   grdStat.DefaultRowHeight:=grdStat.Canvas.Font.Size+8;
+ end else begin
+   grdSumStat.DefaultRowHeight:=25;
+   grdStat.DefaultRowHeight:=25;
+ end;
+ if cqrini.ReadBool('Fonts','GridBoldTitle',false) then
+ begin
+   grdSumStat.TitleFont.Style:=[fsBold];
+   grdStat.TitleFont.Style:=[fsBold];
+ end else begin
+   grdSumStat.TitleFont.Style:=[];
+   grdStat.TitleFont.Style:=[];
+ end;
+ btnRefresh.Click
+end;
+
 
 end.
 

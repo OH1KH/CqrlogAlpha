@@ -115,10 +115,10 @@ object frmSearch: TfrmSearch
     7FFF0000FFFF0001FFFF0003FFFF0007FFFF001FFFFF003FFFFF00FFFFFF83FF
     FFFF
   }
+  Position = poWorkAreaCenter
+  LCLVersion = '4.4.0.0'
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
-  Position = poWorkAreaCenter
-  LCLVersion = '3.8.0.0'
   object GroupBox1: TGroupBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -183,9 +183,12 @@ object frmSearch: TfrmSearch
     object chkInclude: TCheckBox
       Left = 8
       Height = 23
+      Hint = 'When "include" is checked user can type in a letter or string (search item) and all'#10'hits are shown where the search item is found in any place of target(s).'#10'.'#10'User can make more specified search adding % or _  (or both) to search item:'#10'% represents any string '#10'_  represents any single letter'#10'.'#10'EXAMPLE:'#10'OH1%  (finds all OH1 callsigns)'#10'OH_KH (finds OH1KH,OH2KH,OH3KH etc...)'#10'OH_K%(finds all OH [any number] K [any letter(s) after K] )'#10'.'#10'Same functions with Name and Qth search.'
       Top = 7
       Width = 73
       Caption = 'Include'
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 0
     end
     object chkSortByDate: TCheckBox

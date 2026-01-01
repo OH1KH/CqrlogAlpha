@@ -86,11 +86,12 @@ begin
         Writeln('     1  All debug messages');
         Writeln('     2  All debug messages + some additional RBNmonitor & DXCluster debugs');
         Writeln('Negative values can be combined (binary bitwise OR)');
-        Writeln('    -2  AdifImport & ImportProgress debug messages');
+        Writeln('    -2  AdifExport, AdifImport & ImportProgress debug messages');
         Writeln('    -4  Wsjtx remote & Worked grids debug messages');
         Writeln('    -8  CW keying & TRXControl debug messages');
         Writeln('   -16  Grayline map RBN debug messages');
         Writeln('   -32  RBNmonitor debug messages');
+        Writeln('   -64  SQL action debug messages');
         Writeln;
         Exit;
      end;

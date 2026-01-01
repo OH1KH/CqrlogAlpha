@@ -1622,10 +1622,10 @@ begin
   //this have to be done here when log is selected (settings at database)
   frmReminder.chRemi.Checked := cqrini.ReadBool('Reminder','chRemi',False);
   frmReminder.chUTRemi.Checked := cqrini.ReadBool('Reminder','chUTRemi',False);
-  frmReminder.RemindTimeSet.EditText := cqrini.ReadString('Reminder','RemindTimeSet','000');
-  frmReminder.RemindUThour.EditText := cqrini.ReadString('Reminder','RemindUThour','00:00');
+  frmReminder.RemindTimeSet.Text := cqrini.ReadString('Reminder','RemindTimeSet','');
+  frmReminder.RemindUThour.Text := cqrini.ReadString('Reminder','RemindUThour','');
   frmReminder.RemiMemo.Lines.Clear;
-  frmReminder.RemiMemo.Lines.Add(cqrini.ReadString('Reminder','RemiMemo',''));
+  frmReminder.RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
   frmReminder.btCloseClick(nil);
 
   dmUtils.InsertQSL_S(cmbQSL_S);
@@ -2706,7 +2706,9 @@ begin
           case cqrini.ReadInteger('wsjt','mode',1) of
             0 : begin
                   if not frmTRXControl.GetModeFreqNewQSO(TXmode,mhz) then
-                    TXmode :='';
+                    TXmode :=''
+                   else
+                    RigCmd2DataMode(TXmode);
                 end;
             1 : TXmode := trim(StrBuf(index));
             2 : TXmode := cqrini.ReadString('wsjt','defmode','JT65')
@@ -3003,13 +3005,15 @@ begin
           end;
           if dmData.DebugLevel>=1 then Writeln('Band :', WsjtxBand);
           //----------------------------------------------------
+          mode:= trim(StrBuf(index));
           case cqrini.ReadInteger('wsjt','mode',1) of
             0 : begin
                   if frmTRXControl.GetModeFreqNewQSO(mode,mhz) then
-                    cmbMode.Text := mode
+                   Begin
+                    cmbMode.Text := RigCmd2DataMode(mode);
+                   end;
                 end;
             1 : begin
-                  mode:= trim(StrBuf(index));
                   if dmData.DebugLevel>=1 then Writeln('Mode :', mode);
                   cmbMode.Text := mode
                 end;
@@ -5566,6 +5570,10 @@ var
   i          : integer;
   tmp        : string;
   p          : currency;
+  QSOdata    : TStringList;
+  Resp       : String;
+  Result     : integer;
+
 begin
   mode := '';
   freq := '';
@@ -5756,6 +5764,21 @@ begin
     end;
      edtGridExit(nil); //enables LocMap button if grid ok
      FreqBefChange := frmTRXControl.GetFreqMHz;
+
+     //send qso info to external program with UDP  (preferences/NewQSO
+     if cqrini.ReadBool('NewQSO', 'NewQsoUdp', False) then
+      Begin
+        QSOdata := TStringList.Create;
+        QSOData.Clear;
+        QSOdata.Add('Address='+cqrini.ReadString('NewQSO', 'NewQsoUdpAddrPort', '127.0.0.1:60073'));
+        QSOdata.Add('Callsign='+edtCall.Text);
+        QSOdata.Add('Band='+dmUtils.GetBandFromFreq(cmbFreq.Caption));
+        QSOdata.Add('Mode='+cmbMode.Caption);
+        if not dmLogUpload.UploadLogDataUDP('', QSOdata, Resp, Result) then
+                                                                       if dmData.DebugLevel>=1 then
+                                                                                               Writeln('UDP send failed: ',Result,'  ',Resp);
+        QSOdata.Free;
+      end;
   end;
 
 
@@ -7394,9 +7417,10 @@ end;
 
 procedure TfrmNewQSO.SendSpot;
 var
-  call,rst_s,stx,stx_str,srx,srx_str,HisName,HelloMsg : String;
+  call,mode,rst_s,rst_r,stx,stx_str,srx,srx_str,HisName,HelloMsg,MyLoc,HisLoc,Prop : String;
   tmp  : String;
   ModRst,
+  ModRst2,
   HMLoc :String;
   f    : Currency;
   freq : String;
@@ -7407,18 +7431,23 @@ begin
     if TryStrToCurr(cmbFreq.Text,f) then
     begin
       if (cqrini.ReadBool('DXCluster','SpotRX',False)) then
-        f := StrToCurr(edtRXFreq.Text);
-      f := f*1000;
-      call:=  edtCall.Text;
-      rst_s := edtHisRST.Text;
-      stx :=  edtContestSerialSent.Text;
-      stx_str:=edtContestExchangeMessageSent.Text;
-      srx :=  edtContestSerialReceived.Text;
-      srx_str:=edtContestExchangeMessageReceived.Text;
-      HisName:= edtName.Text;
-      tmp := 'DX ' + FloatToStrF(f,ffFixed,8,1) + ' ' + call;
-      ModRst := cmbMode.Text+' '+ rst_s;
-      HMLoc := CurrentMyLoc+'<'+dmSatellite.GetPropShortName(cmbPropagation.Text)+'>'+edtGrid.Text;
+                                                       f := StrToCurr(edtRXFreq.Text);
+      f       := f*1000;
+      mode    := cmbMode.Text;
+      call    := edtCall.Text;
+      rst_s   := edtHisRST.Text;
+      rst_r   := edtMyRST.Text;
+      stx     := edtContestSerialSent.Text;
+      stx_str := edtContestExchangeMessageSent.Text;
+      srx     := edtContestSerialReceived.Text;
+      srx_str := edtContestExchangeMessageReceived.Text;
+      HisName := edtName.Text;
+      tmp     := 'DX ' + FloatToStrF(f,ffFixed,8,1) + ' ' + call;
+      MyLoc   := CurrentMyLoc;
+      HisLoc  := edtGrid.Text;
+      Prop    := dmSatellite.GetPropShortName(cmbPropagation.Text);
+
+
 
     end;
   end
@@ -7436,21 +7465,24 @@ begin
       freq := FloatToStrF(dmData.Q.Fields[2].AsCurrency*1000,ffFixed,8,1);
     dmData.Q.Close();
     dmData.trQ.Rollback;
-    tmp  := 'DX ' + freq + ' ' + call;
+    tmp  := trim('DX ' + freq + ' ' + call);
 
-    dmData.Q.SQL.Text := 'SELECT mode,rst_s,loc,prop_mode,my_loc,stx,stx_string,srx,srx_string,name FROM cqrlog_main ORDER BY qsodate DESC, time_on DESC LIMIT 1';
+    dmData.Q.SQL.Text := 'SELECT mode,rst_s,loc,prop_mode,my_loc,stx,stx_string,srx,srx_string,name,rst_r FROM cqrlog_main ORDER BY qsodate DESC, time_on DESC LIMIT 1';
     dmData.trQ.StartTransaction;
     if dmData.DebugLevel >=1 then
       Writeln(dmData.Q.SQL.Text);
     dmData.Q.Open();
-    ModRst  := dmData.Q.Fields[0].AsString+' '+dmData.Q.Fields[1].AsString;
-    HMLoc   := dmData.Q.Fields[4].AsString+'<'+dmData.Q.Fields[3].AsString+'>'+dmData.Q.Fields[2].AsString;
-    rst_s := dmData.Q.Fields[1].AsString;
-    stx :=  dmData.Q.Fields[5].AsString;
-    stx_str:=dmData.Q.Fields[6].AsString;
-    srx :=  dmData.Q.Fields[7].AsString;
-    srx_str:=dmData.Q.Fields[8].AsString;
-    HisName:= dmData.Q.Fields[9].AsString;
+    mode    := dmData.Q.Fields[0].AsString;
+    MyLoc   := dmData.Q.Fields[4].AsString;
+    Prop    := dmData.Q.Fields[3].AsString;
+    HisLoc  := dmData.Q.Fields[2].AsString;
+    rst_s   := dmData.Q.Fields[1].AsString;
+    stx     := dmData.Q.Fields[5].AsString;
+    stx_str := dmData.Q.Fields[6].AsString;
+    srx     := dmData.Q.Fields[7].AsString;
+    srx_str := dmData.Q.Fields[8].AsString;
+    HisName := dmData.Q.Fields[9].AsString;
+    rst_r   := dmData.Q.Fields[10].AsString;
     dmData.Q.Close();
     dmData.trQ.Rollback;
 
@@ -7458,19 +7490,36 @@ begin
   if (call = '') then
   exit;
 
+  ModRst  := mode+' '+ rst_s;
+  ModRst2 := mode;
+  if    ((pos('-',rst_s)>0) or (pos('+',rst_s)>0))   then    //dB reports like FT8 and FT4
+       ModRst2 := ModRst2+' S'+ rst_s
+    else
+       ModRst2 := ModRst2+' S.'+ rst_s;
+
+  if ((pos('-',rst_r)>0) or (pos('+',rst_r)>0)) then
+       ModRst2 := ModRst2+'/R'+ rst_r
+    else
+       ModRst2 := ModRst2+'/R.'+ rst_r;          //usual 599 type reports
+
+  HMLoc   := MyLoc+'<'+Prop+'>'+HisLoc;
+
+
   with TfrmSendSpot.Create(self) do
   try
     edtSpot.Text := tmp + ' ';
-    ModeRst      :=' '+ModRst;
-    HisMyLoc     :=' '+HMLoc;
-    Scall := call;
-    Srst_s := rst_s;
-    Sstx := stx ;
-    Sstx_str:=stx_str;
-    Ssrx := srx ;
-    Ssrx_str:=srx_str;
-    SHisName:= HisName;
-    SHelloMsg:=HelloMsg;
+    ModeRst      := ModRst;
+    ModeRst2     := ModRst2;
+    HisMyLoc     := ' '+HMLoc;
+    Scall        := call;
+    Srst_s       := rst_s;
+    Srst_r       := rst_r;
+    Sstx         := stx ;
+    Sstx_str     := stx_str;
+    Ssrx         := srx ;
+    Ssrx_str     := srx_str;
+    SHisName     := HisName;
+    SHelloMsg    := HelloMsg;
     ShowModal;
     if ModalResult = mrOK then
     begin
@@ -7570,9 +7619,10 @@ begin
   case  KeyerType of
     1 : begin
           CWint := TCWWinKeyerUSB.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
-          if dmData.DebugLevel < 0 then
-                  CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
+        if dmData.DebugLevel < 0 then
+               CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+              else
+               CWint.DebugMode := dmData.DebugLevel>=1;
           CWint.Port      := cqrini.ReadString('CW'+n,'wk_port','');
           CWint.Device    := cqrini.ReadString('CW'+n,'wk_port','');
           CWint.MinSpeed  := cqrini.ReadInteger('CW'+n, 'wk_min', 5);
@@ -7588,9 +7638,10 @@ begin
         end;
     2 : begin
           CWint    := TCWDaemon.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
           if dmData.DebugLevel < 0 then
-                 CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
+                 CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+                else
+                 CWint.DebugMode := dmData.DebugLevel>=1;
           CWint.Port      := cqrini.ReadString('CW'+n,'cw_port','');
           CWint.Device    := cqrini.ReadString('CW'+n,'cw_address','');
           CWint.MinSpeed  := cqrini.ReadInteger('CW'+n, 'cw_min', 5);
@@ -7605,11 +7656,12 @@ begin
         end;
     3 : begin
           CWint := TCWK3NG.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
           if dmData.DebugLevel < 0 then
-                 CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
-          CWint.Port      := cqrini.ReadString('CW'+n,'K3NGPort'+n,'');
-          CWint.Device    := cqrini.ReadString('CW'+n,'K3NGPort'+n,'');
+                 CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+                else
+                 CWint.DebugMode := dmData.DebugLevel>=1;
+          CWint.Port      := cqrini.ReadString('CW'+n,'K3NGPort','');
+          CWint.Device    := cqrini.ReadString('CW'+n,'K3NGPort','');
           CWint.MinSpeed  := cqrini.ReadInteger('CW'+n, 'K3NG_min', 5);
           CWint.MaxSpeed  := cqrini.ReadInteger('CW'+n, 'K3NG_max', 60);
           CWint.PortSpeed := cqrini.ReadInteger('CW'+n,'K3NGSerSpeed',115200);
@@ -7620,9 +7672,10 @@ begin
         end;
     4 : begin
           CWint        := TCWHamLib.Create;
-          CWint.DebugMode := dmData.DebugLevel>=1;
           if dmData.DebugLevel < 0 then
-                 CWint.DebugMode  :=  CWint.DebugMode  or ((abs(dmData.DebugLevel) and 8) = 8 );
+                 CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
+                else
+                 CWint.DebugMode := dmData.DebugLevel>=1;
           CWint.Port         := cqrini.ReadString('TRX'+n,'RigCtldPort','4532');
           CWint.Device       := cqrini.ReadString('TRX'+n,'host','localhost');
           CWint.MinSpeed     := cqrini.ReadInteger('CW'+n, 'HamLib_min', 5);

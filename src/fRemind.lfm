@@ -1,38 +1,47 @@
 object frmReminder: TfrmReminder
-  Left = 545
-  Height = 128
-  Top = 222
-  Width = 599
+  Left = 691
+  Height = 147
+  Top = 202
+  Width = 609
   BorderStyle = bsDialog
   Caption = 'Reminder'
-  ClientHeight = 128
-  ClientWidth = 599
+  ClientHeight = 147
+  ClientWidth = 609
   OnClose = FormClose
+  OnHide = FormHide
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   LCLVersion = '3.8.0.0'
   object RemiMemo: TMemo
     AnchorSideLeft.Control = Owner
-    AnchorSideLeft.Side = asrCenter
+    AnchorSideTop.Control = RemindUThour
+    AnchorSideTop.Side = asrBottom
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = Owner
     AnchorSideBottom.Side = asrBottom
-    Left = 8
-    Height = 33
-    Top = 91
-    Width = 582
-    Anchors = [akLeft, akBottom]
-    BorderSpacing.Bottom = 4
+    Left = 6
+    Height = 38
+    Top = 103
+    Width = 597
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    BorderSpacing.Left = 6
+    BorderSpacing.Top = 3
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
     MaxLength = 255
     TabOrder = 0
     OnKeyPress = RemiMemoLimit
     OnKeyUp = FormKeyUp
   end
   object chRemi: TCheckBox
+    AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter
-    AnchorSideTop.Side = asrBottom
-    Left = 222
+    AnchorSideTop.Control = RemindTimeSet
+    AnchorSideTop.Side = asrCenter
+    Left = 227
     Height = 23
-    Top = 30
+    Top = 38
     Width = 155
     BorderSpacing.Top = 5
     Caption = 'Remind again after '
@@ -42,9 +51,9 @@ object frmReminder: TfrmReminder
   object lblRemi2: TLabel
     AnchorSideLeft.Control = RemiMemo
     AnchorSideBottom.Control = RemiMemo
-    Left = 8
+    Left = 6
     Height = 17
-    Top = 72
+    Top = 83
     Width = 113
     Anchors = [akLeft, akBottom]
     BorderSpacing.Bottom = 2
@@ -58,74 +67,52 @@ object frmReminder: TfrmReminder
     AnchorSideRight.Control = RemiMemo
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = RemiMemo
-    Left = 515
+    Left = 496
     Height = 25
-    Top = 64
-    Width = 75
+    Top = 75
+    Width = 107
     Anchors = [akRight, akBottom]
-    BorderSpacing.Bottom = 2
-    Caption = 'Close'
+    BorderSpacing.Bottom = 3
+    Caption = 'Save && Close'
     TabOrder = 2
     OnClick = btCloseClick
-  end
-  object RemindTimeSet: TMaskEdit
-    AnchorSideLeft.Control = chRemi
-    AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = chRemi
-    Left = 377
-    Height = 34
-    Top = 30
-    Width = 56
-    EnableSets = False
-    MaxLength = 3
-    TabOrder = 3
-    OnEnter = RemindTimeSetEnter
-    OnExit = RemindTimeSetExit
-    EditMask = '999;1;0'
-    Text = '   '
-    SpaceChar = '0'
   end
   object lblRemi3: TLabel
     AnchorSideLeft.Control = RemindTimeSet
     AnchorSideLeft.Side = asrBottom
-    AnchorSideTop.Control = chRemi
+    AnchorSideTop.Control = RemindTimeSet
     AnchorSideTop.Side = asrCenter
-    Left = 435
+    Left = 449
     Height = 17
-    Top = 33
+    Top = 41
     Width = 53
-    BorderSpacing.Left = 2
+    BorderSpacing.Left = 3
     Caption = 'minutes'
     ParentColor = False
   end
   object chUTRemi: TCheckBox
-    Left = 222
+    AnchorSideLeft.Control = chRemi
+    AnchorSideTop.Control = RemindUThour
+    AnchorSideTop.Side = asrCenter
+    Left = 227
     Height = 23
-    Top = 64
+    Top = 72
     Width = 155
     Caption = 'Remind time (UTC) '
-    TabOrder = 4
+    TabOrder = 3
     OnChange = chUTRemiChange
   end
-  object RemindUThour: TMaskEdit
-    Left = 376
-    Height = 34
-    Top = 57
-    Width = 56
-    EnableSets = False
-    MaxLength = 5
-    ParentFont = False
-    TabOrder = 5
-    OnChange = RemindUThourChange
-    EditMask = '!00\:00;1;-'
-    Text = '  :  '
-    SpaceChar = '-'
-  end
   object lblRemi1: TLabel
+    AnchorSideLeft.Control = Owner
+    AnchorSideTop.Control = Owner
+    AnchorSideRight.Control = Owner
+    AnchorSideRight.Side = asrBottom
     Left = 0
     Height = 29
     Top = 0
-    Width = 602
+    Width = 609
+    Align = alCustom
+    Anchors = [akTop, akLeft, akRight]
     Caption = '    Sitting is killing you!  Take a short walk!    '
     Color = clRed
     Font.Color = clYellow
@@ -134,6 +121,47 @@ object frmReminder: TfrmReminder
     ParentColor = False
     ParentFont = False
     Transparent = False
+  end
+  object RemindTimeSet: TEdit
+    AnchorSideLeft.Control = chRemi
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = lblRemi1
+    AnchorSideTop.Side = asrBottom
+    Left = 382
+    Height = 34
+    Hint = 'Set next remind time in minutes'
+    Top = 32
+    Width = 64
+    Alignment = taRightJustify
+    BorderSpacing.Top = 3
+    MaxLength = 3
+    NumbersOnly = True
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 4
+    OnEnter = RemindTimeSetEnter
+    OnExit = RemindTimeSetExit
+  end
+  object RemindUThour: TEdit
+    AnchorSideLeft.Control = chUTRemi
+    AnchorSideLeft.Side = asrBottom
+    AnchorSideTop.Control = RemindTimeSet
+    AnchorSideTop.Side = asrBottom
+    Left = 382
+    Height = 34
+    Hint = 'Enter UTC time as HHMM'
+    Top = 66
+    Width = 64
+    Alignment = taRightJustify
+    AutoSize = False
+    AutoSelect = False
+    MaxLength = 4
+    NumbersOnly = True
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 5
+    OnEnter = RemindUThourEnter
+    OnExit = RemindUThourExit
   end
   object tmrRemi: TTimer
     Enabled = False

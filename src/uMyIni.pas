@@ -258,6 +258,11 @@ end;
 function TMyIni.LocalOnly(Section : String) : Boolean;
 begin
   Result := IsWordPresent(Section,LocalSections,[',']);
+  {
+  writeln('ini: ',Section);
+  writeln('ini: ',LocalSections);
+  writeln;
+  }
 end;
 
 procedure TMyIni.LoadLocalSectionsList;

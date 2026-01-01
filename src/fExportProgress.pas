@@ -44,6 +44,7 @@ type
 var
   frmExportProgress: TfrmExportProgress;
   running : Boolean = False;
+  DebugThis : Boolean;
   
 implementation
 {$R *.lfm}
@@ -57,6 +58,12 @@ begin
   tmrExport.Enabled := True; // I have to do this horrible workaround because sometimes window after show
                              // dont get focus. Why??
   AutoBackup := False;
+
+  //set debug rules
+  DebugThis := dmData.DebugLevel >= 1 ;
+  // bit 2, %10,  ---> -2 for adif import/export routines
+  if dmData.DebugLevel < 0 then
+      DebugThis :=  ((abs(dmData.DebugLevel) and 2) = 2 );
 end;
 
 procedure TfrmExportProgress.FormShow(Sender: TObject);
@@ -227,7 +234,7 @@ var
       SaveTag(dmUtils.StringToADIF('<CALL',dmUtils.RemoveSpaces(call)),leng);
     if ExMode then
     Begin
-        dmUtils.ModeFromCqr(mode,ExportType,dmData.DebugLevel>=1,OutMode,OutSubmode);
+        dmUtils.ModeFromCqr(mode,ExportType,DebugThis,OutMode,OutSubmode);
         SaveTag(dmUtils.StringToADIF('<MODE',OutMode),leng);
         if OutSubmode<>'' then
                           SaveTag(dmUtils.StringToADIF('<SUBMODE',OutSubmode),leng);

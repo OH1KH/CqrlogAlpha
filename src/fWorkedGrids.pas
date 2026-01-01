@@ -611,9 +611,10 @@ var
   ImgStream : TResourceStream;
 begin
   //set debug rules for this form
-  LocalDbg := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-        LocalDbg :=  LocalDbg or ((abs(dmData.DebugLevel) and 4) = 4 );
+        LocalDbg := ((abs(dmData.DebugLevel) and 4) = 4 )
+       else
+        LocalDbg := dmData.DebugLevel >= 1 ;
 
   //load map base image
   ImgStream := TResourceStream.Create(HINSTANCE,'WORLD_BORDERS',RT_RCDATA);

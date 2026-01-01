@@ -13,7 +13,6 @@ type
   { TfrmRbnFilter }
 
   TfrmRbnFilter = class(TForm)
-    Bevel1: TBevel;
     btnCancel: TButton;
     btnDxBandsAll: TButton;
     btnDXCCnty: TButton;
@@ -24,11 +23,12 @@ type
     btnSrcContAll: TButton;
     btnSrcCallAll: TButton;
     chkDupFilt: TCheckBox;
-    chkToBandMap: TCheckBox;
     chkNewDXConly: TCheckBox;
     chkOnlyeQSL: TCheckBox;
     chkOnlyLoTW: TCheckBox;
+    chkToBandMap: TCheckBox;
     edtDate: TEdit;
+    edtDXOnlyPref: TEdit;
     edtLastHours: TEdit;
     edtSrcCall: TEdit;
     edtDXBand: TEdit;
@@ -40,10 +40,13 @@ type
     edtDXOnlyExpres: TEdit;
     edtSrcCont: TEdit;
     edtTime: TEdit;
+    grpDuplicate: TGroupBox;
+    grpMisc: TGroupBox;
     grpCallsignFrom: TGroupBox;
     grpDXStation: TGroupBox;
     grpCallisgn: TGroupBox;
     grpSource: TGroupBox;
+    Label11: TLabel;
     lblDateTimeFormat: TLabel;
     lblIgnoreHours: TLabel;
     Label10: TLabel;
@@ -60,8 +63,9 @@ type
     Label9: TLabel;
     lblModeFrom: TLabel;
     lblNotCountry: TLabel;
-    rgIgnore: TRadioGroup;
+    rbOnlyPref: TRadioButton;
     rgDupe: TRadioGroup;
+    rgIgnore: TRadioGroup;
     rbAllDx: TRadioButton;
     rbOnlyCall: TRadioButton;
     rbOnlyCallReg: TRadioButton;
@@ -93,7 +97,8 @@ uses uMyIni, dUtils, dDXCC, fSelectDXCC;
 
 procedure TfrmRbnFilter.FormShow(Sender: TObject);
 begin
-  dmUtils.LoadFontSettings(self);
+
+  dmUtils.LoadWindowPos(self);
 
   edtSrcCont.Text      := cqrini.ReadString('RBNFilter','SrcCont',C_RBN_CONT);
   edtSrcCall.Text      := cqrini.ReadString('RBNFilter','SrcCall','');
@@ -103,8 +108,11 @@ begin
   edtTime.Text         := cqrini.ReadString('RBNFilter','IgnTimeValue','');
 
   rbAllDx.Checked       := cqrini.ReadBool('RBNFilter','AllowAllCall',True);
+
   rbOnlyCall.Checked    := cqrini.ReadBool('RBNFilter','AllowOnlyCall',False);
   edtDXOnlyCall.Text    := cqrini.ReadString('RBNFilter','AllowOnlyCallValue','');
+  rbOnlyPref.Checked    := cqrini.ReadBool('RBNFilter','AllowOnlyPref',False);
+  edtDXOnlyPref.Text    := cqrini.ReadString('RBNFilter','AllowOnlyPrefValue','');
   rbOnlyCallReg.Checked := cqrini.ReadBool('RBNFilter','AllowOnlyCallReg',False);
   edtDXOnlyExpres.Text  := cqrini.ReadString('RBNFilter','AllowOnlyCallRegValue','');
 
@@ -133,7 +141,16 @@ procedure TfrmRbnFilter.btnOKClick(Sender: TObject);
 
 var
   i : Integer;
+  s : string;
 begin
+  if rbOnlyPref.Checked then
+     Begin
+      if  edtDXOnlyPref.Text='' then
+       Begin
+        ShowMessage('"Only these prefix" is selected but prefix list is empty!');
+        exit;
+       end;
+     end;
   if not TryStrToInt(edtLastHours.Text,i) then
   begin
     if (rgIgnore.ItemIndex=1) then
@@ -191,6 +208,12 @@ begin
   cqrini.WriteBool('RBNFilter','AllowAllCall',rbAllDx.Checked);
   cqrini.WriteBool('RBNFilter','AllowOnlyCall',rbOnlyCall.Checked);
   cqrini.WriteString('RBNFilter','AllowOnlyCallValue',RmSp(edtDXOnlyCall.Text));
+  cqrini.WriteBool('RBNFilter','AllowOnlyPref',rbOnlyPref.Checked);
+  s:=  edtDXOnlyPref.Text;
+  if s<>'' then
+     if s[length(s)]=',' then
+        Delete(s,length(s),1);
+  cqrini.WriteString('RBNFilter','AllowOnlyPrefValue',s);
   cqrini.WriteBool('RBNFilter','AllowOnlyCallReg',rbOnlyCallReg.Checked);
   cqrini.WriteString('RBNFilter','AllowOnlyCallRegValue',edtDXOnlyExpres.Text);
 
@@ -210,6 +233,7 @@ begin
   cqrini.WriteBool('RBNMonitor','DupeFiltUsed', chkDupFilt.Checked);
 
   cqrini.SaveToDisk;
+  dmUtils.SaveWindowPos(Self);
   ModalResult := mrOK
 end;
 

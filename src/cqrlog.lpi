@@ -20,7 +20,7 @@
       <AutoIncrementBuild Value="True"/>
       <MinorVersionNr Value="3"/>
       <RevisionNr Value="1"/>
-      <BuildNr Value="2207"/>
+      <BuildNr Value="2208"/>
       <StringTable ProductVersion="0.3.1.2026"/>
     </VersionInfo>
     <MacroValues Count="1">
@@ -44,12 +44,6 @@
         <CommandLineParams Value="--debug=0"/>
         <LaunchingApplication PathPlusParams="/usr/X11R6/bin/xterm -T &apos;Lazarus Run Output&apos; -e $(LazarusDir)/tools/runwait.sh $(TargetCmdLine)"/>
       </local>
-      <environment>
-        <UserOverrides Count="2">
-          <Variable0 Name="FIREBIRD" Value="/home/ok2cqr/projekty/cqrlog/testing"/>
-          <Variable1 Name="HEAPTRC" Value="1"/>
-        </UserOverrides>
-      </environment>
       <FormatVersion Value="2"/>
       <Modes Count="1">
         <Mode0 Name="default">
@@ -205,6 +199,7 @@
         <Filename Value="fSelectDXCC.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmSelectDXCC"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit14>
       <Unit15>

@@ -9,7 +9,8 @@ uses
   StdCtrls, Spin, inifiles, lcltype,ActnList, Menus,frCWKeys, Types;
 
 const
-  CWTypeMode: Array [0..2] of String=(', Ltr',', Ltr/Word',', Word');
+  CWTypeMode : Array [0..3] of String=(', Ltr',', Ltr/Word',', Word',', Line');
+  MaxMode    : Word = 3; //max mode to scroll modes. No bigger than CWTypeMode array, but can be less
 
 type
 
@@ -21,6 +22,7 @@ type
     fraCWKeys1: TfraCWKeys;
     lblToShowMouseOverText: TLabel;
     m: TMemo;
+    mnuLine: TMenuItem;
     mnuHead: TMenuItem;
     mnuLtr: TMenuItem;
     mnuWordLtr: TMenuItem;
@@ -75,6 +77,7 @@ type
     procedure btnCloseClick(Sender: TObject);
     procedure fraCWKeys1Resize(Sender: TObject);
     procedure mChange(Sender: TObject);
+    procedure mnuLineClick(Sender: TObject);
     procedure mKeyPress(Sender: TObject; var Key: char);
     procedure mnuLtrClick(Sender: TObject);
     procedure mnuWordClick(Sender: TObject);
@@ -151,6 +154,17 @@ begin
                       frmNewQSO.CWint.StopSending;
                       Key:=0;
                      end;
+   VK_N            :Begin
+                      if (Shift = [ssALT]) then
+                       begin
+                         inc(CWMode);
+                         if CWMode>MaxMode then
+                                        CWMode:=0;
+                         Key:=0;
+                         cqrini.WriteInteger('CW','Mode',CWMode);
+                         UpdateTop;
+                       end;
+                    end;
    end;
 end;
 
@@ -456,6 +470,7 @@ begin
    0: mnuLtr.Checked:=True;
    1: mnuWordLtr.Checked:=True;
    2: mnuWord.Checked:=True;
+   3: mnuLine.Checked:=True;
   end;
   UpdateTop;
   fraCWKeys1.UpdateFKeyLabels;
@@ -465,9 +480,10 @@ begin
   WasMemoLen := length(m.lines.text);
   n:=IntToStr(frmTRXControl.cmbRig.ItemIndex);
    //set debug rules for this form
-  LocalDbg := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-        LocalDbg :=  LocalDbg or ((abs(dmData.DebugLevel) and 8) = 8 );
+        LocalDbg := ((abs(dmData.DebugLevel) and 8) = 8 )
+       else
+        LocalDbg := dmData.DebugLevel >= 1 ;
 end;
 
 procedure TfrmCWType.btnCloseClick(Sender: TObject);
@@ -544,7 +560,6 @@ end;
 procedure TfrmCWType.mChange(Sender: TObject);
 var
   l   : char ;
-
 begin
   if  ((length(m.lines.text)-WasMemoLen) < 1 ) then
         Begin
@@ -557,7 +572,7 @@ begin
   if LocalDbg then Writeln('Len:',  length(m.lines.text),' Was:',WasMemoLen);
   if ( ((length(m.lines.text)-WasMemoLen) > 1 )
        and not(Switch2Word)
-       and not(CWMode=2)
+       and not(CWMode>1)
      ) then
      Begin
        if LocalDbg then Writeln('Pasted text, more than 1chr at same go');
@@ -566,7 +581,7 @@ begin
     else  //only 1 char added
      Begin
         l := Upcase( m.Lines.Text[length(m.lines.text)]);
-         if PassedKey(l) then
+         if PassedKey(l) or ((l=#$0A) and (CwMode=3)) then
            begin
             if LocalDbg then Write(ord(l),'_');
             case CWMode of
@@ -597,6 +612,7 @@ begin
                                   end;
 
                  2:               if (l = ' ') then blocksend; //word mode
+                 3:               if (l = #$0A) then blocksend //line mode
 
               end; //case
            end;  //valid key
@@ -604,6 +620,7 @@ begin
  end;
   l:=#0;
 end;
+
 
 procedure TfrmCWType.mKeyPress(Sender: TObject; var Key: char);
 begin
@@ -637,6 +654,13 @@ begin
   //by this way QT5 and GTK2 both work same
   CWMode:=2;
   UpdateTop;
+end;
+procedure TfrmCWType.mnuLineClick(Sender: TObject);
+begin
+ mnuLine.Checked:=True;
+ //by this way QT5 and GTK2 both work same
+ CWMode:=3;
+ UpdateTop;
 end;
 
 procedure TfrmCWType.popCWmodeClose(Sender: TObject);

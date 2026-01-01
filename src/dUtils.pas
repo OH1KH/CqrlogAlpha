@@ -91,7 +91,7 @@ const
     'NAME_INTL',    'NOTES_INTL',     'QSLMSG_INTL',     'QTH_INTL',
     'RIG_INTL',     'SIG_INTL',       'SIG_INFO_INTL');
 
-   c_MODEFILE_DIR    = ''; //   'ctyfiles/';
+   c_MODEFILE_DIR    = '';
    C_SUBMODE_FILE    = 'submode_mode.txt';
    C_IMPORTMODE_FILE = 'import_mode.txt';
    C_EXCEPMODE_FILE  = 'exception_mode.txt';
@@ -3735,7 +3735,7 @@ begin
   end;
   if dmData.DebugLevel >= 1 then
   begin
-    Writeln('Section:',section);
+    Writeln('Writing section:',section,' Local only:',cqrini.LocalOnly('WindowSize'));
     Writeln('Saving window size a position (',a.Name,') (height|width|top|left):',
             a.height,'|',a.Width,'|',a.top,'|',a.left)
   end;
@@ -3761,9 +3761,9 @@ begin
   end;
   if dmData.DebugLevel >= 1 then
   begin
-    //Writeln('Section:',section);
-    //Writeln('Loading window size a position (',a.Name,') (height|width|top|left):',
-    //        a.height,'|',a.Width,'|',a.top,'|',a.left)
+    Writeln('Reading section:',section,' Local only:',cqrini.LocalOnly('WindowSize'));
+    Writeln('Loading window size a position (',a.Name,') (height|width|top|left):',
+            a.height,'|',a.Width,'|',a.top,'|',a.left)
   end;
 end;
 
@@ -5408,17 +5408,6 @@ Begin
            if dbg then
                       Writeln('submode=mode line: ',e+1);
 
-           //is submode import only? Backup bypasses this adif standard
-           if ExportType <> 2 then
-            begin
-             e:=ImportMode.IndexOf(CqrMode);
-             if e > -1 then
-                           begin
-                             if dbg then
-                                        Writeln('submode for_import_only line: ',e+1);
-                             Submode :='';
-                           end;
-            end;
          end
         else
          //no submodes

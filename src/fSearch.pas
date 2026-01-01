@@ -138,9 +138,12 @@ begin
           end
           else begin
             if chkInclude.Checked then
-              sql := sql + ' where (callsign like ''%' + edtText.Text + '%'')'
+              if ((pos('%',edtText.Text)>0) or (pos('_',edtText.Text)>0)) then
+                    sql := sql + ' where callsign like '+ QuotedStr(edtText.Text)
+                  else
+                    sql := sql + ' where (callsign like ''%' + edtText.Text + '%'')'
             else
-              sql := sql + ' where callsign = '+ QuotedStr(edtText.Text);
+                    sql := sql + ' where callsign = '+ QuotedStr(edtText.Text);
               if chkSortByDate.Checked then
                 sql := sql + ' order by qsodate'
           end
@@ -159,7 +162,10 @@ begin
           end
           else begin
             if chkInclude.Checked then
-              sql := sql + ' where (name like ''%' + edtText.Text + '%'')'
+             if ((pos('%',edtText.Text)>0) or (pos('_',edtText.Text)>0)) then
+                    sql := sql + ' where name like '+ QuotedStr(edtText.Text)
+                  else
+                    sql := sql + ' where (name like ''%' + edtText.Text + '%'')'
             else
               sql := sql + ' where name = '+ QuotedStr(edtText.Text);
             if chkSortByDate.Checked then
@@ -180,7 +186,10 @@ begin
           end
           else begin
             if chkInclude.Checked then
-              sql := sql + ' where (qth like ''%' + edtText.Text + '%'')'
+             if ((pos('%',edtText.Text)>0) or (pos('_',edtText.Text)>0)) then
+                    sql := sql + ' where qth like '+ QuotedStr(edtText.Text)
+                  else
+                    sql := sql + ' where (qth like ''%' + edtText.Text + '%'')'
             else
               sql := sql + ' where qth = '+ QuotedStr(edtText.Text);
             if chkSortByDate.Checked then
@@ -191,7 +200,7 @@ begin
 
   if sql<>'' then
    begin
-     writeln(sql);
+     //writeln(sql);
     try
       dmData.qCQRLOG.DisableControls;
       dmData.Q.Close;

@@ -2,10 +2,10 @@ object frmDXCCStat: TfrmDXCCStat
   Left = 293
   Height = 572
   Top = 37
-  Width = 921
+  Width = 944
   Caption = 'DXCC Statistic'
   ClientHeight = 572
-  ClientWidth = 921
+  ClientWidth = 944
   Constraints.MinHeight = 465
   Constraints.MinWidth = 770
   Icon.Data = {
@@ -113,10 +113,10 @@ object frmDXCCStat: TfrmDXCCStat
     7FFF0000FFFF0001FFFF0003FFFF0007FFFF001FFFFF003FFFFF00FFFFFF83FF
     FFFF
   }
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object pnlStatSum: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom
@@ -127,10 +127,11 @@ object frmDXCCStat: TfrmDXCCStat
     Left = 0
     Height = 80
     Top = 492
-    Width = 921
+    Width = 944
+    Align = alCustom
     Anchors = [akLeft, akRight, akBottom]
     ClientHeight = 80
-    ClientWidth = 921
+    ClientWidth = 944
     TabOrder = 0
     object btClose: TButton
       AnchorSideTop.Control = btnHTMLExport
@@ -138,7 +139,7 @@ object frmDXCCStat: TfrmDXCCStat
       AnchorSideRight.Control = pnlStatSum
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
-      Left = 839
+      Left = 862
       Height = 25
       Top = 25
       Width = 75
@@ -156,7 +157,7 @@ object frmDXCCStat: TfrmDXCCStat
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = btClose
       AnchorSideBottom.Side = asrBottom
-      Left = 718
+      Left = 741
       Height = 25
       Top = 25
       Width = 115
@@ -257,7 +258,7 @@ object frmDXCCStat: TfrmDXCCStat
       Top = 4
       Width = 104
       BorderSpacing.Left = 6
-      Caption = ' DIGI '
+      Caption = 'MGM'
       ClientHeight = 48
       ClientWidth = 102
       TabOrder = 4
@@ -333,11 +334,12 @@ object frmDXCCStat: TfrmDXCCStat
     Left = 0
     Height = 60
     Top = 0
-    Width = 921
+    Width = 944
+    Align = alCustom
     Anchors = [akTop, akLeft, akRight]
     BevelOuter = bvNone
     ClientHeight = 60
-    ClientWidth = 921
+    ClientWidth = 944
     TabOrder = 1
     object btnRefresh: TButton
       AnchorSideLeft.Side = asrBottom
@@ -345,14 +347,17 @@ object frmDXCCStat: TfrmDXCCStat
       AnchorSideTop.Side = asrCenter
       AnchorSideRight.Control = PnlDXCCStat
       AnchorSideRight.Side = asrBottom
-      Left = 768
-      Height = 25
-      Top = 14
-      Width = 147
+      Left = 884
+      Height = 33
+      Top = 10
+      Width = 54
       Anchors = [akTop, akRight]
+      AutoSize = True
       BorderSpacing.Right = 6
-      Caption = 'Refresh statistic'
+      Caption = 'refrsh'
+      Enabled = False
       TabOrder = 1
+      Visible = False
       OnClick = btnRefreshClick
     end
     object cmbCfmType: TComboBox
@@ -360,8 +365,9 @@ object frmDXCCStat: TfrmDXCCStat
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = lblDXCCType
       AnchorSideTop.Side = asrCenter
-      Left = 135
+      Left = 197
       Height = 29
+      Hint = 'On band column cells you can see confimations Q,L,E or & for  CW,Phone and MGM modes'#10'(in that order).'#10'Q=QSL, L=LoTW, E=eQSL, &=Lotw and eQSL both'#10'.'#10'If QSO is worked using defined mode, but not yet confirmed you see X instead.'#10'.'#10'Non worked modes are not shown, or shown by dot . dependin on'#10'selection of preferences/Fonts/GridList settings/Set Dots instead spaces '
       Top = 12
       Width = 260
       BorderSpacing.Left = 12
@@ -376,10 +382,12 @@ object frmDXCCStat: TfrmDXCCStat
         'eQSL only'
         'paper QSL, LoTW and eQSL'
       )
+      ParentShowHint = False
+      ShowHint = True
       Style = csDropDownList
       TabOrder = 0
       Text = 'paper QSL, LoTW and eQSL'
-      OnChange = cmbCfmTypeChange
+      OnChange = btnRefreshClick
     end
     object lblDXCCType: TLabel
       AnchorSideLeft.Control = PnlDXCCStat
@@ -387,10 +395,10 @@ object frmDXCCStat: TfrmDXCCStat
       Left = 18
       Height = 17
       Top = 18
-      Width = 105
+      Width = 167
       BorderSpacing.Left = 18
       BorderSpacing.Top = 18
-      Caption = 'Confirmed type:'
+      Caption = 'DXCC using confirm type:'
       ParentColor = False
     end
     object lblDigiOnly: TLabel
@@ -398,12 +406,12 @@ object frmDXCCStat: TfrmDXCCStat
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cmbCfmType
       AnchorSideTop.Side = asrCenter
-      Left = 407
+      Left = 469
       Height = 17
       Top = 18
-      Width = 102
+      Width = 68
       BorderSpacing.Left = 12
-      Caption = 'Change DIGI to:'
+      Caption = 'and MODE'
       ParentColor = False
     end
     object cmbOnlyMode: TComboBox
@@ -411,8 +419,9 @@ object frmDXCCStat: TfrmDXCCStat
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = cmbCfmType
       AnchorSideTop.Side = asrCenter
-      Left = 521
+      Left = 549
       Height = 29
+      Hint = 'Change DXCC grid showing selected mode only.'#10'.'#10'Effects also summary grid MGM lines (bottom grid, two last lines)'#10'content to show count of specified mode.'#10'.'#10'MGM = (Machine Generated Mode) counts for all other modes than CW,SSB,AM,FM'
       Top = 12
       Width = 90
       BorderSpacing.Left = 12
@@ -420,9 +429,45 @@ object frmDXCCStat: TfrmDXCCStat
       Items.Strings = (
         ''
       )
+      ParentShowHint = False
+      ShowHint = True
       Style = csDropDownList
       TabOrder = 2
-      OnChange = cmbCfmTypeChange
+      OnChange = btnRefreshClick
+    end
+    object btnNotCfm: TButton
+      AnchorSideLeft.Control = cmbOnlyMode
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbOnlyMode
+      AnchorSideTop.Side = asrCenter
+      Left = 645
+      Height = 25
+      Hint = 'Show list of worked but not confirmed.'#10'Be sure you have set a valid text viewer program at Preferences/External viewers/Text files'
+      Top = 14
+      Width = 75
+      BorderSpacing.Left = 6
+      Caption = 'NotCfm'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+      OnClick = btnNotCfmClick
+    end
+    object btnNotWkd: TButton
+      AnchorSideLeft.Control = btnNotCfm
+      AnchorSideLeft.Side = asrBottom
+      AnchorSideTop.Control = cmbOnlyMode
+      AnchorSideTop.Side = asrCenter
+      Left = 726
+      Height = 25
+      Hint = 'Show list of not worked.'#10'Be sure you have set a valid text viewer program at Preferences/External viewers/Text files'
+      Top = 14
+      Width = 75
+      BorderSpacing.Left = 6
+      Caption = 'NotWkd'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+      OnClick = btnNotWkdClick
     end
   end
   object grdDXCCStat: TStringGrid
@@ -433,17 +478,20 @@ object frmDXCCStat: TfrmDXCCStat
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = grdStatSum
     Left = 0
-    Height = 172
+    Height = 154
+    Hint = 'On band column cells you can see confimations Q,L,E for  CW,Phone and MGM modes'#10'(in that order).'#10'If QSO is worked using certain mode, but not yet confirmed you see X instead.'#10'Non worked modes are not shown, or shown by dot . '#10'(If selected in preferences/Fonts/GridList settings/Set Dots instead spaces) '
     Top = 60
-    Width = 921
+    Width = 944
+    Align = alCustom
     Anchors = [akTop, akLeft, akRight, akBottom]
-    ColCount = 27
+    BorderSpacing.Bottom = 6
+    ColCount = 2
     DefaultColWidth = 55
     DefaultRowHeight = 25
     FixedCols = 0
-    Font.Name = 'dejavu sans mono [dejavu]'
-    Font.Pitch = fpFixed
     ParentFont = False
+    ParentShowHint = False
+    ScrollBars = ssNone
     TabOrder = 2
     TitleStyle = tsNative
   end
@@ -454,24 +502,26 @@ object frmDXCCStat: TfrmDXCCStat
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = pnlStatSum
     Left = 0
-    Height = 260
-    Top = 232
-    Width = 921
+    Height = 272
+    Top = 220
+    Width = 944
+    Align = alCustom
     Anchors = [akLeft, akRight, akBottom]
-    ColCount = 27
+    ColCount = 2
     DefaultColWidth = 50
     DefaultRowHeight = 25
     FixedCols = 0
     Font.Name = 'courier [biznet]'
     ParentFont = False
     RowCount = 10
+    ScrollBars = ssNone
     TabOrder = 3
     TitleStyle = tsNative
   end
   object dlgSave: TSaveDialog
     FilterIndex = 0
     Options = [ofOverwritePrompt, ofEnableSizing, ofViewDetail]
-    Left = 480
-    Top = 552
+    Left = 472
+    Top = 512
   end
 end

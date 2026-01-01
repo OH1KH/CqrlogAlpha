@@ -305,9 +305,10 @@ begin
 
   //set debug rules for this form
   // bit 5, %10000,  ---> -16 for routines in this form
-  LocalDbg := dmData.DebugLevel >= 1 ;
   if dmData.DebugLevel < 0 then
-      LocalDbg :=  LocalDbg or ((abs(dmData.DebugLevel) and 16) = 16 );
+      LocalDbg := ((abs(dmData.DebugLevel) and 16) = 16 )
+     else
+      LocalDbg := dmData.DebugLevel >= 1 ;
 
 end;
 
@@ -450,14 +451,17 @@ end;
 
 procedure TfrmGrayline.tmrAutoConnectTimer(Sender : TObject);
 begin
-    if (rbn_status='Connected') or (rbn_status='Linked to RBNMonitor' ) then exit;
+    if (rbn_status='Connected') or (rbn_status='Linked to RBNMonitor' ) then
+                                                                            exit;
     if cqrini.ReadBool('RBN','AutoLink',false) then
         Begin
          acLinkToRbnMonitorExecute(nil);
          exit;
         end;
+
     if cqrini.ReadBool('RBN','AutoConnect',False) and (cqrini.ReadString('RBN','login','') <> '')
-       and (lTelnet = nil) then  acConnect.Execute;
+       and (not lTelnet.Connected) then
+                           acConnect.Execute;
 
     tmrAutoConnect.Enabled:=False; //job is done, nex initiate when FormShow run
 end;

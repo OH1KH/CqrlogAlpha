@@ -2,6 +2,11 @@ unit fDXCCStat;
 
 {$mode objfpc}{$H+}
 
+
+//Note: OH1KH 12/2025: source refers to DIGI in many places, but user sees that either ALL or MGM (Machine Generated Mode). MGM=former DIGI in user view.
+//MGM = all other modes than CW,SSB,AM,FM
+//Phone summary count takes DIGITALVOICE as Phone mode together with SSB,AM,FM
+
 interface
 
 uses
@@ -24,9 +29,11 @@ type
   { TfrmDXCCStat }
 
   TfrmDXCCStat = class(TForm)
+    btnNotWkd: TButton;
     btnRefresh: TButton;
     btClose: TButton;
     btnHTMLExport: TButton;
+    btnNotCfm: TButton;
     cmbCfmType: TComboBox;
     cmbOnlyMode: TComboBox;
     grdDXCCStat: TStringGrid;
@@ -49,6 +56,8 @@ type
     pnlStatSum: TPanel;
     dlgSave: TSaveDialog;
     procedure btnHTMLExportClick(Sender: TObject);
+    procedure btnNotCfmClick(Sender: TObject);
+    procedure btnNotWkdClick(Sender: TObject);
     procedure btnRefreshClick(Sender : TObject);
     procedure cmbCfmTypeChange(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -56,6 +65,7 @@ type
     procedure FormShow(Sender: TObject);
   private
     StatType : TStat;
+    space: String;
 
     function  GetStatTypeWhere(st : TStat) : String;
     function  GetFieldText(fone,cw,digi : String) : String;
@@ -73,6 +83,8 @@ type
     procedure CreateModeStatistic;
     procedure CreateTotalStatistic;
     procedure ChangeCaption;
+    procedure NotWorked;
+    procedure NotConfirmed;
   public
     procedure ExportToHTML(FileName : String);
   end; 
@@ -105,6 +117,7 @@ procedure TfrmDXCCStat.FormShow(Sender: TObject);
 var
    i:integer;
 begin
+  space:=' ';
   dmUtils.LoadFontSettings(self);
   grdStatSum.Constraints.MinHeight:=(grdStatSum.Font.Size+6)*10;
   LoadBandsSettings;
@@ -130,11 +143,10 @@ begin
   StatType := TStat(cmbCfmType.ItemIndex);
 
   dmUtils.InsertModes(cmbOnlyMode);
-  cmbOnlyMode.Items.Insert(0,'DIGI');
+  cmbOnlyMode.Items.Insert(0,'ALL');
   cmbOnlyMode.ItemIndex:=0;
-  btnRefresh.Click
+  btnRefresh.Click;
 end;
-
 
 procedure TfrmDXCCStat.btnHTMLExportClick(Sender: TObject);
 begin
@@ -147,6 +159,17 @@ begin
   end
 end;
 
+procedure TfrmDXCCStat.btnNotCfmClick(Sender: TObject);
+begin
+  NotConfirmed;
+end;
+
+procedure TfrmDXCCStat.btnNotWkdClick(Sender: TObject);
+begin
+  NotWorked;
+end;
+
+
 procedure TfrmDXCCStat.btnRefreshClick(Sender : TObject);
 var
   dxcc_fone     : Integer = 0;
@@ -156,14 +179,22 @@ var
   dxcc_digi     : Integer = 0;
   dxcc_digi_cfm : Integer = 0;
   ShowDel  : Boolean = False;
+  s        : string;
 begin
   btnRefresh.Font.Color:=clDefault;
   btnRefresh.Font.Style:=[];
 
+  grdDXCCStat.ScrollBars:=ssNone;
+  grdStatSum.ScrollBars:=ssNone;
+
   grdStatSum.Clean;
   grdDXCCStat.Clean;
 
-  gbDigi.Caption:=cmbOnlyMode.Items[cmbOnlyMode.ItemIndex];
+   if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='ALL') then
+      s:= 'MGM'
+     else
+      s:= cmbOnlyMode.Items[cmbOnlyMode.ItemIndex];
+  gbDigi.Caption:=s;
   Cursor := crSQLWait;
   try
     cqrini.WriteInteger('DXCC','LastStat',cmbCfmType.ItemIndex);
@@ -195,14 +226,14 @@ begin
     CreateStatistic
   finally
     Cursor := crDefault
-  end
+  end;
+  grdDXCCStat.ScrollBars:=ssAutoBoth;
+  grdStatSum.ScrollBars:=ssAutoBoth;
 end;
 
 procedure TfrmDXCCStat.cmbCfmTypeChange(Sender: TObject);
 begin
-     btnRefresh.Font.Color:=clRed;
-     btnRefresh.Font.Style:=[fsBold];
-     btnRefresh.Repaint;
+
 end;
 
 procedure TfrmDXCCStat.FormClose(Sender: TObject; var CloseAction: TCloseAction
@@ -269,7 +300,7 @@ begin
   begin
     Writeln(f,'<td width="40" bgcolor="#333366" class="hlava">');
     tmp := grdDXCCStat.Cells[i,0];
-    tmp := tmp + '<br>F&nbsp;C&nbsp;D';
+    tmp := tmp + '<br>P&nbsp;C&nbsp;M';
     Writeln(f,'<div align="center" class="popis">' + tmp +  '</div>');
     Writeln(f,'</td>');
   end;  //^^ table header
@@ -303,9 +334,14 @@ begin
   Writeln(f,'</tr>');
   Writeln(f,'</table>');
   Writeln(f,'<br>');
+  Writeln(f,'Legend of Columns:<br> Order: <B>P</B>hone, <B>C</B>w, <B>M</B>gm (Machine Generated Modes, ALL or specified mode)<br>');
+  Writeln(f,' Confirmed by: <B>Q</B>sl, <B>L</B>oTW, <B>E</B>qsl, <B>&</B> both LoTW and eQSL.');
+  Writeln(f,' Worked but NOT confirmed: <B>X</B>');
+
+  Writeln(f,'<br>');
   Writeln(f,'<br>');
 
-  Writeln(f,'<!-- Hmm ... -->');
+  Writeln(f,'<!-- Summary grid -->');
 
   Writeln(f,'<TABLE WIDTH="'+ IntToStr(40 + 200 + 60*(grdDXCCStat.ColCount -1)) + '" BORDER=1 CELLPADDING=2 CELLSPACING=0>');
   Writeln(f,'<COL WIDTH=200>');
@@ -407,7 +443,10 @@ begin
 
   Writeln(f,'<TR>');
   Writeln(f,'<TD WIDTH=200 bgcolor="#333366" class="hlava">');
-  Writeln(f,'<div align="center" class="popis">DXCC '+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]+'</div>');
+   if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='ALL') then
+    Writeln(f,'<div align="center" class="popis">DXCC MGM</div>')
+   else
+    Writeln(f,'<div align="center" class="popis">DXCC '+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]+'</div>');
   Writeln(f,'</TD>');
   for i:=1 to grdDXCCStat.ColCount -1 do
   begin
@@ -420,7 +459,10 @@ begin
 
   Writeln(f,'<TR>');
   Writeln(f,'<TD WIDTH=200 bgcolor="#333366" class="hlava">');
-  Writeln(f,'<div align="center" class="popis">DXCC CFM '+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]+'</div>');
+  if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='ALL') then
+   Writeln(f,'<div align="center" class="popis">DXCC CFM MGM</div>')
+  else
+   Writeln(f,'<div align="center" class="popis">DXCC CFM '+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]+'</div>');
   Writeln(f,'</TD>');
   for i:=1 to grdDXCCStat.ColCount -1 do
   begin
@@ -435,15 +477,15 @@ begin
   Writeln(f,'</TABLE>');
 
   Writeln(f,'<br><br>');
+  Writeln(f,'<TABLE><TR><TD>');
   Writeln(f,'<fieldset style="width:100">');
   Writeln(f,'<legend>Phone</legend>');
-  //Writeln(f,'<b>Phone:</b>');
   Writeln(f,lblFoneWKD.Caption);
   Writeln(f,'<br>');
   Writeln(f,lblFoneCmf.Caption);
   Writeln(f,'</fieldset>');
 
-  Writeln(f,'<br><br>');
+  Writeln(f,'</TD><TD>');
   Writeln(f,'<fieldset style="width:100">');
   Writeln(f,'<legend>CW</legend>');
   Writeln(f,lblCWWKD.Caption);
@@ -451,24 +493,28 @@ begin
   Writeln(f,lblCWCmf.Caption);
   Writeln(f,'</fieldset>');
 
-  Writeln(f,'<br><br>');
+  Writeln(f,'</TD><TD>');
   Writeln(f,'<fieldset style="width:100">');
-  Writeln(f,'<legend>'+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]+'</legend>');
+  if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='ALL') then
+     Writeln(f,'<legend>MGM</legend>')
+    else
+     Writeln(f,'<legend>'+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]+'</legend>');
   Writeln(f,lblDIGIWKD.Caption);
   Writeln(f,'<br>');
   Writeln(f,lblDIGICmf.Caption);
   Writeln(f,'</fieldset>');
 
-  Writeln(f,'<br><br>');
+  Writeln(f,'</TD><TD>');
   Writeln(f,'<fieldset style="width:100">');
   Writeln(f,'<legend>MIX</legend>');
   Writeln(f,lblWkdMix.Caption);
   Writeln(f,'<br>');
   Writeln(f,lblCfmMix.Caption);
   Writeln(f,'</fieldset>');
+  Writeln(f,'</TD></TR></TABLE>');
 
   Writeln(f,'<BR> <BR>');
-  Writeln(f,'<H5 ALIGN=CENTER> <A HREF="http://www.cqrlog.com">CQRLOG ver. ' + dmData.VersionString  + ' </A></H5>');
+  Writeln(f,'<H5 ALIGN=CENTER> <A HREF="https://github.com/OH1KH/CqrlogAlpha">CQRLOG' + dmData.VersionString  + ' </A></H5>');
   Writeln(f,'</BODY>');
   Writeln(f,'</HTML>');
 
@@ -476,12 +522,11 @@ begin
 end;
 procedure TfrmDXCCStat.FormCreate(Sender: TObject);
 begin
-  dmUtils.LoadWindowPos(Self)
+  dmUtils.LoadWindowPos(Self);
 end;
 
 function TfrmDXCCStat.GetFieldText(fone,cw,digi : String) : String;
-var
-  space: String;
+
 begin
   space := ' ';
   // Dots instead spaces, tom@dl7bj.de, 2014-06-24
@@ -534,6 +579,7 @@ var
   BandPos : Integer;
   sql2    : String;
   ShowDel : Boolean;
+  s       : String;
 
   procedure WriteToGrid(const Row : Integer);
   begin
@@ -617,8 +663,13 @@ begin
   grdStatSum.Cells[0,6] := 'DXCC CW';
   grdStatSum.Cells[0,7] := 'DXCC CFM CW';
 
-  grdStatSum.Cells[0,8] := 'DXCC '+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex];
-  grdStatSum.Cells[0,9] := 'DXCC CFM '+cmbOnlyMode.Items[cmbOnlyMode.ItemIndex];
+  if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='ALL') then
+      s:= 'MGM'
+     else
+      s:= cmbOnlyMode.Items[cmbOnlyMode.ItemIndex];
+
+  grdStatSum.Cells[0,8] := 'DXCC '+s;
+  grdStatSum.Cells[0,9] := 'DXCC CFM '+s;
 
   ShowDel := cqrini.ReadBool('Program','ShowDeleted',False);
 
@@ -694,7 +745,7 @@ begin
     WriteToGrid(7);
     dmData.QDXCCStat.Close;
 
-    if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'DIGI') then
+    if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'ALL') then
       GetSQLMode('((mode<>'+QuotedStr('CW')+') and (mode<>'+QuotedStr('CWR')+') '+
                  'and (mode<>'+QuotedStr('SSB')+') and (mode<>'+QuotedStr('FM')+')'+
                  'and (mode<>'+QuotedStr('AM')+'))')
@@ -704,7 +755,7 @@ begin
     WriteToGrid(8);
     dmData.QDXCCStat.Close;
 
-    if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'DIGI') then
+    if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'ALL') then
       GetCfmSQLMode('((mode<>'+QuotedStr('CW')+') and (mode<>'+QuotedStr('CWR')+') '+
                   'and (mode<>'+QuotedStr('SSB')+') and (mode<>'+QuotedStr('FM')+')'+
                   'and (mode<>'+QuotedStr('AM')+'))')
@@ -741,15 +792,16 @@ var
   i         : Integer;
   BandPos   : Integer;
   Mode      : String;
+  ONlyMode  : String;
   mDXCC     : TMemDataset;
   Country   : String;
-  space     : String;
 begin
   grdDXCCStat.RowCount := 2;
   LoadBandsSettings;
   Deleted := cqrini.ReadBool('Program','ShowDeleted',False);
   SetLength(BandMode,grdDXCCStat.ColCount-2);
   grdDXCCStat.ColWidths[1] := 160;
+  OnlyMode:=cmbOnlyMode.Items[cmbOnlyMode.ItemIndex];
 
   space := '';
   // dots instead spaces, tom@dl7bj.de, 2014-06-24
@@ -839,7 +891,9 @@ begin
       end;
       case StatType of
         stCfmOnly  : begin
-                       if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+                       if  ((OnlyMode='ALL') and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM')))
+                        or ((Mode=OnlyMode)  and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM'))) then
+                         //if (Mode='SSB') or (Mode='FM') or (Mode='AM') then
                        begin
                          if QSLR = 'Q' then
                            BandMode[BandPos].SSB := 'Q'
@@ -847,26 +901,32 @@ begin
                            BandMode[BandPos].SSB := 'X'
                        end
                        else begin
-                         if (Mode='CW') or (Mode='CWQ') then
+                         if  ((OnlyMode='ALL') and ((Mode='CW') or (Mode='CWQ')))
+                           or ((Mode=OnlyMode)  and ((Mode='CW') or (Mode='CWQ'))) then
+                            //if (Mode='CW') or (Mode='CWQ') then
                          begin
                            if QSLR = 'Q' then
                              BandMode[BandPos].CW := 'Q'
                            else if BandMode[BandPos].CW = space then
                              BandMode[BandPos].CW := 'X'
                          end
-                         else begin
-                          if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='DIGI') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
-                           begin
+                         else begin      //I think these are not needed, OH1KH 12/2025
+                          if  ((OnlyMode='ALL')
+                            or (Mode=OnlyMode)) then
+                            //if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='MGM') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                          begin
                            if QSLR = 'Q' then
                              BandMode[BandPos].DIGI := 'Q'
                            else if BandMode[BandPos].DIGI = space then
                              BandMode[BandPos].DIGI := 'X'
-                           end
+                          end
                           end
                        end
                      end;
         stCfmLoTW  : begin
-                       if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+                       if  ((OnlyMode='ALL') and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM')))
+                        or ((Mode=OnlyMode)  and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM'))) then
+                         //if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
                        begin
                          if QSLR = 'Q' then
                            BandMode[BandPos].SSB := 'Q'
@@ -876,7 +936,9 @@ begin
                            BandMode[BandPos].SSB := 'X'
                        end
                        else begin
-                         if (Mode='CW') or (Mode='CWQ') then
+                         if  ((OnlyMode='ALL') and ((Mode='CW') or (Mode='CWQ')))
+                           or ((Mode=OnlyMode)  and ((Mode='CW') or (Mode='CWQ'))) then
+                            //if (Mode='CW') or (Mode='CWQ') then
                          begin
                            if QSLR = 'Q' then
                              BandMode[BandPos].CW := 'Q'
@@ -886,7 +948,9 @@ begin
                              BandMode[BandPos].CW := 'X'
                          end
                          else begin
-                         if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='DIGI') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                         if  ((OnlyMode='ALL')
+                            or (Mode=OnlyMode)) then
+                            //if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='MGM') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
                           begin
                             if QSLR = 'Q' then
                              BandMode[BandPos].DIGI := 'Q'
@@ -899,7 +963,9 @@ begin
                        end
                      end;
         stLoTWOnly : begin
-                       if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+                       if  ((OnlyMode='ALL') and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM')))
+                        or ((Mode=OnlyMode)  and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM'))) then
+                         //if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
                        begin
                          if LoTW = 'L' then
                            BandMode[BandPos].SSB := 'L'
@@ -907,7 +973,9 @@ begin
                            BandMode[BandPos].SSB := 'X'
                        end
                        else begin
-                         if (Mode='CW') or (Mode='CWQ') then
+                         if  ((OnlyMode='ALL') and ((Mode='CW') or (Mode='CWQ')))
+                           or ((Mode=OnlyMode)  and ((Mode='CW') or (Mode='CWQ'))) then
+                            //if (Mode='CW') or (Mode='CWQ') then
                          begin
                            if LoTW = 'L' then
                              BandMode[BandPos].CW := 'L'
@@ -915,7 +983,9 @@ begin
                              BandMode[BandPos].CW := 'X'
                          end
                          else begin
-                         if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='DIGI') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                         if  ((OnlyMode='ALL')
+                            or (Mode=OnlyMode)) then
+                            //if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='MGM') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
                           begin
                            if LoTW = 'L' then
                              BandMode[BandPos].DIGI := 'L'
@@ -926,7 +996,9 @@ begin
                        end
                      end;
         stCfmeQSL  : begin
-                       if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+                       if  ((OnlyMode='ALL') and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM')))
+                        or ((Mode=OnlyMode)  and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM'))) then
+                        //if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
                        begin
                          if QSLR = 'Q' then
                            BandMode[BandPos].SSB := 'Q'
@@ -936,7 +1008,9 @@ begin
                            BandMode[BandPos].SSB := 'X'
                        end
                        else begin
-                         if (Mode='CW') or (Mode='CWQ') then
+                         if  ((OnlyMode='ALL') and ((Mode='CW') or (Mode='CWQ')))
+                           or ((Mode=OnlyMode)  and ((Mode='CW') or (Mode='CWQ'))) then
+                            //if (Mode='CW') or (Mode='CWQ') then
                          begin
                            if QSLR = 'Q' then
                              BandMode[BandPos].CW := 'Q'
@@ -946,22 +1020,28 @@ begin
                              BandMode[BandPos].CW := 'X'
                          end
                          else begin
-                          if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='DIGI') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
-                           begin
+                         if  ((OnlyMode='ALL')
+                            or (Mode=OnlyMode)) then
+                            //if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='MGM') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                          begin
                              if QSLR = 'Q' then
                              BandMode[BandPos].DIGI := 'Q'
                            else if (eQSL='E') then
                              BandMode[BandPos].DIGI := 'E'
                            else if BandMode[BandPos].DIGI = space then
                              BandMode[BandPos].DIGI := 'X'
-                           end
+                          end
                          end
                        end
                      end;
         stLoTWeQSL : begin
-                       if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+                        if  ((OnlyMode='ALL') and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM')))
+                        or ((Mode=OnlyMode)  and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM'))) then
+                         //if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
                        begin
-                         if LoTW = 'L' then
+                           if (LoTW = 'L') and  (eQSL = 'E') then
+                           BandMode[BandPos].SSB := '&'
+                         else if LoTW = 'L' then
                            BandMode[BandPos].SSB := 'L'
                          else if (eQSL = 'E') then
                            BandMode[BandPos].SSB := 'E'
@@ -969,9 +1049,13 @@ begin
                            BandMode[BandPos].SSB := 'X'
                        end
                        else begin
-                         if (Mode='CW') or (Mode='CWQ') then
+                         if  ((OnlyMode='ALL') and ((Mode='CW') or (Mode='CWQ')))
+                           or ((Mode=OnlyMode)  and ((Mode='CW') or (Mode='CWQ'))) then
+                            //if (Mode='CW') or (Mode='CWQ') then
                          begin
-                           if LoTW = 'L' then
+                           if  (LoTW = 'L') and  (eQSL = 'E') then
+                             BandMode[BandPos].CW := '&'
+                           else if LoTW = 'L' then
                              BandMode[BandPos].CW := 'L'
                            else if (eQSL='E') then
                              BandMode[BandPos].CW := 'E'
@@ -979,20 +1063,26 @@ begin
                              BandMode[BandPos].CW := 'X'
                          end
                          else begin
-                          if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='DIGI') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
-                           begin
-                            if LoTW = 'L' then
-                             BandMode[BandPos].DIGI := 'L'
-                           else if (eQSL='E') then
-                             BandMode[BandPos].DIGI := 'E'
-                           else if BandMode[BandPos].DIGI = space then
-                             BandMode[BandPos].DIGI := 'X'
-                           end
+                         // if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='MGM') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                           if  ((OnlyMode='ALL')
+                            or (Mode=OnlyMode)) then
+                            begin
+                             if  (LoTW = 'L') and  (eQSL = 'E') then
+                               BandMode[BandPos].DIGI := '&'
+                             else if LoTW = 'L' then
+                              BandMode[BandPos].DIGI := 'L'
+                             else if (eQSL='E') then
+                              BandMode[BandPos].DIGI := 'E'
+                             else if BandMode[BandPos].DIGI = space then
+                              BandMode[BandPos].DIGI := 'X'
+                            end
                          end
                        end
                      end;
         steQSL     : begin
-                       if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+                       if  ((OnlyMode='ALL') and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM')))
+                        or ((Mode=OnlyMode)  and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM'))) then
+                        //if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
                        begin
                          if eQSL = 'E' then
                            BandMode[BandPos].SSB := 'E'
@@ -1000,7 +1090,9 @@ begin
                            BandMode[BandPos].SSB := 'X'
                        end
                        else begin
-                         if (Mode='CW') or (Mode='CWQ') then
+                         if  ((OnlyMode='ALL') and ((Mode='CW') or (Mode='CWQ')))
+                           or ((Mode=OnlyMode)  and ((Mode='CW') or (Mode='CWQ'))) then
+                           //if (Mode='CW') or (Mode='CWQ') then
                          begin
                            if eQSL = 'E' then
                              BandMode[BandPos].CW := 'E'
@@ -1008,7 +1100,9 @@ begin
                              BandMode[BandPos].CW := 'X'
                          end
                          else begin
-                          if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='DIGI') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                        //  if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='MGM') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                           if  ((OnlyMode='ALL')
+                            or (Mode=OnlyMode)) then
                            begin
                             if eQSL = 'E' then
                              BandMode[BandPos].DIGI := 'E'
@@ -1019,10 +1113,14 @@ begin
                        end
                      end;
         stAll      : begin
-                       if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
+                       if  ((OnlyMode='ALL') and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM')))
+                        or ((Mode=OnlyMode)  and ((Mode = 'SSB') or (Mode='FM') or (Mode='AM'))) then
+                       //if (Mode = 'SSB') or (Mode='FM') or (Mode='AM') then
                        begin
                          if QSLR = 'Q' then
                            BandMode[BandPos].SSB := 'Q'
+                         else if  (LoTW = 'L') and  (eQSL = 'E') then
+                             BandMode[BandPos].SSB := '&'
                          else if (LoTW = 'L') then
                            BandMode[BandPos].SSB := 'L'
                          else if (eQSL = 'E') then
@@ -1031,10 +1129,14 @@ begin
                            BandMode[BandPos].SSB := 'X'
                        end
                        else begin
-                         if (Mode='CW') or (Mode='CWQ') then
+                          if  ((OnlyMode='ALL') and ((Mode='CW') or (Mode='CWQ')))
+                           or ((Mode=OnlyMode)  and ((Mode='CW') or (Mode='CWQ'))) then
+                         //if (Mode='CW') or (Mode='CWQ') then
                          begin
                            if QSLR = 'Q' then
                              BandMode[BandPos].CW := 'Q'
+                           else if  (LoTW = 'L') and  (eQSL = 'E') then
+                             BandMode[BandPos].CW := '&'
                            else if (LoTW='L') then
                              BandMode[BandPos].CW := 'L'
                            else if (eQSL='E') then
@@ -1043,9 +1145,14 @@ begin
                              BandMode[BandPos].CW := 'X'
                          end
                          else begin
-                          if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='DIGI') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
-                           begin if QSLR = 'Q' then
+                           if  ((OnlyMode='ALL')
+                            or (Mode=OnlyMode)) then
+                          //if ((cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='MGM') or (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]=mode)) then
+                           begin
+                           if QSLR = 'Q' then
                              BandMode[BandPos].DIGI := 'Q'
+                           else if  (LoTW = 'L') and  (eQSL = 'E') then
+                             BandMode[BandPos].DIGI := '&'
                            else if (LoTW='L') then
                              BandMode[BandPos].DIGI := 'L'
                            else if (eQSL='E') then
@@ -1179,7 +1286,7 @@ var
 begin
   Result := 0;
   dmData.QDXCCStat.Close;
-  if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'DIGI') then
+  if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'ALL') then
       tmp := '(mode<>'+QuotedStr('CW')+') and (mode <> '+QuotedStr('CWR')+')'+
              'and (mode<>'+QuotedStr('SSB')+') and (mode<>'+QuotedStr('FM')+') '+
              'and (mode<>'+QuotedStr('AM')+')'
@@ -1206,7 +1313,7 @@ begin
   Result := 0;
   dmData.QDXCCStat.Close;
   tmp := GetStatTypeWhere(StatType);
-  if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'DIGI') then
+  if (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex] = 'ALL') then
       tmp := tmp +' and (mode<>'+QuotedStr('CW')+') and (mode <> '+QuotedStr('CWR')+')'+
              'and (mode<>'+QuotedStr('SSB')+') and (mode<>'+QuotedStr('FM')+') '+
              'and (mode<>'+QuotedStr('AM')+')'
@@ -1271,6 +1378,157 @@ begin
     end;
     grdStatSum.Cells[grdStatSum.ColCount-1,y] := IntToStr(sum)
   end
+end;
+procedure TfrmDXCCStat.NotWorked;
+const
+C_NWKDFILE = '/tmp/DXCC_Not_Worked.txt';
+
+var
+ f      : TextFile;
+ dxcc   : TStringlist;  //current DXCCs
+ wkdxcc : Tstringlist;  //DXCCs found from DXCC grid
+ x,y,c  : integer;
+ a,b    : integer;
+ s      : string;
+ wkd    : boolean;
+
+Begin
+ try
+  //Make list of worked DXCCs from grid
+  wkdxcc :=  TStringList.Create;
+  wkdxcc.Clear;
+
+  //if mode is ALL this is simple
+  if  (cmbOnlyMode.Items[cmbOnlyMode.ItemIndex]='ALL') then
+   begin
+    for y := 1 to grdDXCCStat.RowCount-1 do
+       wkdxcc.AddPair(grdDXCCStat.Cells[0,y],grdDXCCStat.Cells[1,y]);
+   end
+  else //if there is mode selection that is not ALL we need to check has the grid empty rows
+   begin
+      for y := 1 to grdDXCCStat.RowCount-1 do
+        begin
+          for x := 2 to grdDXCCStat.ColCount-1 do
+            Begin
+             wkd:= (pos('Q',grdDXCCStat.Cells[x,y])>0)
+               or  (pos('L',grdDXCCStat.Cells[x,y])>0)
+               or  (pos('E',grdDXCCStat.Cells[x,y])>0)
+               or  (pos('&',grdDXCCStat.Cells[x,y])>0)
+               or  (pos('X',grdDXCCStat.Cells[x,y])>0)
+              ;
+             if wkd then
+              Begin
+                wkdxcc.AddPair(grdDXCCStat.Cells[0,y],grdDXCCStat.Cells[1,y]);
+                break;
+              end;
+            end;
+        end;
+   end;
+
+
+  //Make list of all current DXCCs from database
+  dxcc :=  TStringList.Create;
+  dxcc.Clear;
+
+  dmData.QDXCCStat.Close;
+  dmData.QDXCCStat.SQL.Text := 'select pref,name from cqrlog_common.dxcc_ref where deleted=0;';
+  dmData.trQDXCCStat.StartTransaction;
+  dmData.QDXCCStat.Open();
+  dmData.QDXCCStat.Last;
+  dmData.QDXCCStat.First;
+    while not dmData.QDXCCStat.Eof do
+       begin
+        dxcc.AddPair(dmData.QDXCCStat.Fields[0].AsString,dmData.QDXCCStat.Fields[1].AsString);
+        dmData.QDXCCStat.Next;
+       end;
+  dmData.QDXCCStat.Close();
+  dmData.trQDXCCStat.Rollback;
+
+  //find worked from all DXCC list
+  AssignFile(f,C_NWKDFILE);
+  Rewrite(f);
+  writeln(f,'Not worked countries:');
+  Writeln(f);
+  c:=0;
+  for y:=0 to dxcc.Count-1 do
+    begin
+     if wkdxcc.IndexOfName(dxcc.Names[y])=-1 then
+      Begin     //not in wkd
+       s:= dxcc.Names[y];
+       while length(s)<10 do
+          s:=s+' ';
+       writeln(f,s,dxcc.Values[dxcc.Names[y]]);
+       inc(c);
+      end;
+    end;
+  Writeln(f);
+  Writeln(f,'DXCC count in this list: ',c);
+  writeln(f,'Confirm type: ',cmbCfmType.Items[cmbCfmType.ItemIndex],' for: ',cmbOnlyMode.Items[cmbOnlyMode.ItemIndex],' mode(s)');
+  Writeln (f,'Information written to file:',C_NWKDFILE);
+  CloseFile(f);
+  dmUtils.ViewTextFile(C_NWKDFILE);
+ finally
+   wkdxcc.Free;
+   dxcc.Free;
+ end;
+end;
+procedure TfrmDXCCStat.NotConfirmed;
+const
+C_NCFMFILE = '/tmp/DXCC_Not_Confirmed.txt';
+
+var
+   f      : TextFile;
+   x,y,c  : integer;
+   wkd,
+   cfm    : boolean;
+   pref   : string;
+Begin
+  try
+  AssignFile(f,C_NCFMFILE);
+  Rewrite(f);
+  writeln(f,'Worked countries (marked with X), but no confirm mark (Q,L,E) on any band or mode cell:');
+  Writeln(f);
+    c:=0;
+    for y := 1 to grdDXCCStat.RowCount-1 do
+     begin
+      wkd:=false;
+      cfm:=false;
+      for x := 2 to grdDXCCStat.ColCount-1 do
+       begin
+        wkd:= pos('X',grdDXCCStat.Cells[x,y])>0;
+        if wkd then
+           break;
+       end;
+      if wkd then
+       Begin
+         for x := 2 to grdDXCCStat.ColCount-1 do
+            Begin
+             cfm:= (pos('Q',grdDXCCStat.Cells[x,y])>0)
+               or  (pos('L',grdDXCCStat.Cells[x,y])>0)
+               or  (pos('E',grdDXCCStat.Cells[x,y])>0)
+               or  (pos('&',grdDXCCStat.Cells[x,y])>0)
+              ;
+             if cfm then
+              break;
+            end;
+         if not cfm then
+          begin
+             pref:= grdDXCCStat.Cells[0,y];
+             while length(pref)<10 do
+               pref:=pref+' ';
+             Writeln (f,pref,' ',grdDXCCStat.Cells[1,y]);
+             inc(c);
+          end;
+       end;
+     end;
+   Writeln(f);
+   Writeln(f,'DXCC count in this list: ',c);
+   writeln(f,'Confirm type: ',cmbCfmType.Items[cmbCfmType.ItemIndex],' for: ',cmbOnlyMode.Items[cmbOnlyMode.ItemIndex],' mode(s)');
+   Writeln (f,'Information written to file:',C_NCFMFILE);
+   CloseFile(f);
+   dmUtils.ViewTextFile(C_NCFMFILE);
+  finally
+  end;
 end;
 
 end.

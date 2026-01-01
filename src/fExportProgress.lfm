@@ -143,10 +143,10 @@ object frmExportProgress: TfrmExportProgress
     0000000000000000000000000000000000000000000000000000000000000000
     0000
   }
+  Position = poWorkAreaCenter
+  LCLVersion = '4.4.0.0'
   OnCreate = FormCreate
   OnShow = FormShow
-  Position = poWorkAreaCenter
-  LCLVersion = '3.8.0.0'
   object lblComment: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideLeft.Side = asrCenter

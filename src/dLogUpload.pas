@@ -193,15 +193,17 @@ begin
 
   try
     Doc := TXMLDocument.Create;
-    if (cmd='DELETE') then
-      RootNode := Doc.CreateElement('contactdelete')
-    else if (cmd='UPDATE') then
-      RootNode := Doc.CreateElement('contactreplace')
-    else // INSERT
-      RootNode := Doc.CreateElement('contactinfo');
+    case cmd of
+         'DELETE'      : RootNode := Doc.CreateElement('contactdelete');
+         'UPDATE'      : RootNode := Doc.CreateElement('contactreplace');
+         else
+                         RootNode := Doc.CreateElement('contactinfo');
+    end;
+
     Doc.Appendchild(RootNode);
     RootNode := Doc.DocumentElement;
 
+    try
     for i:=0 to data.Count-1 do
     begin
       Key   := copy(data.Strings[i],1,Pos('=',data.Strings[i])-1);
@@ -215,12 +217,14 @@ begin
         RootNode.AppendChild(ItemNode)
       end; // case
     end;
+    finally
+    end;
 
     if (Address='') then
     begin
       ResultCode := 500;
       Response   := 'Address not set; check config';
-      Result := True;
+      Result := False;
       exit
     end;
 

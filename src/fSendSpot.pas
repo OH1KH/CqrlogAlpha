@@ -33,6 +33,8 @@ type
     Label1: TLabel;
     procedure btnLocClick(Sender: TObject);
     procedure btnModRstClick(Sender: TObject);
+    procedure btnModRstMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure btnUsrClick(Sender: TObject);
     procedure btnUsrMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -44,9 +46,11 @@ type
     { private declarations }
   public
     ModeRst,
+    ModeRst2,
     HisMyLoc,
     Scall,
     Srst_s,
+    Srst_r,
     Sstx,
     Sstx_str,
     Ssrx,
@@ -81,8 +85,18 @@ end;
 
 procedure TfrmSendSpot.btnModRstClick(Sender: TObject);
 begin
-  if pos(ModeRst, edtSpot.Text) = 0 then
-    edtSpot.Text := edtSpot.Text+ ' '+ModeRst;
+end;
+
+procedure TfrmSendSpot.btnModRstMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if (pos(ModeRst, edtSpot.Text) = 0) and (pos(ModeRst2, edtSpot.Text) = 0) then
+   begin
+    if Button=mbLeft then
+                      edtSpot.Text := edtSpot.Text+ModeRst;
+    if Button=mbRight then
+                          edtSpot.Text := edtSpot.Text+ModeRst2;
+   end;
 end;
 
 procedure TfrmSendSpot.btnUsrClick(Sender: TObject);
@@ -138,7 +152,7 @@ begin
   UsrString:=dmUtils.GetCWMessage('',Scall,Srst_s,Sstx,Sstx_str,Ssrx,Ssrx_str,SHisName,SHelloMsg,UsrString);
   btnUsr.Hint:=UsrString;
   btnLoc.Hint:= HisMyLoc;
-  btnModRst.Hint:= ModeRst;
+  btnModRst.Hint:= 'Left: '+ModeRst+'  Right: '+ModeRst2;
 end;
 
 end.

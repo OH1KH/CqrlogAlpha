@@ -1,16 +1,16 @@
 object frmNewQSO: TfrmNewQSO
   Left = 0
-  Height = 491
+  Height = 615
   Top = 0
-  Width = 992
+  Width = 985
   HelpType = htKeyword
   HelpKeyword = 'help/index.html'
-  HorzScrollBar.Page = 992
-  VertScrollBar.Page = 491
+  HorzScrollBar.Page = 985
+  VertScrollBar.Page = 615
   AutoScroll = True
   Caption = 'New QSO ... (CqrlogAlpha for Linux)'
-  ClientHeight = 491
-  ClientWidth = 992
+  ClientHeight = 615
+  ClientWidth = 985
   Constraints.MinHeight = 200
   Constraints.MinWidth = 400
   Icon.Data = {
@@ -2132,6 +2132,7 @@ object frmNewQSO: TfrmNewQSO
   }
   KeyPreview = True
   Menu = MainMenu1
+  LCLVersion = '4.4.0.0'
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
@@ -2140,7 +2141,6 @@ object frmNewQSO: TfrmNewQSO
   OnKeyUp = FormKeyUp
   OnShow = FormShow
   OnWindowStateChange = FormWindowStateChange
-  LCLVersion = '3.8.0.0'
   object pnlAll: TPanel
     AnchorSideTop.Control = dbgrdQSOBefore
     AnchorSideTop.Side = asrBottom
@@ -3095,9 +3095,9 @@ object frmNewQSO: TfrmNewQSO
           AnchorSideTop.Control = edtEndTime
           AnchorSideTop.Side = asrCenter
           Left = 237
-          Height = 20
-          Top = 253
-          Width = 20
+          Height = 26
+          Top = 250
+          Width = 26
           Action = acRefreshTime
           AutoSize = True
           BorderSpacing.Left = 3
@@ -3535,9 +3535,9 @@ object frmNewQSO: TfrmNewQSO
               FF00FFFFFF00FFFFFF0080502010864B205F8A4B22988A4E25D48B4F25D1884D
               22968849215E894E270DFFFFFF00FFFFFF00FFFFFF00FFFFFF00
             }
-            OnClick = sbtnLocatorMapClick
             ShowHint = True
             ParentShowHint = False
+            OnClick = sbtnLocatorMapClick
           end
         end
         object pnlSbtn1: TPanel
@@ -3600,9 +3600,9 @@ object frmNewQSO: TfrmNewQSO
               00000000000000000000000000000000000000000000000000000000000057D0
               DF00230000000000000000000000000000000000000000000000
             }
-            OnClick = sbtnAttachClick
             ShowHint = True
             ParentShowHint = False
+            OnClick = sbtnAttachClick
           end
         end
         object pnlSbtn2: TPanel
@@ -3705,9 +3705,9 @@ object frmNewQSO: TfrmNewQSO
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00
             }
-            OnClick = sbtnQSLClick
             ShowHint = True
             ParentShowHint = False
+            OnClick = sbtnQSLClick
           end
         end
         object pnlSbtn3: TPanel
@@ -3898,9 +3898,9 @@ object frmNewQSO: TfrmNewQSO
               E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2
               E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2E9FFF5F2E9FF
             }
-            OnClick = sbtnQRZClick
             ShowHint = True
             ParentShowHint = False
+            OnClick = sbtnQRZClick
           end
         end
         object pnlSbtn6: TPanel
@@ -3964,10 +3964,10 @@ object frmNewQSO: TfrmNewQSO
               DAFFFDF4EDFFEF9342FFF19C53FFF19B52FFF1974AFFFADDC4FFFEFEFEFFFEFD
               FDFFF8D1AFFFF0994CFFF19B52FFF19C53FFEF9342FFFDF4EDFF
             }
-            OnClick = sbtnHamQTHClick
             ShowHint = True
             ParentFont = False
             ParentShowHint = False
+            OnClick = sbtnHamQTHClick
           end
         end
         object pnlSbtn7: TPanel
@@ -4024,9 +4024,9 @@ object frmNewQSO: TfrmNewQSO
               FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
             }
             Visible = False
-            OnClick = sbtnUsrbtnClick
             ShowHint = True
             ParentShowHint = False
+            OnClick = sbtnUsrbtnClick
           end
         end
         object lblDateformat: TLabel
@@ -5547,16 +5547,16 @@ object frmNewQSO: TfrmNewQSO
       Caption = 'Close'
       Hint = 'Close program'
       ImageIndex = 4
-      OnExecute = acCloseExecute
       ShortCut = 16465
+      OnExecute = acCloseExecute
     end
     object acPreferences: TAction
       Category = 'File'
       Caption = 'Preferences'
       Hint = 'Preferences'
       ImageIndex = 5
-      OnExecute = acPreferencesExecute
       ShortCut = 16464
+      OnExecute = acPreferencesExecute
     end
     object acGrayline: TAction
       Category = 'Window'
@@ -5587,8 +5587,8 @@ object frmNewQSO: TfrmNewQSO
     object acDetails: TAction
       Category = 'Window'
       Caption = 'Detail info'
-      OnExecute = acDetailsExecute
       ShortCut = 16457
+      OnExecute = acDetailsExecute
     end
     object acQSOperMode: TAction
       Category = 'Statistics'
@@ -5613,8 +5613,8 @@ object frmNewQSO: TfrmNewQSO
     object acLongNote: TAction
       Category = 'File'
       Caption = 'Show/edit long note'
-      OnExecute = acLongNoteExecute
       ShortCut = 16462
+      OnExecute = acLongNoteExecute
     end
     object acDXCCCfm: TAction
       Category = 'Statistics'
@@ -5651,8 +5651,8 @@ object frmNewQSO: TfrmNewQSO
     object acCWType: TAction
       Category = 'Window'
       Caption = 'CW type'
-      OnExecute = acCWTypeExecute
       ShortCut = 123
+      OnExecute = acCWTypeExecute
     end
     object acWACCfm: TAction
       Category = 'Statistics'
@@ -5672,8 +5672,8 @@ object frmNewQSO: TfrmNewQSO
     object acRemoteMode: TAction
       Category = 'File'
       Caption = 'Remote mode for fldigi'
-      OnExecute = acRemoteModeExecute
       ShortCut = 16461
+      OnExecute = acRemoteModeExecute
     end
     object acQSOBefore: TAction
       Category = 'View'
@@ -5711,8 +5711,8 @@ object frmNewQSO: TfrmNewQSO
     object acSendSpot: TAction
       Category = 'File'
       Caption = 'Send spot (~ or CTRL+W)'
-      OnExecute = acSendSpotExecute
       ShortCut = 16471
+      OnExecute = acSendSpotExecute
     end
     object acSCP: TAction
       Category = 'Window'
@@ -5722,8 +5722,8 @@ object frmNewQSO: TfrmNewQSO
     object acTune: TAction
       Category = 'File'
       Caption = 'Tune'
-      OnExecute = acTuneExecute
       ShortCut = 16468
+      OnExecute = acTuneExecute
     end
     object acRotControl: TAction
       Category = 'Window'

@@ -113,10 +113,10 @@ object frmSendSpot: TfrmSendSpot
     7FFF0000FFFF0001FFFF0003FFFF0007FFFF001FFFFF003FFFFF00FFFFFF83FF
     FFFF
   }
+  Position = poWorkAreaCenter
+  LCLVersion = '4.4.0.0'
   OnActivate = FormActivate
   OnShow = FormShow
-  Position = poWorkAreaCenter
-  LCLVersion = '3.8.0.0'
   object Label1: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -192,6 +192,7 @@ object frmSendSpot: TfrmSendSpot
     ShowHint = True
     TabOrder = 3
     OnClick = btnModRstClick
+    OnMouseUp = btnModRstMouseUp
   end
   object btnLoc: TButton
     AnchorSideTop.Control = Label1

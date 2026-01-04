@@ -1,18 +1,18 @@
 object frmPreferences: TfrmPreferences
   Left = 158
-  Height = 741
+  Height = 715
   Top = 40
-  Width = 1038
+  Width = 1012
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1038
-  VertScrollBar.Page = 741
+  HorzScrollBar.Page = 1012
+  VertScrollBar.Page = 715
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 741
-  ClientWidth = 1038
+  ClientHeight = 715
+  ClientWidth = 1012
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   Position = poMainFormCenter
@@ -3142,12 +3142,12 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = chkRSendCWR
           AnchorSideTop.Side = asrCenter
-          Left = 520
+          Left = 518
           Height = 23
           Hint = 'Check if rigctld has started with --vfo parameter. '#10'if response is 1 the polling command format should be'#10'changed from "+f +m +v" to "+f currVFO +m currVFO +v"'#10'And also some other Hamlib commands need "currVFO" then.'
           Top = 110
           Width = 103
-          BorderSpacing.Left = 3
+          BorderSpacing.Left = 1
           Caption = 'Use \chkvfo'
           Checked = True
           ParentShowHint = False
@@ -3185,12 +3185,13 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Control = chkRVfo
           AnchorSideTop.Control = chkRVfo
           AnchorSideTop.Side = asrBottom
-          Left = 520
+          Left = 518
           Height = 23
-          Hint = 'When checked Power_ON command will be sent when initializing rig.'
+          Hint = 'When checked "-C auto_power_on=0" will be added '#10'to rigctld command line arguments'
           Top = 133
-          Width = 131
-          Caption = 'Rig pwr ON cmd'
+          Width = 129
+          AutoSize = False
+          Caption = 'Rig AutoPwrON'
           ParentShowHint = False
           ShowHint = True
           TabOrder = 14
@@ -3210,7 +3211,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Control = chkRPwrOn
           AnchorSideTop.Control = chkRPwrOn
           AnchorSideTop.Side = asrBottom
-          Left = 520
+          Left = 518
           Height = 23
           Hint = 'Send UTC time from PC to rig via Hamlib command.'#10'Sending occurs once after rigctld start.'
           Top = 156
@@ -3225,7 +3226,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Control = chkRPwrOn
           AnchorSideTop.Control = chkVoiceR
           AnchorSideTop.Side = asrBottom
-          Left = 520
+          Left = 518
           Height = 23
           Hint = 'Default rig poll is compound +f +m +v as one command.'#10'Unchecking this breaks compound and every single '#10'command is sent as own line.'#10'This may help poor rigctld emulators like WFview to work.'
           Top = 202
@@ -3242,7 +3243,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Control = chkRPwrOn
           AnchorSideTop.Control = chkUTC2R
           AnchorSideTop.Side = asrBottom
-          Left = 520
+          Left = 518
           Height = 23
           Hint = 'When using phone modes launch rig''s voice memories'#10'via rigctld command instead of starting voice_keyer'#10'script. (Rig must support \send_voice_mem command)'
           Top = 179
@@ -3293,7 +3294,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 6
         Caption = ' rotctld '
-        ClientHeight = 70
+        ClientHeight = 86
         ClientWidth = 655
         TabOrder = 0
         object Label124: TLabel
@@ -3340,7 +3341,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Control = pgROTControl
           AnchorSideBottom.Side = asrBottom
           Caption = 'Rotor one'
-          ClientHeight = 369
+          ClientHeight = 396
           ClientWidth = 640
           object gbRot1: TGroupBox
             AnchorSideLeft.Control = tabRot1
@@ -3350,7 +3351,7 @@ object frmPreferences: TfrmPreferences
             AnchorSideBottom.Control = tabRot1
             AnchorSideBottom.Side = asrBottom
             Left = 6
-            Height = 345
+            Height = 372
             Top = 12
             Width = 628
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -3359,7 +3360,7 @@ object frmPreferences: TfrmPreferences
             BorderSpacing.Right = 6
             BorderSpacing.Bottom = 12
             Caption = ' Rotor one, desc.:'
-            ClientHeight = 327
+            ClientHeight = 370
             ClientWidth = 626
             TabOrder = 0
             object lblDevice1: TLabel
@@ -3486,14 +3487,14 @@ object frmPreferences: TfrmPreferences
               AnchorSideBottom.Side = asrBottom
               Left = 6
               Height = 148
-              Top = 173
+              Top = 216
               Width = 614
               Anchors = [akLeft, akRight, akBottom]
               BorderSpacing.Left = 6
               BorderSpacing.Right = 6
               BorderSpacing.Bottom = 6
               Caption = 'Rotor one serial parameters'
-              ClientHeight = 130
+              ClientHeight = 146
               ClientWidth = 612
               TabOrder = 5
               object lblSpeed1: TLabel
@@ -3810,7 +3811,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideBottom.Control = tabRot1
           AnchorSideBottom.Side = asrBottom
           Caption = 'Rotor two'
-          ClientHeight = 369
+          ClientHeight = 396
           ClientWidth = 640
           object gbRot2: TGroupBox
             AnchorSideLeft.Control = tabRot2
@@ -3820,7 +3821,7 @@ object frmPreferences: TfrmPreferences
             AnchorSideBottom.Control = tabRot2
             AnchorSideBottom.Side = asrBottom
             Left = 6
-            Height = 345
+            Height = 372
             Top = 12
             Width = 628
             Anchors = [akTop, akLeft, akRight, akBottom]
@@ -3829,7 +3830,7 @@ object frmPreferences: TfrmPreferences
             BorderSpacing.Right = 6
             BorderSpacing.Bottom = 12
             Caption = ' Rotor two, desc.:'
-            ClientHeight = 327
+            ClientHeight = 370
             ClientWidth = 626
             TabOrder = 0
             object lblDevice2: TLabel
@@ -3956,14 +3957,14 @@ object frmPreferences: TfrmPreferences
               AnchorSideBottom.Side = asrBottom
               Left = 6
               Height = 148
-              Top = 173
+              Top = 216
               Width = 614
               Anchors = [akLeft, akRight, akBottom]
               BorderSpacing.Left = 6
               BorderSpacing.Right = 6
               BorderSpacing.Bottom = 6
               Caption = 'Rotor two serial parameters'
-              ClientHeight = 130
+              ClientHeight = 146
               ClientWidth = 612
               TabOrder = 5
               object lblSpeed2: TLabel

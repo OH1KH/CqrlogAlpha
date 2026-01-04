@@ -262,8 +262,9 @@ begin
   index:=0;
   paramList := TStringList.Create;
   paramList.Delimiter := ' ';
-  if pos('AUTO_POWER',UpperCase(RigCtldArgs))=0 then
-   if (RigId>10) then  //only true rigs can do auto_power_on
+  if (pos('AUTO_POWER',UpperCase(RigCtldArgs))=0) and (RigId>10) then  //only true rigs can do auto_power_on,
+                                                                     //if user sets extra parameter AUTO_POWER=1 for
+                                                                     //rig models < 10 it is on his responsible
     begin
     if fPowerON then RigCtldArgs:= RigCtldArgs+' -C auto_power_on=1';
           //2023-08-02 auto_power on is not any more default "1" and it should stay so (by W9MDB)
@@ -955,6 +956,9 @@ begin
           end;
 
       3:  Begin
+         {this is not good idea as powering rig takes undefined wakeup time that leads to timeouts
+          better to use "rig pwr ON"(fPowerON) only for setting parameter "AutoPowerON=1" at rigctld startup
+
             if (fPower and fPowerON and (not InitDone)) then
              begin
                cmd:= '+\set_powerstat 1'+LineEnding;
@@ -966,6 +970,7 @@ begin
                fPollCount :=  fPollTimeout;
              end
             else
+            }
              begin
                if not InitDone then
                                InitFinal;

@@ -5,7 +5,7 @@ unit uRigControl;
 interface
 
 uses
-  Classes, SysUtils, Process, ExtCtrls, lNetComponents, lnet, Forms, strutils;
+  Classes, SysUtils, Process, ExtCtrls, lNetComponents, lnet, Forms, strutils, DateUtils;
 
 type TRigMode =  record
     mode : String[10];
@@ -84,7 +84,7 @@ type TRigControl = class
 
     RigCmdChannelBusy : Boolean;
     RigCmdChannelMsg  : String;
-
+    TimeOutCounter    : LongInt;
 
     function  RigConnected   : Boolean;
     function  StartRigctld   : Boolean;
@@ -683,7 +683,7 @@ begin
                     InitReceive(Imsg,Hit)
     else
 
-     Begin
+     Begin   //other than init
         a := Explode(LineEnding,msg);
         MaxArg:=Length(a)-1;
 
@@ -858,6 +858,8 @@ begin
                     tmrRigPoll.Enabled  := False;
                     fResponseTimeout := true;
                   end;
+                if fDebugMode then
+                                Writeln('Response waited: ',DateTimeToUnix(now)-TimeOutCounter,'sec');
                Exit;   //no sending allowed
            end;
 
@@ -1033,7 +1035,6 @@ begin
                end;
               //cmd := '+f'+VfoStr+' +m'+VfoStr+LineEnding //do not ask vfo if rig can't
             end
-
        end
       else
        begin
@@ -1098,7 +1099,8 @@ begin
 
      AllowCommand:=-1; //waiting for reply
      fPollCount :=  fPollTimeout;
-    end;
+
+    end;    //end of Allowcommand=0
 
 end;
 procedure TRigControl.OnConnectRigctldConnect(aSocket: TLSocket);
@@ -1147,6 +1149,7 @@ begin
   Result:=(r=length(msg)); //SendMessage returns sent char count (inc LineEnding)
   if fDebugMode then
                 writeln('Sent :',r,' ',Result);
+  TimeOutCounter:=DateTimeToUnix(now);
 end;
 procedure TRigControl.Restart;
 var
@@ -1363,13 +1366,6 @@ end;
                     Writeln(LineEnding,'VFO Ops: ',fSupGetVfoOp);
          Hit:=true;Imsg:='';
          AllowCommand:=3;    //this is the last init command
-      end;
-
-     if pos('SET_POWERSTAT',Imsg)>0 then
-      Begin
-        Hit:=true;Imsg:='';
-        if not InitDone then
-                        InitFinal;
       end;
 
      if Hit then

@@ -2783,7 +2783,7 @@ begin
             if (frmNewQSO.RepHead <> '') and (not CallFromSpot) and (not newstart) then
              //clean wsjtx's DXCall and DXGrid and do GenStdMsg(to clean it too)
                Begin
-                 frmMonWsjtx.SendConfigure('','',' ',' ',$7FFFFFFF,$7FFFFFFF,$7FFFFFFF,False,True);
+                 frmMonWsjtx.SendConfigure('','',' ',' ',$FFFFFFFF,$FFFFFFFF,$FFFFFFFF,False,True);
                end;
             if not CallFromSpot then
                Begin
@@ -7115,7 +7115,7 @@ begin
                     if RemoteActive='wsjtx' then
                      Begin
                       CallFromSpot:=True;
-                      frmMonWsjtx.SendConfigure('','',call,' ',$7FFFFFFF,$7FFFFFFF,$7FFFFFFF,False,True);
+                      frmMonWsjtx.SendConfigure('','',call,' ',$FFFFFFFF,$FFFFFFFF,$FFFFFFFF,False,True);
                      end;
                     SendToBack;
                    end

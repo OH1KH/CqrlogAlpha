@@ -7,12 +7,12 @@ object frmMonWsjtx: TfrmMonWsjtx
   Caption = 'Wsjt-x CQ-monitor'
   ClientHeight = 345
   ClientWidth = 582
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnDropFiles = FormDropFiles
   OnHide = FormHide
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object pnlMap: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom

@@ -357,7 +357,10 @@ begin
      Begin
            if LocalDbg then
                        Writeln('---O msgtime is:', msgTime,'  LastWsjtlinetime is:',LastWsjtLineTime);
-          if chkdB.Checked then sgMonitor.Columns.Items[1].Visible:= true
+          if not chkMap.Checked then   //Cq-monitor has always dB visible
+                sgMonitor.Columns.Items[1].Visible:= true
+              else
+               if chkdB.Checked then sgMonitor.Columns.Items[1].Visible:= true
                              else sgMonitor.Columns.Items[1].Visible:= false;
           clearSgMonitor;
           CqPeriodTimerStart(msgTime, LastWsjtLineTime);

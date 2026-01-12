@@ -3588,7 +3588,7 @@ begin
       ErrMsg := 'Callsign field empty!';
       exit;
     end;
-    req := 'https://xml.qrz.com/xml/1.34?s=' + fQRZSession + ';callsign=' + GetIDCall(call);
+    req := cqrini.ReadString('CallBook', 'CbQRZAddr', 'https://xml.qrz.com') + '/xml/1.34?s=' + fQRZSession + ';callsign=' + GetIDCall(call);
     if not HTTP.HTTPMethod('GET', req) then
       ErrMsg := '(' + IntToStr(http.ResultCode) + '):' + http.ResultString
     else
@@ -3672,7 +3672,7 @@ begin
       ErrMsg := 'Callsign field empty!';
       exit;
     end;
-    req := 'https://ssl.qrzcq.com/xml?s=' + fQRZCQSession + '&callsign=' + GetIDCall(call)+'&agent=Cqrlog_'+uVersion.cVERSION;
+    req := cqrini.ReadString('CallBook', 'CbQRZCQAddr', 'https://ssl.qrzcq.com') + '/xml?s=' + fQRZCQSession + '&callsign=' + GetIDCall(call)+'&agent=Cqrlog_'+uVersion.cVERSION;
     if not HTTP.HTTPMethod('GET', req) then
       ErrMsg := '(' + IntToStr(http.ResultCode) + '):' + http.ResultString
     else
@@ -4312,7 +4312,7 @@ begin
     http.ProxyPort := cqrini.ReadString('Program', 'Port', '');
     http.UserName := cqrini.ReadString('Program', 'User', '');
     http.Password := cqrini.ReadString('Program', 'Passwd', '');
-    req := 'https://xmldata.qrz.com/xml/1.34?username=' + cqrini.ReadString(
+    req := cqrini.ReadString('CallBook', 'CbQRZAddr', 'https://xml.qrz.com') + '/xml/1.34?username=' + cqrini.ReadString(
       'CallBook', 'CbQRZUser', '') + ';password=' + cqrini.ReadString(
       'CallBook', 'CbQRZPass', '') + ';agent=Cqrlog_'+uVersion.cVERSION;
     if not HTTP.HTTPMethod('GET', req) then
@@ -4372,7 +4372,7 @@ begin
     http.ProxyPort := cqrini.ReadString('Program', 'Port', '');
     http.UserName := cqrini.ReadString('Program', 'User', '');
     http.Password := cqrini.ReadString('Program', 'Passwd', '');
-    req := 'https://ssl.qrzcq.com/xml?username=' + cqrini.ReadString(
+    req := cqrini.ReadString('CallBook', 'CbQRZCQAddr', 'https://ssl.qrzcq.com') + '/xml?username=' + cqrini.ReadString(
       'CallBook', 'CbQRZCQUser', '') + '&password=' + cqrini.ReadString(
       'CallBook', 'CbQRZCQPass', '') + '&agent=Cqrlog_'+uVersion.cVERSION;
     if not HTTP.HTTPMethod('GET', req) then
@@ -4426,7 +4426,7 @@ begin
     http.ProxyPort := cqrini.ReadString('Program', 'Port', '');
     http.UserName := cqrini.ReadString('Program', 'User', '');
     http.Password := cqrini.ReadString('Program', 'Passwd', '');
-    req := 'http://www.hamqth.com/xml.php?u=' + cqrini.ReadString('CallBook', 'CbHamQTHUser', '') +
+    req := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'http://www.hamqth.com') + '/xml.php?u=' + cqrini.ReadString('CallBook', 'CbHamQTHUser', '') +
       '&p=' + EncodeURLData(cqrini.ReadString('CallBook', 'CbHamQTHPass', '')) + '&prg=Cqrlog_'+uVersion.cVERSION;
     //Writeln(req);
     if not HTTP.HTTPMethod('GET', req) then
@@ -4487,7 +4487,7 @@ begin
       ErrMsg := 'Callsign field empty!';
       exit;
     end;
-    req := 'http://www.hamqth.com/xml.php?id=' + fHamQTHSession + '&callsign=' +
+    req := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'http://www.hamqth.com') + '/xml.php?id=' + fHamQTHSession + '&callsign=' +
       GetIDCall(call) + '&prg=CQRLOG';
     if not HTTP.HTTPMethod('GET', req) then
       ErrMsg := '(' + IntToStr(http.ResultCode) + '):' + http.ResultString

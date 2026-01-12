@@ -460,6 +460,9 @@ type
     DateEditCall: TDateEdit;
     DateEditLoc: TDateEdit;
     dlgColor : TColorDialog;
+    edtCbHamQThAddr: TEdit;
+    edtCbQrzAddr: TEdit;
+    edtCbQrzcqAddr: TEdit;
     edtNewQsoUdpAddrPort: TEdit;
     edtPollTimeout: TEdit;
     edtHamClockUrl: TEdit;
@@ -637,6 +640,7 @@ type
     GroupBox18: TGroupBox;
     GroupBox19: TGroupBox;
     gbInternet: TGroupBox;
+    gbCallbookAddr: TGroupBox;
     GroupBox20: TGroupBox;
     GroupBox21: TGroupBox;
     GroupBox22: TGroupBox;
@@ -656,7 +660,7 @@ type
     grpUsrDigitalModes: TGroupBox;
     gbeQSL: TGroupBox;
     grbRigBandWidths: TGroupBox;
-    GroupBox38: TGroupBox;
+    gbCallbookSelect: TGroupBox;
     gbProfiles: TGroupBox;
     grbRigctldPath: TGroupBox;
     GroupBox41: TGroupBox;
@@ -686,6 +690,9 @@ type
     Label108: TLabel;
     Label12: TLabel;
     Label13: TLabel;
+    lblHamQTHAddr: TLabel;
+    lblQrzAddr: TLabel;
+    lblQrzcqAddr: TLabel;
     lblRot2Host: TLabel;
     lblRot1Name: TLabel;
     lblRot1Host: TLabel;
@@ -771,8 +778,8 @@ type
     lbleQSLUsr: TLabel;
     lbleQSLPass: TLabel;
     Label11: TLabel;
-    Label111: TLabel;
-    Label112: TLabel;
+    lblCallbookUser: TLabel;
+    lblCallbookPass: TLabel;
     lblintProxy: TLabel;
     Label124: TLabel;
     lblDevice1: TLabel;
@@ -1632,6 +1639,9 @@ begin
   cqrini.WriteString('CallBook', 'CbQRZPass', edtCbQRZPass.Text);
   cqrini.WriteString('CallBook', 'CbQRZCQUser', edtCbQRZCQUser.Text);
   cqrini.WriteString('CallBook', 'CbQRZCQPass', edtCbQRZCQPass.Text);
+  cqrini.WriteString('CallBook', 'CbHamQTHAddr', edtCbHamQTHAddr.Text);
+  cqrini.WriteString('CallBook', 'CbQRZAddr', edtCbQRZAddr.Text);
+  cqrini.WriteString('CallBook', 'CbQRZCQAddr', edtCbQRZCQAddr.Text);
 
   cqrini.WriteInteger('RBN','10db',cmbCl10db.Selected);
   cqrini.WriteInteger('RBN','20db',cmbCl20db.Selected);
@@ -3470,10 +3480,10 @@ begin
 
   chkAskBackup.Checked := cqrini.ReadBool('Backup','AskFirst',False);
 
-  edtTxtFiles.Text := cqrini.ReadString('ExtView', 'txt', '');
-  edtPdfFiles.Text := cqrini.ReadString('ExtView', 'pdf', '');
-  edtImgFiles.Text := cqrini.ReadString('ExtView', 'img', '');
-  edtHtmlFiles.Text := cqrini.ReadString('ExtView', 'html', dmUtils.MyDefaultBrowser);
+  edtTxtFiles.Text        := cqrini.ReadString('ExtView', 'txt', '');
+  edtPdfFiles.Text        := cqrini.ReadString('ExtView', 'pdf', '');
+  edtImgFiles.Text        := cqrini.ReadString('ExtView', 'img', '');
+  edtHtmlFiles.Text       := cqrini.ReadString('ExtView', 'html', dmUtils.MyDefaultBrowser);
   chkIntQSLViewer.Checked := cqrini.ReadBool('ExtView', 'QSL', True);
   chkDeleteEqsl.Checked   := cqrini.ReadBool('ExtView', 'DeleQSL', False);
 
@@ -3483,15 +3493,19 @@ begin
   edtClub4Date.Text := cqrini.ReadString('FourthClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);
   edtClub5Date.Text := cqrini.ReadString('FifthClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);
 
-  edtCbHamQTHUser.Text := cqrini.ReadString('CallBook', 'CbHamQTHUser', '');
-  edtCbHamQTHPass.Text := cqrini.ReadString('CallBook', 'CbHamQTHPass', '');
-  edtCbQRZUser.Text := cqrini.ReadString('CallBook', 'CbQRZUser', '');
-  edtCbQRZPass.Text := cqrini.ReadString('CallBook', 'CbQRZPass', '');
-  edtCbQRZCQUser.Text := cqrini.ReadString('CallBook', 'CbQRZCQUser', '');
-  edtCbQRZCQPass.Text := cqrini.ReadString('CallBook', 'CbQRZCQPass', '');
-  rbHamQTH.Checked := cqrini.ReadBool('Callbook', 'HamQTH', True);
-  rbQRZ.Checked := cqrini.ReadBool('Callbook', 'QRZ', False);
-  rbQRZCQ.Checked := cqrini.ReadBool('Callbook', 'QRZCQ', False);
+  edtCbHamQTHUser.Text  := cqrini.ReadString('CallBook', 'CbHamQTHUser', '');
+  edtCbHamQTHPass.Text  := cqrini.ReadString('CallBook', 'CbHamQTHPass', '');
+  edtCbQRZUser.Text     := cqrini.ReadString('CallBook', 'CbQRZUser', '');
+  edtCbQRZPass.Text     := cqrini.ReadString('CallBook', 'CbQRZPass', '');
+  edtCbQRZCQUser.Text   := cqrini.ReadString('CallBook', 'CbQRZCQUser', '');
+  edtCbQRZCQPass.Text   := cqrini.ReadString('CallBook', 'CbQRZCQPass', '');
+  rbHamQTH.Checked      := cqrini.ReadBool('Callbook', 'HamQTH', True);
+  rbQRZ.Checked         := cqrini.ReadBool('Callbook', 'QRZ', False);
+  rbQRZCQ.Checked       := cqrini.ReadBool('Callbook', 'QRZCQ', False);
+  edtCbHamQTHAddr.Text  := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'http://www.hamqth.com' );
+  edtCbQRZAddr.Text     := cqrini.ReadString('CallBook', 'CbQRZAddr', 'https://xml.qrz.com');
+  edtCbQRZCQAddr.Text   := cqrini.ReadString('CallBook', 'CbQRZCQAddr', 'https://ssl.qrzcq.com' );
+
 
   cmbCl10db.Selected        := cqrini.ReadInteger('RBN','10db',clWhite);
   cmbCl20db.Selected        := cqrini.ReadInteger('RBN','20db',clPurple);

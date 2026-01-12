@@ -417,6 +417,7 @@ type
     procedure acUploadToHrdLogExecute(Sender: TObject);
     procedure acUploadToUDPLogExecute(Sender: TObject);
     procedure acPropExecute(Sender: TObject);
+    procedure btnCancelExit(Sender: TObject);
     procedure btnClearSatelliteClick(Sender : TObject);
     procedure cbRxLoChange(Sender: TObject);
     procedure cbSplitTXChange(Sender: TObject);
@@ -4798,6 +4799,15 @@ end;
 procedure TfrmNewQSO.acPropExecute(Sender: TObject);
 begin
    frmPropagation.Show
+end;
+
+procedure TfrmNewQSO.btnCancelExit(Sender: TObject);
+begin
+     btnCancel.Caption:='Quit [CTRL+Q]';
+     btnCancel.Font.Color:=clDefault;
+     btnCancel.Font.Style:=[];
+     btnCancel.Repaint;
+     FirstClose:=true;
 end;
 
 procedure TfrmNewQSO.btnClearSatelliteClick(Sender : TObject);

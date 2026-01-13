@@ -193,7 +193,7 @@ type
       AllCountries,
       QsoRate10,
       QsoRate60    : integer;
-      CQcount : integer;
+      CQcount      : integer;
 
     procedure SetActualReportForModeFromRadio;
     procedure InitInput;
@@ -400,6 +400,11 @@ begin
   if  ((Shift = [ssCTRL]) and (key = VK_L)) then
                               lblCqFreqClick(nil);
 
+  //tune
+   if  ((Shift = [ssCTRL]) and (key = VK_T)) then
+                           Begin
+                            frmTRXControl.HLTune(true);
+                           end;
 end;
 
 procedure TfrmContest.edtCallExit(Sender: TObject);

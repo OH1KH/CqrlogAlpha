@@ -5886,7 +5886,9 @@ begin
       Caption := dmUtils.GetNewQSOCaption('New QSO');
       fViewQSO := False;
       fEditQSO := False;
-    end
+    end;
+    key:=0;
+    Exit;
   end
   else
     EscFirstPressDone := False;
@@ -5914,7 +5916,8 @@ begin
             else ShowMessage('CW interface:  No keyer defined for current radio!');
        end;
       end;
-    key := 0
+    key := 0;
+    Exit;
   end;
 
   if (Key = VK_F11) then                                            //VK_11
@@ -5926,7 +5929,9 @@ begin
       QRZ := TQRZThread.Create(True);
       QRZ.FreeOnTerminate := True;
       QRZ.Start
-    end
+    end;
+    key:=0;
+    Exit;
   end;
 
   // keys for CW speed up / down
@@ -5945,6 +5950,7 @@ begin
     if (frmCWType <> nil ) then
          frmCWType.UpdateTop;
     key:=0;
+    Exit;
   end;
 
   // CTRL-Key > Keyboard Shortcuts for NewQSO with CTRL
@@ -5971,55 +5977,64 @@ begin
         fEditQSO := False;
         NewQSO;
         ClearAll;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (Key = VK_F8) then                                         //VK_F8
       begin
         if not (fEditQSO or fViewQSO) then
           edtCall.Text:= '';
         ReturnToNewQSO;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_A) then                                          //VK_A
       begin
         acAddToBandMap.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_D) then                                          //VK_D
       begin
         acDXCCCfm.Execute;
         key := 0;
+        Exit;
       end;
       if (key = VK_I) then                                          //VK_I
       begin
         acDetails.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_H) then                                          //VK_H
       begin
         ShowHelp;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_M) then                                          //VK_M
       begin
         acRemoteMode.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_N) then                                          //VK_N
       begin
         acLongNote.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if(key = VK_P) then                                           //VK_P
       begin
         acPreferences.Execute;
         key := 0;
+        Exit;
       end;
       if (key = VK_Q) then                                          //VK_Q
       begin
         btnCancelClick(nil);
         key := 0;
-        exit
+        Exit;
       end;
       if (key = VK_R) then                                          //VK_R
       begin
@@ -6038,12 +6053,14 @@ begin
               CheckCallsignClub;
           end;
         end;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_W) then                                          //VK_W
         Begin
          acSendSpot.Execute;
          key := 0;
+         Exit;
         end;
       if key in [VK_1..VK_9] then                                   //VK_1..VK_9
          Begin
@@ -6053,6 +6070,7 @@ begin
         begin
          frmTRXControl.DisableSplit;
          key:=0;
+         Exit;
         end;
  end;
 
@@ -6067,13 +6085,16 @@ begin
          edtDate.SetFocus
        else
          edtCall.SetFocus;
-     key := 0;
+       key:=0;
+       Exit;
     end;
    if (Shift = [ssCtrl]) then
     begin
       mnuQSOList.Click;
       key := 0;
+      Exit;
     end;
+
    if (Shift = [ssAlt]) then
     begin
       with TfrmChangeOperator.Create(self) do
@@ -6094,6 +6115,8 @@ begin
         Free;
       end;
     end;
+   key:=0;
+   Exit;
   end; //end VK_O
 
 
@@ -6120,36 +6143,43 @@ begin
         begin
          frmTRXControl.btnMemUp.Click;
          key:=0;
+         Exit;
         end;
       if (key = VK_F) then                                         //VK_F
         begin
           dmUtils.EnterFreq;
           key:=0;
+          Exit;
         end;
       if (key = VK_V) then                                         //Alt+V
         Begin
          frmTRXControl.btnMemDwn.Click;
          key:=0;
+         Exit;
         end;
       if (key = VK_W) then                                         //Alt+W
         Begin
          cmbQSL_S.text:='SB';
          key:=0;
+         Exit;
         end;
       if (key = VK_N) then                                         //Alt+N
         Begin
          cmbQSL_S.text:='N';
          key:=0;
+         Exit;
         end;
       if (key = VK_H) then                                         //VK_H
         begin
          ShowHelp;
          key:=0;
+         Exit;
         end;
       if (key = VK_F2) then                                        //VK_F2
         begin
          acNewQSOExecute(nil);
          key:= 0;
+         Exit;
         end;
   end;
 end;

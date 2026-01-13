@@ -271,6 +271,7 @@ begin
     if (length(edtCall.Text) > 2) and (not edtCall.Focused) then   //must be some kind of call and cursor away from edtCall
       btSave.Click;
     key := 0;
+    Exit;
   end;
 
   //Ctrl+esc
@@ -318,6 +319,7 @@ begin
          end;
     end; //case
     key := 0;
+    Exit;
   end;
 
   //memory keys
@@ -332,8 +334,8 @@ begin
           if Assigned(frmNewQSO.CWint) and (chkSP.Checked=False) and (edtCall.Text<>'') then//run mode with uncomplete call
            Begin
               frmNewQSO.CWint.SendText(edtCall.Text);
-              Key:=0;
-              exit;
+              Key := 0;
+              Exit;
             end;
 
         end;
@@ -346,7 +348,8 @@ begin
   if (Key = VK_F1) and (Shift = [ssShift]) and (edtCall.Text='') then
    begin
      CQstart(true);
-     key:=0;
+     key := 0;
+     Exit;
    end;
 
    n:=IntToStr(frmTRXControl.cmbRig.ItemIndex);
@@ -365,7 +368,8 @@ begin
     lblSpeed.Caption:= frmNewQSO.sbNewQSO.Panels[4].Text;
     if (frmCWType <> nil ) then
          frmCWType.UpdateTop;
-    key:=0;
+    key := 0;
+    Exit;
    end;
 
 
@@ -376,34 +380,47 @@ begin
       Begin
           chkSP.Checked:= False;
           key:=0;
+          Exit;
       end;
      if (Shift = [ssCTRL]) then  //on
       Begin
           chkSP.Checked:= True;
-          key:=0;
+          key := 0;
+          Exit;
       end;
    end;
 
   if ((Shift = [ssCtrl]) and (key = VK_A)) then
   begin
     frmNewQSO.acAddToBandMap.Execute;
-    key := 0
+    key := 0;
+    Exit;
   end;
 
   //split keys
    if (Shift = [ssCTRL]) then
     if key in [VK_1..VK_9] then frmNewQSO.SetSplit(chr(key));
   if ((Shift = [ssCTRL]) and (key = VK_0)) then
+   begin
     frmTRXControl.DisableSplit;
+    key := 0;
+    Exit;
+   end;
 
   //Jump to last CQ freq,mode
   if  ((Shift = [ssCTRL]) and (key = VK_L)) then
+                          begin
                               lblCqFreqClick(nil);
+                              key := 0;
+                              Exit;
+                          end;
 
   //tune
    if  ((Shift = [ssCTRL]) and (key = VK_T)) then
                            Begin
-                            frmTRXControl.HLTune(true);
+                            frmNewQSO.acTuneExecute(nil);
+                            Key := 0;
+                            Exit;
                            end;
 end;
 

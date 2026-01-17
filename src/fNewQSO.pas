@@ -3142,6 +3142,10 @@ begin
                                   end;
                  end;
                  case ContestNr of
+                      0         : Begin   //user may want to store event qsos (like WWA) with "contest" name. Therefore contest #0 must be chekcked
+                                      if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
+                                            edtContestName.Text :=frmContest.cmbContestName.Text;
+                                  end;
                       1,2,3,4   : Begin
                                        edtContestSerialReceived.Text := copy( edtContestSerialReceived.Text,1,6); //Max Db length=6
                                        if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then

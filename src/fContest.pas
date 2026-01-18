@@ -1156,6 +1156,8 @@ Begin
    tmrScore.Enabled:=false;
    tmrESC2.Enabled:=false;
    tmrCQ.Enabled:=false;
+   if dmData.IsFilter then
+        frmMain.acCancelFilterExecute(nil);
 end;
 
 procedure TfrmContest.FormHide(Sender: TObject);

@@ -3502,7 +3502,7 @@ begin
   rbHamQTH.Checked      := cqrini.ReadBool('Callbook', 'HamQTH', True);
   rbQRZ.Checked         := cqrini.ReadBool('Callbook', 'QRZ', False);
   rbQRZCQ.Checked       := cqrini.ReadBool('Callbook', 'QRZCQ', False);
-  edtCbHamQTHAddr.Text  := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'http://www.hamqth.com' );
+  edtCbHamQTHAddr.Text  := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com' );
   edtCbQRZAddr.Text     := cqrini.ReadString('CallBook', 'CbQRZAddr', 'https://xml.qrz.com');
   edtCbQRZCQAddr.Text   := cqrini.ReadString('CallBook', 'CbQRZCQAddr', 'https://ssl.qrzcq.com' );
 
@@ -3524,7 +3524,7 @@ begin
   edtHaUserName.Text     := cqrini.ReadString('OnlineLog','HaUserName','');
   edtHaPasswd.Text       := cqrini.ReadString('OnlineLog','HaPasswd','');
   cmbHaColor.Selected    := cqrini.ReadInteger('OnlineLog','HaColor',clBlue);
-  edtHamQTHurl.Text      := cqrini.ReadString('OnlineLog','HaUrl','http://www.hamqth.com/qso_realtime.php');
+  edtHamQTHurl.Text      := cqrini.ReadString('OnlineLog','HaUrl','https://www.hamqth.com/qso_realtime.php');
   chkHaUpEnabledChange(nil);
 
   chkClUpEnabled.Checked := cqrini.ReadBool('OnlineLog','ClUP',False);

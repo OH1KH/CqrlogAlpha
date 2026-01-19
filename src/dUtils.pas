@@ -4426,7 +4426,7 @@ begin
     http.ProxyPort := cqrini.ReadString('Program', 'Port', '');
     http.UserName := cqrini.ReadString('Program', 'User', '');
     http.Password := cqrini.ReadString('Program', 'Passwd', '');
-    req := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'http://www.hamqth.com') + '/xml.php?u=' + cqrini.ReadString('CallBook', 'CbHamQTHUser', '') +
+    req := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com') + '/xml.php?u=' + cqrini.ReadString('CallBook', 'CbHamQTHUser', '') +
       '&p=' + EncodeURLData(cqrini.ReadString('CallBook', 'CbHamQTHPass', '')) + '&prg=Cqrlog_'+uVersion.cVERSION;
     //Writeln(req);
     if not HTTP.HTTPMethod('GET', req) then
@@ -4487,7 +4487,7 @@ begin
       ErrMsg := 'Callsign field empty!';
       exit;
     end;
-    req := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'http://www.hamqth.com') + '/xml.php?id=' + fHamQTHSession + '&callsign=' +
+    req := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com') + '/xml.php?id=' + fHamQTHSession + '&callsign=' +
       GetIDCall(call) + '&prg=CQRLOG';
     if not HTTP.HTTPMethod('GET', req) then
       ErrMsg := '(' + IntToStr(http.ResultCode) + '):' + http.ResultString
@@ -4563,7 +4563,7 @@ begin
   AProcess := TProcess.Create(nil);
   try
     AProcess.Executable  := cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
-    AProcess.Parameters.Add('http://www.hamqth.com/' + GetIDCall(call));
+    AProcess.Parameters.Add(cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com') + GetIDCall(call));
     if dmData.DebugLevel>=1 then ;
     Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute

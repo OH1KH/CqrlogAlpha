@@ -114,13 +114,13 @@ object frmDXCluster: TfrmDXCluster
     FFFF
   }
   KeyPreview = True
+  LCLVersion = '4.4.0.0'
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object pgDXCluster: TPageControl
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -130,9 +130,9 @@ object frmDXCluster: TfrmDXCluster
     Height = 428
     Top = 0
     Width = 716
-    ActivePage = tabTelnet
+    ActivePage = tabWeb
     Align = alClient
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     object tabWeb: TTabSheet
       AnchorSideLeft.Control = pgDXCluster
@@ -159,47 +159,77 @@ object frmDXCluster: TfrmDXCluster
           ParentColor = False
         end
         object btnWebConnect: TButton
-          Left = 617
+          AnchorSideTop.Control = Panel4
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = Panel4
+          AnchorSideRight.Side = asrBottom
+          Left = 615
           Height = 25
-          Top = 8
+          Top = 6
           Width = 84
           Anchors = [akTop, akRight]
+          BorderSpacing.Right = 6
           BorderSpacing.InnerBorder = 4
           Caption = 'Connect'
           TabOrder = 0
           OnClick = btnWebConnectClick
         end
         object btnClear: TButton
-          Left = 535
+          AnchorSideLeft.Control = btnWebUrl
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel4
+          AnchorSideTop.Side = asrCenter
+          Left = 491
           Height = 25
           Top = 6
-          Width = 75
-          Anchors = [akTop, akRight]
+          Width = 84
+          BorderSpacing.Left = 6
           BorderSpacing.InnerBorder = 4
           Caption = 'Clear'
           TabOrder = 1
           OnClick = btnClearClick
         end
         object btnHelp: TButton
-          Left = 142
+          AnchorSideTop.Control = Panel4
+          AnchorSideTop.Side = asrCenter
+          AnchorSideRight.Control = btnFont
+          Left = 221
           Height = 25
           Top = 6
-          Width = 75
+          Width = 84
+          Anchors = [akTop, akRight]
+          BorderSpacing.Right = 6
           BorderSpacing.InnerBorder = 4
           Caption = 'Help'
           TabOrder = 2
-          Visible = False
           OnClick = btnHelpClick
         end
         object btnFont: TButton
-          Left = 455
+          AnchorSideLeft.Control = Panel4
+          AnchorSideLeft.Side = asrCenter
+          AnchorSideTop.Control = Panel4
+          AnchorSideTop.Side = asrCenter
+          Left = 311
           Height = 25
           Top = 6
-          Width = 75
+          Width = 84
           Action = acFont
-          Anchors = [akTop, akRight]
           BorderSpacing.InnerBorder = 4
           TabOrder = 3
+        end
+        object btnWebUrl: TButton
+          AnchorSideLeft.Control = btnFont
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = Panel4
+          AnchorSideTop.Side = asrCenter
+          Left = 401
+          Height = 25
+          Top = 6
+          Width = 84
+          BorderSpacing.Left = 6
+          Caption = 'WebURL'
+          TabOrder = 4
+          OnClick = btnWebUrlClick
         end
       end
       object pnlWeb: TPanel
@@ -308,13 +338,13 @@ object frmDXCluster: TfrmDXCluster
           Width = 263
           Max = 100
           Min = 2
-          OnChange = trChatSizeChange
           Position = 20
           ScalePos = trLeft
-          OnClick = trChatSizeClick
-          OnMouseWheel = trChatSizeMouseWheel
+          OnChange = trChatSizeChange
           TabOrder = 3
           Visible = False
+          OnClick = trChatSizeClick
+          OnMouseWheel = trChatSizeMouseWheel
         end
       end
       object pnlTop: TPanel

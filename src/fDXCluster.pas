@@ -38,6 +38,7 @@ type
     btnHlp: TButton;
     btnHiddenTest: TButton;
     btnPreferences : TButton;
+    btnWebUrl: TButton;
     dlgDXfnt: TFontDialog;
     edtCommand: TEdit;
     edtF1: TEdit;
@@ -97,7 +98,7 @@ type
     procedure acProgPrefExecute(Sender : TObject);
     procedure btnHiddenTestClick(Sender: TObject);
     procedure btnPreferencesClick(Sender : TObject);
-    procedure edtF2Exit(Sender: TObject);
+    procedure btnWebUrlClick(Sender: TObject);
     procedure edtFExit(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -139,6 +140,7 @@ type
     ReloadDXCPref : Boolean;
     FirstWebGet : Boolean;
     mindex      : LongInt;
+    WebAddr     : String;
 
     gcfgUseBackColor : Boolean;
     gcfgBckColor : TColor;
@@ -210,6 +212,7 @@ type
     TWebThread = class(TThread)
     protected
       BiggerFetch : Boolean;
+      WebURL  : String;
       procedure Execute; override;
   end;
 
@@ -258,8 +261,9 @@ begin
       WebThread.FreeOnTerminate := True
     end;
     WebThread.BiggerFetch := FirstWebGet;
+    WebThread.WebUrl      := WebAddr;
     WebThread.Start;
-    FirstWebGet := False
+    FirstWebGet           := False
   end
 end;
 
@@ -306,6 +310,7 @@ begin
   cqrini.WriteString('DXCluster','Port',telPort);
   cqrini.WriteString('DXCluster','User',telUser);
   cqrini.WriteString('DXCluster','Pass',telPass);
+  cqrini.WriteString('DXCluster','WebAddr',WebAddr);
   cqrini.SaveToDisk;
   if ConWeb then
     btnWebConnect.Click;
@@ -399,9 +404,36 @@ begin
   popPreferences.PopUp(p.x, p.y)
 end;
 
-procedure TfrmDXCluster.edtF2Exit(Sender: TObject);
-begin
+procedure TfrmDXCluster.btnWebUrlClick(Sender: TObject);
+var
+  WasCon  : boolean;
 
+begin
+   WasCon:=ConWeb;
+   if ConWeb then
+  begin
+    StopAllConnections;
+    btnWebConnect.Caption := 'Connect';
+    ConWeb := False
+  end;
+
+  WebAddr :=  cqrini.ReadString('DXCluster','WebAddr','https://www.hamqth.com/dxc_csv.php?limit=');
+  if InputQuery('Question', 'Modify WebDXCluster URL', False, WebAddr)
+    then
+     begin
+       cqrini.WriteString('DXCluster','WebAddr',WebAddr);
+       if WasCon then
+        begin
+          WebSpots.RemoveAllLines;
+          FirstWebGet:=true;
+        end;
+     end;
+  if WasCon then
+   begin
+     ConnectToWeb;
+     btnWebConnect.Caption := 'Disconnect';
+     ConWeb := True;
+   end;
 end;
 
 procedure TfrmDXCluster.edtFExit(Sender: TObject);
@@ -633,6 +665,7 @@ begin
     f.Name    := cqrini.ReadString('DXCluster','Font','DejaVu Sans Mono');
     f.Size    := cqrini.ReadInteger('DXCluster','FontSize',12);
     f.Style   := StringToFontStyles(cqrini.ReadString('DXCluster','FontStyle',''));
+    WebAddr   := cqrini.ReadString('DXCluster','WebAddr','https://www.hamqth.com/dxc_csv.php?limit=');
     WebSpots.SetFont(f);
     TelSpots.SetFont(f) ;
     ChatSpots.SetFont(f)
@@ -1590,6 +1623,8 @@ var
   Country : String;
   x       : String;
   limit   : String;
+
+
 begin
   if dmData.DebugLevel>=1 then
     Writeln('In TWebThread.Execute');
@@ -1609,7 +1644,7 @@ begin
     HTTP.ProxyPort := cqrini.ReadString('Program','Port','');
     HTTP.UserName  := cqrini.ReadString('Program','User','');
     HTTP.Password  := cqrini.ReadString('Program','Passwd','');
-    if not HTTP.HTTPMethod('GET','http://www.hamqth.com/dxc_csv.php?limit='+limit) then
+    if not HTTP.HTTPMethod('GET',WebUrl+limit) then
     begin
       frmDXCluster.StopAllConnections;
       frmDXCluster.btnWebConnect.Click;

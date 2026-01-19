@@ -348,6 +348,7 @@ type
     function  ModeToCqr(InMode,InSubmode:String;dbg:boolean=False):String;
     function  ContestNameFromFilteredQsos:string;
     function  CoordinateFromLocator(loc: string; var latitude, longitude: currency):Boolean;
+    function  IsFileThere(ASearch: string;out ResultFile: string):boolean;
 
 end;
 
@@ -3973,11 +3974,14 @@ end;
 
 procedure TdmUtils.ShowQRZInBrowser(call: string);
 var
-  AProcess: TProcess;
+  AProcess   : TProcess;
+  ResultFile :String;
 begin
   AProcess := TProcess.Create(nil);
   try
-    AProcess.Executable := cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
+    if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+     AProcess.Executable := ResultFile
+    else exit;
     AProcess.Parameters.Add('https://www.qrz.com/db/' + GetIDCall(call));
     if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute
@@ -3989,12 +3993,15 @@ end;
 procedure TdmUtils.ShowLocatorMapInBrowser(locator: string);
 var
   AProcess: TProcess;
-  myloc: string = '';
+  myloc,
+  ResultFile: string;
 begin
   myloc := cqrini.ReadString('Station', 'LOC', '');
   AProcess := TProcess.Create(nil);
   try
-    AProcess.Executable := cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
+    if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+     AProcess.Executable := ResultFile
+    else exit;
     AProcess.Parameters.Add('https://www.k7fry.com/grid/?qth=' + locator + '&from=' + myloc);
     if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute
@@ -4558,11 +4565,14 @@ begin
 end;
 procedure TdmUtils.ShowHamQTHInBrowser(call: string);
 var
-  AProcess: TProcess;
+  AProcess   : TProcess;
+  ResultFile : String;
 begin
   AProcess := TProcess.Create(nil);
   try
-    AProcess.Executable  := cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
+    if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+     AProcess.Executable := ResultFile
+    else exit;
     AProcess.Parameters.Add(cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com') +'/'+ GetIDCall(call));
     if dmData.DebugLevel>=1 then ;
     Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
@@ -4573,8 +4583,9 @@ begin
 end;
 procedure TdmUtils.ShowUsrUrl;
 var
-  AProcess: TProcess;
-  cmd       :String;
+  AProcess   : TProcess;
+  cmd,
+  ResultFile : String;
 begin
   cmd := cqrini.ReadString('NewQSO', 'UsrBtn', 'https://www.qrzcq.com/call/$CALL');
   if (cmd<>'') then
@@ -4589,7 +4600,9 @@ begin
           if not(frmNewQSO.fEditQSO or frmNewQSO.fViewQSO) then
              cmd := StringReplace(cmd,'$MYLOC',frmNewQSO.CurrentMyLoc,[rfReplaceAll])
             else  cmd := StringReplace(cmd,'$MYLOC',frmNewQSO.EditViewMyLoc,[rfReplaceAll]);
-        AProcess.Executable  := cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
+        if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+          AProcess.Executable := ResultFile
+         else exit;
         AProcess.Parameters.Add(cmd);
         if dmData.DebugLevel>=1 then ;
         Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
@@ -4906,8 +4919,9 @@ end;
 
 procedure TdmUtils.OpenInApp(what: string);
 var
-  b:string;
+  b: string;
 begin
+  try
   if ((pos('.HTML',upcase(what))>0)
     or (pos('.HTM',upcase(what))>0)
     or (pos('HTTP',upcase(what))>0) ) then //because possible "hashtag in link-problem"
@@ -4915,12 +4929,14 @@ begin
       b:= cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
       if (b<>'') then
         Begin
-          RunOnBackground(cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser) + ' ' + what);
+          RunOnBackground(b + ' ' + what);
           exit;
         end;
      end;
 
   RunOnBackground('xdg-open ' + what);
+  finally
+  end;
 end;
 
 function TdmUtils.GetDescKeyFromCode(key: word): string;
@@ -5976,6 +5992,20 @@ procedure TdmUtils.TheButtonClick(Sender: TObject);
 begin
   WaitTime:=0;
 end;
+function  TdmUtils.IsFileThere(ASearch: string;out ResultFile: string): boolean;
+Begin
+ if FileExists(ASearch,true) then
+   Begin
+    ResultFile:=ASearch;
+    Result:=True;
+   end
+  else
+   begin
+      ShowMessage('File: '+ASearch+' is not found!');
+      ResultFile:=ASearch;
+      Result:=False;
+   end;
 
+end;
 end.
 

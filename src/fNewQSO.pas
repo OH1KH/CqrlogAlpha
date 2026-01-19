@@ -5287,11 +5287,14 @@ end;
 
 procedure TfrmNewQSO.mnuIK3QARClick(Sender: TObject);
 var
-   AProcess: TProcess;
+   AProcess   : TProcess;
+   ResultFile : String;
 begin
   AProcess := TProcess.Create(nil);
   try
-    AProcess.Executable := cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser);
+    if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+     AProcess.Executable := ResultFile
+    else exit;
     AProcess.Parameters.Add('http://www.ik3qar.it/manager/man_result.php?call='+
                             dmData.qQSOBefore.Fields[4].AsString);
     if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);

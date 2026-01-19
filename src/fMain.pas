@@ -1441,7 +1441,8 @@ var
   QSOMinute,//        MM format
             //        20m, 80M, 70cm, etc. (case insensitive) band
             //        Must match exactly and should be an ADIF-compatible mode
-  suff      //        FIlename suffix from URL. Expected 'png' or 'jpg'
+  suff,     //        FIlename suffix from URL. Expected 'png' or 'jpg'
+  ResultFile
   : String;
 begin
         ShowOK:=true;
@@ -1526,7 +1527,9 @@ begin
       //view in browser can do either from https:// or file:// without any external code
       AProcess := TProcess.Create(nil);
       try
-        AProcess.Executable := cqrini.ReadString('Program', 'WebBrowser', dmUtils.MyDefaultBrowser);
+      if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+         AProcess.Executable := ResultFile
+       else exit;
         AProcess.Parameters.Add(url);
         if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
         AProcess.Execute
@@ -1544,10 +1547,13 @@ end;
 procedure TfrmMain.mnuIK3AQRClick(Sender: TObject);
 var
   AProcess: TProcess;
+  ResultFile :String;
 begin
   AProcess := TProcess.Create(nil);
   try
-    AProcess.Executable := cqrini.ReadString('Program', 'WebBrowser', dmUtils.MyDefaultBrowser);
+    if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+     AProcess.Executable := ResultFile
+    else exit;
     AProcess.Parameters.Add('http://www.ik3qar.it/manager/man_result.php?call=' + dmData.qCQRLOG.Fields[4].AsString);
     if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute

@@ -6119,7 +6119,6 @@ begin
         Free;
       end;
     end;
-   key:=0;
    Exit;
   end; //end VK_O
 

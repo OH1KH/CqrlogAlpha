@@ -4563,7 +4563,7 @@ begin
   AProcess := TProcess.Create(nil);
   try
     AProcess.Executable  := cqrini.ReadString('Program', 'WebBrowser', MyDefaultBrowser);
-    AProcess.Parameters.Add(cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com') + GetIDCall(call));
+    AProcess.Parameters.Add(cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com') +'/'+ GetIDCall(call));
     if dmData.DebugLevel>=1 then ;
     Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute

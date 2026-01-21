@@ -276,7 +276,7 @@ begin
     exit;
   end;
 
-  if Application.MessageBox('Do you really want to DELETE this log?','Question ...', mb_YesNo + mb_IconQuestion + mb_DefButton2) in [idNo, idCancel] then
+  if Application.MessageBox(PChar('Do you really want to DELETE log'+LineEnding+LineEnding+dmData.qLogList.Fields[0].AsString+'|'+dmData.qLogList.Fields[1].AsString+' ?'),'Question ...', mb_YesNo + mb_IconQuestion + mb_DefButton2) in [idNo, idCancel] then
   begin
     exit;
   end;
@@ -545,8 +545,8 @@ end;
 
 procedure TfrmDBConnect.mnuClearLogClick(Sender: TObject);
 begin
-  if Application.MessageBox('All QSOS and SETTINGS will be DELETED!'+LineEnding+LineEnding+
-       'Do you really want do this ?','Question ...', mb_YesNo + mb_IconQuestion + mb_DefButton1) in [idNo, idCancel] then exit;
+  if Application.MessageBox(PChar('All QSOS and SETTINGS from log'+LineEnding+LineEnding+'  '+dmData.qLogList.Fields[0].AsString+'|'+dmData.qLogList.Fields[1].AsString+LineEnding+LineEnding+
+   'will be DELETED!'+LineEnding+LineEnding+'Do you really want to do this ?'),'Question ...', mb_YesNo + mb_IconQuestion + mb_DefButton1) in [idNo, idCancel] then exit;
 
   dmData.TruncateTables(dmData.qLogList.Fields[0].AsInteger);
   ShowMessage('Log is empty')
@@ -554,8 +554,9 @@ end;
 
 procedure TfrmDBConnect.mnuClearQsosClick(Sender: TObject);
 begin
-  if Application.MessageBox('All QSOS will be DELETED!'+LineEnding+LineEnding+
-       'Do you really want do this ?','Question ...', mb_YesNo + mb_IconQuestion + mb_DefButton1) in [idNo, idCancel] then exit;
+
+  if Application.MessageBox(PChar('All QSOS from log'+LineEnding+LineEnding+'  '+dmData.qLogList.Fields[0].AsString+'|'+dmData.qLogList.Fields[1].AsString+LineEnding+LineEnding+
+    'will be DELETED!'+LineEnding+LineEnding+'Do you really want to do this ?'),'Question ...', mb_YesNo + mb_IconQuestion + mb_DefButton1) in [idNo, idCancel] then exit;
 
   dmData.TruncateTables(dmData.qLogList.Fields[0].AsInteger,False);
   ShowMessage('All qsos deleted')

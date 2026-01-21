@@ -1072,7 +1072,8 @@ var
   f:integer;
 begin
   if chkFFlt.Checked then
-  chkFlt.Checked := false;
+                     chkFlt.Checked := false
+   else
    Begin
       FileFilter.Clear;
       s:= FileSearch('filefilter.txt',dmData.HomeDir + 'ctyfiles' + PathDelim,[]);
@@ -1102,7 +1103,10 @@ procedure TfrmMonWsjtx.chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if Button = mbRight then
+          begin
+            chkFFlt.Checked:=false;
             dmUtils.ViewTextFile(dmData.HomeDir + 'ctyfiles' + PathDelim+'filefilter.txt');
+          end;
 end;
 
 procedure TfrmMonWsjtx.chkFltChange(Sender: TObject);

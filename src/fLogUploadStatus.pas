@@ -130,6 +130,7 @@ procedure TUploadThread.Execute;
 const
   C_SEL_UPLOAD_STATUS = 'select * from upload_status where logname=%s';
   C_SEL_LOG_CHANGES   = 'select * from log_changes where id > %d order by id';
+  C_COUNT_CLUBLOG_ACTIONS = 'select(select count(id) from log_changes where id > (select id_log_changes from upload_status where logname="ClubLog")) as nr';
 var
   data       : TStringList;
   err        : String = '';
@@ -140,6 +141,9 @@ var
   UpSuccess  : Boolean = False;
   ErrorCode  : Integer = 0;
   AlreadyDel : Boolean = False;
+  ClubCount  : integer;
+  ClubBulk   : boolean;
+
 begin
   data := TStringList.Create;
   try
@@ -162,6 +166,20 @@ begin
 
     if dmLogUpload.trQ.Active then dmLogUpload.trQ.RollBack;
     dmLogUpload.trQ.StartTransaction;
+
+    if (WhereToUpload=upClubLog) then
+       begin
+         dmLogUpload.Q.Close;
+         dmLogUpload.Q.SQL.Text := C_COUNT_CLUBLOG_ACTIONS;
+         dmLogUpload.Q.Open;
+         ClubCount:=  dmLogUpload.Q.FieldByName('nr').AsInteger;
+         ClubBulk:=  (ClubCount > 2);  //How many actions cause putlogs.php usage
+       end;
+     if dmData.DebugLevel >= 1 then
+      writeln('Bulk upload:',ClubBulk,'    ',CLubCount,' changes');
+
+    if not ClubBulk then
+    Begin
     try try
       dmLogUpload.Q.Close;
       dmLogUpload.Q.SQL.Text := Format(C_SEL_UPLOAD_STATUS,[QuotedStr(GetLogName)]);
@@ -325,6 +343,20 @@ begin
     on E : Exception do
       Writeln(E.Message)
   end
+  end //not ClubBulk
+  else
+   Begin
+    try try
+
+      finally
+
+      end;
+    except
+    on E : Exception do
+      Writeln(E.Message)
+    end;
+   end;//ClubBulk
+
   finally
     FreeAndNil(data);
     frmLogUploadStatus.thRunning := False

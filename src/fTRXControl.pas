@@ -160,7 +160,6 @@ type
   private
     MouseWheelUsed : Boolean;
     CaretMousePos   : integer;
-    radio : TRigControl;
     old_mode : String;
     old_band : String;
 
@@ -186,6 +185,7 @@ type
     procedure UserButton(r, b : Char);
 
   public
+    radio : TRigControl;
     AutoMode : Boolean;
     infosetstage : Integer;
     infosetfreq : String;
@@ -335,7 +335,8 @@ begin
      if  cqrini.ReadBool('NewQSO', 'UseSplitTX', False) and radio.RigSplitActive then
          f:=fs;
 
-    UpdatePwrBar;
+    if not radio.SimpleRig then
+                           UpdatePwrBar;
   end
   else
    begin
@@ -528,7 +529,6 @@ begin
   gbInfo.Visible := cqrini.ReadBool('TRX', 'MemShowInfo', False);
   mnuShowPwrBar.Checked:= cqrini.ReadBool('TRX', 'ShowPwrBar', false);
   mnuBclearXR.Checked := cqrini.ReadBool('TRX', 'BandClearsXitRit', True);
-  pnlPwrBar.Visible:= mnuShowPwrBar.Checked;
   mnuShowInfo.Checked := gbInfo.Visible;
   gbVfo.Visible := cqrini.ReadBool('TRX', 'ShowVfo', False);
   pnlUsr.Visible := cqrini.ReadBool('TRX', 'ShowUsr', False);
@@ -750,6 +750,8 @@ end;
 
 procedure TfrmTRXControl.mnuShowPwrBarClick(Sender: TObject);
 begin
+   If assigned(radio) then
+      if radio.SimpleRig then exit;
    mnuShowPwrBar.Checked  := not mnuShowPwrBar.Checked;
    cqrini.WriteBool('TRX', 'ShowPwrBar', mnuShowPwrBar.Checked);
    pnlPwrBar.Visible:= mnuShowPwrBar.Checked;
@@ -866,7 +868,7 @@ begin
      if currMin<>m then //minute has changed set rig time
         Begin
             m:='+\set_clock '+FormatDateTime('yyyy-mm-dd"T"hh:mm',dmutils.GetDateTime(0))+'+00';
-            if Assigned(radio) then
+            if Assigned(radio) and (radio.SimpleRig=false) then //do not send clock to simple rig
                           radio.UsrCmd(m);
             if ((dmData.DebugLevel >= 1) or ((abs(dmData.DebugLevel) and 8) = 8)) then
               writeln(m);
@@ -1253,6 +1255,7 @@ var
   KeyerType : Integer;
 begin
   tmrRadio.Enabled := False;
+  pnlTXPwr.Visible:=false;
   pnlPwrBar.Visible:=false;
   StopPwrUpdate := 1;  //true
 
@@ -1300,27 +1303,28 @@ begin
     poll:=cqrini.ReadInteger('TRX' + RigInUse, 'poll', 500);
     if ((poll>60000) or (poll<10)) then  poll := 500;  //limit values
 
-  radio.RigCtldPath := cqrini.ReadString('TRX', 'RigCtldPath', '/usr/bin/rigctld');
-  radio.RigCtldArgs := dmUtils.GetRadioRigCtldCommandLine(StrToInt(RigInUse));
-  radio.RunRigCtld := cqrini.ReadBool('TRX' + RigInUse, 'RunRigCtld', False);
-  radio.RigDevice := cqrini.ReadString('TRX' + RigInUse, 'device', '');
-  radio.RigCtldPort := port;
-  radio.RigCtldHost := cqrini.ReadString('TRX' + RigInUse, 'host', 'localhost');
-  radio.RigPoll := poll;
-  radio.PollTimeout:=cqrini.ReadInteger('TRX' + RigInUse, 'PollTimeout', 15); //rig response timeout in poll rounds NOTE:This is read/write as (numbers only)String in preferences
-  radio.RigSendCWR := cqrini.ReadBool('TRX' + RigInUse, 'CWR', False);
-  radio.RigChkVfo := cqrini.ReadBool('TRX' + RigInUse, 'ChkVfo', True);
-  radio.PowerON:=cqrini.ReadBool('TRX'+ RigInUse, 'RigPwrON', True);
-  radio.CompoundPoll:=cqrini.ReadBool('TRX'+RigInUse, 'CPollR', True);
-  radio.GetSplitTX:=cqrini.ReadBool('NewQSO', 'UseSplitTX', False);
-  tmrRadio.Interval := radio.RigPoll;
-  tmrRadio.Enabled := True;
-  Result := True;
+  radio.RigCtldPath     := cqrini.ReadString('TRX', 'RigCtldPath', '/usr/bin/rigctld');
+  radio.RigCtldArgs     := dmUtils.GetRadioRigCtldCommandLine(StrToInt(RigInUse));
+  radio.RunRigCtld      := cqrini.ReadBool('TRX' + RigInUse, 'RunRigCtld', False);
+  radio.RigDevice       := cqrini.ReadString('TRX' + RigInUse, 'device', '');
+  radio.RigCtldPort     := port;
+  radio.RigCtldHost     := cqrini.ReadString('TRX' + RigInUse, 'host', 'localhost');
+  radio.RigPoll         := poll;
+  radio.PollTimeout     := cqrini.ReadInteger('TRX' + RigInUse, 'PollTimeout', 15); //rig response timeout in poll rounds NOTE:This is read/write as (numbers only)String in preferences
+  radio.RigSendCWR      := cqrini.ReadBool('TRX' + RigInUse, 'CWR', False);
+  radio.RigChkVfo       := cqrini.ReadBool('TRX' + RigInUse, 'ChkVfo', True);
+  radio.PowerON         := cqrini.ReadBool('TRX' + RigInUse, 'RigPwrON', True);
+  radio.CompoundPoll    := cqrini.ReadBool('TRX' + RigInUse, 'CPollR', True);
+  radio.SimpleRig       := cqrini.ReadBool('TRX' + RigInUse, 'SimpleRig',false);
+  radio.GetSplitTX      := cqrini.ReadBool('NewQSO', 'UseSplitTX', False);
+  tmrRadio.Interval     := radio.RigPoll;
+  tmrRadio.Enabled      := True;
+  Result                := True;
 
   LoadUsrButtonCaptions;
 
-  pnlPower.Visible := cqrini.ReadBool('TRX', 'PowerButtons', False);
-  mnuShowPwr.Checked := pnlPower.Visible;
+  pnlPower.Visible      := cqrini.ReadBool('TRX', 'PowerButtons', False);
+  mnuShowPwr.Checked    := pnlPower.Visible;
 
 
   if not radio.Connected then

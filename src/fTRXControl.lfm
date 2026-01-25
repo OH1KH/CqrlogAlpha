@@ -148,13 +148,13 @@ object frmTRXControl: TfrmTRXControl
   }
   KeyPreview = True
   Menu = mnuMem
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnKeyDown = FormKeyDown
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object gbMode: TGroupBox
     AnchorSideLeft.Control = gbVfo
     AnchorSideTop.Control = gbVfo
@@ -893,14 +893,14 @@ object frmTRXControl: TfrmTRXControl
         BorderSpacing.Top = 1
         BorderSpacing.Right = 1
         BorderSpacing.Bottom = 1
-        OnMouseDown = tbPwrMouseDown
-        OnMouseMove = tbPwrMouseMove
-        OnMouseUp = tbPwrMouseUp
-        OnMouseWheel = tbPwrMouseWheel
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
         TabOrder = 0
+        OnMouseDown = tbPwrMouseDown
+        OnMouseMove = tbPwrMouseMove
+        OnMouseUp = tbPwrMouseUp
+        OnMouseWheel = tbPwrMouseWheel
       end
     end
     object lblHidAnch: TLabel

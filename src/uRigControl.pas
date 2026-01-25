@@ -54,6 +54,7 @@ type TRigControl = class
     fCompoundPoll   : Boolean;
     fVoice          : Boolean;
     fIsNewHamlib    : Boolean;
+    fSimpleRig      : Boolean;
     fModelName      : string;
     fGetSplitTX     : Boolean;
     fRigSplitActive : Boolean;
@@ -125,47 +126,48 @@ public
     property RigCtldHost : String  read fRigCtldHost write fRigCtldHost;     //host where is rigctld running
     property Connected   : Boolean read RigConnected;                        //connect rigctld
     property RigPoll     : Word    read fRigPoll     write fRigPoll;         //poll rate in milliseconds
-    property RigSendCWR  : Boolean read fRigSendCWR    write fRigSendCWR;    //send CWR instead of CW
-    property RigChkVfo  : Boolean read fRigChkVfo    write fRigChkVfo;       //test if rigctld "--vfo" start parameter is used
-    property Morse      : Boolean read fMorse;                               //can rig send CW
-    property Voice      : Boolean read fVoice;                               //can rig launch voice memories
-    property IsNewHamlib: Boolean read fIsNewHamlib;                         //Is Hamlib version date higer than 2023-06-01
+    property RigSendCWR  : Boolean read fRigSendCWR  write fRigSendCWR;      //send CWR instead of CW
+    property SimpleRig   : Boolean read fSimpleRig   write fSimpleRig;       //bypass \dump_caps do just get/set freq and mode
+    property RigChkVfo   : Boolean read fRigChkVfo   write fRigChkVfo;       //test if rigctld "--vfo" start parameter is used
+    property Morse       : Boolean read fMorse;                              //can rig send CW
+    property Voice       : Boolean read fVoice;                              //can rig launch voice memories
+    property IsNewHamlib : Boolean read fIsNewHamlib;                        //Is Hamlib version date higer than 2023-06-01
                                                                              //not used internally, but can give info out
-    property ModelName  : string  read fModelName;                           //rig model
-    property Power      : Boolean read fPower;                               //can rig switch power
-    property PowerON      : Boolean write fPowerON;                          //may rig switch power on at start
-    property CanGetVfo  : Boolean read fGetVfo;                              //can rig show vfo (many Icoms can not)
+    property ModelName   : string  read fModelName;                          //rig model
+    property Power       : Boolean read fPower;                              //can rig switch power
+    property PowerON     : Boolean write fPowerON;                           //may rig switch power on at start
+    property CanGetVfo   : Boolean read fGetVfo;                             //can rig show vfo (many Icoms can not)
     property LastError   : String  read fLastError;                          //last error during operation
-    property RXOffset : Double read fRXOffset write fRXOffset;               //RX offset for transvertor in MHz
-    property TXOffset : Double read fTXOffset write fTXOffset;               //TX offset for transvertor in MHz
-    property GetSplitTX : Boolean read fGetSplitTX write  fGetSplitTX;       //TX freq from split vfo
+    property RXOffset    : Double  read fRXOffset     write fRXOffset;       //RX offset for transvertor in MHz
+    property TXOffset    : Double  read fTXOffset     write fTXOffset;       //TX offset for transvertor in MHz
+    property GetSplitTX  : Boolean read fGetSplitTX   write  fGetSplitTX;    //TX freq from split vfo
     property RigSplitActive : Boolean read fRigSplitActive;
 
-    property GetRFPower: boolean read fGetRFPower  write fGetRFPower;        //Can get RFpower
-    property SetRFPower: boolean read fSetRFPower  write fSetRFPower;        //Can set RFpower
-    property MemGetRFP: boolean read fMemGetRFP;                             //Memory what rig said
-    property MemSetRFP: boolean read fMemSetRFP;                             //Memory what rig said
+    property GetRFPower  : boolean read fGetRFPower   write fGetRFPower;     //Can get RFpower
+    property SetRFPower  : boolean read fSetRFPower   write fSetRFPower;     //Can set RFpower
+    property MemGetRFP   : boolean read fMemGetRFP;                          //Memory what rig said
+    property MemSetRFP   : boolean read fMemSetRFP;                          //Memory what rig said
     property RfPwrMtrWtts : String read fRfPwrMtrWtts;
-    property MemRfPwrMtrWtts : String read fMemRfPwrMtrWtts;                    //last TX value of meter.
+    property MemRfPwrMtrWtts : String read fMemRfPwrMtrWtts;                 //last TX value of meter.
 
-    property SetFunc   : boolean read fSetFunc;                              //Can set
-    property GetFunc   : boolean read fGetFunc;                              //can get functions
-    property SupSetFuncs  : String read fSupSetFuncs;                        //list of supported functions set
-    property SupGetFuncs  : String read fSupGetFuncs;                        //list of supported functions set
-    property SetLevel  : boolean read fSetLevel;                             //Can set
-    property GetLevel  : boolean read fGetLevel;                             //can get Levels
-    property SupSetLevels : String read fSupSetLevels;                       //list of supported Levels set
-    property SupGetLevels : String read fSupGetLevels;                       //list of supported Levels get
-    property SupGetVfoOp  : String read fSupGetVfoOp;                        //list of supported  VFO operations
-    property Ptt          : String read fPtt;                                //PTT state;
+    property SetFunc     : boolean read fSetFunc;                            //Can set
+    property GetFunc     : boolean read fGetFunc;                            //can get functions
+    property SupSetFuncs : String  read fSupSetFuncs;                        //list of supported functions set
+    property SupGetFuncs : String  read fSupGetFuncs;                        //list of supported functions set
+    property SetLevel    : boolean read fSetLevel;                           //Can set
+    property GetLevel    : boolean read fGetLevel;                           //can get Levels
+    property SupSetLevels: String  read fSupSetLevels;                       //list of supported Levels set
+    property SupGetLevels: String  read fSupGetLevels;                       //list of supported Levels get
+    property SupGetVfoOp : String  read fSupGetVfoOp;                        //list of supported  VFO operations
+    property Ptt         : String  read fPtt;                                //PTT state;
 
-    property PwrPcnt :  String read fPwrPcnt write fPwrPcnt;                 //Set/Get the amount of Power level in %
-    property PwrmW   :  String read fPwrmW   write fPwrmW;                   //Mode-band related milliWatts for  Power level in %
+    property PwrPcnt     :  String read fPwrPcnt write fPwrPcnt;             //Set/Get the amount of Power level in %
+    property PwrmW       :  String read fPwrmW   write fPwrmW;               //Mode-band related milliWatts for  Power level in %
 
     property ResponseTimeout : Boolean read fResponseTimeout;
-    property CompoundPoll : Boolean read fCompoundPoll  write  fCompoundPoll;//Char to use between compound commands.
+    property CompoundPoll: Boolean read fCompoundPoll  write  fCompoundPoll; //Char to use between compound commands.
                                                                              //Default is space, can be also LineEnding that breaks compound
-    property PollTimeout  : integer read fPollTimeout write fPolltimeout;    //Poll timeout in poll rounds (PollTimeout X RigPoll = timeout in milliseconds)
+    property PollTimeout : integer read fPollTimeout write fPolltimeout;     //Poll timeout in poll rounds (PollTimeout X RigPoll = timeout in milliseconds)
 
     function  GetCurrVFO  : TVFO;
     function  GetModePass : TRigMode;
@@ -224,21 +226,25 @@ begin
   tmrRigPoll           := TTimer.Create(nil);
   tmrRigPoll.Enabled   := False;
   VfoStr               := ''; //defaults to non-"--vfo" (legacy) mode
-  fPowerON             := true;  //we do this via rigctld startup parameter autopower_on
-  fGetVfo              := true;   //defaut these true
-  fMorse               := true;
-  fVoice               := false;
+  fPowerON             := false;  //we do this via rigctld startup parameter autopower_on
   fIsNewHamlib         := false;
+  fPower               := false;
+  fGetVfo              := false;
+  fGetFunc             := false;
+  fSetFunc             := false;
+  fVfoOps              := false;
+  fMorse               := false;
+  fVoice               := false;
+  fGetRFPower          := false;
+  fSetRFPower          := false;
   fGetSplitTX          := false;  //poll rig polls also split TX vfo
   PowerOffIssued       := false;
   fCompoundPoll        := True;
   fPollTimeout         := 15;  //max count of false responses when polled. Set_power ON is critical. Must be big enough to allow rig wake up.
   fPollCount           := fPollTimeout;
   fRigSplitActive      := False;
-  fGetRFPower          := false;
-  fSetRFPower          := false;
-  fGetFunc             := false;
-  fSetFunc             := false;
+  fSimpleRig           := false; //simple rig knows just set/get frequency and mode (bypas startup \dump_caps)
+
   fSupSetFuncs         := '';
   fSupGetFuncs         := '';
   fSupSetLevels        := '';
@@ -1164,24 +1170,38 @@ Begin
                    Writeln('Connecting to rigctld Poll (OnConnect)');
 
     ParmHasVfo:=0;   //default: "--vfo" is not used as start parameter
-    AllowCommand:=10;  //start with chk_vfo
     RigCommand.Clear;
     tmrRigPoll.Interval := StartupPoll; //to speed up init
 
-    if RigChkVfo then
-      Begin
-        AllowCommand:=10;  //start with chkvfo
-        ParmVfoChkd:=false;
-      end
-     else
-      Begin
-        AllowCommand:=9;  //otherwise start with dump caps
-        ParmVfoChkd:=false;
-      end;
+    if not fSimpleRig then
+     begin
+       if RigChkVfo then
+        Begin
+          ParmVfoChkd  :=false;
+          InitDone     :=false;
+          AllowCommand :=10;  //start with chkvfo
+        end
+       else
+        Begin
+          ParmVfoChkd  :=false;
+          InitDone     :=false;
+          AllowCommand :=9;  //otherwise start with dump caps
+        end;
+     end;
+
     ConnectionDone :=true;
-    InitDone       :=false;
     DumpCapsPending:=false;
+
+   if SimpleRig then
+    Begin
+     ParmVfoChkd:=true;
+     InitFinal;  //bypass all \dump_caps checking
+    end;
+
     tmrRigPoll.Enabled  := True;
+
+
+
 end;
 procedure TRigControl.OnErrorRigctldConnect(const msg: string; aSocket: TLSocket);
 

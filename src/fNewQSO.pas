@@ -7664,7 +7664,7 @@ begin
   Menuitem45.Visible:=False;  //send hex commands to win/k3ng keyer
   case  KeyerType of
     1 : begin
-          CWint := TCWWinKeyerUSB.Create;
+        CWint := TCWWinKeyerUSB.Create;
         if dmData.DebugLevel < 0 then
                CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
               else
@@ -7717,6 +7717,9 @@ begin
             i:=Uppercase(cqrini.ReadString('CW'+n,'K3NG_hex',''));
         end;
     4 : begin
+          if assigned(frmTRXControl.radio) then    //if radio can not send CW do not init
+            if not frmTRXControl.radio.Morse then exit;
+
           CWint        := TCWHamLib.Create;
           if dmData.DebugLevel < 0 then
                  CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )

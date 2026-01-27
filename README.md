@@ -7,7 +7,6 @@ See file src/changelog.html for changes
 
 ----------------------------------------------------------------------------------------------------
 
-# NOTE: This "devel" branch contains source that is under testing before release. You may find more bugs here than in released version at "main" branch.
 
 ----------------------------------------------------------------------------------------------------
 

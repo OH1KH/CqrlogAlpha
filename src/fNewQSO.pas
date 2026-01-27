@@ -8040,8 +8040,8 @@ begin
   btnSave.Enabled       := False;  //disable manual saving when remote is on
   tmrADIF.Interval      := 250;    //rate to read qsos from UDP (msec)
 
-  if pos('%rig',path)> 0 then
-            path:=StringReplace(path,'%rig',cqrini.ReadString('TRX'+frmTRXControl.RigInUse, 'Desc', ''),[rfReplaceAll]);
+  if pos('%radio',path)> 0 then
+            path:=StringReplace(path,'%radio',cqrini.ReadString('TRX'+frmTRXControl.RigInUse, 'Desc', ''),[rfReplaceAll]);
 
   if run and FileExists(ExtractWord(1,path,[' '])) then
     dmUtils.RunOnBackground(path)

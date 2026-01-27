@@ -1,16 +1,16 @@
 object frmNewQSO: TfrmNewQSO
   Left = 0
-  Height = 615
+  Height = 577
   Top = 0
-  Width = 985
+  Width = 972
   HelpType = htKeyword
   HelpKeyword = 'help/index.html'
-  HorzScrollBar.Page = 985
-  VertScrollBar.Page = 615
+  HorzScrollBar.Page = 972
+  VertScrollBar.Page = 577
   AutoScroll = True
   Caption = 'New QSO ... (CqrlogAlpha for Linux)'
-  ClientHeight = 615
-  ClientWidth = 985
+  ClientHeight = 577
+  ClientWidth = 972
   Constraints.MinHeight = 200
   Constraints.MinWidth = 400
   Icon.Data = {
@@ -4671,6 +4671,7 @@ object frmNewQSO: TfrmNewQSO
         Caption = 'Quit [CTRL+Q]'
         TabOrder = 2
         OnClick = btnCancelClick
+        OnExit = btnCancelExit
       end
     end
     object pnlProfiles: TPanel

@@ -7,12 +7,12 @@ object frmMonWsjtx: TfrmMonWsjtx
   Caption = 'Wsjt-x CQ-monitor'
   ClientHeight = 345
   ClientWidth = 582
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnDropFiles = FormDropFiles
   OnHide = FormHide
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object pnlMap: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Side = asrBottom
@@ -137,7 +137,7 @@ object frmMonWsjtx: TfrmMonWsjtx
       AnchorSideBottom.Side = asrCenter
       Left = 172
       Height = 23
-      Hint = 'Use text file based callsign filter.'#10'Put your list of callsigns to ~/.config/cqrlog/ctyfiles/filefilter.txt'#10'One call per line, no other texts. Use simple editor like ''nano'' for edit.'#10'.'#10'Right mouse click opens filefilter.txt with editor defined '#10'in "Preferences/external viewers/text files"'
+      Hint = 'Use text file based callsign filter.'#10'Put your list of callsigns to ~/.config/cqrlog/ctyfiles/filefilter.txt'#10'One call per line, no other texts. Use simple editor like ''nano'' for edit.'#10'.'#10'Right mouse click opens filefilter.txt with editor defined '#10'in "Preferences/external viewers/text files" and sets FFlt OFF'#10'.'#10'After edit remember to set FFlt again ON to reload edited filefilter.txt'
       Top = 10
       Width = 51
       Anchors = [akLeft, akBottom]

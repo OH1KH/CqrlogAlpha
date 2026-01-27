@@ -357,7 +357,10 @@ begin
      Begin
            if LocalDbg then
                        Writeln('---O msgtime is:', msgTime,'  LastWsjtlinetime is:',LastWsjtLineTime);
-          if chkdB.Checked then sgMonitor.Columns.Items[1].Visible:= true
+          if not chkMap.Checked then   //Cq-monitor has always dB visible
+                sgMonitor.Columns.Items[1].Visible:= true
+              else
+               if chkdB.Checked then sgMonitor.Columns.Items[1].Visible:= true
                              else sgMonitor.Columns.Items[1].Visible:= false;
           clearSgMonitor;
           CqPeriodTimerStart(msgTime, LastWsjtLineTime);
@@ -840,7 +843,6 @@ begin
       chkCbCQ.Checked := cqrini.ReadBool('MonWsjtx', 'ColorBacCQkMap', False);
       chkdB.Checked   := cqrini.ReadBool('MonWsjtx', 'ShowdB', False);
       chkFlt.Checked  := cqrini.ReadBool('MonWsjtx', 'MapFilter', False);
-      chkFFlt.Checked := cqrini.ReadBool('MonWsjtx', 'FileFilter', False);
       edtFltMap.Text  := cqrini.ReadString('MonWsjtx', 'MapFilterString', '');
       //map mode allows text printing. Printing stays on when return to monitor mode.
       chknoHistory.Visible := False;
@@ -1069,7 +1071,8 @@ var
   f:integer;
 begin
   if chkFFlt.Checked then
-  chkFlt.Checked := false;
+                     chkFlt.Checked := false
+   else
    Begin
       FileFilter.Clear;
       s:= FileSearch('filefilter.txt',dmData.HomeDir + 'ctyfiles' + PathDelim,[]);
@@ -1099,7 +1102,10 @@ procedure TfrmMonWsjtx.chkFFltMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if Button = mbRight then
+          begin
+            chkFFlt.Checked:=false;
             dmUtils.ViewTextFile(dmData.HomeDir + 'ctyfiles' + PathDelim+'filefilter.txt');
+          end;
 end;
 
 procedure TfrmMonWsjtx.chkFltChange(Sender: TObject);
@@ -1339,7 +1345,6 @@ procedure TfrmMonWsjtx.tmrStartupDoneTimer(Sender: TObject);
 begin   //post actions after window has opened.
    tmrStartupDone.Enabled:=False;
    chkUState.Checked:= cqrini.ReadBool('MonWsjtx', 'UStates', False);
-
    chkDx.Checked:=cqrini.ReadBool('MonWsjtx', 'CheckDx',false);
    chkSort.Checked:= cqrini.ReadBool('MonWsjtx', 'Sort', false);
    popSort.Items[cqrini.ReadInteger('MonWsjtx', 'SortCol', 1)-1].Checked:=true;
@@ -1348,6 +1353,13 @@ begin   //post actions after window has opened.
    if chkSort.Checked then
                     popSort.Close;
    DXpopOK:=true;
+   if  chkFFlt.Checked then  //this will cause filefilter reload at startup
+    begin
+     chkFFlt.Checked:=false;
+     sleep(200);
+     application.ProcessMessages;
+     chkFFlt.Checked:=true;
+    end;
 end;
 
 procedure TfrmMonWsjtx.tmrFollowTimer(Sender: TObject);
@@ -1472,6 +1484,7 @@ begin
   edtFollowCall.Text := uppercase(cqrini.ReadString('MonWsjtx', 'FollowCall', ''));
   chkMap.Checked := cqrini.ReadBool('MonWsjtx', 'MapMode', False);
   chkDs.Checked := cqrini.ReadBool('MonWsjtx', 'DxStatus', False);
+  chkFFlt.Checked := cqrini.ReadBool('MonWsjtx', 'FileFilter', False);
   if ((trim(edtFollowCall.Text) = '') and tbFollow.Checked) then
     tbFollow.Checked := False; //should not happen, chk it here
   LockFlw := False;

@@ -107,6 +107,7 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkSimpleRig: TCheckBox;
     chkNewQsoUdp: TCheckBox;
     chkProfile: TCheckBox;
     chkHamForceSpace: TCheckBox;
@@ -460,6 +461,9 @@ type
     DateEditCall: TDateEdit;
     DateEditLoc: TDateEdit;
     dlgColor : TColorDialog;
+    edtCbHamQThAddr: TEdit;
+    edtCbQrzAddr: TEdit;
+    edtCbQrzcqAddr: TEdit;
     edtNewQsoUdpAddrPort: TEdit;
     edtPollTimeout: TEdit;
     edtHamClockUrl: TEdit;
@@ -637,6 +641,7 @@ type
     GroupBox18: TGroupBox;
     GroupBox19: TGroupBox;
     gbInternet: TGroupBox;
+    gbCallbookAddr: TGroupBox;
     GroupBox20: TGroupBox;
     GroupBox21: TGroupBox;
     GroupBox22: TGroupBox;
@@ -656,7 +661,7 @@ type
     grpUsrDigitalModes: TGroupBox;
     gbeQSL: TGroupBox;
     grbRigBandWidths: TGroupBox;
-    GroupBox38: TGroupBox;
+    gbCallbookSelect: TGroupBox;
     gbProfiles: TGroupBox;
     grbRigctldPath: TGroupBox;
     GroupBox41: TGroupBox;
@@ -686,6 +691,9 @@ type
     Label108: TLabel;
     Label12: TLabel;
     Label13: TLabel;
+    lblHamQTHAddr: TLabel;
+    lblQrzAddr: TLabel;
+    lblQrzcqAddr: TLabel;
     lblRot2Host: TLabel;
     lblRot1Name: TLabel;
     lblRot1Host: TLabel;
@@ -771,8 +779,8 @@ type
     lbleQSLUsr: TLabel;
     lbleQSLPass: TLabel;
     Label11: TLabel;
-    Label111: TLabel;
-    Label112: TLabel;
+    lblCallbookUser: TLabel;
+    lblCallbookPass: TLabel;
     lblintProxy: TLabel;
     Label124: TLabel;
     lblDevice1: TLabel;
@@ -1045,6 +1053,7 @@ type
     procedure chkHaUpEnabledChange(Sender: TObject);
     procedure chkHrUpEnabledChange(Sender: TObject);
     procedure chkRotControlDebugChange(Sender: TObject);
+    procedure chkSimpleRigChange(Sender: TObject);
     procedure chkUdUpEnabledChange(Sender: TObject);
     procedure chkIgnoreEditChange(Sender: TObject);
     procedure chkIgnoreLoTWChange(Sender: TObject);
@@ -1632,6 +1641,9 @@ begin
   cqrini.WriteString('CallBook', 'CbQRZPass', edtCbQRZPass.Text);
   cqrini.WriteString('CallBook', 'CbQRZCQUser', edtCbQRZCQUser.Text);
   cqrini.WriteString('CallBook', 'CbQRZCQPass', edtCbQRZCQPass.Text);
+  cqrini.WriteString('CallBook', 'CbHamQTHAddr', edtCbHamQTHAddr.Text);
+  cqrini.WriteString('CallBook', 'CbQRZAddr', edtCbQRZAddr.Text);
+  cqrini.WriteString('CallBook', 'CbQRZCQAddr', edtCbQRZCQAddr.Text);
 
   cqrini.WriteInteger('RBN','10db',cmbCl10db.Selected);
   cqrini.WriteInteger('RBN','20db',cmbCl20db.Selected);
@@ -2379,6 +2391,15 @@ end;
 procedure TfrmPreferences.chkRotControlDebugChange(Sender: TObject);
 begin
   RotChanged := True;
+end;
+
+procedure TfrmPreferences.chkSimpleRigChange(Sender: TObject);
+begin
+  TRXParamsChange(nil);
+  chkRVfo.enabled   :=not chkSimpleRig.Checked;
+  chkRPwrOn.enabled :=not chkSimpleRig.Checked;
+  chkUTC2R.enabled  :=not chkSimpleRig.Checked;
+  chkVoiceR.enabled :=not chkSimpleRig.Checked;
 end;
 
 procedure TfrmPreferences.chkIgnoreEditChange(Sender: TObject);
@@ -3470,10 +3491,10 @@ begin
 
   chkAskBackup.Checked := cqrini.ReadBool('Backup','AskFirst',False);
 
-  edtTxtFiles.Text := cqrini.ReadString('ExtView', 'txt', '');
-  edtPdfFiles.Text := cqrini.ReadString('ExtView', 'pdf', '');
-  edtImgFiles.Text := cqrini.ReadString('ExtView', 'img', '');
-  edtHtmlFiles.Text := cqrini.ReadString('ExtView', 'html', dmUtils.MyDefaultBrowser);
+  edtTxtFiles.Text        := cqrini.ReadString('ExtView', 'txt', '');
+  edtPdfFiles.Text        := cqrini.ReadString('ExtView', 'pdf', '');
+  edtImgFiles.Text        := cqrini.ReadString('ExtView', 'img', '');
+  edtHtmlFiles.Text       := cqrini.ReadString('ExtView', 'html', dmUtils.MyDefaultBrowser);
   chkIntQSLViewer.Checked := cqrini.ReadBool('ExtView', 'QSL', True);
   chkDeleteEqsl.Checked   := cqrini.ReadBool('ExtView', 'DeleQSL', False);
 
@@ -3483,15 +3504,19 @@ begin
   edtClub4Date.Text := cqrini.ReadString('FourthClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);
   edtClub5Date.Text := cqrini.ReadString('FifthClub', 'DateFrom', C_CLUB_DEFAULT_DATE_FROM);
 
-  edtCbHamQTHUser.Text := cqrini.ReadString('CallBook', 'CbHamQTHUser', '');
-  edtCbHamQTHPass.Text := cqrini.ReadString('CallBook', 'CbHamQTHPass', '');
-  edtCbQRZUser.Text := cqrini.ReadString('CallBook', 'CbQRZUser', '');
-  edtCbQRZPass.Text := cqrini.ReadString('CallBook', 'CbQRZPass', '');
-  edtCbQRZCQUser.Text := cqrini.ReadString('CallBook', 'CbQRZCQUser', '');
-  edtCbQRZCQPass.Text := cqrini.ReadString('CallBook', 'CbQRZCQPass', '');
-  rbHamQTH.Checked := cqrini.ReadBool('Callbook', 'HamQTH', True);
-  rbQRZ.Checked := cqrini.ReadBool('Callbook', 'QRZ', False);
-  rbQRZCQ.Checked := cqrini.ReadBool('Callbook', 'QRZCQ', False);
+  edtCbHamQTHUser.Text  := cqrini.ReadString('CallBook', 'CbHamQTHUser', '');
+  edtCbHamQTHPass.Text  := cqrini.ReadString('CallBook', 'CbHamQTHPass', '');
+  edtCbQRZUser.Text     := cqrini.ReadString('CallBook', 'CbQRZUser', '');
+  edtCbQRZPass.Text     := cqrini.ReadString('CallBook', 'CbQRZPass', '');
+  edtCbQRZCQUser.Text   := cqrini.ReadString('CallBook', 'CbQRZCQUser', '');
+  edtCbQRZCQPass.Text   := cqrini.ReadString('CallBook', 'CbQRZCQPass', '');
+  rbHamQTH.Checked      := cqrini.ReadBool('Callbook', 'HamQTH', True);
+  rbQRZ.Checked         := cqrini.ReadBool('Callbook', 'QRZ', False);
+  rbQRZCQ.Checked       := cqrini.ReadBool('Callbook', 'QRZCQ', False);
+  edtCbHamQTHAddr.Text  := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com' );
+  edtCbQRZAddr.Text     := cqrini.ReadString('CallBook', 'CbQRZAddr', 'https://xml.qrz.com');
+  edtCbQRZCQAddr.Text   := cqrini.ReadString('CallBook', 'CbQRZCQAddr', 'https://ssl.qrzcq.com' );
+
 
   cmbCl10db.Selected        := cqrini.ReadInteger('RBN','10db',clWhite);
   cmbCl20db.Selected        := cqrini.ReadInteger('RBN','20db',clPurple);
@@ -3510,7 +3535,7 @@ begin
   edtHaUserName.Text     := cqrini.ReadString('OnlineLog','HaUserName','');
   edtHaPasswd.Text       := cqrini.ReadString('OnlineLog','HaPasswd','');
   cmbHaColor.Selected    := cqrini.ReadInteger('OnlineLog','HaColor',clBlue);
-  edtHamQTHurl.Text      := cqrini.ReadString('OnlineLog','HaUrl','http://www.hamqth.com/qso_realtime.php');
+  edtHamQTHurl.Text      := cqrini.ReadString('OnlineLog','HaUrl','https://www.hamqth.com/qso_realtime.php');
   chkHaUpEnabledChange(nil);
 
   chkClUpEnabled.Checked := cqrini.ReadBool('OnlineLog','ClUP',False);
@@ -3667,34 +3692,35 @@ Begin
     Application.MessageBox('rigctld binary not found, unable to load list of supported rigs!'+LineEnding+LineEnding+
                            'Fix path to rigctld in TRX control tab.', 'Error', mb_OK+ mb_IconError)
   end;
-  edtRDevice.Text := cqrini.ReadString('TRX'+nr, 'device', '');
-  edtPoll.Text := cqrini.ReadString('TRX'+nr, 'poll', '500');
-  edtRadioName.Text := cqrini.ReadString('TRX'+nr, 'Desc', '');
-  chkRSendCWR.Checked := cqrini.ReadBool('TRX'+nr, 'CWR', False);
-  chkRVfo.Checked:=   cqrini.ReadBool('TRX'+nr, 'ChkVfo', True);
-  edtRRigCtldPort.Text := cqrini.ReadString('TRX'+nr, 'RigCtldPort', '4532');
-  edtRRigCtldArgs.Text := cqrini.ReadString('TRX'+nr, 'ExtraRigCtldArgs', '');
-  chkRunRigCtld.Checked := cqrini.ReadBool('TRX'+nr, 'RunRigCtld', False);
-  chkRPwrON.Checked := cqrini.ReadBool('TRX'+nr, 'RigPwrON', True);
-  chkUTC2R.Checked := cqrini.ReadBool('TRX'+nr, 'UTC2Rig', False);
-  chkCPollR.Checked:= cqrini.ReadBool('TRX'+nr, 'CPollR', True);
-  edtPollTimeout.Text:= cqrini.ReadString('TRX' + nr, 'PollTimeout', '15');
-  chkVoiceR.Checked:= cqrini.ReadBool('TRX'+nr, 'RigVoice', True);
-  edtRHost.Text := cqrini.ReadString('TRX'+nr, 'host', '');
-  cmbSpeedR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'SerialSpeed', 0);
-  cmbDataBitsR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'DataBits', 0);
-  cmbStopBitsR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'StopBits', 0);
-  cmbParityR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'Parity', 0);
-  cmbHanshakeR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'HandShake', 0);
-  cmbDTRR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'DTR', 0);
-  cmbRTSR.ItemIndex := cqrini.ReadInteger('TRX'+nr, 'RTS', 0);
-  edtUsr1RName.Text:=cqrini.ReadString('TRX'+nr, 'usr1name', 'Usr1');
-  edtUsr2RName.Text:=cqrini.ReadString('TRX'+nr, 'usr2name', 'Usr2');
-  edtUsr3RName.Text:=cqrini.ReadString('TRX'+nr, 'usr3name', 'Usr3');
-  edtUsr1R.Text:=cqrini.ReadString('TRX'+nr, 'usr1', '');
-  edtUsr2R.Text:=cqrini.ReadString('TRX'+nr, 'usr2', '');
-  edtUsr3R.Text:=cqrini.ReadString('TRX'+nr, 'usr3', '');
-  RadioNrLoaded:= RigNr;
+  edtRDevice.Text              := cqrini.ReadString('TRX'+nr, 'device', '');
+  edtPoll.Text                 := cqrini.ReadString('TRX'+nr, 'poll', '500');
+  edtRadioName.Text            := cqrini.ReadString('TRX'+nr, 'Desc', '');
+  chkRSendCWR.Checked          := cqrini.ReadBool('TRX'+nr, 'CWR', False);
+  chkRVfo.Checked              := cqrini.ReadBool('TRX'+nr, 'ChkVfo', True);
+  edtRRigCtldPort.Text         := cqrini.ReadString('TRX'+nr, 'RigCtldPort', '4532');
+  edtRRigCtldArgs.Text         := cqrini.ReadString('TRX'+nr, 'ExtraRigCtldArgs', '');
+  chkRunRigCtld.Checked        := cqrini.ReadBool('TRX'+nr, 'RunRigCtld', False);
+  chkRPwrON.Checked            := cqrini.ReadBool('TRX'+nr, 'RigPwrON', True);
+  chkUTC2R.Checked             := cqrini.ReadBool('TRX'+nr, 'UTC2Rig', False);
+  chkCPollR.Checked            := cqrini.ReadBool('TRX'+nr, 'CPollR', True);
+  chkSimpleRig.Checked         := cqrini.ReadBool('TRX'+nr, 'SimpleRig',false);
+  edtPollTimeout.Text          := cqrini.ReadString('TRX' + nr, 'PollTimeout', '15');
+  chkVoiceR.Checked            := cqrini.ReadBool('TRX'+nr, 'RigVoice', True);
+  edtRHost.Text                := cqrini.ReadString('TRX'+nr, 'host', '');
+  cmbSpeedR.ItemIndex          := cqrini.ReadInteger('TRX'+nr, 'SerialSpeed', 0);
+  cmbDataBitsR.ItemIndex       := cqrini.ReadInteger('TRX'+nr, 'DataBits', 0);
+  cmbStopBitsR.ItemIndex       := cqrini.ReadInteger('TRX'+nr, 'StopBits', 0);
+  cmbParityR.ItemIndex         := cqrini.ReadInteger('TRX'+nr, 'Parity', 0);
+  cmbHanshakeR.ItemIndex       := cqrini.ReadInteger('TRX'+nr, 'HandShake', 0);
+  cmbDTRR.ItemIndex            := cqrini.ReadInteger('TRX'+nr, 'DTR', 0);
+  cmbRTSR.ItemIndex            := cqrini.ReadInteger('TRX'+nr, 'RTS', 0);
+  edtUsr1RName.Text            := cqrini.ReadString('TRX'+nr, 'usr1name', 'Usr1');
+  edtUsr2RName.Text            := cqrini.ReadString('TRX'+nr, 'usr2name', 'Usr2');
+  edtUsr3RName.Text            := cqrini.ReadString('TRX'+nr, 'usr3name', 'Usr3');
+  edtUsr1R.Text                := cqrini.ReadString('TRX'+nr, 'usr1', '');
+  edtUsr2R.Text                := cqrini.ReadString('TRX'+nr, 'usr2', '');
+  edtUsr3R.Text                := cqrini.ReadString('TRX'+nr, 'usr3', '');
+  RadioNrLoaded                := RigNr;
 end;
 Procedure TfrmPreferences.SaveTRX(RigNr:integer);
 var
@@ -3722,6 +3748,7 @@ Begin
   cqrini.WriteBool('TRX'+nr, 'RigPwrON', chkRPwrON.Checked);
   cqrini.WriteBool('TRX'+nr, 'UTC2Rig', chkUTC2R.Checked);
   cqrini.WriteBool('TRX'+nr, 'CPollR',chkCPollR.Checked);
+  cqrini.WriteBool('TRX'+nr, 'SimpleRig',chkSimpleRig.Checked);
   cqrini.WriteString('TRX' + nr, 'PollTimeout', edtPollTimeout.Text);
   cqrini.WriteBool('TRX'+nr, 'RigVoice', chkVoiceR.Checked);
   cqrini.WriteString('TRX'+nr, 'host', edtRHost.Text);

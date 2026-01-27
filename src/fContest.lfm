@@ -13,12 +13,12 @@ object frmContest: TfrmContest
   ClientWidth = 770
   Constraints.MinHeight = 225
   Constraints.MinWidth = 620
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnHide = FormHide
   OnKeyDown = FormKeyDown
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object edtCall: TEdit
     AnchorSideLeft.Control = lblContestName
     AnchorSideTop.Control = lblCall
@@ -966,12 +966,12 @@ object frmContest: TfrmContest
       Increment = 250
       MaxValue = 30000
       MinValue = 5000
-      OnChange = spCQperiodChange
       ParentShowHint = False
       ShowHint = True
       TabStop = False
       TabOrder = 1
       Value = 5000
+      OnChange = spCQperiodChange
     end
     object spCQrepeat: TSpinEdit
       AnchorSideLeft.Control = spCQperiod

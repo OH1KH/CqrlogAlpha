@@ -441,9 +441,10 @@ begin
   if not rotor.Connected then
   begin
           ShowMessage(rotor.LastError+LineEnding+
-                    'Start cqrlog from command console as:'+LineEnding+LineEnding+
-                    'cqrlog --debug=1'+LineEnding+LineEnding+
-                    'to see more debug information.');
+                    'Start cqrlog from command console as:'+LineEnding+
+                    'cqrlog --debug=1'+LineEnding+
+                    'to see more debug information.'+LineEnding+LineEnding+
+                    'If you do not have rotor: Set preferences/RotControl/Host empty');
     FreeAndNil(rotor)
   end
 end;

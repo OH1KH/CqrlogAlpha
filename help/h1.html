@@ -332,6 +332,11 @@
     <strong>Compound poll</strong> When checked Cqrlog will send rig poll command as one line "+f +m +v". That is Cqrlog default.
     <br>When unchecked every command will be sent with LineEnding, I.E. in it's own line. This may help poor rigctld emulators like WFview.
     <br><br>
+    <strong>Simple Rig</strong> When checked Cqrlog does not do \chk_vfo and \dump_caps checking. Then mainly set/get frequency and mode are 
+    working. In additon some other commands may work, like set PTT and set VFO. Hamlib CW keyer is not supported when Simple Rig is checked.
+    <br>The purpose for this is to support old rigs and poor rigctld emulators using minimized command set.
+    <br>Compound poll can be used to send rig poll command as "+f" and "+m" in own their lines instead of one line "+f +m". That is Cqrlog default.
+    <br><br>    
     <strong>User defined TRXControl buttons</strong> can be defined here. Your defined buttons will be shown in the TRX Control window after
      you select this option using the <strong>Preferences menu/Show Usr buttons</strong> in the <strong>TRXControl window.</strong> 
      <br>
@@ -805,6 +810,7 @@ There are no known dependencies issues.<br><br>
     When logging/saving a contact, frequency, mode and RST should appear correctly in this QSO list.
     If you choose the CQRLOG option, you must set the mode in CQRLOG which seems less sensible.
     <br><br>See also:<a href="fldxml.html#fl1"> Using fldigi withXmlRpc remote mode</a><br>
+    <br><br> You can enter parameters for fldigi in path. '%radio' will be replaced with preferences/TRXControl/name of currently used radio for making radio specific configurations, if needed.
     <br><br>
     <a name=ch2b></a>
     <p><img src="img/h101.png"><br><br>
@@ -824,6 +830,7 @@ There are no known dependencies issues.<br><br>
     WB4 can be handy when working <strong>ARRL International Grid Chase </strong>or <strong>ARRL RTTY-FT8</strong> like contests if one does not like to create separate log for that purpose.
     <br><br><img src="img/h101b.png"><br><br>
     Pressing calendar icon is easy way to set date. Double click on selected date closes calendar and sets the date. Pressing ESC closes calendar, but does not set date. Date can also be typed in manually.
+    <br><br> You can enter parameters for wsjtx in path. '%radio' will be replaced with preferences/TRXControl/name of currently used radio for making radio specific configurations, if needed.
     </p>
     <a name=ch2c></a>
     <h2><strong>ADIF interface</strong></h2>

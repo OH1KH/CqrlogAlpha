@@ -367,7 +367,7 @@ object frmDXCCStat: TfrmDXCCStat
       AnchorSideTop.Side = asrCenter
       Left = 197
       Height = 29
-      Hint = 'On band column cells you can see confimations Q,L,E or & for  CW,Phone and MGM modes'#10'(in that order).'#10'Q=QSL, L=LoTW, E=eQSL, &=Lotw and eQSL both'#10'.'#10'If QSO is worked using defined mode, but not yet confirmed you see X instead.'#10'.'#10'Non worked modes are not shown, or shown by dot . dependin on'#10'selection of preferences/Fonts/GridList settings/Set Dots instead spaces '
+      Hint = 'On band column cells you can see confimations Q,L,E or & for  CW,Phone and MGM modes'#10'(in that order).'#10'Q=QSL, L=LoTW, E=eQSL, &=Lotw and eQSL both'#10'.'#10'If QSO is worked using defined mode, but not yet confirmed you see X instead.'#10'.'#10'Non worked modes are not shown, or shown by dot . depending on'#10'selection of preferences/Fonts/GridList settings/Set Dots instead spaces '
       Top = 12
       Width = 260
       BorderSpacing.Left = 12

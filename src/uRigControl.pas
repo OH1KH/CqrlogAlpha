@@ -5,7 +5,10 @@ unit uRigControl;
 interface
 
 uses
-  Classes, SysUtils, Process, ExtCtrls, lNetComponents, lnet, Forms, strutils;
+  Classes, SysUtils, Process, ExtCtrls, lNetComponents, lnet, Forms, strutils, DateUtils;
+
+const
+    StartupPoll = 100;  //polling ms during rig init (replaces user value during int)
 
 type TRigMode =  record
     mode : String[10];
@@ -51,6 +54,7 @@ type TRigControl = class
     fCompoundPoll   : Boolean;
     fVoice          : Boolean;
     fIsNewHamlib    : Boolean;
+    fSimpleRig      : Boolean;
     fModelName      : string;
     fGetSplitTX     : Boolean;
     fRigSplitActive : Boolean;
@@ -84,7 +88,8 @@ type TRigControl = class
 
     RigCmdChannelBusy : Boolean;
     RigCmdChannelMsg  : String;
-
+    TimeOutCounter    : LongInt;
+    DumpCapsPending   : boolean; //because it seems that +\dump_caps response may spilt to parts
 
     function  RigConnected   : Boolean;
     function  StartRigctld   : Boolean;
@@ -121,47 +126,48 @@ public
     property RigCtldHost : String  read fRigCtldHost write fRigCtldHost;     //host where is rigctld running
     property Connected   : Boolean read RigConnected;                        //connect rigctld
     property RigPoll     : Word    read fRigPoll     write fRigPoll;         //poll rate in milliseconds
-    property RigSendCWR  : Boolean read fRigSendCWR    write fRigSendCWR;    //send CWR instead of CW
-    property RigChkVfo  : Boolean read fRigChkVfo    write fRigChkVfo;       //test if rigctld "--vfo" start parameter is used
-    property Morse      : Boolean read fMorse;                               //can rig send CW
-    property Voice      : Boolean read fVoice;                               //can rig launch voice memories
-    property IsNewHamlib: Boolean read fIsNewHamlib;                         //Is Hamlib version date higer than 2023-06-01
+    property RigSendCWR  : Boolean read fRigSendCWR  write fRigSendCWR;      //send CWR instead of CW
+    property SimpleRig   : Boolean read fSimpleRig   write fSimpleRig;       //bypass \dump_caps do just get/set freq and mode
+    property RigChkVfo   : Boolean read fRigChkVfo   write fRigChkVfo;       //test if rigctld "--vfo" start parameter is used
+    property Morse       : Boolean read fMorse;                              //can rig send CW
+    property Voice       : Boolean read fVoice;                              //can rig launch voice memories
+    property IsNewHamlib : Boolean read fIsNewHamlib;                        //Is Hamlib version date higer than 2023-06-01
                                                                              //not used internally, but can give info out
-    property ModelName  : string  read fModelName;                           //rig model
-    property Power      : Boolean read fPower;                               //can rig switch power
-    property PowerON      : Boolean write fPowerON;                          //may rig switch power on at start
-    property CanGetVfo  : Boolean read fGetVfo;                              //can rig show vfo (many Icoms can not)
+    property ModelName   : string  read fModelName;                          //rig model
+    property Power       : Boolean read fPower;                              //can rig switch power
+    property PowerON     : Boolean write fPowerON;                           //may rig switch power on at start
+    property CanGetVfo   : Boolean read fGetVfo;                             //can rig show vfo (many Icoms can not)
     property LastError   : String  read fLastError;                          //last error during operation
-    property RXOffset : Double read fRXOffset write fRXOffset;               //RX offset for transvertor in MHz
-    property TXOffset : Double read fTXOffset write fTXOffset;               //TX offset for transvertor in MHz
-    property GetSplitTX : Boolean read fGetSplitTX write  fGetSplitTX;       //TX freq from split vfo
+    property RXOffset    : Double  read fRXOffset     write fRXOffset;       //RX offset for transvertor in MHz
+    property TXOffset    : Double  read fTXOffset     write fTXOffset;       //TX offset for transvertor in MHz
+    property GetSplitTX  : Boolean read fGetSplitTX   write  fGetSplitTX;    //TX freq from split vfo
     property RigSplitActive : Boolean read fRigSplitActive;
 
-    property GetRFPower: boolean read fGetRFPower  write fGetRFPower;        //Can get RFpower
-    property SetRFPower: boolean read fSetRFPower  write fSetRFPower;        //Can set RFpower
-    property MemGetRFP: boolean read fMemGetRFP;                             //Memory what rig said
-    property MemSetRFP: boolean read fMemSetRFP;                             //Memory what rig said
+    property GetRFPower  : boolean read fGetRFPower   write fGetRFPower;     //Can get RFpower
+    property SetRFPower  : boolean read fSetRFPower   write fSetRFPower;     //Can set RFpower
+    property MemGetRFP   : boolean read fMemGetRFP;                          //Memory what rig said
+    property MemSetRFP   : boolean read fMemSetRFP;                          //Memory what rig said
     property RfPwrMtrWtts : String read fRfPwrMtrWtts;
-    property MemRfPwrMtrWtts : String read fMemRfPwrMtrWtts;                    //last TX value of meter.
+    property MemRfPwrMtrWtts : String read fMemRfPwrMtrWtts;                 //last TX value of meter.
 
-    property SetFunc   : boolean read fSetFunc;                              //Can set
-    property GetFunc   : boolean read fGetFunc;                              //can get functions
-    property SupSetFuncs  : String read fSupSetFuncs;                        //list of supported functions set
-    property SupGetFuncs  : String read fSupGetFuncs;                        //list of supported functions set
-    property SetLevel  : boolean read fSetLevel;                             //Can set
-    property GetLevel  : boolean read fGetLevel;                             //can get Levels
-    property SupSetLevels : String read fSupSetLevels;                       //list of supported Levels set
-    property SupGetLevels : String read fSupGetLevels;                       //list of supported Levels get
-    property SupGetVfoOp  : String read fSupGetVfoOp;                        //list of supported  VFO operations
-    property Ptt          : String read fPtt;                                //PTT state;
+    property SetFunc     : boolean read fSetFunc;                            //Can set
+    property GetFunc     : boolean read fGetFunc;                            //can get functions
+    property SupSetFuncs : String  read fSupSetFuncs;                        //list of supported functions set
+    property SupGetFuncs : String  read fSupGetFuncs;                        //list of supported functions set
+    property SetLevel    : boolean read fSetLevel;                           //Can set
+    property GetLevel    : boolean read fGetLevel;                           //can get Levels
+    property SupSetLevels: String  read fSupSetLevels;                       //list of supported Levels set
+    property SupGetLevels: String  read fSupGetLevels;                       //list of supported Levels get
+    property SupGetVfoOp : String  read fSupGetVfoOp;                        //list of supported  VFO operations
+    property Ptt         : String  read fPtt;                                //PTT state;
 
-    property PwrPcnt :  String read fPwrPcnt write fPwrPcnt;                 //Set/Get the amount of Power level in %
-    property PwrmW   :  String read fPwrmW   write fPwrmW;                   //Mode-band related milliWatts for  Power level in %
+    property PwrPcnt     :  String read fPwrPcnt write fPwrPcnt;             //Set/Get the amount of Power level in %
+    property PwrmW       :  String read fPwrmW   write fPwrmW;               //Mode-band related milliWatts for  Power level in %
 
     property ResponseTimeout : Boolean read fResponseTimeout;
-    property CompoundPoll : Boolean read fCompoundPoll  write  fCompoundPoll;//Char to use between compound commands.
+    property CompoundPoll: Boolean read fCompoundPoll  write  fCompoundPoll; //Char to use between compound commands.
                                                                              //Default is space, can be also LineEnding that breaks compound
-    property PollTimeout  : integer read fPollTimeout write fPolltimeout;    //Poll timeout in poll rounds (PollTimeout X RigPoll = timeout in milliseconds)
+    property PollTimeout : integer read fPollTimeout write fPolltimeout;     //Poll timeout in poll rounds (PollTimeout X RigPoll = timeout in milliseconds)
 
     function  GetCurrVFO  : TVFO;
     function  GetModePass : TRigMode;
@@ -220,21 +226,25 @@ begin
   tmrRigPoll           := TTimer.Create(nil);
   tmrRigPoll.Enabled   := False;
   VfoStr               := ''; //defaults to non-"--vfo" (legacy) mode
-  fPowerON             := true;  //we do this via rigctld startup parameter autopower_on
-  fGetVfo              := true;   //defaut these true
-  fMorse               := true;
-  fVoice               := false;
+  fPowerON             := false;  //we do this via rigctld startup parameter autopower_on
   fIsNewHamlib         := false;
+  fPower               := false;
+  fGetVfo              := false;
+  fGetFunc             := false;
+  fSetFunc             := false;
+  fVfoOps              := false;
+  fMorse               := false;
+  fVoice               := false;
+  fGetRFPower          := false;
+  fSetRFPower          := false;
   fGetSplitTX          := false;  //poll rig polls also split TX vfo
   PowerOffIssued       := false;
   fCompoundPoll        := True;
   fPollTimeout         := 15;  //max count of false responses when polled. Set_power ON is critical. Must be big enough to allow rig wake up.
   fPollCount           := fPollTimeout;
   fRigSplitActive      := False;
-  fGetRFPower          := false;
-  fSetRFPower          := false;
-  fGetFunc             := false;
-  fSetFunc             := false;
+  fSimpleRig           := false; //simple rig knows just set/get frequency and mode (bypas startup \dump_caps)
+
   fSupSetFuncs         := '';
   fSupGetFuncs         := '';
   fSupSetLevels        := '';
@@ -262,8 +272,9 @@ begin
   index:=0;
   paramList := TStringList.Create;
   paramList.Delimiter := ' ';
-  if pos('AUTO_POWER',UpperCase(RigCtldArgs))=0 then
-   if (RigId>10) then  //only true rigs can do auto_power_on
+  if (pos('AUTO_POWER',UpperCase(RigCtldArgs))=0) and (RigId>10) then  //only true rigs can do auto_power_on,
+                                                                     //if user sets extra parameter AUTO_POWER=1 for
+                                                                     //rig models < 10 it is on his responsible
     begin
     if fPowerON then RigCtldArgs:= RigCtldArgs+' -C auto_power_on=1';
           //2023-08-02 auto_power on is not any more default "1" and it should stay so (by W9MDB)
@@ -419,46 +430,51 @@ begin
 end;
 procedure TRigControl.SetTuner;
 begin
-  if fSetFunc and (Pos('TUNER', fSupSetFuncs)>0) then
-    RigCommand.Add('+\set_func'+VfoStr+' TUNER 1');
+  if not (fSetFunc and (Pos('TUNER', fSupSetFuncs)>0)) then exit;
+  RigCommand.Add('+\set_func'+VfoStr+' TUNER 1');
   Allowcommand:=1;
 end;
 
 procedure TRigControl.ReSetTuner;
 begin
-  if fSetFunc and (Pos('TUNER', fSupSetFuncs)>0) then
-    RigCommand.Add('+\set_func'+VfoStr+' TUNER 0');
+  if not (fSetFunc and (Pos('TUNER', fSupSetFuncs)>0)) then exit;
+  RigCommand.Add('+\set_func'+VfoStr+' TUNER 0');
   Allowcommand:=1;
 end;
 procedure TRigControl.Tune;
 begin
-  if (Pos('TUNE', fSupGetVfoOp)>0) then
-    RigCommand.Add('+\vfo_op'+VfoStr+' TUNE');
+  if not (fVfoOps and (Pos('TUNE', fSupGetVfoOp)>0)) then exit;
+  RigCommand.Add('+\vfo_op'+VfoStr+' TUNE');
   Allowcommand:=1;
 end;
 procedure TRigControl.ClearRit;
 begin
+  if not (fSetFunc and (Pos('RIT', fSupSetFuncs)>0)) then exit;
   RigCommand.Add('+\set_rit'+VfoStr+' 0');
   Allowcommand:=1;
 end;
 procedure TRigControl.DisableRit;
 Begin
+  if not (fSetFunc and (Pos('RIT', fSupSetFuncs)>0)) then exit;
   RigCommand.Add('+\set_func'+VfoStr+' RIT 0');
   Allowcommand:=1;
 end;
 procedure TRigControl.SetSplit(up:integer);
 Begin
+  if not (fSetFunc and (Pos('XIT', fSupSetFuncs)>0)) then exit;
   RigCommand.Add('+\set_xit'+VfoStr+' '+IntToStr(up));
   RigCommand.Add( '+\set_func'+VfoStr+' XIT 1');
   Allowcommand:=1;
 end;
 procedure TRigControl.ClearXit;
 begin
+ if not (fSetFunc and (Pos('XIT', fSupSetFuncs)>0)) then exit;
  RigCommand.Add('+\set_xit'+VfoStr+' 0');
  Allowcommand:=1;
 end;
 procedure TRigControl.DisableSplit;
 Begin
+ if not (fSetFunc and (Pos('XIT', fSupSetFuncs)>0)) then exit;
  RigCommand.Add('+\set_func'+VfoStr+' XIT 0');
  Allowcommand:=1;
 end;
@@ -474,29 +490,37 @@ begin
 end;
 procedure TRigControl.SendVoice(Vmem:String);
 begin
+  if not fVoice then exit;
   RigCommand.Add('+\send_voice_mem '+Vmem);
   Allowcommand:=1;
 end;
 procedure TRigControl.StopVoice;
 begin
+  if not fVoice then exit;
   RigCommand.Add('+\stop_voice_mem');
   Allowcommand:=1;
 end;
 procedure TRigControl.PwrOn;
 begin
-  AllowCommand:=4; //high prority  passes -1 state
+  if not fPower then exit;
+  RigCommand.Add('+\set_powerstat 1');
+  AllowCommand:=1;
+  PowerOffIssued:=false;
+  tmrRigPoll.Enabled:=true;
 end;
 procedure TRigControl.PwrOff;
 begin
-  PowerOffIssued:=true;
+  if not fPower then exit;
   RigCommand.Add('+\set_powerstat 0');
   Allowcommand:=1;
+  PowerOffIssued:=true;
 end;
 procedure TRigControl.PwrStBy;
 begin
-   PowerOffIssued:=true;
+   if not fPower then exit;
    RigCommand.Add('+\set_powerstat 2');
    Allowcommand:=1;
+   PowerOffIssued:=true;
 end;
 procedure TRigControl.UsrCmd(cmd:String);
 begin
@@ -682,7 +706,7 @@ begin
                     InitReceive(Imsg,Hit)
     else
 
-     Begin
+     Begin   //other than init
         a := Explode(LineEnding,msg);
         MaxArg:=Length(a)-1;
 
@@ -728,8 +752,8 @@ begin
              if pos('1',a[i])>0 then //line may have 'STAT: 1' or 'STAT: CURRVFO 1'
               Begin
                 if fDebugMode then Writeln('Power on, start polling');
-                AllowCommand:=92; //check pending commands via delay Assume rig needs time to start
-                PowerOffIssued:=false;
+                OnConnectRigctldConnect(nil); //simulate tcp just connected
+                Exit;
               end
              else
               Begin
@@ -842,12 +866,17 @@ var
   f       :integer;
   s       :array[1..5] of string=('','','','','');
 
+
 begin
+ tmrRigPoll.Enabled:=false;
+
  if fDebugMode then
                Writeln('Polling - allowcommand:',AllowCommand);
 
  case AllowCommand of
-     -2:  Exit;
+     -2:  Begin
+               Exit; //this disables tmrRigPoll permanently!
+          end;
      -1:  Begin
                dec(fPollCount);
                if fPollCount<1 then
@@ -857,6 +886,10 @@ begin
                     tmrRigPoll.Enabled  := False;
                     fResponseTimeout := true;
                   end;
+                if fDebugMode then
+                                Writeln('Response waited: ',DateTimeToUnix(now)-TimeOutCounter,'sec');
+
+               tmrRigPoll.Enabled:=true;
                Exit;   //no sending allowed
            end;
 
@@ -869,14 +902,18 @@ begin
      94:  Begin AllowCommand:=93;  end;
      93:  Begin AllowCommand:=92;  end;
      92:  Begin AllowCommand:=91;  end;
-     91:  AllowCommand:=1;
+     91:  AllowCommand:=10;
 
      //high priority (init) commands
      10:  Begin
                cmd:='+\chk_vfo'+LineEnding;
                if fDebugMode then
                      Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
           end;
@@ -884,7 +921,11 @@ begin
                cmd:='+\dump_caps'+LineEnding;
                 if fDebugMode then
                      Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
           end;
@@ -894,7 +935,11 @@ begin
                cmd:=('+\get_func'+VfoStr+' ?'+LineEnding);
                if fDebugMode then
                    Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
              end
@@ -907,7 +952,11 @@ begin
                cmd:=('+\set_func'+VfoStr+' ?'+LineEnding);
                if fDebugMode then
                    Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
              end
@@ -920,7 +969,11 @@ begin
                cmd:=('+\get_level'+VfoStr+' ?'+LineEnding);
                if fDebugMode then
                      Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
             end
@@ -933,7 +986,11 @@ begin
                cmd:=('+\set_level'+VfoStr+' ?'+LineEnding);
                if fDebugMode then
                      Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
             end
@@ -946,7 +1003,11 @@ begin
                cmd:=('+\vfo_op'+VfoStr+' ?'+LineEnding);
                if fDebugMode then
                      Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
              end
@@ -955,21 +1016,8 @@ begin
           end;
 
       3:  Begin
-            if (fPower and fPowerON and (not InitDone)) then
-             begin
-               cmd:= '+\set_powerstat 1'+LineEnding;
-               if fDebugMode then
-                     Write(LineEnding+'Rig init sending: '+cmd);
-               if not SendPoll(cmd) then exit;
-               AllowCommand:=-1; //waiting for reply
-               sleep(4000); //allow rig to wake up
-               fPollCount :=  fPollTimeout;
-             end
-            else
-             begin
                if not InitDone then
                                InitFinal;
-             end
           end;
 
       //lower priority commands queue handled here
@@ -986,9 +1034,16 @@ begin
                   RigCommand.Delete(RigCommand.Count-1);
                   if fDebugMode then
                      write('Queue left:'+LineEnding,RigCommand.Text);
-                  if not SendPoll(cmd) then exit;
+                  if not SendPoll(cmd) then
+                                           begin
+                                            tmrRigPoll.Enabled:=true;
+                                            Exit;
+                                           end;
                   AllowCommand:=-1; //wait answer
-                  fPollCount :=  fPollTimeout;
+                  if (pos('set_powerstat 1',cmd)>0) then
+                       fPollCount :=  fPollTimeout*10   //give time for rig to wake up
+                     else
+                       fPollCount :=  fPollTimeout;
                end
             else
               AllowCommand :=0;
@@ -1001,7 +1056,11 @@ begin
      begin
       if   ((not RigctldConnect.Connected)
              or fResponseTimeout )
-                           then exit;
+                           then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
 
      if  ParmHasVfo=2 then
        begin
@@ -1028,7 +1087,6 @@ begin
                end;
               //cmd := '+f'+VfoStr+' +m'+VfoStr+LineEnding //do not ask vfo if rig can't
             end
-
        end
       else
        begin
@@ -1062,7 +1120,11 @@ begin
            Begin
             if fDebugMode then
                Write(LineEnding+'Poll Sending:'+trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding);
-            if not SendPoll(trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding) then exit;
+            if not SendPoll(trim(s[1]+' '+s[2]+' '+s[3]+' '+s[4]+' '+s[5])+LineEnding) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
            end
           else
             Begin
@@ -1072,7 +1134,11 @@ begin
                    Begin
                       if fDebugMode then
                             Write(LineEnding+'Poll Sending:'+s[f]+LineEnding);
-                      if not SendPoll(s[f]+LineEnding) then exit;
+                      if not SendPoll(s[f]+LineEnding) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
                    end
                   else
                   break;
@@ -1093,31 +1159,49 @@ begin
 
      AllowCommand:=-1; //waiting for reply
      fPollCount :=  fPollTimeout;
-    end;
 
+    end;    //end of Allowcommand=0
+   tmrRigPoll.Enabled:=true;
 end;
 procedure TRigControl.OnConnectRigctldConnect(aSocket: TLSocket);
 Begin
+    tmrRigPoll.Enabled  := False;
     if fDebugMode then
                    Writeln('Connecting to rigctld Poll (OnConnect)');
 
     ParmHasVfo:=0;   //default: "--vfo" is not used as start parameter
-    AllowCommand:=10;  //start with chk_vfo
     RigCommand.Clear;
-    tmrRigPoll.Interval := 50; //to speed up init
+    tmrRigPoll.Interval := StartupPoll; //to speed up init
+
+    if not fSimpleRig then
+     begin
+       if RigChkVfo then
+        Begin
+          ParmVfoChkd  :=false;
+          InitDone     :=false;
+          AllowCommand :=10;  //start with chkvfo
+        end
+       else
+        Begin
+          ParmVfoChkd  :=false;
+          InitDone     :=false;
+          AllowCommand :=9;  //otherwise start with dump caps
+        end;
+     end;
+
+    ConnectionDone :=true;
+    DumpCapsPending:=false;
+
+   if SimpleRig then
+    Begin
+     ParmVfoChkd:=true;
+     InitFinal;  //bypass all \dump_caps checking
+    end;
+
     tmrRigPoll.Enabled  := True;
 
-    if RigChkVfo then
-      Begin
-        AllowCommand:=10;  //start with chkvfo
-        ParmVfoChkd:=false;
-      end
-     else
-      Begin
-        AllowCommand:=9;  //otherwise start with dump caps
-        ParmVfoChkd:=false;
-      end;
-    ConnectionDone:=true;
+
+
 end;
 procedure TRigControl.OnErrorRigctldConnect(const msg: string; aSocket: TLSocket);
 
@@ -1142,6 +1226,7 @@ begin
   Result:=(r=length(msg)); //SendMessage returns sent char count (inc LineEnding)
   if fDebugMode then
                 writeln('Sent :',r,' ',Result);
+  TimeOutCounter:=DateTimeToUnix(now);
 end;
 procedure TRigControl.Restart;
 var
@@ -1251,8 +1336,9 @@ end;
        AllowCommand:=9; //next dump_caps
       end;
 
-     if pos('DUMP_CAPS',Imsg)>0 then
+     if (pos('DUMP_CAPS',Imsg)>0) or DumpCapsPending then
        Begin
+          DumpCapsPending := true;
           fIsNewHamlib := (pos('HAMLIB VERSION:',      Imsg)>0);  //old versions do not have this
           fPower       := (pos('CAN SET POWER STAT: Y',Imsg)>0);
           fGetVfo      := (pos('CAN GET VFO: Y',       Imsg)>0);
@@ -1296,7 +1382,9 @@ end;
                                                              );
                                        end;
 
-        if fDebugMode then
+        if (DumpCapsPending and (pos('RPRT',Imsg)>0)) then
+          begin
+             if fDebugMode then
                Begin
                   Writeln(LineEnding,'This is New Hamlib: ',fIsNewHamlib);
                   Writeln('Cqrlog can switch power: ',fPower);
@@ -1311,8 +1399,12 @@ end;
                   Writeln('Cqrlog can get power2mW: ',fGetRFPower);
                   Writeln('Cqrlog can set mW2power: ',fSetRFPower,LineEnding);
                end;
-        Hit:=true;Imsg:='';
-        AllowCommand:=8; //next get_func
+              DumpCapsPending:=false;
+              Hit:=true;Imsg:='';
+              AllowCommand:=8; //next get_func
+          end;
+
+
         end;
 
      if pos('GET_FUNC',Imsg)>0 then
@@ -1358,13 +1450,6 @@ end;
                     Writeln(LineEnding,'VFO Ops: ',fSupGetVfoOp);
          Hit:=true;Imsg:='';
          AllowCommand:=3;    //this is the last init command
-      end;
-
-     if pos('SET_POWERSTAT',Imsg)>0 then
-      Begin
-        Hit:=true;Imsg:='';
-        if not InitDone then
-                        InitFinal;
       end;
 
      if Hit then

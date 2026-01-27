@@ -417,6 +417,7 @@ type
     procedure acUploadToHrdLogExecute(Sender: TObject);
     procedure acUploadToUDPLogExecute(Sender: TObject);
     procedure acPropExecute(Sender: TObject);
+    procedure btnCancelExit(Sender: TObject);
     procedure btnClearSatelliteClick(Sender : TObject);
     procedure cbRxLoChange(Sender: TObject);
     procedure cbSplitTXChange(Sender: TObject);
@@ -2783,7 +2784,7 @@ begin
             if (frmNewQSO.RepHead <> '') and (not CallFromSpot) and (not newstart) then
              //clean wsjtx's DXCall and DXGrid and do GenStdMsg(to clean it too)
                Begin
-                 frmMonWsjtx.SendConfigure('','',' ',' ',$7FFFFFFF,$7FFFFFFF,$7FFFFFFF,False,True);
+                 frmMonWsjtx.SendConfigure('','',' ',' ',$FFFFFFFF,$FFFFFFFF,$FFFFFFFF,False,True);
                end;
             if not CallFromSpot then
                Begin
@@ -3141,6 +3142,10 @@ begin
                                   end;
                  end;
                  case ContestNr of
+                      0         : Begin   //user may want to store event qsos (like WWA) with "contest" name. Therefore contest #0 must be chekcked
+                                      if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
+                                            edtContestName.Text :=frmContest.cmbContestName.Text;
+                                  end;
                       1,2,3,4   : Begin
                                        edtContestSerialReceived.Text := copy( edtContestSerialReceived.Text,1,6); //Max Db length=6
                                        if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
@@ -4800,6 +4805,15 @@ begin
    frmPropagation.Show
 end;
 
+procedure TfrmNewQSO.btnCancelExit(Sender: TObject);
+begin
+     btnCancel.Caption:='Quit [CTRL+Q]';
+     btnCancel.Font.Color:=clDefault;
+     btnCancel.Font.Style:=[];
+     btnCancel.Repaint;
+     FirstClose:=true;
+end;
+
 procedure TfrmNewQSO.btnClearSatelliteClick(Sender : TObject);
 begin
   cmbPropagation.ItemIndex := 0;
@@ -5273,11 +5287,14 @@ end;
 
 procedure TfrmNewQSO.mnuIK3QARClick(Sender: TObject);
 var
-   AProcess: TProcess;
+   AProcess   : TProcess;
+   ResultFile : String;
 begin
   AProcess := TProcess.Create(nil);
   try
-    AProcess.Executable := cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser);
+    if dmUtils.IsFileThere(cqrini.ReadString('Program','WebBrowser',dmUtils.MyDefaultBrowser),ResultFile) then
+     AProcess.Executable := ResultFile
+    else exit;
     AProcess.Parameters.Add('http://www.ik3qar.it/manager/man_result.php?call='+
                             dmData.qQSOBefore.Fields[4].AsString);
     if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
@@ -5876,7 +5893,9 @@ begin
       Caption := dmUtils.GetNewQSOCaption('New QSO');
       fViewQSO := False;
       fEditQSO := False;
-    end
+    end;
+    key:=0;
+    Exit;
   end
   else
     EscFirstPressDone := False;
@@ -5904,7 +5923,8 @@ begin
             else ShowMessage('CW interface:  No keyer defined for current radio!');
        end;
       end;
-    key := 0
+    key := 0;
+    Exit;
   end;
 
   if (Key = VK_F11) then                                            //VK_11
@@ -5916,7 +5936,9 @@ begin
       QRZ := TQRZThread.Create(True);
       QRZ.FreeOnTerminate := True;
       QRZ.Start
-    end
+    end;
+    key:=0;
+    Exit;
   end;
 
   // keys for CW speed up / down
@@ -5935,6 +5957,7 @@ begin
     if (frmCWType <> nil ) then
          frmCWType.UpdateTop;
     key:=0;
+    Exit;
   end;
 
   // CTRL-Key > Keyboard Shortcuts for NewQSO with CTRL
@@ -5961,55 +5984,64 @@ begin
         fEditQSO := False;
         NewQSO;
         ClearAll;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (Key = VK_F8) then                                         //VK_F8
       begin
         if not (fEditQSO or fViewQSO) then
           edtCall.Text:= '';
         ReturnToNewQSO;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_A) then                                          //VK_A
       begin
         acAddToBandMap.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_D) then                                          //VK_D
       begin
         acDXCCCfm.Execute;
         key := 0;
+        Exit;
       end;
       if (key = VK_I) then                                          //VK_I
       begin
         acDetails.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_H) then                                          //VK_H
       begin
         ShowHelp;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_M) then                                          //VK_M
       begin
         acRemoteMode.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_N) then                                          //VK_N
       begin
         acLongNote.Execute;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if(key = VK_P) then                                           //VK_P
       begin
         acPreferences.Execute;
         key := 0;
+        Exit;
       end;
       if (key = VK_Q) then                                          //VK_Q
       begin
         btnCancelClick(nil);
         key := 0;
-        exit
+        Exit;
       end;
       if (key = VK_R) then                                          //VK_R
       begin
@@ -6028,12 +6060,14 @@ begin
               CheckCallsignClub;
           end;
         end;
-        key := 0
+        key := 0;
+        Exit;
       end;
       if (key = VK_W) then                                          //VK_W
         Begin
          acSendSpot.Execute;
          key := 0;
+         Exit;
         end;
       if key in [VK_1..VK_9] then                                   //VK_1..VK_9
          Begin
@@ -6043,6 +6077,7 @@ begin
         begin
          frmTRXControl.DisableSplit;
          key:=0;
+         Exit;
         end;
  end;
 
@@ -6057,13 +6092,16 @@ begin
          edtDate.SetFocus
        else
          edtCall.SetFocus;
-     key := 0;
+       key:=0;
+       Exit;
     end;
    if (Shift = [ssCtrl]) then
     begin
       mnuQSOList.Click;
       key := 0;
+      Exit;
     end;
+
    if (Shift = [ssAlt]) then
     begin
       with TfrmChangeOperator.Create(self) do
@@ -6084,6 +6122,7 @@ begin
         Free;
       end;
     end;
+   Exit;
   end; //end VK_O
 
 
@@ -6110,36 +6149,43 @@ begin
         begin
          frmTRXControl.btnMemUp.Click;
          key:=0;
+         Exit;
         end;
       if (key = VK_F) then                                         //VK_F
         begin
           dmUtils.EnterFreq;
           key:=0;
+          Exit;
         end;
       if (key = VK_V) then                                         //Alt+V
         Begin
          frmTRXControl.btnMemDwn.Click;
          key:=0;
+         Exit;
         end;
       if (key = VK_W) then                                         //Alt+W
         Begin
          cmbQSL_S.text:='SB';
          key:=0;
+         Exit;
         end;
       if (key = VK_N) then                                         //Alt+N
         Begin
          cmbQSL_S.text:='N';
          key:=0;
+         Exit;
         end;
       if (key = VK_H) then                                         //VK_H
         begin
          ShowHelp;
          key:=0;
+         Exit;
         end;
       if (key = VK_F2) then                                        //VK_F2
         begin
          acNewQSOExecute(nil);
          key:= 0;
+         Exit;
         end;
   end;
 end;
@@ -7115,7 +7161,7 @@ begin
                     if RemoteActive='wsjtx' then
                      Begin
                       CallFromSpot:=True;
-                      frmMonWsjtx.SendConfigure('','',call,' ',$7FFFFFFF,$7FFFFFFF,$7FFFFFFF,False,True);
+                      frmMonWsjtx.SendConfigure('','',call,' ',$FFFFFFFF,$FFFFFFFF,$FFFFFFFF,False,True);
                      end;
                     SendToBack;
                    end
@@ -7618,7 +7664,7 @@ begin
   Menuitem45.Visible:=False;  //send hex commands to win/k3ng keyer
   case  KeyerType of
     1 : begin
-          CWint := TCWWinKeyerUSB.Create;
+        CWint := TCWWinKeyerUSB.Create;
         if dmData.DebugLevel < 0 then
                CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
               else
@@ -7671,6 +7717,9 @@ begin
             i:=Uppercase(cqrini.ReadString('CW'+n,'K3NG_hex',''));
         end;
     4 : begin
+          if assigned(frmTRXControl.radio) then    //if radio can not send CW do not init
+            if not frmTRXControl.radio.Morse then exit;
+
           CWint        := TCWHamLib.Create;
           if dmData.DebugLevel < 0 then
                  CWint.DebugMode  := ((abs(dmData.DebugLevel) and 8) = 8 )
@@ -7990,8 +8039,12 @@ begin
   cbOffline.Enabled     := False;
   btnSave.Enabled       := False;  //disable manual saving when remote is on
   tmrADIF.Interval      := 250;    //rate to read qsos from UDP (msec)
+
+  if pos('%radio',path)> 0 then
+            path:=StringReplace(path,'%radio',cqrini.ReadString('TRX'+frmTRXControl.RigInUse, 'Desc', ''),[rfReplaceAll]);
+
   if run and FileExists(ExtractWord(1,path,[' '])) then
-    dmUtils.RunOnBackground(AnsiQuotedStr(path, '"'))
+    dmUtils.RunOnBackground(path)
 end;
 
 

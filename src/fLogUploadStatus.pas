@@ -310,7 +310,7 @@ begin
           ErrorCode := 1;
           Break
         end;
-        Sleep(2000); //we don't want to make small DDOS attack to server
+        Sleep(2000 + Random(3001)); //we don't want to make small DDOS attack to server
         dmLogUpload.Q.Next
       end; //while not dmLogUpload.Q.Eof do
 

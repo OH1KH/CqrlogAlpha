@@ -863,6 +863,7 @@ var
    m  : String;
 begin
      tmrSetRigTime.Enabled:=False;
+     if not ((assigned (radio)) and (pos('TIME',radio.SupSetParms)>0)) then exit;
      m:= FormatDateTime('n',Now);
      if currMin='' then currMin:=m;
      if currMin<>m then //minute has changed set rig time
@@ -1379,7 +1380,7 @@ begin
             Writeln('CW keyer reloaded by TRControl radio' + RigInUse + ' change');
         end;
 
-      if cqrini.ReadBool('TRX'+RigInUse, 'UTC2Rig', False) then
+      if cqrini.ReadBool('TRX'+RigInUse, 'UTC2Rig', False) and (pos('TIME',radio.SupSetParms)>0) then
              Begin
               currMin:='';
               tmrSetRigTime.Enabled:=True; //sets rig time on next minute change

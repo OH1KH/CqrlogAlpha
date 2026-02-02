@@ -856,10 +856,12 @@ begin
   case where of
     upHamQTH  : Result := cqrini.ReadString('OnlineLog','HaUrl','http://www.hamqth.com/qso_realtime.php');
     upClubLog : begin
-                  if (cmd='DELETE') then
-                    Result := cqrini.ReadString('OnlineLog','ClUrlDel','https://clublog.org/delete.php')
+                 case cmd of
+                  'DELETE': Result := cqrini.ReadString('OnlineLog','ClUrlDel','https://clublog.org/delete.php');
+                  'BULK'  : Result := cqrini.ReadString('OnlineLog','ClUrlBulk','https://clublog.org/putlogs.php');
                   else
                     Result := cqrini.ReadString('OnlineLog','ClUrl','https://clublog.org/realtime.php');
+                 end;
                 end;
     upHrdLog  : Result := cqrini.ReadString('OnlineLog','HrUrl','http://robot.hrdlog.net/NewEntry.aspx');
   end //case

@@ -9,7 +9,7 @@ uses
   dynlibs, lcltype, ExtCtrls, sqlscript, process, mysql51dyn, ssl_openssl_lib,
   mysql55dyn, mysql55conn, mysql51conn, db, httpsend, blcksock, synautil, Forms,
   Graphics, mysql56conn, mysql56dyn, mysql57dyn, mysql57conn,
-  lNet, lNetComponents, laz2_DOM, laz2_XMLWrite, md5;
+  lNet, lNetComponents, laz2_DOM, laz2_XMLWrite, md5, StrUtils, LazFileUtils;
 
 const
   C_HAMQTH       = 'HamQTH';
@@ -18,6 +18,7 @@ const
   C_UDPLOG       = 'UDPLog';
   C_ALLDONE      = 'ALLDONE';
   C_CLUBLOG_API  = '21507885dece41ca049fec7fe02a813f2105aff2';
+
 type
   TWhereToUpload = (upHamQTH, upClubLog, upHrdLog, upUDPLog);
 
@@ -115,9 +116,9 @@ end;
 function TdmLogUpload.UploadLogData(where : TWhereToUpload; cmd: String; data : TStringList; var Response : String; var ResultCode : Integer) : Boolean;
 begin
   case where of
-    upUDPLog  : Result := UploadLogDataUDP(cmd,data,Response,ResultCode)
-  else
-    Result := UploadLogDataHTTP(dmLogUpload.GetUploadUrl(where,cmd), data, Response, ResultCode);
+    upUDPLog  : Result := UploadLogDataUDP(cmd,data,Response,ResultCode);
+    else
+       Result := UploadLogDataHTTP(dmLogUpload.GetUploadUrl(where,cmd), data, Response, ResultCode);
   end; // case
 end;
 
@@ -128,31 +129,68 @@ var
   i     : Integer;
   Key   : String;
   Value : String;
-  l     : TStringList;
+  l,
+  Dummy : TStringList;
+  F     : TMemoryStream;
+  s     : String;
 begin
+
   Bound := IntToHex(Random(MaxInt), 8) + '_Synapse_boundary';
   HTTP  := THTTPSend.Create;
   l     := TStringList.Create;
   try
+    HTTP.Clear;
     HTTP.ProxyHost := cqrini.ReadString('Program','Proxy','');
     HTTP.ProxyPort := cqrini.ReadString('Program','Port','');
     HTTP.UserName  := cqrini.ReadString('Program','User','');
     HTTP.Password  := cqrini.ReadString('Program','Passwd','');
 
+
     for i:=0 to data.Count-1 do
     begin
-      Key   := copy(data.Strings[i],1,Pos('=',data.Strings[i])-1);
-      Value := copy(data.Strings[i],Pos('=',data.Strings[i])+1,Length(data.Strings[i])-Pos('=',data.Strings[i])+1);
+      Key   :=ExtractWord(1,data.Strings[i],['=']);
+      Value := ExtractWord(2,data.Strings[i],['=']);
 
-      WriteStrToStream(HTTP.Document,
-        '--' + Bound + CRLF +
-        'Content-Disposition: form-data; name=' + AnsiQuotedStr(Key, '"') + CRLF +
-        'Content-Type: text/plain' + CRLF +
-        CRLF);
-      WriteStrToStream(HTTP.Document, Value);
-      WriteStrToStream(HTTP.Document,CRLF)
+      if Key='file' then
+        begin
+          WriteStrToStream(HTTP.Document,
+            '--' + Bound + CRLF +
+            'Content-Disposition: form-data; name=' + AnsiQuotedStr(Key, '"') + '; ' +
+            ' filename=' + AnsiQuotedStr(Value, '"')  + CRLF+
+            'Content-Type: application/octet-string' + CRLF +
+            CRLF);
+          F:=TMemoryStream.Create;
+          F.LoadFromFile(Value);
+          HTTP.Document.CopyFrom(F, 0);
+          F.Destroy;
+          WriteStrToStream(HTTP.Document,CRLF);
+        end
+        else
+         begin
+          WriteStrToStream(HTTP.Document,
+            '--' + Bound + CRLF +
+            'Content-Disposition: form-data; name=' + AnsiQuotedStr(Key, '"') + CRLF +
+            'Content-Type: text/plain' + CRLF +
+            CRLF);
+          WriteStrToStream(HTTP.Document, Value);
+          WriteStrToStream(HTTP.Document,CRLF);
+         end;
+
     end;
     WriteStrToStream(HTTP.Document,'--' + Bound + '--' + CRLF);
+
+    if dmData.DebugLevel >=1 then
+      begin
+        writeln('**HTTP.Document contents:');
+        Dummy := TStringList.Create;
+        try
+          HTTP.Document.Position := 0;
+          Dummy.LoadFromStream(HTTP.Document);
+          Writeln(Dummy.Text);
+        finally
+          Dummy.Free;
+        end;
+      end;
 
     HTTP.MimeType := 'multipart/form-data; boundary=' + Bound;
     if HTTP.HTTPMethod('POST',Url) then

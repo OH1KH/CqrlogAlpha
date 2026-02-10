@@ -5,9 +5,11 @@ unit fLogUploadStatus;
 interface
 
 uses
-  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs,
+  Classes, SysUtils, FileUtil, LResources, Forms, Controls, Graphics, Dialogs, StrUtils,
   Menus, ActnList, ExtCtrls, uColorMemo, lcltype,  dLogUpload, lclintf, lmessages;
 
+const
+  CRLF = #13#10;
 type
 
   { TfrmLogUploadStatus }
@@ -127,6 +129,10 @@ begin
 end;
 
 procedure TUploadThread.Execute;
+
+// test upload with command console:
+//clear;while true; do printf '' | nc -l localhost 60006; done
+
 const
   C_SEL_UPLOAD_STATUS = 'select * from upload_status where logname=%s';
   C_SEL_LOG_CHANGES   = 'select * from log_changes where id > %d order by id';
@@ -135,6 +141,7 @@ var
   data,
   tmpdata    : TStringList;
   tmp        : String;
+  filepart   : Text;
   err        : String = '';
   LastId     : Integer = 0;
   Response   : String;
@@ -145,10 +152,13 @@ var
   AlreadyDel : Boolean = False;
   ClubCount  : integer;
   ClubBulk   : boolean;
-
+  StreamFile : String;
+  BulkResp1,
+  BulkResp2  : String;
 begin
   data := TStringList.Create;
   tmpdata := TStringList.Create;
+  StreamFile := dmUtils.GetHomeDirectory+'.config/cqrlog/Clublog_BulkUp.adi';
   try
     frmLogUploadStatus.thRunning := True;
     FreeOnTerminate := True;
@@ -176,16 +186,16 @@ begin
          dmLogUpload.Q.SQL.Text := C_COUNT_CLUBLOG_ACTIONS;
          dmLogUpload.Q.Open;
          ClubCount:=  dmLogUpload.Q.FieldByName('nr').AsInteger;
-         ClubBulk:=  (ClubCount > 2);  //How many actions cause putlogs.php usage
+         ClubBulk:=  (ClubCount > 1);  //How many actions cause putlogs.php usage
        end;
 
-      CLubBulk:=true; //debug for testing
+      //CLubBulk:=true; //debug for testing, comment out for production
 
-     //if (dmData.DebugLevel >= 1) and CLubBulk then
+     if (dmData.DebugLevel >= 1) and CLubBulk then
       writeln('Bulk upload:',ClubBulk,'    ',CLubCount,' changes');
 
-    if not ClubBulk then
-    Begin
+  if not ClubBulk then
+   Begin
     try try
       dmLogUpload.Q.Close;
       dmLogUpload.Q.SQL.Text := Format(C_SEL_UPLOAD_STATUS,[QuotedStr(GetLogName)]);
@@ -206,7 +216,8 @@ begin
         Command := dmLogUpload.Q.FieldByName('cmd').AsString;
         if (Command<>'INSERT') and (Command<>'UPDATE') and (Command<>'DELETE') then
         begin
-          Writeln('Unknown command:',Command);
+           if (dmData.DebugLevel >= 1) then
+              Writeln('Unknown command:',Command);
           dmLogUpload.Q.Next;
           Continue
         end;
@@ -325,7 +336,8 @@ begin
           else
             dmLogUpload.MarkAsUploaded(GetLogName,dmLogUpload.Q.FieldByName('id').AsInteger)
         end
-        else begin
+        else
+        begin
           if AlreadyDel then  //if cmd was update, delete was successful but new insert was not
           begin
             dmLogUpload.MarkAsUpDeleted(dmLogUpload.Q.Fields[0].AsInteger)
@@ -334,25 +346,25 @@ begin
           ErrorCode := 1;
           Break
         end;
-        Sleep(2000 + Random(3001)); //we don't want to make small DDOS attack to server
+        Sleep(2000); //we don't want to make small DDOS attack to server
         dmLogUpload.Q.Next
       end; //while not dmLogUpload.Q.Eof do
 
-      if not (ErrorCode = 1) then
-        ToMainThread('Done ...','')
-    finally
-      dmLogUpload.Q.Close;
-      dmLogUpload.trQ.RollBack
-    end;
-    Sleep(500)
-  except
-    on E : Exception do
-      Writeln(E.Message)
-  end
-  end //not ClubBulk
+        if not (ErrorCode = 1) then
+          ToMainThread('Done ...','')
+      finally
+        dmLogUpload.Q.Close;
+        dmLogUpload.trQ.RollBack
+      end;
+      Sleep(500)
+    except
+      on E : Exception do
+        Writeln(E.Message)
+    end
+   end //not ClubBulk
   else
-       Begin
-       try try
+   Begin
+     try try
          dmLogUpload.Q.Close;
          dmLogUpload.Q.SQL.Text := Format(C_SEL_UPLOAD_STATUS,[QuotedStr(GetLogName)]);
          dmLogUpload.Q.Open;
@@ -366,58 +378,60 @@ begin
            ToMainThread('All QSO already uploaded','');
            exit
          end;
+         ToMainThread('Using bulk upload for '+IntToStr(CLubCount)+' changes','');
          tmpdata.clear;
-         dmLogUpload.PrepareUserInfoHeader(WhereToUpload,tmpdata);
 
-        //if dmData.DebugLevel >= 1then
-           writeln('Header:',tmpdata.text);
+         AssignFile(filepart,StreamFile);
+         ReWrite(filepart);
 
          while not dmLogUpload.Q.Eof do
          begin
-           writeln('id:',dmLogUpload.Q.FieldByName('id').AsString);
+           if (dmData.DebugLevel >= 1) then
+              writeln('id:',dmLogUpload.Q.FieldByName('id').AsString);
            AlreadyDel := False;
            Command := dmLogUpload.Q.FieldByName('cmd').AsString;
 
            data.Clear;
-           ToMainThread(Command+' '+dmLogUpload.Q.FieldByName('callsign').AsString,'');
+           if (Command = 'DELETE') then
+                ToMainThread(Command+' '+dmLogUpload.Q.FieldByName('old_callsign').AsString,'')
+              else
+                ToMainThread(Command+' '+dmLogUpload.Q.FieldByName('callsign').AsString,'');
            case Command of
 
              'INSERT'   :  begin
                              dmLogUpload.PrepareInsertHeader(WhereToUpload,dmLogUpload.Q.Fields[0].AsInteger,dmLogUpload.Q.FieldByName('id_cqrlog_main').AsInteger,data);
                              tmp:=data[0];
-                             tmpdata.add(copy(tmp,pos('=<',tmp)+1,length(tmp)));
+                             Write(filepart,copy(tmp,pos('=<',tmp)+1,length(tmp))+CRLF);
                            end;
 
              'UPDATE'   : Begin
                             //we get better format from modified HamQth-delete
                             dmLogUpload.PrepareDeleteHeader(upHamQth,dmLogUpload.Q.Fields[0].AsInteger,dmLogUpload.Q.FieldByName('id_cqrlog_main').AsInteger,data);
-                            tmp:=copy(data[0],pos('=<',tmp)+1,length(tmp));
+                            tmp:=copy(data[0],6,length(data[0]));
                             tmp:=StringReplace(tmp,'OLD_','',[rfReplaceAll,rfIgnoreCase]);
-                            writeln('tmp:',tmp);
-                            tmp:=tmp+'<'+dmUtils.StringToADIF('QSLCALL',UpperCase(cqrini.ReadString('Station', 'Call', '')))+'<EOR>'; //station call as QSLCALL will delete qso
-                            tmpdata.Add(tmp);
+                            tmp:=tmp+'<'+dmUtils.StringToADIF('QSLCALL',UpperCase(cqrini.ReadString('Station', 'Call', '')))+'<EOR>'+LineEnding; //station call as QSLCALL will delete qso
+                            Write(filepart,tmp+CRLF);
                             AlreadyDel := true;
                             data.Clear;
                             dmLogUpload.PrepareInsertHeader(WhereToUpload,dmLogUpload.Q.Fields[0].AsInteger,dmLogUpload.Q.FieldByName('id_cqrlog_main').AsInteger,data);
                             tmp:=data[0];
-                            tmpdata.add(copy(tmp,pos('=<',tmp)+1,length(tmp)));
-
-
+                            Write(filepart,copy(tmp,pos('=<',tmp)+1,length(tmp))+CRLF);
                           end;
 
              'DELETE'   : Begin
                             //we get better format from modified HamQth-delete
                             dmLogUpload.PrepareDeleteHeader(upHamQth,dmLogUpload.Q.Fields[0].AsInteger,dmLogUpload.Q.FieldByName('id_cqrlog_main').AsInteger,data);
-                            tmp:=copy(data[0],pos('=<',tmp)+1,length(tmp));
+                            tmp:=copy(data[0],6,length(data[0]));
                             tmp:=StringReplace(tmp,'OLD_','',[rfReplaceAll,rfIgnoreCase]);
-                            writeln('tmp:',tmp);
-                            tmp:=tmp+'<'+dmUtils.StringToADIF('QSLCALL',UpperCase(cqrini.ReadString('Station', 'Call', '')))+'<EOR>';
-                            tmpdata.Add(tmp);
+                            tmp:=tmp+'<'+dmUtils.StringToADIF('QSLCALL',UpperCase(cqrini.ReadString('Station', 'Call', '')))+'<EOR>'+LineEnding; //station call as QSLCALL will delete qso
+                            Write(filepart,tmp+CRLF);
+                            AlreadyDel := true;
                           end;
 
              else
                          begin
-                           Writeln('Unknown command:',Command);
+                           if (dmData.DebugLevel >= 1) then
+                              Writeln('Unknown command:',Command);
                            dmLogUpload.Q.Next;
                            Continue
                          end;
@@ -425,14 +439,18 @@ begin
            end;
 
          dmLogUpload.Q.Next
-         end; //while not dmLogUpload.Q.Eof do
+         end; //while not bulk dmLogUpload.Q.Eof do
 
-         //if dmData.DebugLevel >= 1 then
-                                writeln('Next to upload bulk data:',lineending,'tmpdata:',lineending,tmpdata.text);
+         close(filepart);
+         tmpdata.Add('file='+StreamFile);
+         dmLogUpload.PrepareUserInfoHeader(WhereToUpload,tmpdata);
 
+         if dmData.DebugLevel >= 1 then
+         begin
+           writeln('*Next to upload bulk data:',LineEnding,'tmpdata:',LineEnding,tmpdata.text);
+         end;
 
-         UpSuccess := dmLogUpload.UploadLogData(WhereToUpload,'BULK',data,Response,ResultCode);
-
+         UpSuccess := dmLogUpload.UploadLogData(WhereToUpload,'BULK',tmpdata,Response,ResultCode);
 
          if dmData.DebugLevel >= 1 then
            begin
@@ -444,55 +462,28 @@ begin
 
          if UpSuccess then
            begin
-             Response := dmLogUpload.GetResultMessage(WhereToUpload,Response,ResultCode,ErrorCode);
-             if (Response='OK') then
+              BulkResp1 := trim(ExtractWord(1,Response,[':']));
+              BulkResp2 := trim(ExtractWord(2,Response,[':']));
+              Response := dmLogUpload.GetResultMessage(WhereToUpload,Response,ResultCode,ErrorCode);
+              if (Response='OK') then
                ToMainThread('','OK')
              else
-               ToMainThread(Response,'');
+               begin
+                ToMainThread(Response,'');
+               end;
            end;
 
-            //if upload succeeded then we need to roll the  dmLogUpload.Q around again and mark
-            //insert = MarkAsUploaded, updated = MarkAsUploaded and deleted = MarkAsUpDeleted
-            //how ever if bulk upload fails we may not mark anything.
-            //if bulk upload fails partially (upload ok, but error in some qso(s) we get report later with email and here we just need to set all ok
-            //as there is no immediate feedback.
-
-            {
-
-            dmLogUpload.Q.First;
-            while not dmLogUpload.Q.Eof do
-                begin
-                 Command := dmLogUpload.Q.FieldByName('cmd').AsString;
-
-                 case Command of
-
-                   'INSERT',
-                   'UPDATE'   :  dmLogUpload.MarkAsUploaded(GetLogName,dmLogUpload.Q.FieldByName('id').AsInteger);
-                   'DELETE'   :  dmLogUpload.MarkAsUpDeleted(dmLogUpload.Q.Fields[0].AsInteger);
-
-                  end;
-
-                 dmLogUpload.Q.Next;
-                end;
-
-
-             if (ErrorCode = 1) then
-             Begin
-               ToMainThread('Upload failed! Check Internet connection','');
-               ErrorCode := 1;
-               Break
-             end;
-
-             }
-
-         if not (ErrorCode = 1) then
-           ToMainThread('Done ...','');
+         if (ErrorCode = 0) then
+           Begin
+            ToMainThread(BulkResp1,'');
+            ToMainThread(BulkResp2,'');
+            dmLogUpload.MarkAsUploaded('ClubLog')
+           end;
 
        finally
          dmLogUpload.Q.Close;
          dmLogUpload.trQ.RollBack
        end;
-       Sleep(500)
      except
        on E : Exception do
          Writeln(E.Message)
@@ -532,14 +523,18 @@ var
   tmp  : LongInt;
   c    : TColor;
 begin
-  Writeln('SyncUpdate:',SyncUpdate);
-  Writeln('SyncMsg   :',SyncMsg);
+  if (dmData.DebugLevel >= 1) then
+   begin
+        Writeln('SyncUpdate:',SyncUpdate);
+        Writeln('SyncMsg   :',SyncMsg);
+   end;
   if (SyncUpdate<>'') then
   begin
     //cti_vetu(var te:string;var bpi,bpo:Tcolor;var pom:longint;kam:longint):boolean;
     mStatus.ReadLine(item,c,c,tmp,mStatus.LastLineNumber);
     item := item + ' ... ' + SyncUpdate;
-    Writeln('Item:',item);
+    if (dmData.DebugLevel >= 1) then
+       Writeln('Item:',item);
     //prepis_vetu(te:string;bpi,bpo:Tcolor;pom:longint;kam:longint;msk:longint):boolean;
     mStatus.ReplaceLine(item,SyncColor,clWhite,0,mStatus.LastLineNumber,0)
   end

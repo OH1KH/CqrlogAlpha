@@ -464,6 +464,7 @@ type
     edtCbHamQThAddr: TEdit;
     edtCbQrzAddr: TEdit;
     edtCbQrzcqAddr: TEdit;
+    edtClubLogUrlBulk: TEdit;
     edtNewQsoUdpAddrPort: TEdit;
     edtPollTimeout: TEdit;
     edtHamClockUrl: TEdit;
@@ -1675,6 +1676,7 @@ begin
   cqrini.WriteInteger('OnlineLog','ClColor',cmbClColor.Selected);
   cqrini.WriteString('OnlineLog','ClUrl',edtClubLogUrl.Text);
   cqrini.WriteString('OnlineLog','ClUrlDel',edtClubLogUrlDel.Text);
+  cqrini.WriteString('OnlineLog','ClUrlBulk',edtClubLogUrlBulk.Text);
 
   cqrini.WriteBool('OnlineLog','HrUP',chkHrUpEnabled.Checked);
   cqrini.WriteBool('OnlineLog','HrUpOnline',chkHrUpOnline.Checked);
@@ -3546,6 +3548,7 @@ begin
   cmbClColor.Selected    := cqrini.ReadInteger('OnlineLog','ClColor',clRed);
   edtClubLogUrl.Text     := cqrini.ReadString('OnlineLog','ClUrl','https://clublog.org/realtime.php');
   edtClubLogUrlDel.Text  := cqrini.ReadString('OnlineLog','ClUrlDel','https://clublog.org/delete.php');
+  edtClubLogUrlBulk.Text  := cqrini.ReadString('OnlineLog','ClUrlBulk','https://clublog.org/putlogs.php');
   chkClUpEnabledChange(nil);
 
   chkHrUpEnabled.Checked := cqrini.ReadBool('OnlineLog','HrUP',False);

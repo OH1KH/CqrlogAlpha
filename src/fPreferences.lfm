@@ -10138,8 +10138,8 @@ object frmPreferences: TfrmPreferences
     end
     object tabOnlineLog: TTabSheet
       Caption = 'Online log upload'
-      ClientHeight = 757
-      ClientWidth = 836
+      ClientHeight = 781
+      ClientWidth = 854
       object GroupBox44: TGroupBox
         AnchorSideLeft.Control = tabOnlineLog
         AnchorSideTop.Control = tabOnlineLog
@@ -10284,12 +10284,12 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Control = GroupBox44
         AnchorSideTop.Side = asrBottom
         Left = 12
-        Height = 194
+        Height = 218
         Top = 158
         Width = 650
         BorderSpacing.Top = 3
         Caption = ' ClubLog '
-        ClientHeight = 192
+        ClientHeight = 200
         ClientWidth = 648
         TabOrder = 1
         object chkClUpEnabled: TCheckBox
@@ -10310,21 +10310,21 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 6
           Height = 17
-          Top = 103
+          Top = 137
           Width = 56
           Caption = 'Callsign:'
         end
         object edtClUserName: TEdit
           AnchorSideLeft.Control = Label180
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = edtClubLogUrlDel
+          AnchorSideTop.Control = edtClubLogUrlBulk
           AnchorSideTop.Side = asrBottom
           Left = 62
           Height = 34
-          Top = 94
+          Top = 128
           Width = 102
           BorderSpacing.Top = 3
-          TabOrder = 4
+          TabOrder = 5
           Text = 'edtClUserName'
         end
         object lbl1: TLabel
@@ -10334,7 +10334,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 170
           Height = 17
-          Top = 103
+          Top = 137
           Width = 66
           BorderSpacing.Left = 6
           Caption = 'Password:'
@@ -10346,11 +10346,11 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 236
           Height = 34
-          Top = 94
+          Top = 128
           Width = 104
           EchoMode = emPassword
           PasswordChar = '*'
-          TabOrder = 5
+          TabOrder = 6
           Text = 'edtClPasswd'
         end
         object chkClUpOnline: TCheckBox
@@ -10371,7 +10371,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Control = Label180
           Left = 346
           Height = 17
-          Top = 103
+          Top = 137
           Width = 41
           BorderSpacing.Left = 6
           Caption = 'Email:'
@@ -10383,9 +10383,9 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 387
           Height = 34
-          Top = 94
+          Top = 128
           Width = 184
-          TabOrder = 6
+          TabOrder = 7
           Text = 'edtClEmail'
         end
         object Label186: TLabel
@@ -10394,7 +10394,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 6
           Height = 17
-          Top = 137
+          Top = 171
           Width = 53
           Caption = 'Use this'
         end
@@ -10405,7 +10405,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrCenter
           Left = 235
           Height = 17
-          Top = 137
+          Top = 171
           Width = 329
           BorderSpacing.Left = 6
           Caption = 'color to show information in status upload window'
@@ -10417,7 +10417,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideTop.Side = asrBottom
           Left = 65
           Height = 29
-          Top = 131
+          Top = 165
           Width = 164
           DefaultColorColor = clRed
           NoneColorColor = clMoneyGreen
@@ -10426,7 +10426,7 @@ object frmPreferences: TfrmPreferences
           BorderSpacing.Left = 6
           BorderSpacing.Top = 3
           ItemHeight = 28
-          TabOrder = 7
+          TabOrder = 8
         end
         object edtClubLogUrl: TEdit
           AnchorSideLeft.Control = chkClUpEnabled
@@ -10450,6 +10450,17 @@ object frmPreferences: TfrmPreferences
           TabOrder = 3
           Text = 'https://clublog.org/delete.php'
         end
+        object edtClubLogUrlBulk: TEdit
+          AnchorSideLeft.Control = chkClUpEnabled
+          AnchorSideTop.Control = edtClubLogUrlDel
+          AnchorSideTop.Side = asrBottom
+          Left = 6
+          Height = 34
+          Top = 91
+          Width = 600
+          TabOrder = 4
+          Text = 'https://clublog.org/putlogs.php'
+        end
       end
       object GroupBox46: TGroupBox
         AnchorSideLeft.Control = GroupBox45
@@ -10457,7 +10468,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 157
-        Top = 355
+        Top = 379
         Width = 650
         BorderSpacing.Top = 3
         Caption = ' HRDLog.net '
@@ -10593,11 +10604,11 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 662
+        Top = 686
         Width = 442
         BorderSpacing.Top = 6
         Caption = 'Close the "Status of log upload" window after successful upload'
-        TabOrder = 3
+        TabOrder = 4
       end
       object chkIgnoreLoTW: TCheckBox
         AnchorSideLeft.Control = chkCloseAfterUpload
@@ -10605,11 +10616,11 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 688
+        Top = 712
         Width = 404
         BorderSpacing.Top = 3
         Caption = 'Ignore changes caused by LoTW/eQSL upload or download'
-        TabOrder = 4
+        TabOrder = 5
         OnChange = chkIgnoreLoTWChange
       end
       object chkIgnoreQSL: TCheckBox
@@ -10618,10 +10629,10 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 711
+        Top = 735
         Width = 316
         Caption = 'Ignore changes caused by QSL sent/received'
-        TabOrder = 5
+        TabOrder = 6
         OnChange = chkIgnoreQSLChange
       end
       object chkIgnoreEdit: TCheckBox
@@ -10630,10 +10641,10 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 734
+        Top = 758
         Width = 256
         Caption = 'Ignore changes caused by QSO edit'
-        TabOrder = 6
+        TabOrder = 7
         OnChange = chkIgnoreEditChange
       end
       object GroupBox47: TGroupBox
@@ -10642,13 +10653,13 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 141
-        Top = 515
+        Top = 539
         Width = 650
         BorderSpacing.Top = 3
         Caption = 'UDP Log Messages'
         ClientHeight = 139
         ClientWidth = 648
-        TabOrder = 7
+        TabOrder = 3
         object chkUdUpEnabled: TCheckBox
           AnchorSideLeft.Control = GroupBox47
           AnchorSideTop.Control = GroupBox47

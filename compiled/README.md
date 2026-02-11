@@ -31,8 +31,7 @@ If you do not want to do that you can compile this source (see parent folder) wi
 
  Binaries (cqr2,cqr3,cqr5,cqr6 zips) include latest CarlogAlpha versions.
  
- To see updates in this alpha version look at <https://github.com/OH1KH/cqrlog/commits/loc_testing>
-
+ To see updates in this alpha version look at [Changelog](https://htmlpreview.github.io/?https://github.com/OH1KH/CqrlogALpha/blob/main/src/changelog.html)  
  To read about UTF8 special charcters in logs read file UTF8_logs.md
  
  

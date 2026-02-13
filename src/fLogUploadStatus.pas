@@ -186,7 +186,7 @@ begin
          dmLogUpload.Q.SQL.Text := C_COUNT_CLUBLOG_ACTIONS;
          dmLogUpload.Q.Open;
          ClubCount:=  dmLogUpload.Q.FieldByName('nr').AsInteger;
-         ClubBulk:=  (ClubCount > 1);  //How many actions cause putlogs.php usage
+         ClubBulk:=  (ClubCount > 3);  //How many actions cause putlogs.php usage
        end;
 
       //CLubBulk:=true; //debug for testing, comment out for production

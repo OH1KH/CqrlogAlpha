@@ -1091,6 +1091,7 @@ type
     procedure edtHtmlFilesClick(Sender: TObject);
     procedure edtHtmlFilesExit(Sender: TObject);
     procedure edtImgFilesExit(Sender: TObject);
+    procedure edtLoadFromFldigiChange(Sender: TObject);
     procedure edtLocChange(Sender: TObject);
     procedure edtLocExit(Sender: TObject);
     procedure edtLocKeyPress(Sender: TObject; var Key: char);
@@ -2801,6 +2802,14 @@ procedure TfrmPreferences.edtImgFilesExit(Sender: TObject);
 begin
    if ExtractFilePath(edtImgFiles.Text)='' then
         edtImgFiles.Text:=SeekExecFile(edtImgFiles.Text,'Find image viewer');
+end;
+
+procedure TfrmPreferences.edtLoadFromFldigiChange(Sender: TObject);
+begin
+  if edtLoadFromFldigi.Value < 1 then
+                             edtLoadFromFldigi.Value := 1;
+  if edtLoadFromFldigi.Value > 200 then
+                             edtLoadFromFldigi.Value := 200;
 end;
 
 procedure TfrmPreferences.edtSpeedChange(Sender: TObject);

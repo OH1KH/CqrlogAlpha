@@ -2357,6 +2357,8 @@ end;
 
 procedure TfrmPreferences.chkClUpEnabledChange(Sender: TObject);
 begin
+  if not chkClUpEnabled.Checked then
+                                chkClupOnline.Checked:=False;
   edtClUserName.Enabled := chkClUpEnabled.Checked;
   edtClPasswd.Enabled   := chkClUpEnabled.Checked;
   edtClEmail.Enabled    := chkClUpEnabled.Checked;
@@ -2377,6 +2379,8 @@ end;
 
 procedure TfrmPreferences.chkHaUpEnabledChange(Sender: TObject);
 begin
+  if not chkHaUpEnabled.Checked then
+                                chkHaupOnline.Checked:=False;
   edtHaUserName.Enabled := chkHaUpEnabled.Checked;
   edtHaPasswd.Enabled   := chkHaUpEnabled.Checked;
   chkHaupOnline.Enabled := chkHaUpEnabled.Checked;
@@ -2385,6 +2389,8 @@ end;
 
 procedure TfrmPreferences.chkHrUpEnabledChange(Sender: TObject);
 begin
+  if not chkHrUpEnabled.Checked then
+                             chkHrUpOnline.Checked:=False;
   edtHrUserName.Enabled := chkHrUpEnabled.Checked;
   edtHrCode.Enabled     := chkHrUpEnabled.Checked;
   chkHrUpOnline.Enabled := chkHrUpEnabled.Checked;
@@ -2429,6 +2435,8 @@ end;
 
 procedure TfrmPreferences.chkUdUpEnabledChange(Sender: TObject);
 begin
+  if not  chkUdUpEnabled.Checked then
+                                 chkUdUpOnline.Checked:=False;
   edtUdAddress.Enabled  := chkUdUpEnabled.Checked;
   chkUdIncExch.Enabled  := chkUdUpEnabled.Checked;
   chkUdUpOnline.Enabled := chkUdUpEnabled.Checked;

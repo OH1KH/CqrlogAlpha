@@ -1,18 +1,18 @@
 object frmPreferences: TfrmPreferences
   Left = 158
-  Height = 650
+  Height = 637
   Top = 40
-  Width = 1090
+  Width = 1077
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1090
-  VertScrollBar.Page = 650
+  HorzScrollBar.Page = 1077
+  VertScrollBar.Page = 637
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 650
-  ClientWidth = 1090
+  ClientHeight = 637
+  ClientWidth = 1077
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   Position = poMainFormCenter
@@ -9602,7 +9602,7 @@ object frmPreferences: TfrmPreferences
         BorderSpacing.Left = 6
         BorderSpacing.Top = 6
         Caption = ' Callbook search '
-        ClientHeight = 158
+        ClientHeight = 142
         ClientWidth = 648
         TabOrder = 0
         object rbHamQTH: TRadioButton
@@ -10151,7 +10151,7 @@ object frmPreferences: TfrmPreferences
         Width = 650
         BorderSpacing.Left = 12
         Caption = ' HamQTH '
-        ClientHeight = 153
+        ClientHeight = 137
         ClientWidth = 648
         TabOrder = 0
         object chkHaUpEnabled: TCheckBox
@@ -10291,7 +10291,7 @@ object frmPreferences: TfrmPreferences
         Width = 650
         BorderSpacing.Top = 3
         Caption = ' ClubLog '
-        ClientHeight = 216
+        ClientHeight = 200
         ClientWidth = 648
         TabOrder = 1
         object chkClUpEnabled: TCheckBox
@@ -10474,7 +10474,7 @@ object frmPreferences: TfrmPreferences
         Width = 650
         BorderSpacing.Top = 3
         Caption = ' HRDLog.net '
-        ClientHeight = 155
+        ClientHeight = 139
         ClientWidth = 648
         TabOrder = 2
         object chkHrUpEnabled: TCheckBox
@@ -10659,7 +10659,7 @@ object frmPreferences: TfrmPreferences
         Width = 650
         BorderSpacing.Top = 3
         Caption = 'UDP Log Messages'
-        ClientHeight = 139
+        ClientHeight = 123
         ClientWidth = 648
         TabOrder = 3
         object chkUdUpEnabled: TCheckBox

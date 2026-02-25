@@ -3592,7 +3592,8 @@ begin
     else
     begin
       m.LoadFromStream(http.Document);
-      if Pos('<Error>Session Timeout</Error>', m.Text) > 0 then
+      if (Pos('<Error>Session Timeout</Error>', m.Text) > 0)
+        or (Pos('Invalid session key', m.Text) > 0)then      //[2026-02-23 05:56:37] [33m[!] QRZ API ERROR: Invalid session key[0m
       begin
         fQRZSession := '';
         Result := GetQRZInfo(call, nick, qth, address, zip, grid, state,

@@ -5503,6 +5503,22 @@ Begin
       on E : Exception do writeln('Could not load mode conversion files!');
    end;
 
+   //FT2 mode added 2026-02-26. User may not have it and he may made own changes that we can not destroy
+   //by cleaning and rewriting whole file.
+   //if FT2 is not found from C_SUBMODE_FILE then add it as last line.
+   try
+     if  SubmodeMode.IndexOf('FT2=MFSK') < 0 then
+         Begin
+            SubmodeMode.Add('FT2=MFSK');
+            SubmodeMode.SaveToFile(dmData.HomeDir+C_MODEFILE_DIR+C_SUBMODE_FILE);
+            if dmData.DebugLevel>=1 then
+                 Writeln('Added  FT2=MFSK to '+dmData.HomeDir+C_MODEFILE_DIR+C_SUBMODE_FILE);
+         end;
+   except
+      on E : Exception do writeln('Could not add new submode=mode pair to file!');
+   end;
+
+
    if dmData.DebugLevel>=1 then
     Begin
        Writeln('Loaded mode conversion files:');
@@ -5519,11 +5535,11 @@ procedure TdmUtils.MakeMissingModeFile(num:integer);
 //the idea not to use const for conversion is that when they are put in files
 //later additions and deletions can be done by user without compile
 Const
-  S_file: array [1..168] of string = (
+  S_file: array [1..169] of string = (
   'submode=mode','8PSK125=PSK','8PSK125F=PSK','8PSK125FL=PSK','8PSK250=PSK','8PSK250F=PSK','8PSK250FL=PSK','8PSK500=PSK','8PSK500F=PSK','8PSK1000=PSK',
   '8PSK1000F=PSK','8PSK1200F=PSK','AMTORFEC=TOR','ASCI=RTTY','CHIP64=CHIP','CHIP128=CHIP','DOM-M=DOMINO','DOM4=DOMINO','DOM5=DOMINO','DOM8=DOMINO',
   'DOM11=DOMINO','DOM16=DOMINO','DOM22=DOMINO','DOM44=DOMINO','DOM88=DOMINO','DOMINOEX=DOMINO','DOMINOF=DOMINO','FMHELL=HELL','FSK31=PSK','FSKHELL=HELL',
-  'FSQCALL=MFSK','FST4=MFSK','FST4W=MFSK','FT4=MFSK','GTOR=TOR','HELL80=HELL','HELLX5=HELL','HELLX9=HELL','HFSK=HELL','ISCAT-A=ISCAT',
+  'FSQCALL=MFSK','FST4=MFSK','FST4W=MFSK','FT4=MFSK','FT2=MFSK','GTOR=TOR','HELL80=HELL','HELLX5=HELL','HELLX9=HELL','HFSK=HELL','ISCAT-A=ISCAT',
   'ISCAT-B=ISCAT','JS8=MFSK','JT4A=JT4','JT4B=JT4','JT4C=JT4','JT4D=JT4','JT4E=JT4','JT4F=JT4','JT4G=JT4','JT9-1=JT9',
   'JT9-2=JT9','JT9-5=JT9','JT9-10=JT9','JT9-30=JT9','JT9A=JT9','JT9B=JT9','JT9C=JT9','JT9D=JT9','JT9E=JT9','JT9E=FAST',
   'JT9F=JT9','JT9F=FAST','JT9G=JT9','JT9G=FAST','JT9H=JT9','JT9H=FAST','JT65A=JT65','JT65B=JT65','JT65B2=JT65','JT65C=JT65',

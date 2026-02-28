@@ -52,9 +52,9 @@ const
   empty_freq = '0.00000';
   empty_azimuth = '0.0';
 
-  cMaxModes = 46; //One less than count 47 modes (loops have 0..MaxModes)
+  cMaxModes = 47; //One less than count 47 modes (loops have 0..MaxModes)
   cModes: array [0..cMaxModes] of string =
-    ('CW', 'SSB', 'FT8', 'FT4', 'RTTY', 'AM', 'AMTOR', 'ATV', 'CLOVER', 'CWQ',
+    ('CW', 'SSB', 'FT8', 'FT4', 'FT2', 'RTTY', 'AM', 'AMTOR', 'ATV', 'CLOVER', 'CWQ',
     'DIGITALVOICE', 'FM', 'FSK44', 'FSK441', 'FST4', 'GTOR', 'HELL', 'ISCAT', 'JS8', 'JT4',
     'JT44', 'JT65', 'JT65A', 'JT65B', 'JT65C', 'JT6M', 'JT9', 'MFSK', 'MFSK16', 'MSK144',
     'MT63', 'MTOR', 'OLIVIA', 'PACKET', 'PACTOR', 'PSK', 'PSK125', 'PSK250', 'PSK31', 'PSK63',

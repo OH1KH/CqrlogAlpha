@@ -296,6 +296,7 @@ begin
                        frmTRXControl.edtMemNr.Font.Color:= clDefault;
           if info='' then frmTRXControl.edtMemNr.Text := 'M '+IntToStr(dcRow+1)
                      else frmTRXControl.edtMemNr.Text := info;
+          frmTRXControl.infosetfreq:=FormatFloat('0.00000',(freq/1000));
           frmTRXControl.infosetstage :=1;
          end;
     dcRowOk :=false; //we handeld this one

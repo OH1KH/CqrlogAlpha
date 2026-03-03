@@ -351,23 +351,18 @@ begin
 
   UpdateModeButtons(m);
 
-  // this waits5 rig polls before lock freq set by memory. After that if freq changes (by vfo knob) clean info text
-  // stupid but works quite well
-  case infosetstage of
-    4: begin
-      infosetfreq := lblFreq.Caption;
-      Inc(infosetstage);
+  if (infosetstage>0) then //wait for rig to get frequency set by memory Up/Dn button
+    begin
+      if (infosetfreq = lblFreq.Caption) then
+        inc(infosetstage);
     end;
-    5: begin
-      if (infosetfreq <> lblFreq.Caption) then
-      begin
+
+  if (infosetstage>1) and  (infosetfreq <> lblFreq.Caption) then  //if rig differs from set memory frequency once it reached it first then vfo is changed.
+    begin                                                         //clear memory info. We are no more on memory QRG
         edtMemNr.Text := '';
         infosetstage := 0;
-      end;
     end;
-    else
-      if ((infosetstage > 0) and (infosetstage < 4)) then Inc(infosetstage);
-  end;
+
   if (f = 0) then
   begin
     if cqrini.ReadBool('BandMap', 'UseNewQSOFreqMode', False) then
@@ -966,29 +961,13 @@ begin
 end;
 
 procedure TfrmTRXControl.btnMemDwnClick(Sender : TObject);
-var
-  freq : Double;
-  mode : String;
-  bandwidth : Integer;
-  info : String;
 begin
-  dmData.GetNextFreqFromMem(freq, mode, bandwidth, info);
-  if dmData.DebugLevel >= 1 then
-    writeln('--------------FMWI', freq, ' ', mode, ' ', bandwidth, ' ', info);
-  if freq > 0 then
-    SetFreqModeBandWidth(freq, mode, bandwidth);
+  dmData.GetFreqFromMem(False);
 end;
 
 procedure TfrmTRXControl.btnMemUpClick(Sender : TObject);
-var
-  freq : Double;
-  mode : String;
-  bandwidth : Integer;
-  info : String;
 begin
-  dmData.GetPreviousFreqFromMem(freq, mode, bandwidth, info);
-  if freq > 0 then
-    SetFreqModeBandWidth(freq, mode, bandwidth);
+  dmData.GetFreqFromMem(True);
 end;
 
 procedure TfrmTRXControl.btPoffClick(Sender : TObject);

@@ -6,10 +6,10 @@ object frmRadioMemories: TfrmRadioMemories
   Caption = 'Memories'
   ClientHeight = 415
   ClientWidth = 578
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object sgrdMem: TStringGrid
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner

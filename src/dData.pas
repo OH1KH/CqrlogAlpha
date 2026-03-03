@@ -347,8 +347,7 @@ type
     procedure RemoveLoTWUploadedFlag(id : Integer);
     procedure StoreFreqMemories(grid : TStringGrid);
     procedure LoadFreqMemories(grid : TStringGrid);
-    procedure GetPreviousFreqFromMem(var freq : Double; var mode : String; var bandwidth : Integer; var info : String);
-    procedure GetNextFreqFromMem(var freq : Double; var mode : String; var bandwidth : Integer; var info : String);
+    procedure GetFreqFromMem(up:boolean);
     procedure OpenFreqMemories(mode : String);
     procedure SaveBandChanges(band : String; BandBegin, BandEnd, BandCW, BandRTTY, BandSSB, RXOffset, TXOffset,
                                       Bcw, Ecw, Bdata, Edata, Bssb, Essb, Bam, Eam, Bfm, Efm:currency);
@@ -4317,7 +4316,6 @@ begin
             frmTRXControl.edtMemNr.Text := IntToStr(c+1)+' of '+ IntToStr(FreqMemCount);
             end
                else frmTRXControl.edtMemNr.Text := info;
-    frmTRXControl.infosetstage :=1;
   end
   else begin
      freq      := 0;
@@ -4325,49 +4323,53 @@ begin
      bandwidth := 0;
      frmTRXControl.edtMemNr.Font.Color:= clRed;
      frmTRXControl.edtMemNr.Text := 'None';
-     frmTRXControl.infosetstage :=1;
   end;
   if fDebugLevel>=1 then Writeln('Freq:',freq,' mode:',mode,' bandwidth:',bandwidth);
 end;
-
-procedure TdmData.GetPreviousFreqFromMem(var freq : Double; var mode : String; var bandwidth : Integer; var info : String);
-begin
+procedure TdmData.GetFreqFromMem(up:boolean);
+var
+  freq : Double;
+  mode : String;
+  bandwidth : Integer;
+  info : String;
+Begin
   if not qFreqMem.Active then
-  begin
-    OpenFreqMemories(frmTRXControl.GetRawMode);
-    qFreqMem.Last
-  end
-  else begin
-    //if qFreqMem.Bof then  doesn't work because when it's on the first record, it has to call Prior again to be sure that
-    //it's really first - that caused user has to click twice to get on the end of the table
-    if fDebugLevel>=1 then writeln('-----------UP---', qFreqMem.Fields[0].AsInteger,' ',   fFirstMemId);
-    if (fFirstMemId = qFreqMem.Fields[0].AsInteger) then
-      qFreqMem.Last
-    else
-      qFreqMem.Prior
-  end;
-  GetCurrentFreqFromMem(freq,mode,bandwidth,info)
+    begin
+      OpenFreqMemories(frmTRXControl.GetRawMode);
+      if up then
+        qFreqMem.First
+       else
+        qFreqMem.Last
+    end
+  else
+    begin
+      //if qFreqMem.Bof then  doesn't work because when it's on the first record, it has to call Prior again to be sure that
+      //it's really first - that caused user has to click twice to get on the end of the table
+      if up then
+       Begin
+          if fDebugLevel>=1 then writeln('-----------UP---', qFreqMem.Fields[0].AsInteger,' ',   fFirstMemId);
+          if (fFirstMemId = qFreqMem.Fields[0].AsInteger) then
+            qFreqMem.Last
+          else
+            qFreqMem.Prior
+       end
+      else
+       begin
+          if fDebugLevel>=1 then writeln('-----------DN---', qFreqMem.Fields[0].AsInteger,' ',   fLastMemId);
+          if (fLastMemId = qFreqMem.Fields[0].AsInteger) then
+             qFreqMem.First
+           else
+             qFreqMem.Next
+       end;
+    end;
+   GetCurrentFreqFromMem(freq,mode,bandwidth,info);
+   if freq > 0 then
+    begin
+     frmTRXControl.SetFreqModeBandWidth(freq, mode, bandwidth);
+     frmTRXControl.infosetstage :=1;
+     frmTRXControl.infosetfreq:=FormatFloat('0.00000',(freq/1000));
+    end;
 end;
-
-
-procedure TdmData.GetNextFreqFromMem(var freq : Double; var mode : String; var bandwidth : Integer; var info : String);
-begin
-  if not qFreqMem.Active then
-  begin
-    OpenFreqMemories(frmTRXControl.GetRawMode);
-    qFreqMem.First
-  end
-  else begin
-    //if qFreqMem.Eof then the same problem like with Bof()
-    if fDebugLevel>=1 then writeln('-----------DN---', qFreqMem.Fields[0].AsInteger,' ',   fLastMemId);
-    if (fLastMemId = qFreqMem.Fields[0].AsInteger) then
-      qFreqMem.First
-    else
-      qFreqMem.Next
-  end;
-  GetCurrentFreqFromMem(freq,mode,bandwidth,info)
-end;
-
 
 procedure TdmData.SaveBandChanges(band : String; BandBegin, BandEnd, BandCW, BandRTTY, BandSSB, RXOffset, TXOffset,
                                       Bcw, Ecw, Bdata, Edata, Bssb, Essb, Bam, Eam, Bfm, Efm:currency);

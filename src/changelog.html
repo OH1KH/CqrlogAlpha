@@ -11,7 +11,19 @@
     <strong>CQRLOG α (Alpha)</strong><br>
     What is new:
     <ul style="list-style: square;text-align:left; color: green;" >
-    <li>(140) 2026-01-27</li><ul>
+    <li>(141) 2026-03-17</li><ul>
+    <li>TRXControl:Memories:Fix: Mem Up/Dn button procedures</li>	
+    <li>Mode list:Add: FT2 to modelist so that user has no need to add it to "user defined digital modes"</li>
+    <li>ADIF export:Add: support for MFSK/FT2</li>
+    <li>WSJT remote:Add: support for FT2. Qso initiate from CQmonitor/Map with 2xclick works after wsjtx's bug is fixed</li>
+    <li>NewQSO:Callbook:QRZ:Fix: Added detect for 'Invalid session key' for renew of the key</li>
+    <li>Preferences:Onlinelogs:Fix: Unchecking "Enable upload..." will uncheck "Upload QSO data immediately" too for all online logs.</li>
+    <li>Preferences:Bands:Frequencies:Modify:Fix: Txoffset column anchoring</li>
+    <li>Preferences:fldigi/wsjt remote:Fix: Check qso from fldigi spin edit went negative, fixed to keep between 1-200</li>
+    <li>Onlinelogs:Clublog:Fix: set realtime/bulk upload switch limit for more than 3 operations.</li>
+    <li>Onlinelogs:Clublog:Add: if there is more than one change use bulk upload (putlogs.php)</li>
+    <li>RigControl:Fix: missing set/get params info added. TRXControl:Fix Set Rig time only if params allow it</li>
+    </ul><li>(140) 2026-01-27</li><ul>
     <li>Remote:Fix: replaced '%rig' with '%radio' (as TRXControl uses 'radio', too) and fixed help files too</li>
     <li>Remote:Add: 'path to wsjtx' and 'path to fldigi' can have parameters where %rig is replaced with preferences/TRXControl/name of rig currently used</li>
     <li>TRXControl:Add: checkbox "Simple Rig". No \chk_vfo, \dump_caps. Mainly set/get frequency and mode (+some other commands).<br>

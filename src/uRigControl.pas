@@ -68,16 +68,26 @@ type TRigControl = class
     fMemGetRFP      : boolean;
     fSetRFPower     : boolean;
     fMemSetRFP      : boolean;
-    fSetFunc        : boolean; //if can set/get func then test "U currVFO ?" supported functions "fSupFuncs"
-    fGetFunc        : boolean;
+
     fSetLevel       : boolean;
     fGetLevel       : boolean;
     fSupSetLevels   : String;
-    fSupSetFuncs    : String;
     fSupGetLevels   : String;
+
+    fSetFunc        : boolean; //if can set/get func then test "U currVFO ?" supported functions "fSupFuncs"
+    fGetFunc        : boolean;
+    fSupSetFuncs    : String;
     fSupGetFuncs    : String;
-    fSupGetVfoOp    : String;
+
+    fSetParam       : boolean;
+    fGetParam       : boolean;
+    fSupSetParms    : String;
+    fSupGetParms   : String;
+
+
     fVfoOps         : boolean;
+    fSupGetVfoOp    : String;
+
     fPtt            : String;
     fPttTail        : integer;
     fResponseTimeout: Boolean;
@@ -158,6 +168,10 @@ public
     property GetLevel    : boolean read fGetLevel;                           //can get Levels
     property SupSetLevels: String  read fSupSetLevels;                       //list of supported Levels set
     property SupGetLevels: String  read fSupGetLevels;                       //list of supported Levels get
+    property SetParam    : boolean read fSetParam;                           //Can set Param Note: rigctld bug: \dump_caps talk about 'param' commands are 'parm'
+    property GetParam    : boolean read fGetParam;                           //can get Param
+    property SupSetParms : String  read fSupSetLevels;                       //list of supported Parm set
+    property SupGetParms : String  read fSupGetLevels;                       //list of supported Parm get
     property SupGetVfoOp : String  read fSupGetVfoOp;                        //list of supported  VFO operations
     property Ptt         : String  read fPtt;                                //PTT state;
 
@@ -232,6 +246,10 @@ begin
   fGetVfo              := false;
   fGetFunc             := false;
   fSetFunc             := false;
+  fGetLevel            := false;
+  fSetLevel            := false;
+  fGetParam             := false;
+  fSetParam             := false;
   fVfoOps              := false;
   fMorse               := false;
   fVoice               := false;
@@ -249,6 +267,8 @@ begin
   fSupGetFuncs         := '';
   fSupSetLevels        := '';
   fSupGetLevels        := '';
+  fSupSetParms         := '';
+  fSupGetParms         := '';
   fSupGetVfoOp         := '';
   fRfPwrMtrWtts        := '';
   fMemRfPwrMtrWtts     := '0';
@@ -902,10 +922,10 @@ begin
      94:  Begin AllowCommand:=93;  end;
      93:  Begin AllowCommand:=92;  end;
      92:  Begin AllowCommand:=91;  end;
-     91:  AllowCommand:=10;
+     91:  AllowCommand:=12;
 
      //high priority (init) commands
-     10:  Begin
+     12:  Begin
                cmd:='+\chk_vfo'+LineEnding;
                if fDebugMode then
                      Write(LineEnding+'Rig init sending: '+cmd);
@@ -917,7 +937,7 @@ begin
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
           end;
-      9:  Begin
+     11:  Begin
                cmd:='+\dump_caps'+LineEnding;
                 if fDebugMode then
                      Write(LineEnding+'Rig init sending: '+cmd);
@@ -929,7 +949,7 @@ begin
                AllowCommand:=-1; //waiting for reply
                fPollCount :=  fPollTimeout;
           end;
-      8:  Begin
+     10:  Begin
             if fGetFunc then
              begin
                cmd:=('+\get_func'+VfoStr+' ?'+LineEnding);
@@ -946,7 +966,7 @@ begin
             else
                dec(Allowcommand);
           end;
-      7:  Begin
+      9:  Begin
            if fSetFunc then
            begin
                cmd:=('+\set_func'+VfoStr+' ?'+LineEnding);
@@ -963,7 +983,7 @@ begin
             else
                dec(Allowcommand);
           end;
-      6:  Begin
+      8:  Begin
            if  fGetLevel then
             begin
                cmd:=('+\get_level'+VfoStr+' ?'+LineEnding);
@@ -980,7 +1000,7 @@ begin
             else
                dec(Allowcommand);
           end;
-      5:  Begin
+      7:  Begin
            if fSetLevel then
             begin
                cmd:=('+\set_level'+VfoStr+' ?'+LineEnding);
@@ -997,6 +1017,42 @@ begin
             else
                dec(Allowcommand);
           end;
+
+      6:  Begin
+           if  fGetParam then
+            begin
+               cmd:=('+\get_parm'+' ?'+LineEnding);
+               if fDebugMode then
+                     Write(LineEnding+'Rig init sending: '+cmd);
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
+               AllowCommand:=-1; //waiting for reply
+               fPollCount :=  fPollTimeout;
+            end
+            else
+               dec(Allowcommand);
+          end;
+      5:  Begin
+           if fSetLevel then
+            begin
+               cmd:=('+\set_parm'+' ?'+LineEnding);
+               if fDebugMode then
+                     Write(LineEnding+'Rig init sending: '+cmd);
+               if not SendPoll(cmd) then
+                 begin
+                  tmrRigPoll.Enabled:=true;
+                  Exit;
+                 end;
+               AllowCommand:=-1; //waiting for reply
+               fPollCount :=  fPollTimeout;
+            end
+            else
+               dec(Allowcommand);
+          end;
+
       4:  Begin
             if fVfoOps then
              begin
@@ -1179,13 +1235,13 @@ Begin
         Begin
           ParmVfoChkd  :=false;
           InitDone     :=false;
-          AllowCommand :=10;  //start with chkvfo
+          AllowCommand :=12;  //start with chkvfo
         end
        else
         Begin
           ParmVfoChkd  :=false;
           InitDone     :=false;
-          AllowCommand :=9;  //otherwise start with dump caps
+          AllowCommand :=11;  //otherwise start with dump caps
         end;
      end;
 
@@ -1333,7 +1389,7 @@ end;
        if fDebugMode then
                          Writeln('"--vfo" checked:',ParmHasVfo,' using VfoString:',VfoStr);
        Hit:=true;
-       AllowCommand:=9; //next dump_caps
+       AllowCommand:=11; //next dump_caps
       end;
 
      if (pos('DUMP_CAPS',Imsg)>0) or DumpCapsPending then
@@ -1346,6 +1402,8 @@ end;
           fGetFunc     := (pos('CAN GET FUNC: Y',      Imsg)>0);
           fSetLevel    := (pos('CAN SET LEVEL: Y',     Imsg)>0);
           fGetLevel    := (pos('CAN GET LEVEL: Y',     Imsg)>0);
+          fSetParam     := (pos('CAN SET PARAM: Y',      Imsg)>0);
+          fGetParam     := (pos('CAN GET PARAM: Y',      Imsg)>0);
           fVfoOps      := (pos('CAN CTL MEM/VFO: Y',   Imsg)>0);
           fMorse       := (pos('CAN SEND MORSE: Y',    Imsg)>0);
           fVoice       := (pos('CAN SEND VOICE: Y',    Imsg)>0);
@@ -1393,6 +1451,8 @@ end;
                   Writeln('Cqrlog can set func: ',fSetFunc);
                   Writeln('Cqrlog can get level: ',fGetLevel);
                   Writeln('Cqrlog can set level: ',fSetLevel);
+                  Writeln('Cqrlog can get param: ',fGetParam);
+                  Writeln('Cqrlog can set param: ',fSetParam);
                   Writeln('Cqrlog can set vfoOps: ',fVfoOps);
                   Writeln('Cqrlog can send Morse: ',fMorse);
                   Writeln('Cqrlog can launch voice memories: ',fVoice);
@@ -1401,7 +1461,7 @@ end;
                end;
               DumpCapsPending:=false;
               Hit:=true;Imsg:='';
-              AllowCommand:=8; //next get_func
+              AllowCommand:=10; //next get_func
           end;
 
 
@@ -1413,7 +1473,7 @@ end;
         if fDebugMode then
                    Writeln(LineEnding,'Get functions: ',fSupGetFuncs);
         Hit:=true;Imsg:='';
-        AllowCommand:=7; //next get_set_func
+        AllowCommand:=9; //next get_set_func
       end;
 
      if pos('SET_FUNC',Imsg)>0 then
@@ -1422,7 +1482,7 @@ end;
          if fDebugMode then
                     Writeln(LineEnding,'Set functions: ',fSupSetFuncs);
          Hit:=true;Imsg:='';
-         AllowCommand:=6; //next get_level
+         AllowCommand:=8; //next get_level
       end;
 
       if pos('GET_LEVEL',Imsg)>0 then
@@ -1431,7 +1491,7 @@ end;
           if fDebugMode then
                      Writeln(LineEnding,'Get levels: ',fSupGetLevels);
           Hit:=true;Imsg:='';
-          AllowCommand:=5; //next set_level
+          AllowCommand:=7; //next set_level
        end;
 
      if pos('SET_LEVEL',Imsg)>0 then
@@ -1440,8 +1500,26 @@ end;
         if fDebugMode then
                     Writeln(LineEnding,'Set Levels: ',fSupSetLevels);
          Hit:=true;Imsg:='';
-         AllowCommand:=4; //next vfo_op
+         AllowCommand:=6; //next vfo_op
        end;
+
+     if pos('GET_PARM',Imsg)>0 then
+      Begin
+         fSupGetParms:= ExtractWord(2,Imsg,['|']);
+         if fDebugMode then
+                    Writeln(LineEnding,'Get Parms: ',fSupGetParms);
+         Hit:=true;Imsg:='';
+         AllowCommand:=5; //next set_level
+      end;
+
+    if pos('SET_PARM',Imsg)>0 then
+     Begin
+       fSupSetParms:= ExtractWord(2,Imsg,['|']);
+       if fDebugMode then
+                   Writeln(LineEnding,'Set Parms: ',fSupSetParms);
+        Hit:=true;Imsg:='';
+        AllowCommand:=4; //next vfo_op
+      end;
 
      if pos('VFO_OP',Imsg)>0 then
       Begin

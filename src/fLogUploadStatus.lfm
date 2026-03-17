@@ -1,25 +1,25 @@
 object frmLogUploadStatus: TfrmLogUploadStatus
   Left = 347
-  Height = 245
+  Height = 125
   Top = 190
   Width = 250
   HorzScrollBar.Visible = False
   Caption = 'Status of log upload'
-  ClientHeight = 245
+  ClientHeight = 125
   ClientWidth = 250
   Constraints.MinHeight = 125
   Constraints.MinWidth = 250
   KeyPreview = True
   Menu = MainMenu1
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object pnlLogStatus: TPanel
     Left = 0
-    Height = 245
+    Height = 125
     Top = 0
     Width = 250
     Align = alClient

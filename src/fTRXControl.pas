@@ -351,23 +351,18 @@ begin
 
   UpdateModeButtons(m);
 
-  // this waits5 rig polls before lock freq set by memory. After that if freq changes (by vfo knob) clean info text
-  // stupid but works quite well
-  case infosetstage of
-    4: begin
-      infosetfreq := lblFreq.Caption;
-      Inc(infosetstage);
+  if (infosetstage>0) then //wait for rig to get frequency set by memory Up/Dn button
+    begin
+      if (infosetfreq = lblFreq.Caption) then
+        inc(infosetstage);
     end;
-    5: begin
-      if (infosetfreq <> lblFreq.Caption) then
-      begin
+
+  if (infosetstage>1) and  (infosetfreq <> lblFreq.Caption) then  //if rig differs from set memory frequency once it reached it first then vfo is changed.
+    begin                                                         //clear memory info. We are no more on memory QRG
         edtMemNr.Text := '';
         infosetstage := 0;
-      end;
     end;
-    else
-      if ((infosetstage > 0) and (infosetstage < 4)) then Inc(infosetstage);
-  end;
+
   if (f = 0) then
   begin
     if cqrini.ReadBool('BandMap', 'UseNewQSOFreqMode', False) then
@@ -863,6 +858,7 @@ var
    m  : String;
 begin
      tmrSetRigTime.Enabled:=False;
+     if not ((assigned (radio)) and (pos('TIME',radio.SupSetParms)>0)) then exit;
      m:= FormatDateTime('n',Now);
      if currMin='' then currMin:=m;
      if currMin<>m then //minute has changed set rig time
@@ -965,29 +961,13 @@ begin
 end;
 
 procedure TfrmTRXControl.btnMemDwnClick(Sender : TObject);
-var
-  freq : Double;
-  mode : String;
-  bandwidth : Integer;
-  info : String;
 begin
-  dmData.GetNextFreqFromMem(freq, mode, bandwidth, info);
-  if dmData.DebugLevel >= 1 then
-    writeln('--------------FMWI', freq, ' ', mode, ' ', bandwidth, ' ', info);
-  if freq > 0 then
-    SetFreqModeBandWidth(freq, mode, bandwidth);
+  dmData.GetFreqFromMem(False);
 end;
 
 procedure TfrmTRXControl.btnMemUpClick(Sender : TObject);
-var
-  freq : Double;
-  mode : String;
-  bandwidth : Integer;
-  info : String;
 begin
-  dmData.GetPreviousFreqFromMem(freq, mode, bandwidth, info);
-  if freq > 0 then
-    SetFreqModeBandWidth(freq, mode, bandwidth);
+  dmData.GetFreqFromMem(True);
 end;
 
 procedure TfrmTRXControl.btPoffClick(Sender : TObject);
@@ -1379,7 +1359,7 @@ begin
             Writeln('CW keyer reloaded by TRControl radio' + RigInUse + ' change');
         end;
 
-      if cqrini.ReadBool('TRX'+RigInUse, 'UTC2Rig', False) then
+      if cqrini.ReadBool('TRX'+RigInUse, 'UTC2Rig', False) and (pos('TIME',radio.SupSetParms)>0) then
              Begin
               currMin:='';
               tmrSetRigTime.Enabled:=True; //sets rig time on next minute change

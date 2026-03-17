@@ -9,9 +9,9 @@ object frmChangeFreq: TfrmChangeFreq
   Caption = 'Frequency'
   ClientHeight = 255
   ClientWidth = 567
-  OnShow = FormShow
   Position = poWorkAreaCenter
-  LCLVersion = '3.8.0.0'
+  LCLVersion = '4.4.0.0'
+  OnShow = FormShow
   object lblBBegin: TLabel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -91,9 +91,11 @@ object frmChangeFreq: TfrmChangeFreq
   end
   object edtTXOffset: TEdit
     AnchorSideLeft.Control = lblTXoff
+    AnchorSideTop.Control = lblTXoff
+    AnchorSideTop.Side = asrBottom
     Left = 340
     Height = 34
-    Top = 24
+    Top = 23
     Width = 100
     TabOrder = 3
     Text = '0'

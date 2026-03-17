@@ -464,6 +464,7 @@ type
     edtCbHamQThAddr: TEdit;
     edtCbQrzAddr: TEdit;
     edtCbQrzcqAddr: TEdit;
+    edtClubLogUrlBulk: TEdit;
     edtNewQsoUdpAddrPort: TEdit;
     edtPollTimeout: TEdit;
     edtHamClockUrl: TEdit;
@@ -1090,6 +1091,7 @@ type
     procedure edtHtmlFilesClick(Sender: TObject);
     procedure edtHtmlFilesExit(Sender: TObject);
     procedure edtImgFilesExit(Sender: TObject);
+    procedure edtLoadFromFldigiChange(Sender: TObject);
     procedure edtLocChange(Sender: TObject);
     procedure edtLocExit(Sender: TObject);
     procedure edtLocKeyPress(Sender: TObject; var Key: char);
@@ -1675,6 +1677,7 @@ begin
   cqrini.WriteInteger('OnlineLog','ClColor',cmbClColor.Selected);
   cqrini.WriteString('OnlineLog','ClUrl',edtClubLogUrl.Text);
   cqrini.WriteString('OnlineLog','ClUrlDel',edtClubLogUrlDel.Text);
+  cqrini.WriteString('OnlineLog','ClUrlBulk',edtClubLogUrlBulk.Text);
 
   cqrini.WriteBool('OnlineLog','HrUP',chkHrUpEnabled.Checked);
   cqrini.WriteBool('OnlineLog','HrUpOnline',chkHrUpOnline.Checked);
@@ -2354,6 +2357,8 @@ end;
 
 procedure TfrmPreferences.chkClUpEnabledChange(Sender: TObject);
 begin
+  if not chkClUpEnabled.Checked then
+                                chkClupOnline.Checked:=False;
   edtClUserName.Enabled := chkClUpEnabled.Checked;
   edtClPasswd.Enabled   := chkClUpEnabled.Checked;
   edtClEmail.Enabled    := chkClUpEnabled.Checked;
@@ -2374,6 +2379,8 @@ end;
 
 procedure TfrmPreferences.chkHaUpEnabledChange(Sender: TObject);
 begin
+  if not chkHaUpEnabled.Checked then
+                                chkHaupOnline.Checked:=False;
   edtHaUserName.Enabled := chkHaUpEnabled.Checked;
   edtHaPasswd.Enabled   := chkHaUpEnabled.Checked;
   chkHaupOnline.Enabled := chkHaUpEnabled.Checked;
@@ -2382,6 +2389,8 @@ end;
 
 procedure TfrmPreferences.chkHrUpEnabledChange(Sender: TObject);
 begin
+  if not chkHrUpEnabled.Checked then
+                             chkHrUpOnline.Checked:=False;
   edtHrUserName.Enabled := chkHrUpEnabled.Checked;
   edtHrCode.Enabled     := chkHrUpEnabled.Checked;
   chkHrUpOnline.Enabled := chkHrUpEnabled.Checked;
@@ -2426,6 +2435,8 @@ end;
 
 procedure TfrmPreferences.chkUdUpEnabledChange(Sender: TObject);
 begin
+  if not  chkUdUpEnabled.Checked then
+                                 chkUdUpOnline.Checked:=False;
   edtUdAddress.Enabled  := chkUdUpEnabled.Checked;
   chkUdIncExch.Enabled  := chkUdUpEnabled.Checked;
   chkUdUpOnline.Enabled := chkUdUpEnabled.Checked;
@@ -2799,6 +2810,14 @@ procedure TfrmPreferences.edtImgFilesExit(Sender: TObject);
 begin
    if ExtractFilePath(edtImgFiles.Text)='' then
         edtImgFiles.Text:=SeekExecFile(edtImgFiles.Text,'Find image viewer');
+end;
+
+procedure TfrmPreferences.edtLoadFromFldigiChange(Sender: TObject);
+begin
+  if edtLoadFromFldigi.Value < 1 then
+                             edtLoadFromFldigi.Value := 1;
+  if edtLoadFromFldigi.Value > 200 then
+                             edtLoadFromFldigi.Value := 200;
 end;
 
 procedure TfrmPreferences.edtSpeedChange(Sender: TObject);
@@ -3546,6 +3565,7 @@ begin
   cmbClColor.Selected    := cqrini.ReadInteger('OnlineLog','ClColor',clRed);
   edtClubLogUrl.Text     := cqrini.ReadString('OnlineLog','ClUrl','https://clublog.org/realtime.php');
   edtClubLogUrlDel.Text  := cqrini.ReadString('OnlineLog','ClUrlDel','https://clublog.org/delete.php');
+  edtClubLogUrlBulk.Text  := cqrini.ReadString('OnlineLog','ClUrlBulk','https://clublog.org/putlogs.php');
   chkClUpEnabledChange(nil);
 
   chkHrUpEnabled.Checked := cqrini.ReadBool('OnlineLog','HrUP',False);

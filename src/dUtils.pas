@@ -125,7 +125,6 @@ type
     procedure MakeMissingModeFile(num:integer);
     procedure TheButtonClick(Sender: TObject);
 
-    function nr(ch: char): integer;
     function GetTagValue(Data, tg: string): string;
     function GetQRZSession(var ErrMsg: string): boolean;
     function GetQRZCQSession(var ErrMsg: string): boolean;
@@ -1172,19 +1171,20 @@ end;
 
 procedure TdmUtils.KeyInLoc(Loc:string; var Key:char);
 Begin
-  //pass only format AB12cd34ef and BS/DEL keys
+  //pass only format BL11bh16ef and BS/DEL keys
+  // NOTE2: Wikipedia has changed in late 2023 and now format is BL11BH16EF
+
   if (( Key<>#$8 ) and ( Key<>#$7F) and ( Key<>#22)) then
   begin
     case length(Loc) of
       0,1  :  if Key in ['a'..'r'] then Key:= chr(ord(Key) - $20) else
                   if not (Key in ['A'..'R']) then Key:= #0;
       2,3  :  if not (Key in ['0'..'9']) then Key:= #0;
-      4,5  :  if Key in ['A'..'X'] then Key:= chr(ord(Key) + $20) else
-                 if not (Key in ['a'..'x']) then Key:= #0;
+      4,5  :  if Key in ['a'..'x'] then Key:= chr(ord(Key) - $20) else
+                  if not (Key in ['A'..'X']) then Key:= #0;
       6,7  :  if not (Key in ['0'..'9']) then Key:=  #0;
-      8,9  :  if Key in ['A'..'X'] then Key:= chr(ord(Key) + $20) else
-                 if not (Key in ['a'..'x']) then Key:= #0;
-      else
+      8,9  :  if Key in ['a'..'x'] then Key:= chr(ord(Key) - $20) else
+                        if not (Key in ['A'..'X']) then Key:= #0;       else
         Key:=#0;
     end;
   end;
@@ -1241,14 +1241,19 @@ end;
 function TdmUtils.StdFormatLocator(loc:string):String;
 // Format locator to standard form BL11bh16 See:
 // https://en.wikipedia.org/wiki/Maidenhead_Locator_System#Description_of_the_system
+
+// NOTE2: Wikipedia has changed in late 2023 and now format is BL11BH16 I.E. all letters are CAPS. (when do they make their mind?)
+
 // Check TEdit CharCase to be ecNormal, othewise you get runtime error!
 var
   s :String;
 begin
   Result := loc;
   if loc = '' then exit;
-  s :=  Upcase(copy(loc,1,4));
-  s:= s + lowercase(copy(loc,5,6));   //max loc length 10 in database
+  s :=  Upcase(loc);
+  //NOTE2:
+  //s :=  Upcase(copy(loc,1,4));
+  //s:= s + lowercase(copy(loc,5,6));   //max loc length 10 in database
   Result := trim(s);
 end;
 
@@ -1537,31 +1542,27 @@ begin
 
 end;
 
-function TdmUtils.nr(ch: char): integer;
-var
-  letters: string;
-begin
-  letters := 'ABCDEFGHIJKLMNOPQRSTUVWX';
-  Result := Pos(ch, letters);
-end;
-
 function TdmUtils.CoordinateFromLocator(loc: string; var latitude, longitude: currency): Boolean;
 var
   a, b, c, d, e, f: integer;
+
 begin
   Result:= IsLocOK(loc);
   if not Result then
     exit;
 
-  a := nr(loc[1]);
-  b := nr(loc[2]);
+  loc:=UpperCase(loc);
+
+  a := ord(loc[1])-64;
+  b := ord(loc[2])-64;
   c := StrToInt(loc[3]);
   d := StrToInt(loc[4]);
-  e := nr(loc[5]);
-  f := nr(loc[6]);
+  e := ord(loc[5])-64;
+  f := ord(loc[6])-64;
 
   longitude := (a - 10) * 20 + c * 2 + (e - 1) * 0.083333333333333333330 + 0.08333333333333333333 / 2;
   latitude := (b - 10) * 10 + d * 1 + (f - 1) * 0.04166666666666666667 + 0.04166666666666666667 / 2;
+
 end;
 
 function TdmUtils.RemoveSpaces(S: string): string;

@@ -467,6 +467,7 @@ end;
 
 procedure TfrmContest.btSaveClick(Sender: TObject);
 begin
+  if (edtSRXStr.Font.Color=clRed) and chkLoc.Checked then exit; //there is error in loc, no save until fixed
   if frmNewQSO.AnyRemoteOn then
     begin
       Application.MessageBox('Log is in remote mode, please disable it.','Info ...',mb_ok + mb_IconInformation);

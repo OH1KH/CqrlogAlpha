@@ -1474,6 +1474,11 @@ begin
   btnCancel.Hint:='';
   btnCancel.ShowHint:=False;
 
+  lblGrid.Font.Style:=[];
+  lblGrid.Font.Color:=clDefault;
+  edtGrid.Font.Style:=[];
+  edtGrid.Font.Color:=clDefault;
+
   btnCancel.Caption:='Quit [CTRL+Q]';
   btnCancel.Font.Color:=clDefault;
   btnCancel.Font.Style:=[];
@@ -4582,6 +4587,8 @@ begin
     frmSCP.mSCP.Clear;
   lblGrid.Font.Style:=[];
   lblGrid.Font.Color:=clDefault;
+  edtGrid.Font.Style:=[];
+  edtGrid.Font.Color:=clDefault;
 end;
 
 
@@ -4625,11 +4632,19 @@ begin
   edtGrid.Text := dmUtils.StdFormatLocator(edtGrid.Text);
   edtGrid.SelStart := Length(edtGrid.Text);
   edtGrid.SelLength:=0;
+  if ( edtGrid.SelStart in [1,3,5] )then
+       edtGrid.Font.Color:=clRed
+      else
+       edtGrid.Font.Color:=clDefault;
 end;
 
 procedure TfrmNewQSO.edtGridEnter(Sender: TObject);
 begin
-  edtGrid.SelectAll
+  edtGrid.SelectAll;
+  lblGrid.Font.Style:=[];
+  lblGrid.Font.Color:=clDefault;
+  edtGrid.Font.Style:=[];
+  edtGrid.Font.Color:=clDefault;
 end;
 
 procedure TfrmNewQSO.edtGridExit(Sender: TObject);
@@ -4647,15 +4662,19 @@ begin
      lblGrid.Font.Color:=clDefault;
     end
    else
-    Begin
-     lblGrid.Font.Style:=[fsBold];
-     lblGrid.Font.Color:=clRed;
-    end;
+    if not frmContest.Showing then
+      Begin
+       lblGrid.Font.Style:=[fsBold];
+       edtGrid .Font.Style:=[fsBold];
+       lblGrid.Font.Color:=clRed;
+       edtGrid.Font.Color:=clRed;
+      end;
 end;
 
 procedure TfrmNewQSO.edtGridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  writeln(length(edtGrid.text));
   if (key = 40) then  //down arrow
   begin
     edtPWR.SetFocus;

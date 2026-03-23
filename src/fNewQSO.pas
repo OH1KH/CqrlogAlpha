@@ -4662,7 +4662,7 @@ begin
      lblGrid.Font.Color:=clDefault;
     end
    else
-    if not frmContest.Showing then
+    if  (edtGrid.Text<>'') then
       Begin
        lblGrid.Font.Style:=[fsBold];
        edtGrid .Font.Style:=[fsBold];

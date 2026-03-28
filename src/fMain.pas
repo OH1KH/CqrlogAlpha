@@ -1347,17 +1347,22 @@ var
 begin
   if not (cqrini.ReadBool('OnlineLog','HaUP',False)
           or cqrini.ReadBool('OnlineLog','ClUP',False)
-          or cqrini.ReadBool('OnlineLog','HrUP',False) ) then
+          or cqrini.ReadBool('OnlineLog','HrUP',False)
+          or cqrini.ReadBool('OnlineLog','UdUP',False) ) then
      Begin
        //warn: none of uploads selected
-       Application.MessageBox('You do not have any log uploads enabled!','Info ...',mb_ok + mb_IconInformation);
+       s:= 'You do not have any log uploads enabled!'+LineEnding+LineEnding+
+           'If you have just disabled them all because of problems'+LineEnding+
+           'you need to enable at least one to get old triggers cleaned.';
+       Application.MessageBox(s,'Info ...',mb_ok + mb_IconInformation);
        exit
      end
    else
      Begin
        if not (cqrini.ReadBool('OnlineLog','HaUpOnline',False)
            or cqrini.ReadBool('OnlineLog','ClUpOnline',False)
-           or cqrini.ReadBool('OnlineLog','HrUpOnline',False) ) then
+           or cqrini.ReadBool('OnlineLog','HrUpOnline',False)
+           or cqrini.ReadBool('OnlineLog','UdUpOnline',False) ) then
          Begin
            //Warn: none of online uploads
            s:= 'You do not have any immediately uploads active'+LineEnding+LineEnding+
@@ -1367,13 +1372,16 @@ begin
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
             RemoveTriggers;
            exit;
+         end
+        else
+         Begin
+          s:= 'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
+              'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
+              'Are you sure you want to remove ALL upload triggers?';
+          if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
+           RemoveTriggers;
+          exit;
          end;
-        s:= 'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
-            'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
-            'Are you sure you want to remove ALL upload triggers?';
-        if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
-         RemoveTriggers;
-        exit;
      end;
 end;
 

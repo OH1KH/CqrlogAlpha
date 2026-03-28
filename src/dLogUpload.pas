@@ -218,7 +218,6 @@ var
   Value   : String;
   Address : String;
   udp     : TLUDPComponent;
-  n       : Integer;
   Doc     : TXMLDocument;
   RootNode,ItemNode,TextNode: TDOMNode;
   msg     : TStringStream;
@@ -280,11 +279,10 @@ begin
 
   try
     udp := TLUDPComponent.Create(nil);
-    n := Pos(':', Address);
-    if n > 0 then
+    if Pos(':', Address) > 0 then
     begin
-      udp.Host := Copy(Address, 1, n-1);
-      udp.Port := StrToInt(Copy(Address, n+1, Length(Address)));
+      udp.Host := ExtractWord(1,Address,[':']);
+      udp.Port := StrToInt(ExtractWord(2,Address,[':']));
     end
     else
     begin

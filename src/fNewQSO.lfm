@@ -1,16 +1,16 @@
 object frmNewQSO: TfrmNewQSO
   Left = 0
-  Height = 577
+  Height = 593
   Top = 0
-  Width = 972
+  Width = 1098
   HelpType = htKeyword
   HelpKeyword = 'help/index.html'
-  HorzScrollBar.Page = 972
-  VertScrollBar.Page = 577
+  HorzScrollBar.Page = 1025
+  VertScrollBar.Page = 593
   AutoScroll = True
   Caption = 'New QSO ... (CqrlogAlpha for Linux)'
-  ClientHeight = 577
-  ClientWidth = 972
+  ClientHeight = 593
+  ClientWidth = 1098
   Constraints.MinHeight = 200
   Constraints.MinWidth = 400
   Icon.Data = {
@@ -2132,7 +2132,7 @@ object frmNewQSO: TfrmNewQSO
   }
   KeyPreview = True
   Menu = MainMenu1
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
@@ -2149,10 +2149,10 @@ object frmNewQSO: TfrmNewQSO
     Left = 0
     Height = 565
     Top = 50
-    Width = 1025
+    Width = 1098
     Align = alBottom
     ClientHeight = 565
-    ClientWidth = 1025
+    ClientWidth = 1098
     TabOrder = 0
     object pnlQsoInfo: TPanel
       AnchorSideLeft.Control = sbNewQSO
@@ -2163,12 +2163,12 @@ object frmNewQSO: TfrmNewQSO
       Left = 1
       Height = 506
       Top = 35
-      Width = 545
+      Width = 618
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Bottom = 3
       BevelOuter = bvNone
       ClientHeight = 506
-      ClientWidth = 545
+      ClientWidth = 618
       TabOrder = 0
       object pnlQSOinput: TPanel
         AnchorSideLeft.Control = pnlQsoInfo
@@ -2180,12 +2180,12 @@ object frmNewQSO: TfrmNewQSO
         Left = 0
         Height = 506
         Top = 0
-        Width = 545
+        Width = 618
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.InnerBorder = 2
         BevelOuter = bvNone
         ClientHeight = 506
-        ClientWidth = 545
+        ClientWidth = 618
         ParentShowHint = False
         TabOrder = 0
         object lblCommentToCallsign: TLabel
@@ -3117,7 +3117,7 @@ object frmNewQSO: TfrmNewQSO
           Left = 12
           Height = 135
           Top = 368
-          Width = 533
+          Width = 606
           ActivePage = tabSatellite
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 3
@@ -3131,14 +3131,14 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideBottom.Side = asrBottom
             Caption = 'DXCC statistic'
             ClientHeight = 104
-            ClientWidth = 523
+            ClientWidth = 596
             object sgrdStatistic: TStringGrid
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Side = asrBottom
               Left = 0
               Height = 104
               Top = 0
-              Width = 523
+              Width = 596
               Align = alClient
               AutoFillColumns = True
               ColCount = 2
@@ -3153,22 +3153,22 @@ object frmNewQSO: TfrmNewQSO
               TitleStyle = tsNative
               OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
               ColWidths = (
-                260
-                259
+                296
+                296
               )
             end
           end
           object tabCallStat: TTabSheet
             Caption = 'Call statistic'
             ClientHeight = 104
-            ClientWidth = 523
+            ClientWidth = 596
             object sgrdCallStatistic: TStringGrid
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Side = asrBottom
               Left = 0
               Height = 104
               Top = 0
-              Width = 523
+              Width = 596
               Align = alClient
               AutoFillColumns = True
               ColCount = 2
@@ -3183,8 +3183,8 @@ object frmNewQSO: TfrmNewQSO
               TitleStyle = tsNative
               OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
               ColWidths = (
-                260
-                259
+                296
+                296
               )
             end
           end
@@ -3192,7 +3192,7 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideBottom.Side = asrBottom
             Caption = 'Satellite'
             ClientHeight = 104
-            ClientWidth = 523
+            ClientWidth = 596
             object cmbPropagation: TComboBox
               AnchorSideLeft.Control = lblStatellite
               AnchorSideTop.Control = lblPropagation
@@ -3322,7 +3322,7 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideBottom.Side = asrBottom
             Caption = 'LO Config'
             ClientHeight = 104
-            ClientWidth = 523
+            ClientWidth = 596
             object cbTxLo: TCheckBox
               Left = 8
               Height = 23
@@ -4072,7 +4072,7 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = pnlAll
       AnchorSideBottom.Side = asrBottom
-      Left = 746
+      Left = 819
       Height = 509
       Top = 35
       Width = 278
@@ -4094,6 +4094,7 @@ object frmNewQSO: TfrmNewQSO
         ClientHeight = 442
         ClientWidth = 256
         ParentFont = False
+        ParentShowHint = False
         TabOrder = 0
         object lblDXCCCaption: TLabel
           AnchorSideLeft.Control = lblContCaption
@@ -4316,6 +4317,7 @@ object frmNewQSO: TfrmNewQSO
           AnchorSideTop.Side = asrBottom
           Left = 7
           Height = 20
+          Hint = 'DXCC STD local time (by prefix, no DST)'
           Top = 220
           Width = 162
           AutoSize = False
@@ -4323,6 +4325,8 @@ object frmNewQSO: TfrmNewQSO
           Caption = 'AAAAAAAAAAAAAA'
           Layout = tlBottom
           ParentFont = False
+          ParentShowHint = False
+          ShowHint = True
         end
         object lblGreeting: TLabel
           AnchorSideLeft.Control = lblHisTime
@@ -4347,6 +4351,7 @@ object frmNewQSO: TfrmNewQSO
           AnchorSideTop.Side = asrBottom
           Left = 7
           Height = 22
+          Hint = 'DXCC Sun rise (by My time)'
           Top = 192
           Width = 23
           BorderSpacing.Top = 16
@@ -4386,6 +4391,8 @@ object frmNewQSO: TfrmNewQSO
             0000000000000000000000000000000000000000000000000000
           }
           Layout = blGlyphBottom
+          ShowHint = True
+          ParentShowHint = False
         end
         object SpeedButton2: TSpeedButton
           AnchorSideLeft.Control = btnSunSet
@@ -4394,6 +4401,7 @@ object frmNewQSO: TfrmNewQSO
           AnchorSideBottom.Side = asrBottom
           Left = 132
           Height = 22
+          Hint = 'My Sun set'
           Top = 268
           Width = 23
           Anchors = [akLeft, akBottom]
@@ -4427,6 +4435,8 @@ object frmNewQSO: TfrmNewQSO
             F5D7F9F2DFEEE6EEF6EB
           }
           Layout = blGlyphBottom
+          ShowHint = True
+          ParentShowHint = False
         end
         object SpeedButton3: TSpeedButton
           AnchorSideLeft.Control = lblLocalCaption
@@ -4434,6 +4444,7 @@ object frmNewQSO: TfrmNewQSO
           AnchorSideTop.Side = asrBottom
           Left = 7
           Height = 22
+          Hint = 'My Sun rise'
           Top = 268
           Width = 23
           BorderSpacing.Top = 5
@@ -4473,6 +4484,8 @@ object frmNewQSO: TfrmNewQSO
             0000000000000000000000000000000000000000000000000000
           }
           Layout = blGlyphBottom
+          ShowHint = True
+          ParentShowHint = False
         end
         object btnSunSet: TSpeedButton
           AnchorSideLeft.Control = lblAzim
@@ -4481,6 +4494,7 @@ object frmNewQSO: TfrmNewQSO
           AnchorSideBottom.Side = asrBottom
           Left = 131
           Height = 22
+          Hint = 'DXCC Sun set (by My time)'
           Top = 192
           Width = 23
           Anchors = [akLeft, akBottom]
@@ -4513,6 +4527,8 @@ object frmNewQSO: TfrmNewQSO
             F5D7F9F2DFEEE6EEF6EB
           }
           Layout = blGlyphBottom
+          ShowHint = True
+          ParentShowHint = False
         end
         object lblLocSunRise: TLabel
           AnchorSideLeft.Control = SpeedButton3
@@ -4584,9 +4600,9 @@ object frmNewQSO: TfrmNewQSO
           Left = 7
           Height = 17
           Top = 246
-          Width = 38
+          Width = 59
           BorderSpacing.Top = 6
-          Caption = 'Local:'
+          Caption = 'My local:'
           Layout = tlBottom
           ParentFont = False
         end
@@ -4679,12 +4695,12 @@ object frmNewQSO: TfrmNewQSO
       Left = 1
       Height = 34
       Top = 1
-      Width = 1023
+      Width = 1096
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
       ClientHeight = 34
-      ClientWidth = 1023
+      ClientWidth = 1096
       TabOrder = 2
       object lblQSONr: TLabel
         AnchorSideLeft.Control = lblQSONrDesc
@@ -4787,7 +4803,7 @@ object frmNewQSO: TfrmNewQSO
       Left = 1
       Height = 20
       Top = 544
-      Width = 1023
+      Width = 1096
       AutoSize = False
       Panels = <      
         item
@@ -4811,7 +4827,7 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = pnlDXCCinfo
       AnchorSideRight.Control = pnlDXCCinfo
-      Left = 546
+      Left = 619
       Height = 215
       Top = 35
       Width = 200
@@ -4973,7 +4989,7 @@ object frmNewQSO: TfrmNewQSO
     Left = 0
     Height = 50
     Top = 0
-    Width = 1025
+    Width = 1098
     Align = alClient
     Color = clWindow
     Columns = <>

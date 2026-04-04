@@ -6085,10 +6085,7 @@ begin
       if (key = VK_U) then                                          //VK_U
       begin
         if frmLogUploadStatus.Showing then
-            frmLogUploadStatus.Hide
-           else
-            frmLogUploadStatus.show;
-        Self.ReturnToNewQSO;
+            frmLogUploadStatus.Hide;
         key := 0;
         Exit;
       end;

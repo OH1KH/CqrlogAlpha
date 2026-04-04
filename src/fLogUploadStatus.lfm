@@ -11,7 +11,7 @@ object frmLogUploadStatus: TfrmLogUploadStatus
   Constraints.MinWidth = 250
   KeyPreview = True
   Menu = MainMenu1
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate

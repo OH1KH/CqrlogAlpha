@@ -840,25 +840,53 @@ end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
-  if key = VK_F2 then  //why hotkeys doesn't work?
-    acNewQSO.Execute;
-  if key = VK_F6 then
-    acCallBook.Execute;
-  if (Shift = [ssAlt]) and (key = VK_F) then
+
+  if key = VK_F2 then                                    //VK_F2
+    begin
+     acNewQSO.Execute;
+     Key:=0;
+     Exit;
+    end;
+  if key = VK_F6 then                                    //VK_f6
+    begin
+     acCallBook.Execute;
+     key:=0;
+     Exit;
+    end;
+
+ if (Shift = [ssCTRL]) then                              //Ctrl+ key
+ begin
+  if (Key = VK_N) then                                   //VK_N
+  begin
+    mnuDoNotSendClick(nil);
+    key := 0;
+    Exit;
+  end;
+   if (key = VK_H) then                                  //VK_H
+  begin
+    ShowHelp;
+    key := 0;
+    Exit;
+  end;
+  if (key = VK_U) then                                   //VK_U
+      begin
+        if frmLogUploadStatus.Showing then
+            frmLogUploadStatus.Hide;
+        key := 0;
+        Exit;
+      end;
+ end;
+
+ if (Shift = [ssAlt]) then                              //Alt+ key
+ begin
+  if (key = VK_F) then                                  //VK_F
   begin
     dmUtils.EnterFreq;
     key := 0;
+    Exit;
   end;
-  if (Shift = [ssCTRL]) and (Key = VK_N) then
-  begin
-    mnuDoNotSendClick(nil);
-    key := 0
-  end;
-   if ((Shift = [ssCtrl]) and (key = VK_H)) then
-  begin
-    ShowHelp;
-    key := 0
-  end;
+ end;
+
 end;
 
 procedure TfrmMain.mnuOQRSClick(Sender : TObject);

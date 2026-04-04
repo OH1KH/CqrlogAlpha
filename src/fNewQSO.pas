@@ -6082,6 +6082,16 @@ begin
         key := 0;
         Exit;
       end;
+      if (key = VK_U) then                                          //VK_U
+      begin
+        if frmLogUploadStatus.Showing then
+            frmLogUploadStatus.Hide
+           else
+            frmLogUploadStatus.show;
+        Self.ReturnToNewQSO;
+        key := 0;
+        Exit;
+      end;
       if (key = VK_W) then                                          //VK_W
         Begin
          acSendSpot.Execute;

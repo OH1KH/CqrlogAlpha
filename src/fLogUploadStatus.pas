@@ -588,6 +588,7 @@ procedure TfrmLogUploadStatus.FormKeyUp(Sender: TObject; var Key: Word;
 begin
   if (key= VK_ESCAPE) then
   begin
+    Self.Hide;
     frmNewQSO.ReturnToNewQSO;
     key := 0
   end

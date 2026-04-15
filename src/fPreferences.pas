@@ -107,6 +107,14 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkCbSH: TCheckBox;
+    chkLoSH: TCheckBox;
+    chkHrSH: TCheckBox;
+    chkHaSH: TCheckBox;
+    chkClSH: TCheckBox;
+    chkEqSH: TCheckBox;
+    chkPxSH: TCheckBox;
+    chkQrSH: TCheckBox;
     chkSimpleRig: TCheckBox;
     chkNewQsoUdp: TCheckBox;
     chkProfile: TCheckBox;
@@ -1056,6 +1064,14 @@ type
     procedure btnSplitClick(Sender: TObject);
     procedure btnForceMembershipUpdateClick(Sender : TObject);
     procedure cbNoKeyerResetChange(Sender: TObject);
+    procedure chkCbSHClick(Sender: TObject);
+    procedure chkEqSHClick(Sender: TObject);
+    procedure chkLoSHClick(Sender: TObject);
+    procedure chkPxSHClick(Sender: TObject);
+    procedure chkQrSHClick(Sender: TObject);
+    procedure chkHrSHClick(Sender: TObject);
+    procedure chkClSHClick(Sender: TObject);
+    procedure chkHaSHClick(Sender: TObject);
     procedure chkBeamArcLengthExit(Sender: TObject);
     procedure chkBlenByQsoExit(Sender: TObject);
     procedure chkClUpEnabledChange(Sender: TObject);
@@ -1112,7 +1128,11 @@ type
     procedure edtRotCtldPathChange(Sender: TObject);
     procedure edtMinMaxSpeedChange(Sender: TObject);
     procedure edtHexExit(Sender: TObject);
+    procedure rbHamQTHChange(Sender: TObject);
+    procedure rbQRZChange(Sender: TObject);
+    procedure rbQRZCQChange(Sender: TObject);
     procedure RotorParamsChange(Sender: TObject);
+    procedure tabCallbookShow(Sender: TObject);
     procedure tabCWInterfaceExit(Sender: TObject);
     procedure tabModesExit(Sender: TObject);
     procedure tabTRXcontrolEnter(Sender: TObject);
@@ -2389,7 +2409,11 @@ begin
   edtHaUserName.Enabled := chkHaUpEnabled.Checked;
   edtHaPasswd.Enabled   := chkHaUpEnabled.Checked;
   chkHaupOnline.Enabled := chkHaUpEnabled.Checked;
-  cmbHaColor.Enabled    := chkHaUpEnabled.Checked
+  cmbHaColor.Enabled    := chkHaUpEnabled.Checked;
+  edtHamQTHurl.Enabled  := chkHaUpEnabled.Checked;
+  if  chkHaupOnline.Checked=False then
+       chkHaSH.Checked  :=false;
+  chkHaSH.Enabled       :=chkHaUpEnabled.Checked;
 end;
 
 procedure TfrmPreferences.chkClUpEnabledChange(Sender: TObject);
@@ -2400,17 +2424,29 @@ begin
   edtClPasswd.Enabled   := chkClUpEnabled.Checked;
   edtClEmail.Enabled    := chkClUpEnabled.Checked;
   chkClupOnline.Enabled := chkClUpEnabled.Checked;
-  cmbClColor.Enabled    := chkClUpEnabled.Checked
+  cmbClColor.Enabled    := chkClUpEnabled.Checked;
+  edtClubLogUrl.Enabled := chkClUpEnabled.Checked;
+  edtClubLogUrlDel.Enabled  := chkClUpEnabled.Checked;
+  edtClubLogUrlBulk.Enabled := chkClUpEnabled.Checked;
+  if  chkClupOnline.Checked=False then
+       chkClSH.Checked  :=false;
+  chkClSH.Enabled       :=chkClUpEnabled.Checked;
+
 end;
 
 procedure TfrmPreferences.chkHrUpEnabledChange(Sender: TObject);
 begin
   if not chkHrUpEnabled.Checked then
-                             chkHrUpOnline.Checked:=False;
+   chkHrUpOnline.Checked:=False;
   edtHrUserName.Enabled := chkHrUpEnabled.Checked;
   edtHrCode.Enabled     := chkHrUpEnabled.Checked;
   chkHrUpOnline.Enabled := chkHrUpEnabled.Checked;
-  cmbHrColor.Enabled    := chkHrUpEnabled.Checked
+  cmbHrColor.Enabled    := chkHrUpEnabled.Checked;
+  edtHrdUrl.Enabled     := chkHrUpEnabled.Checked;
+  if  chkHrUpOnline.Checked=False then
+       chkHrSH.Checked  :=false;
+  chkHrSH.Enabled       :=chkHrUpEnabled.Checked;
+
 end;
 
 procedure TfrmPreferences.chkUdUpEnabledChange(Sender: TObject);
@@ -2428,8 +2464,12 @@ begin
   if not chkQrzUpEnabled.Checked then
     chkQrzUpOnline.Checked := False;
   edtQrzApiKey.Enabled     := chkQrzUpEnabled.Checked;
-  chkQrzUpOnline.Enabled := chkQrzUpEnabled.Checked;
-  cmbQrzColor.Enabled    := chkQrzUpEnabled.Checked
+  chkQrzUpOnline.Enabled   := chkQrzUpEnabled.Checked;
+  cmbQrzColor.Enabled      := chkQrzUpEnabled.Checked;
+  edtQrzUrl.Enabled        := chkQrzUpEnabled.Checked;
+  if chkQrzUpOnline.Checked = False then
+           chkQrSH.Checked := false;
+  chkQrSH.Enabled          := chkQrzUpEnabled.Checked;
 end;
 
 procedure TfrmPreferences.chkRotControlDebugChange(Sender: TObject);
@@ -2610,6 +2650,81 @@ begin
     and (cmbIfaceType.ItemIndex = 4) //type is HamLib
      then cbNoKeyerReset.Checked := false; //restart is always needed  when radio changes
   CWKeyerChanged := True
+end;
+
+procedure TfrmPreferences.chkCbSHClick(Sender: TObject);
+begin
+   if  chkCbSH.Checked then
+     Begin
+        if rbHamQTH.Checked then edtCbHamQTHPass.EchoMode := emNormal
+         else edtCbHamQTHPass.EchoMode := emPassword;
+        if rbQRZ.Checked    then edtCbQRZPass.EchoMode    := emNormal
+         else edtCbQRZPass.EchoMode    := emPassword;
+        if rbQRZCQ.Checked  then edtCbQRZCQPass.EchoMode  := emNormal
+         else edtCbQRZCQPass.EchoMode  := emPassword;
+     end
+    else
+     Begin
+        if rbHamQTH.Checked then edtCbHamQTHPass.EchoMode := emPassword;
+        if rbQRZ.Checked    then edtCbQRZPass.EchoMode    := emPassword;
+        if rbQRZCQ.Checked  then edtCbQRZCQPass.EchoMode  := emPassword;
+     end;
+end;
+
+procedure TfrmPreferences.chkEqSHClick(Sender: TObject);
+begin
+  if chkEqSH.Checked then
+      edteQSLPass.EchoMode:=emNormal
+     else
+      edteQSLPass.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkLoSHClick(Sender: TObject);
+begin
+  if chkLoSH.Checked then
+      edtLoTWPass.EchoMode:=emNormal
+     else
+      edtLoTWPass.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkPxSHClick(Sender: TObject);
+begin
+  if chkPxSH.Checked then
+      edtPasswd.EchoMode:=emNormal
+     else
+      edtPasswd.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkQrSHClick(Sender: TObject);
+begin
+   if chkQrSH.Checked then
+      edtQrzApiKey.EchoMode:=emNormal
+     else
+      edtQrzApiKey.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkHrSHClick(Sender: TObject);
+begin
+     if chkHrSH.Checked then
+      edtHrCode.EchoMode:=emNormal
+     else
+      edtHrCode.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkClSHClick(Sender: TObject);
+begin
+    if chkClSH.Checked then
+      edtClPasswd.EchoMode:=emNormal
+     else
+      edtClPasswd.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkHaSHClick(Sender: TObject);
+begin
+    if chkHaSH.Checked then
+      edtHaPasswd.EchoMode:=emNormal
+     else
+      edtHaPasswd.EchoMode:=emPassword;
 end;
 
 procedure TfrmPreferences.chkBeamArcLengthExit(Sender: TObject);
@@ -2925,6 +3040,30 @@ var
   CWKeyerChanged := True
 end;
 
+procedure TfrmPreferences.rbHamQTHChange(Sender: TObject);
+begin
+  edtCbHamQThAddr.Enabled:=rbHamQTH.Checked;
+  edtCbHamQTHUser.Enabled:=rbHamQTH.Checked;
+  edtCbHamQTHPass.Enabled:=rbHamQTH.Checked;
+  chkCbSHClick(nil);
+end;
+
+procedure TfrmPreferences.rbQRZChange(Sender: TObject);
+begin
+  edtCbQrzAddr.Enabled:=rbQRZ.Checked;
+  edtCbQRZUser.Enabled:=rbQRZ.Checked;
+  edtCbQRZPass.Enabled:=rbQRZ.Checked;
+  chkCbSHClick(nil);
+end;
+
+procedure TfrmPreferences.rbQRZCQChange(Sender: TObject);
+begin
+  edtCbQrzcqAddr.Enabled:=rbQRZCQ.Checked;
+  edtCbQRZCQUser.Enabled:=rbQRZCQ.Checked;
+  edtCbQRZCQPass.Enabled:=rbQRZCQ.Checked;
+  chkCbSHClick(nil);
+end;
+
 procedure TfrmPreferences.edtPdfFilesExit(Sender: TObject);
 begin
    if ExtractFilePath(edtPdfFiles.Text)='' then
@@ -3022,6 +3161,13 @@ begin
   RotChanged := True;
 end;
 
+procedure TfrmPreferences.tabCallbookShow(Sender: TObject);
+begin
+  rbHamQTHChange(nil);
+  rbQRZChange(nil);
+  rbQRZCQChange(nil);
+end;
+
 procedure TfrmPreferences.tabCWInterfaceExit(Sender: TObject);
 begin
      SaveCWif(CWifLoaded);  //save currently open CW settings
@@ -3032,7 +3178,7 @@ end;
 procedure TfrmPreferences.tabModesExit(Sender: TObject);
 begin
   SaveBandW(BandWNrLoaded); //save currently loaded modes
-  cmbRadioNr.ItemIndex:=cmbRadioModes.ItemIndex;          //select rig in use
+  cmbRadioNr.ItemIndex:=cmbRadioModes.ItemIndex;             //select rig in use
   cmbCWRadio.ItemIndex:=cmbRadioNr.ItemIndex;
 end;
 
@@ -3554,13 +3700,12 @@ begin
   edtCbQRZPass.Text     := cqrini.ReadString('CallBook', 'CbQRZPass', '');
   edtCbQRZCQUser.Text   := cqrini.ReadString('CallBook', 'CbQRZCQUser', '');
   edtCbQRZCQPass.Text   := cqrini.ReadString('CallBook', 'CbQRZCQPass', '');
-  rbHamQTH.Checked      := cqrini.ReadBool('Callbook', 'HamQTH', True);
-  rbQRZ.Checked         := cqrini.ReadBool('Callbook', 'QRZ', False);
-  rbQRZCQ.Checked       := cqrini.ReadBool('Callbook', 'QRZCQ', False);
   edtCbHamQTHAddr.Text  := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com' );
   edtCbQRZAddr.Text     := cqrini.ReadString('CallBook', 'CbQRZAddr', 'https://xml.qrz.com');
   edtCbQRZCQAddr.Text   := cqrini.ReadString('CallBook', 'CbQRZCQAddr', 'https://ssl.qrzcq.com' );
-
+  rbHamQTH.Checked      := cqrini.ReadBool('Callbook', 'HamQTH', True);
+  rbQRZ.Checked         := cqrini.ReadBool('Callbook', 'QRZ', False);
+  rbQRZCQ.Checked       := cqrini.ReadBool('Callbook', 'QRZCQ', False);
 
   cmbCl10db.Selected        := cqrini.ReadInteger('RBN','10db',clWhite);
   cmbCl20db.Selected        := cqrini.ReadInteger('RBN','20db',clPurple);

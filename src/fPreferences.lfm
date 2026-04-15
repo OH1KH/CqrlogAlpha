@@ -1,18 +1,18 @@
 object frmPreferences: TfrmPreferences
   Left = 158
-  Height = 822
+  Height = 809
   Top = 0
-  Width = 1076
+  Width = 1063
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1076
-  VertScrollBar.Page = 822
+  HorzScrollBar.Page = 1063
+  VertScrollBar.Page = 809
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 822
-  ClientWidth = 1076
+  ClientHeight = 809
+  ClientWidth = 1063
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   Position = poMainFormCenter
@@ -41,7 +41,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = rgStatistics
         AnchorSideTop.Side = asrBottom
-        Left = 350
+        Left = 475
         Height = 17
         Top = 78
         Width = 249
@@ -55,51 +55,50 @@ object frmPreferences: TfrmPreferences
         Left = 6
         Height = 129
         Top = 3
-        Width = 341
+        Width = 466
         BorderSpacing.Left = 6
         BorderSpacing.Top = 3
         Caption = ' Internet connection '
         ClientHeight = 111
-        ClientWidth = 339
+        ClientWidth = 464
         TabOrder = 0
         object lblintProxy: TLabel
           AnchorSideTop.Control = edtProxy
-          AnchorSideTop.Side = asrCenter
           Left = 7
           Height = 17
-          Top = 24
+          Top = 15
           Width = 40
           Caption = 'Proxy:'
         end
         object lblIntPort: TLabel
-          AnchorSideLeft.Control = lblIntPasswd
+          AnchorSideLeft.Control = edtProxy
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = edtPort
-          AnchorSideTop.Side = asrCenter
-          Left = 173
+          Left = 165
           Height = 17
-          Top = 24
+          Top = 15
           Width = 30
+          BorderSpacing.Left = 12
           Caption = 'Port:'
         end
         object lblIntUser: TLabel
           AnchorSideLeft.Control = lblintProxy
           AnchorSideTop.Control = edtUser
-          AnchorSideTop.Side = asrCenter
           Left = 7
           Height = 17
-          Top = 67
+          Top = 58
           Width = 34
           Caption = 'User:'
         end
         object lblIntPasswd: TLabel
+          AnchorSideLeft.Control = edtUser
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = edtPasswd
-          AnchorSideTop.Side = asrCenter
-          AnchorSideRight.Control = edtPasswd
-          Left = 173
+          Left = 165
           Height = 17
-          Top = 67
+          Top = 58
           Width = 66
-          Anchors = [akTop, akRight]
+          BorderSpacing.Left = 12
           BorderSpacing.Right = 6
           Caption = 'Password:'
         end
@@ -116,15 +115,13 @@ object frmPreferences: TfrmPreferences
           TabOrder = 0
         end
         object edtPort: TEdit
+          AnchorSideLeft.Control = edtPasswd
           AnchorSideTop.Control = edtProxy
-          AnchorSideRight.Control = gbInternet
           AnchorSideRight.Side = asrBottom
-          Left = 245
+          Left = 237
           Height = 34
           Top = 15
-          Width = 88
-          Anchors = [akTop, akRight]
-          BorderSpacing.Right = 6
+          Width = 100
           TabOrder = 1
         end
         object edtUser: TEdit
@@ -139,24 +136,40 @@ object frmPreferences: TfrmPreferences
           TabOrder = 2
         end
         object edtPasswd: TEdit
+          AnchorSideLeft.Control = lblIntPasswd
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = edtPort
           AnchorSideTop.Side = asrBottom
-          AnchorSideRight.Control = edtPort
           AnchorSideRight.Side = asrBottom
-          Left = 245
+          Left = 237
           Height = 34
           Top = 58
-          Width = 88
-          Anchors = [akTop, akRight]
+          Width = 100
           BorderSpacing.Top = 9
+          EchoMode = emPassword
+          PasswordChar = '*'
           TabOrder = 3
+        end
+        object chkPxSH: TCheckBox
+          AnchorSideLeft.Control = edtPasswd
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = edtPasswd
+          AnchorSideTop.Side = asrCenter
+          Left = 343
+          Height = 23
+          Top = 64
+          Width = 92
+          BorderSpacing.Left = 6
+          Caption = 'Show Pwd'
+          TabOrder = 4
+          OnClick = chkPxSHClick
         end
       end
       object rgStatistics: TRadioGroup
         AnchorSideLeft.Control = gbInternet
         AnchorSideLeft.Side = asrBottom
         AnchorSideTop.Control = gbInternet
-        Left = 350
+        Left = 475
         Height = 72
         Top = 3
         Width = 136
@@ -183,7 +196,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideLeft.Control = lblWebBrowser
         AnchorSideTop.Control = lblWebBrowser
         AnchorSideTop.Side = asrBottom
-        Left = 350
+        Left = 475
         Height = 34
         Top = 98
         Width = 176
@@ -7350,7 +7363,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Control = cmbLoTWBckColor
         Left = 271
         Height = 34
-        Top = 431
+        Top = 442
         Width = 327
         BorderSpacing.Left = 6
         Caption = 'color as a background in DX cluster and band map'#10'for stations using LoTW'
@@ -7361,7 +7374,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 347
+        Top = 358
         Width = 425
         BorderSpacing.Top = 6
         Caption = 'Include LoTW and eQSL confirmed countries in DXCC statistic'
@@ -7373,7 +7386,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 376
+        Top = 387
         Width = 594
         BorderSpacing.Top = 6
         Caption = 'Use LoTW and eQSL confirmed countries for New country or New band country etc. info'
@@ -7383,13 +7396,13 @@ object frmPreferences: TfrmPreferences
         AnchorSideLeft.Control = tabLoTW
         AnchorSideTop.Control = tabLoTW
         Left = 12
-        Height = 72
+        Height = 77
         Top = 3
         Width = 516
         BorderSpacing.Left = 12
         BorderSpacing.Top = 3
         Caption = ' Data for access to ARRL LoTW website '
-        ClientHeight = 54
+        ClientHeight = 59
         ClientWidth = 514
         TabOrder = 2
         object lblLoUsr: TLabel
@@ -7404,13 +7417,14 @@ object frmPreferences: TfrmPreferences
           Caption = 'User name:'
         end
         object lblLoTWpass: TLabel
+          AnchorSideLeft.Control = edtLoTWName
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = lblLoUsr
-          AnchorSideRight.Control = edtLoTWPass
-          Left = 319
+          Left = 199
           Height = 17
           Top = 6
           Width = 70
-          Anchors = [akTop, akRight]
+          BorderSpacing.Left = 12
           BorderSpacing.Right = 6
           Caption = 'Password: '
         end
@@ -7421,23 +7435,37 @@ object frmPreferences: TfrmPreferences
           Left = 87
           Height = 34
           Top = 6
-          Width = 88
+          Width = 100
           BorderSpacing.Left = 6
           TabOrder = 0
         end
         object edtLoTWPass: TEdit
+          AnchorSideLeft.Control = lblLoTWpass
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = lblLoUsr
-          AnchorSideRight.Control = gbLoTW
           AnchorSideRight.Side = asrBottom
-          Left = 395
+          Left = 275
           Height = 34
           Top = 6
-          Width = 104
-          Anchors = [akTop, akRight]
-          BorderSpacing.Right = 15
+          Width = 120
+          BorderSpacing.Left = 6
           EchoMode = emPassword
           PasswordChar = '*'
           TabOrder = 1
+        end
+        object chkLoSH: TCheckBox
+          AnchorSideLeft.Control = edtLoTWPass
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = edtLoTWPass
+          AnchorSideTop.Side = asrCenter
+          Left = 401
+          Height = 23
+          Top = 12
+          Width = 92
+          BorderSpacing.Left = 6
+          Caption = 'Show Pwd'
+          TabOrder = 2
+          OnClick = chkLoSHClick
         end
       end
       object chkShowLoTWInfo: TCheckBox
@@ -7446,7 +7474,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 405
+        Top = 416
         Width = 398
         BorderSpacing.Top = 6
         Caption = 'Show info in New QSO window if station uses LoTW/eQSL'
@@ -7458,7 +7486,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 434
+        Top = 445
         Width = 83
         BorderSpacing.Top = 6
         Caption = 'Use this '
@@ -7471,7 +7499,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrCenter
         Left = 101
         Height = 29
-        Top = 431
+        Top = 442
         Width = 164
         DefaultColorColor = clMoneyGreen
         NoneColorColor = clMoneyGreen
@@ -7486,12 +7514,12 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Control = gbLoTW
         AnchorSideTop.Side = asrBottom
         Left = 12
-        Height = 260
-        Top = 81
+        Height = 266
+        Top = 86
         Width = 516
         BorderSpacing.Top = 6
         Caption = ' Data for access to eQSL website '
-        ClientHeight = 242
+        ClientHeight = 248
         ClientWidth = 514
         TabOrder = 6
         object lbleQSLUsr: TLabel
@@ -7506,13 +7534,14 @@ object frmPreferences: TfrmPreferences
           Caption = 'User name:'
         end
         object lbleQSLPass: TLabel
+          AnchorSideLeft.Control = edteQSLName
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = lbleQSLUsr
-          AnchorSideRight.Control = edteQSLPass
-          Left = 322
+          Left = 199
           Height = 17
           Top = 6
           Width = 70
-          Anchors = [akTop, akRight]
+          BorderSpacing.Left = 12
           BorderSpacing.Right = 6
           Caption = 'Password: '
         end
@@ -7523,20 +7552,20 @@ object frmPreferences: TfrmPreferences
           Left = 87
           Height = 34
           Top = 6
-          Width = 88
+          Width = 100
           BorderSpacing.Left = 6
           TabOrder = 0
         end
         object edteQSLPass: TEdit
+          AnchorSideLeft.Control = lbleQSLPass
+          AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = lbleQSLUsr
-          AnchorSideRight.Control = gbeQSL
           AnchorSideRight.Side = asrBottom
-          Left = 398
+          Left = 275
           Height = 34
           Top = 6
-          Width = 104
-          Anchors = [akTop, akRight]
-          BorderSpacing.Right = 12
+          Width = 120
+          BorderSpacing.Left = 6
           EchoMode = emPassword
           PasswordChar = '*'
           TabOrder = 1
@@ -7619,6 +7648,20 @@ object frmPreferences: TfrmPreferences
           BorderSpacing.Right = 12
           TabOrder = 4
         end
+        object chkEqSH: TCheckBox
+          AnchorSideLeft.Control = edteQSLPass
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = edteQSLPass
+          AnchorSideTop.Side = asrCenter
+          Left = 401
+          Height = 23
+          Top = 12
+          Width = 92
+          BorderSpacing.Left = 6
+          Caption = 'Show Pwd'
+          TabOrder = 5
+          OnClick = chkEqSHClick
+        end
       end
       object chkShowBckEQSL: TCheckBox
         AnchorSideLeft.Control = chkShowBckLoTW
@@ -7626,7 +7669,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 469
+        Top = 480
         Width = 83
         BorderSpacing.Top = 12
         Caption = 'Use this '
@@ -7639,7 +7682,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrCenter
         Left = 101
         Height = 29
-        Top = 466
+        Top = 477
         Width = 164
         DefaultColorColor = clSkyBlue
         NoneColorColor = clMoneyGreen
@@ -7655,7 +7698,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Control = cmbeQSLBckColor
         Left = 271
         Height = 34
-        Top = 466
+        Top = 477
         Width = 327
         BorderSpacing.Left = 6
         Caption = 'color as a background in DX cluster and band map'#10'for stations using eQSL'
@@ -7666,7 +7709,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 504
+        Top = 515
         Width = 316
         BorderSpacing.Top = 12
         Caption = 'Upload to eQSL also data in COMMENT field '
@@ -9592,6 +9635,7 @@ object frmPreferences: TfrmPreferences
       Caption = 'Callbook support'
       ClientHeight = 932
       ClientWidth = 836
+      OnShow = tabCallbookShow
       object gbCallbookSelect: TGroupBox
         AnchorSideLeft.Control = tabCallbook
         AnchorSideTop.Control = tabCallbook
@@ -9619,6 +9663,7 @@ object frmPreferences: TfrmPreferences
           Checked = True
           TabOrder = 0
           TabStop = True
+          OnChange = rbHamQTHChange
         end
         object rbQRZ: TRadioButton
           AnchorSideLeft.Control = edtCbQRZUser
@@ -9629,6 +9674,7 @@ object frmPreferences: TfrmPreferences
           Width = 86
           Caption = 'QRZ.com'
           TabOrder = 3
+          OnChange = rbQRZChange
         end
         object edtCbHamQTHUser: TEdit
           AnchorSideLeft.Control = lblCallbookUser
@@ -9642,6 +9688,7 @@ object frmPreferences: TfrmPreferences
           AutoSize = False
           BorderSpacing.Left = 12
           BorderSpacing.Top = 12
+          Enabled = False
           TabOrder = 1
         end
         object lblCallbookUser: TLabel
@@ -9676,6 +9723,7 @@ object frmPreferences: TfrmPreferences
           AutoSize = False
           BorderSpacing.Top = 6
           EchoMode = emPassword
+          Enabled = False
           PasswordChar = '*'
           TabOrder = 2
         end
@@ -9688,6 +9736,7 @@ object frmPreferences: TfrmPreferences
           Width = 105
           Caption = 'QRZCQ.com'
           TabOrder = 6
+          OnChange = rbQRZCQChange
         end
         object edtCbQRZUser: TEdit
           AnchorSideLeft.Control = edtCbHamQTHUser
@@ -9699,6 +9748,7 @@ object frmPreferences: TfrmPreferences
           Width = 120
           AutoSize = False
           BorderSpacing.Left = 12
+          Enabled = False
           TabOrder = 4
         end
         object edtCbQRZCQUser: TEdit
@@ -9711,6 +9761,7 @@ object frmPreferences: TfrmPreferences
           Width = 120
           AutoSize = False
           BorderSpacing.Left = 12
+          Enabled = False
           TabOrder = 7
         end
         object edtCbQRZPass: TEdit
@@ -9724,6 +9775,7 @@ object frmPreferences: TfrmPreferences
           AutoSize = False
           BorderSpacing.Top = 6
           EchoMode = emPassword
+          Enabled = False
           PasswordChar = '*'
           TabOrder = 5
         end
@@ -9738,8 +9790,23 @@ object frmPreferences: TfrmPreferences
           AutoSize = False
           BorderSpacing.Top = 6
           EchoMode = emPassword
+          Enabled = False
           PasswordChar = '*'
           TabOrder = 8
+        end
+        object chkCbSH: TCheckBox
+          AnchorSideLeft.Control = edtCbQRZCQUser
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = rbQRZCQ
+          AnchorSideTop.Side = asrCenter
+          Left = 489
+          Height = 23
+          Top = 6
+          Width = 92
+          BorderSpacing.Left = 12
+          Caption = 'Show Pwd'
+          TabOrder = 9
+          OnClick = chkCbSHClick
         end
       end
       object gbCallbookAddr: TGroupBox
@@ -9769,6 +9836,7 @@ object frmPreferences: TfrmPreferences
           AutoSize = False
           BorderSpacing.Left = 28
           BorderSpacing.Top = 6
+          Enabled = False
           TabOrder = 0
         end
         object edtCbQrzAddr: TEdit
@@ -9781,6 +9849,7 @@ object frmPreferences: TfrmPreferences
           Width = 384
           AutoSize = False
           BorderSpacing.Top = 6
+          Enabled = False
           TabOrder = 1
         end
         object edtCbQrzcqAddr: TEdit
@@ -9793,6 +9862,7 @@ object frmPreferences: TfrmPreferences
           Width = 384
           AutoSize = False
           BorderSpacing.Top = 6
+          Enabled = False
           TabOrder = 2
         end
         object lblHamQTHAddr: TLabel
@@ -10188,7 +10258,6 @@ object frmPreferences: TfrmPreferences
           Width = 102
           BorderSpacing.Left = 3
           TabOrder = 3
-          Text = 'edtHaUserName'
         end
         object lbl: TLabel
           AnchorSideLeft.Control = edtHaUserName
@@ -10209,12 +10278,11 @@ object frmPreferences: TfrmPreferences
           Left = 267
           Height = 34
           Top = 57
-          Width = 104
+          Width = 133
           BorderSpacing.Left = 3
           EchoMode = emPassword
           PasswordChar = '*'
           TabOrder = 4
-          Text = 'edtHaPasswd'
         end
         object chkHaupOnline: TCheckBox
           AnchorSideLeft.Control = chkHaUpEnabled
@@ -10280,6 +10348,20 @@ object frmPreferences: TfrmPreferences
           TabOrder = 2
           Text = 'http://www.hamqth.com/qso_realtime.php'
         end
+        object chkHaSH: TCheckBox
+          AnchorSideLeft.Control = edtHaPasswd
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = edtHaPasswd
+          AnchorSideTop.Side = asrCenter
+          Left = 406
+          Height = 23
+          Top = 63
+          Width = 92
+          BorderSpacing.Left = 6
+          Caption = 'Show Pwd'
+          TabOrder = 6
+          OnClick = chkHaSHClick
+        end
       end
       object grpClubLog: TGroupBox
         AnchorSideLeft.Control = grpHamQTHlog
@@ -10327,7 +10409,6 @@ object frmPreferences: TfrmPreferences
           Width = 102
           BorderSpacing.Top = 3
           TabOrder = 5
-          Text = 'edtClUserName'
         end
         object lbl1: TLabel
           AnchorSideLeft.Control = edtClUserName
@@ -10349,11 +10430,10 @@ object frmPreferences: TfrmPreferences
           Left = 236
           Height = 34
           Top = 128
-          Width = 104
+          Width = 133
           EchoMode = emPassword
           PasswordChar = '*'
           TabOrder = 6
-          Text = 'edtClPasswd'
         end
         object chkClUpOnline: TCheckBox
           AnchorSideLeft.Control = chkClUpEnabled
@@ -10371,7 +10451,7 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Control = edtClPasswd
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Label180
-          Left = 346
+          Left = 375
           Height = 17
           Top = 137
           Width = 41
@@ -10383,12 +10463,11 @@ object frmPreferences: TfrmPreferences
           AnchorSideLeft.Side = asrBottom
           AnchorSideTop.Control = Label181
           AnchorSideTop.Side = asrCenter
-          Left = 387
+          Left = 416
           Height = 34
           Top = 128
-          Width = 184
+          Width = 190
           TabOrder = 7
-          Text = 'edtClEmail'
         end
         object Label186: TLabel
           AnchorSideLeft.Control = Label180
@@ -10463,6 +10542,20 @@ object frmPreferences: TfrmPreferences
           TabOrder = 4
           Text = 'https://clublog.org/putlogs.php'
         end
+        object chkClSH: TCheckBox
+          AnchorSideLeft.Control = chkClUpOnline
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = chkClUpOnline
+          AnchorSideTop.Side = asrCenter
+          Left = 430
+          Height = 23
+          Top = 0
+          Width = 92
+          BorderSpacing.Left = 6
+          Caption = 'Show Pwd'
+          TabOrder = 9
+          OnClick = chkClSHClick
+        end
       end
       object grpHRDlog: TGroupBox
         AnchorSideLeft.Control = grpClubLog
@@ -10511,7 +10604,6 @@ object frmPreferences: TfrmPreferences
           Width = 102
           BorderSpacing.Top = 3
           TabOrder = 3
-          Text = 'edtHrUserName'
         end
         object chkHrUpOnline: TCheckBox
           AnchorSideLeft.Control = chkHrUpEnabled
@@ -10545,8 +10637,9 @@ object frmPreferences: TfrmPreferences
           Height = 34
           Top = 60
           Width = 184
+          EchoMode = emPassword
+          PasswordChar = '*'
           TabOrder = 4
-          Text = 'edtHrCode'
         end
         object Label188: TLabel
           AnchorSideLeft.Control = Label182
@@ -10598,6 +10691,20 @@ object frmPreferences: TfrmPreferences
           Width = 600
           TabOrder = 2
           Text = 'http://robot.hrdlog.net/NewEntry.aspx'
+        end
+        object chkHrSH: TCheckBox
+          AnchorSideLeft.Control = edtHrCode
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = edtHrCode
+          AnchorSideTop.Side = asrCenter
+          Left = 397
+          Height = 23
+          Top = 66
+          Width = 98
+          BorderSpacing.Left = 6
+          Caption = 'Show Code'
+          TabOrder = 6
+          OnClick = chkHrSHClick
         end
       end
       object chkCloseAfterUpload: TCheckBox
@@ -10795,8 +10902,10 @@ object frmPreferences: TfrmPreferences
           Left = 6
           Height = 34
           Top = 60
-          Width = 600
+          Width = 300
           BorderSpacing.Top = 3
+          EchoMode = emPassword
+          PasswordChar = '*'
           TabOrder = 2
         end
         object lblQrzApiKey: TLabel
@@ -10859,6 +10968,20 @@ object frmPreferences: TfrmPreferences
           Width = 600
           TabOrder = 4
           Text = 'https://logbook.qrz.com/api'
+        end
+        object chkQrSH: TCheckBox
+          AnchorSideLeft.Control = edtQrzApiKey
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = edtQrzApiKey
+          AnchorSideTop.Side = asrCenter
+          Left = 312
+          Height = 23
+          Top = 66
+          Width = 86
+          BorderSpacing.Left = 6
+          Caption = 'Show API'
+          TabOrder = 5
+          OnClick = chkQrSHClick
         end
       end
     end

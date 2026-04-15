@@ -1,22 +1,22 @@
 object frmPreferences: TfrmPreferences
   Left = 158
-  Height = 637
-  Top = 40
-  Width = 1077
+  Height = 822
+  Top = 0
+  Width = 1076
   HelpType = htKeyword
   HelpKeyword = 'help/h1.html'
-  HorzScrollBar.Page = 1077
-  VertScrollBar.Page = 637
+  HorzScrollBar.Page = 1076
+  VertScrollBar.Page = 822
   ActiveControl = lbPreferences
   AutoScroll = True
   BorderIcons = [biSystemMenu]
   Caption = 'Preferences'
-  ClientHeight = 637
-  ClientWidth = 1077
+  ClientHeight = 822
+  ClientWidth = 1076
   Constraints.MinHeight = 200
   Constraints.MinWidth = 300
   Position = poMainFormCenter
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnShow = FormShow
@@ -24,7 +24,7 @@ object frmPreferences: TfrmPreferences
     AnchorSideLeft.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 160
-    Height = 812
+    Height = 963
     Top = 0
     Width = 846
     ActivePage = tabProgram
@@ -34,7 +34,7 @@ object frmPreferences: TfrmPreferences
     OnChange = pgPreferencesChange
     object tabProgram: TTabSheet
       Caption = 'Program'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object lblWebBrowser: TLabel
         AnchorSideLeft.Control = gbInternet
@@ -717,7 +717,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabStation: TTabSheet
       Caption = 'Station'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox5: TGroupBox
         Left = 16
@@ -871,7 +871,7 @@ object frmPreferences: TfrmPreferences
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Side = asrBottom
       Caption = 'New QSO'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object Label82: TLabel
         AnchorSideLeft.Control = speRecentQSOs
@@ -1440,7 +1440,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabVisibleColumns: TTabSheet
       Caption = 'Visible columns'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object chkDate: TCheckBox
         AnchorSideLeft.Control = tabVisibleColumns
@@ -2041,7 +2041,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabBands: TTabSheet
       Caption = 'Bands'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object cb136kHz: TCheckBox
         AnchorSideLeft.Control = tabBands
@@ -2405,7 +2405,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabTRXcontrol: TTabSheet
       Caption = 'TRX control'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       OnExit = cmbRadioNrCloseUp
       OnShow = tabTRXcontrolEnter
@@ -3295,7 +3295,7 @@ object frmPreferences: TfrmPreferences
     end
     object TabROTcontrol: TTabSheet
       Caption = 'ROT control'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox41: TGroupBox
         AnchorSideLeft.Control = TabROTcontrol
@@ -4315,7 +4315,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabModes: TTabSheet
       Caption = 'Modes'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       OnExit = tabModesExit
       object grpUsrDigitalModes: TGroupBox
@@ -4688,7 +4688,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabQTHProfiles: TTabSheet
       Caption = 'QTH Profiles'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object chkUseProfiles: TCheckBox
         Left = 9
@@ -4792,7 +4792,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabExport: TTabSheet
       Caption = 'Export'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       inline fraExportPref1: TfraExportPref
         Top = 8
@@ -4810,7 +4810,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabDXCluster: TTabSheet
       Caption = 'DXCluster'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object gbDXCColor: TGroupBox
         AnchorSideLeft.Control = tabDXCluster
@@ -5499,7 +5499,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabFont: TTabSheet
       Caption = 'Fonts'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox7: TGroupBox
         Left = 14
@@ -5702,7 +5702,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabWazItu: TTabSheet
       Caption = 'WAZ, ITU zones'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox8: TGroupBox
         Left = 14
@@ -5839,7 +5839,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabIOTA: TTabSheet
       Caption = 'IOTA'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox10: TGroupBox
         Left = 22
@@ -5894,7 +5894,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabMemebership: TTabSheet
       Caption = 'Membership'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox11: TGroupBox
         AnchorSideLeft.Control = tabMemebership
@@ -6331,7 +6331,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabBandMap: TTabSheet
       Caption = 'Bandmap'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox16: TGroupBox
         Left = 13
@@ -6642,7 +6642,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabXplanet: TTabSheet
       Caption = 'xplanet support'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox21: TGroupBox
         AnchorSideLeft.Control = tabXplanet
@@ -7091,7 +7091,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabZipCode: TTabSheet
       Caption = 'Zip code tracking'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox25: TGroupBox
         Left = 6
@@ -7342,7 +7342,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabLoTW: TTabSheet
       Caption = 'LoTW/eQSL support'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object lblLoTWBkg: TLabel
         AnchorSideLeft.Control = cmbLoTWBckColor
@@ -7675,7 +7675,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabCWInterface: TTabSheet
       Caption = 'CW interface'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       OnExit = tabCWInterfaceExit
       object lbIfaceType: TLabel
@@ -8472,7 +8472,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabFldigi1: TTabSheet
       Caption = 'fldigi/wsjt interface'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox31: TGroupBox
         AnchorSideLeft.Control = tabFldigi1
@@ -9182,7 +9182,7 @@ object frmPreferences: TfrmPreferences
     object tabAutoBackup: TTabSheet
       AnchorSideBottom.Side = asrBottom
       Caption = 'Exit & Auto backup'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object GroupBox32: TGroupBox
         Left = 8
@@ -9423,7 +9423,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabExtViewers: TTabSheet
       Caption = 'External viewers'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object lblTxtFIles: TLabel
         AnchorSideLeft.Control = tabExtViewers
@@ -9590,7 +9590,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabCallbook: TTabSheet
       Caption = 'Callbook support'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object gbCallbookSelect: TGroupBox
         AnchorSideLeft.Control = tabCallbook
@@ -9832,7 +9832,7 @@ object frmPreferences: TfrmPreferences
     end
     object tabRBN: TTabSheet
       Caption = 'RBN support'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object chkRBNAutoConn: TCheckBox
         AnchorSideLeft.Control = lblRbnWindowOpen
@@ -10140,23 +10140,23 @@ object frmPreferences: TfrmPreferences
     end
     object tabOnlineLog: TTabSheet
       Caption = 'Online log upload'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
-      object GroupBox44: TGroupBox
+      object grpHamQTHlog: TGroupBox
         AnchorSideLeft.Control = tabOnlineLog
         AnchorSideTop.Control = tabOnlineLog
         Left = 12
-        Height = 155
+        Height = 150
         Top = 0
         Width = 650
         BorderSpacing.Left = 12
         Caption = ' HamQTH '
-        ClientHeight = 137
+        ClientHeight = 132
         ClientWidth = 648
         TabOrder = 0
         object chkHaUpEnabled: TCheckBox
-          AnchorSideLeft.Control = GroupBox44
-          AnchorSideTop.Control = GroupBox44
+          AnchorSideLeft.Control = grpHamQTHlog
+          AnchorSideTop.Control = grpHamQTHlog
           Left = 6
           Height = 23
           Top = 0
@@ -10219,7 +10219,7 @@ object frmPreferences: TfrmPreferences
         object chkHaupOnline: TCheckBox
           AnchorSideLeft.Control = chkHaUpEnabled
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = GroupBox44
+          AnchorSideTop.Control = grpHamQTHlog
           Left = 207
           Height = 23
           Top = 0
@@ -10281,13 +10281,13 @@ object frmPreferences: TfrmPreferences
           Text = 'http://www.hamqth.com/qso_realtime.php'
         end
       end
-      object GroupBox45: TGroupBox
-        AnchorSideLeft.Control = GroupBox44
-        AnchorSideTop.Control = GroupBox44
+      object grpClubLog: TGroupBox
+        AnchorSideLeft.Control = grpHamQTHlog
+        AnchorSideTop.Control = grpHamQTHlog
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 218
-        Top = 158
+        Top = 153
         Width = 650
         BorderSpacing.Top = 3
         Caption = ' ClubLog '
@@ -10295,8 +10295,8 @@ object frmPreferences: TfrmPreferences
         ClientWidth = 648
         TabOrder = 1
         object chkClUpEnabled: TCheckBox
-          AnchorSideLeft.Control = GroupBox45
-          AnchorSideTop.Control = GroupBox45
+          AnchorSideLeft.Control = grpClubLog
+          AnchorSideTop.Control = grpClubLog
           Left = 6
           Height = 23
           Top = 0
@@ -10358,7 +10358,7 @@ object frmPreferences: TfrmPreferences
         object chkClUpOnline: TCheckBox
           AnchorSideLeft.Control = chkClUpEnabled
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = GroupBox45
+          AnchorSideTop.Control = grpClubLog
           Left = 200
           Height = 23
           Top = 0
@@ -10464,22 +10464,22 @@ object frmPreferences: TfrmPreferences
           Text = 'https://clublog.org/putlogs.php'
         end
       end
-      object GroupBox46: TGroupBox
-        AnchorSideLeft.Control = GroupBox45
-        AnchorSideTop.Control = GroupBox45
+      object grpHRDlog: TGroupBox
+        AnchorSideLeft.Control = grpClubLog
+        AnchorSideTop.Control = grpClubLog
         AnchorSideTop.Side = asrBottom
         Left = 12
-        Height = 157
-        Top = 379
+        Height = 150
+        Top = 374
         Width = 650
         BorderSpacing.Top = 3
         Caption = ' HRDLog.net '
-        ClientHeight = 139
+        ClientHeight = 132
         ClientWidth = 648
         TabOrder = 2
         object chkHrUpEnabled: TCheckBox
-          AnchorSideLeft.Control = GroupBox46
-          AnchorSideTop.Control = GroupBox46
+          AnchorSideLeft.Control = grpHRDlog
+          AnchorSideTop.Control = grpHRDlog
           Left = 6
           Height = 23
           Top = 0
@@ -10516,7 +10516,7 @@ object frmPreferences: TfrmPreferences
         object chkHrUpOnline: TCheckBox
           AnchorSideLeft.Control = chkHrUpEnabled
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = GroupBox46
+          AnchorSideTop.Control = grpHRDlog
           Left = 225
           Height = 23
           Top = 0
@@ -10601,16 +10601,16 @@ object frmPreferences: TfrmPreferences
         end
       end
       object chkCloseAfterUpload: TCheckBox
-        AnchorSideLeft.Control = GroupBox47
-        AnchorSideTop.Control = GroupBox47
+        AnchorSideLeft.Control = grpQRZLog
+        AnchorSideTop.Control = grpQRZLog
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 686
+        Top = 840
         Width = 442
         BorderSpacing.Top = 6
         Caption = 'Close the "Status of log upload" window after successful upload'
-        TabOrder = 4
+        TabOrder = 8
       end
       object chkIgnoreLoTW: TCheckBox
         AnchorSideLeft.Control = chkCloseAfterUpload
@@ -10618,9 +10618,8 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 712
+        Top = 863
         Width = 404
-        BorderSpacing.Top = 3
         Caption = 'Ignore changes caused by LoTW/eQSL upload or download'
         TabOrder = 5
         OnChange = chkIgnoreLoTWChange
@@ -10631,7 +10630,7 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 735
+        Top = 886
         Width = 316
         Caption = 'Ignore changes caused by QSL sent/received'
         TabOrder = 6
@@ -10643,28 +10642,28 @@ object frmPreferences: TfrmPreferences
         AnchorSideTop.Side = asrBottom
         Left = 12
         Height = 23
-        Top = 758
+        Top = 909
         Width = 256
         Caption = 'Ignore changes caused by QSO edit'
         TabOrder = 7
         OnChange = chkIgnoreEditChange
       end
-      object GroupBox47: TGroupBox
-        AnchorSideLeft.Control = GroupBox46
-        AnchorSideTop.Control = GroupBox46
+      object grpUDPLog: TGroupBox
+        AnchorSideLeft.Control = grpHRDlog
+        AnchorSideTop.Control = grpHRDlog
         AnchorSideTop.Side = asrBottom
         Left = 12
-        Height = 141
-        Top = 539
+        Height = 137
+        Top = 527
         Width = 650
         BorderSpacing.Top = 3
         Caption = 'UDP Log Messages'
-        ClientHeight = 123
+        ClientHeight = 119
         ClientWidth = 648
         TabOrder = 3
         object chkUdUpEnabled: TCheckBox
-          AnchorSideLeft.Control = GroupBox47
-          AnchorSideTop.Control = GroupBox47
+          AnchorSideLeft.Control = grpUDPLog
+          AnchorSideTop.Control = grpUDPLog
           Left = 6
           Height = 23
           Top = 0
@@ -10677,7 +10676,7 @@ object frmPreferences: TfrmPreferences
         object chkUdUpOnline: TCheckBox
           AnchorSideLeft.Control = chkUdUpEnabled
           AnchorSideLeft.Side = asrBottom
-          AnchorSideTop.Control = GroupBox47
+          AnchorSideTop.Control = grpUDPLog
           Left = 262
           Height = 23
           Top = 0
@@ -10752,10 +10751,120 @@ object frmPreferences: TfrmPreferences
           TabOrder = 3
         end
       end
+      object grpQRZLog: TGroupBox
+        AnchorSideLeft.Control = grpUDPLog
+        AnchorSideTop.Control = grpUDPLog
+        AnchorSideTop.Side = asrBottom
+        Left = 12
+        Height = 167
+        Top = 667
+        Width = 650
+        BorderSpacing.Top = 3
+        Caption = 'QRZ.com Logbook'
+        ClientHeight = 149
+        ClientWidth = 648
+        TabOrder = 4
+        object chkQrzUpEnabled: TCheckBox
+          AnchorSideLeft.Control = grpQRZLog
+          AnchorSideTop.Control = grpQRZLog
+          Left = 6
+          Height = 23
+          Top = 0
+          Width = 238
+          BorderSpacing.Left = 6
+          Caption = 'Enable QRZ.com logbook upload'
+          TabOrder = 0
+          OnChange = chkQrzUpEnabledChange
+        end
+        object chkQrzUpOnline: TCheckBox
+          AnchorSideLeft.Control = chkQrzUpEnabled
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = grpQRZLog
+          Left = 247
+          Height = 23
+          Top = 0
+          Width = 224
+          BorderSpacing.Left = 3
+          Caption = 'Upload QSO data immediately'
+          TabOrder = 1
+        end
+        object edtQrzApiKey: TEdit
+          AnchorSideLeft.Control = chkQrzUpEnabled
+          AnchorSideTop.Control = edtQrzUrl
+          AnchorSideTop.Side = asrBottom
+          Left = 6
+          Height = 34
+          Top = 60
+          Width = 600
+          BorderSpacing.Top = 3
+          TabOrder = 2
+        end
+        object lblQrzApiKey: TLabel
+          AnchorSideLeft.Control = edtQrzApiKey
+          AnchorSideTop.Control = edtQrzApiKey
+          AnchorSideTop.Side = asrBottom
+          Left = 6
+          Height = 17
+          Top = 94
+          Width = 49
+          Caption = 'API Key'
+        end
+        object lblQrzColorLbl: TLabel
+          AnchorSideLeft.Control = chkQrzUpEnabled
+          AnchorSideTop.Control = cmbQrzColor
+          AnchorSideTop.Side = asrCenter
+          Left = 6
+          Height = 17
+          Top = 120
+          Width = 53
+          Caption = 'Use this'
+        end
+        object cmbQrzColor: TColorBox
+          AnchorSideLeft.Control = lblQrzColorLbl
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = lblQrzApiKey
+          AnchorSideTop.Side = asrBottom
+          Left = 65
+          Height = 29
+          Top = 114
+          Width = 164
+          DefaultColorColor = clTeal
+          NoneColorColor = clMoneyGreen
+          Selected = clLime
+          Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbPrettyNames]
+          BorderSpacing.Left = 6
+          BorderSpacing.Top = 3
+          ItemHeight = 28
+          TabOrder = 3
+        end
+        object lblQrzColorDesc: TLabel
+          AnchorSideLeft.Control = cmbQrzColor
+          AnchorSideLeft.Side = asrBottom
+          AnchorSideTop.Control = cmbQrzColor
+          AnchorSideTop.Side = asrCenter
+          Left = 235
+          Height = 17
+          Top = 120
+          Width = 329
+          BorderSpacing.Left = 6
+          Caption = 'color to show information in status upload window'
+        end
+        object edtQrzUrl: TEdit
+          AnchorSideLeft.Control = chkQrzUpEnabled
+          AnchorSideTop.Control = chkQrzUpEnabled
+          AnchorSideTop.Side = asrBottom
+          Left = 6
+          Height = 34
+          Top = 23
+          Width = 600
+          TabOrder = 4
+          Text = 'https://logbook.qrz.com/api'
+        end
+      end
     end
     object tabCondx: TTabSheet
       Caption = 'Propagation'
-      ClientHeight = 781
+      ClientHeight = 932
       ClientWidth = 836
       object rbCondxAsImage: TRadioButton
         AnchorSideLeft.Control = tabCondx
@@ -10864,11 +10973,11 @@ object frmPreferences: TfrmPreferences
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Side = asrBottom
     Left = 1006
-    Height = 812
+    Height = 963
     Top = 0
     Width = 101
     Align = alRight
-    ClientHeight = 812
+    ClientHeight = 963
     ClientWidth = 101
     TabOrder = 1
     object btnOK: TButton
@@ -10934,7 +11043,7 @@ object frmPreferences: TfrmPreferences
   object lbPreferences: TListBox
     AnchorSideBottom.Side = asrBottom
     Left = 0
-    Height = 812
+    Height = 963
     Top = 0
     Width = 160
     Align = alLeft

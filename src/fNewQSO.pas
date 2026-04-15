@@ -88,6 +88,7 @@ type
     acUploadToClubLog: TAction;
     acUploadToHamQTH: TAction;
     acUploadToUDPLog: TAction;
+    acUploadToQrzLog: TAction;
     acTune : TAction;
     btnClearSatellite : TButton;
     cbOffline: TCheckBox;
@@ -416,6 +417,7 @@ type
     procedure acUploadToHamQTHExecute(Sender: TObject);
     procedure acUploadToHrdLogExecute(Sender: TObject);
     procedure acUploadToUDPLogExecute(Sender: TObject);
+    procedure acUploadToQrzLogExecute(Sender: TObject);
     procedure acPropExecute(Sender: TObject);
     procedure btnCancelExit(Sender: TObject);
     procedure btnClearSatelliteClick(Sender : TObject);
@@ -2408,7 +2410,7 @@ begin
                       if cqrini.ReadBool('OnlineLog','HrUpOnline',False) then
                         frmLogUploadStatus.UploadDataToHrdLog
                     end;
-                    WhatUpNext           := upUDPLog
+                    WhatUpNext := upUDPLog
                   end;
       upUDPLog  : begin
                     if UploadAll then
@@ -2417,6 +2419,17 @@ begin
                       if cqrini.ReadBool('OnlineLog','UdUpOnline',False) then
                         frmLogUploadStatus.UploadDataToUDPLog
                     end;
+                    WhatUpNext := upQrzLog
+                  end;
+
+      upQrzLog  : begin
+                    if UploadAll then
+                      frmLogUploadStatus.UploadDataToQrzLog(UploadAll)
+                    else begin
+                      if cqrini.ReadBool('OnlineLog','QrzUpOnline',False) then
+                        frmLogUploadStatus.UploadDataToQrzLog;
+                    end;
+
                     tmrUploadAll.Enabled := False;
                     UploadAll            := False;
                     WhatUpNext           := upHamQTH
@@ -3524,7 +3537,7 @@ begin
     frmTRXControl.ClearRIT;
 
   fEditQSO := False; //this should be cleared by clearAll. Needed here ???
-  UploadAllQSOOnline;
+  frmNewQSO.UploadAllQSOOnline;
   if frmWorkedGrids.Showing then frmWorkedGrids.UpdateMap;
   Op := cqrini.ReadString('TMPQSO','OP','');
   ShowOperator;
@@ -3602,7 +3615,6 @@ begin
     begin
       mode := dmUtils.GetModeFromFreq(FloatToStr(tmp/1000));
       frmTRXControl.SetModeFreq(mode,FloatToStr(tmp));
-      key := 0;
       edtCall.Text := '';
       exit
     end
@@ -4795,6 +4807,15 @@ begin
   if not tmrUploadAll.Enabled then
   begin
     UploadAll            := True;
+    tmrUploadAll.Enabled := True
+  end
+end;
+
+procedure TfrmNewQSO.UploadAllQSOOnline;
+begin
+  if not tmrUploadAll.Enabled then
+  begin
+    UploadAll            := False;
     tmrUploadAll.Enabled := True
   end
 end;
@@ -7835,15 +7856,6 @@ begin
   end
 end;
 
-procedure TfrmNewQSO.UploadAllQSOOnline;
-begin
-  if not tmrUploadAll.Enabled then
-  begin
-    UploadAll            := False;
-    tmrUploadAll.Enabled := True
-  end
-end;
-
 function TfrmNewQSO.CheckFreq(freq : String) : String;
 begin
   if (Pos(',',freq) > 0) then
@@ -8305,6 +8317,10 @@ Begin
      else   Result := mode;
 end;
 
+
+procedure TfrmNewQSO.acUploadToQrzLogExecute(Sender: TObject);
+begin
+  frmLogUploadStatus.UploadDataToQrzLog
+end;
+
 end.
-
-

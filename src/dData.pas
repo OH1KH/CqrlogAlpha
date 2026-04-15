@@ -24,7 +24,7 @@ uses
 
 const
   cDB_LIMIT = 500;
-  cDB_MAIN_VER = 19;
+  cDB_MAIN_VER = 20;
   cDB_COMN_VER = 8;
   cDB_PING_INT = 300;  //ping interval for database connection in seconds
                        //program crashed after long time of inactivity
@@ -363,7 +363,8 @@ type
 
 var
   dmData : TdmData;
-  handle : THandle;
+//  handle : THandle;   //depreceated on Laz 4.6
+  handle : TLCLHandle;
   reg    : TRegExpr;
   MemNR  : array of integer;
 
@@ -524,25 +525,6 @@ begin
   trmQ.Commit;
 
   PrepareEmptyLogUploadStatusTables(mQ,trmQ);
-  {
-  trmQ.StartTransaction;
-  mQ.SQL.Text := 'insert into log_changes (id,cmd) values(1,'+QuotedStr(C_ALLDONE)+')';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-
-  mQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HAMQTH)+',1)';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-
-  mQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_CLUBLOG)+',1)';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-
-  mQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HRDLOG)+',1)';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-  trmQ.Commit;
-  }
 
   RefreshLogList(nr)
 end;
@@ -1498,8 +1480,36 @@ var
   changed : Integer;
   sWAZ, sITU : String;
   rx_freq : String;
+  QRbefore : String;
 begin
   Q.Close;
+  if trQ.Active then trQ.Rollback;
+
+  {
+  OH1KH fix:
+   Check first if old qsl_r has been "" or "!"
+   and if it is now something else ("Q") user has edited qsl received
+   Then we need to add also qslr_date here.
+
+   It does not happen here but if it is done via QSOlist/Group edit
+   the date is added as should
+  }
+  Q.SQL.Text := 'select qsl_r, current_date from cqrlog_main where id_cqrlog_main = ' + IntToStr(idx);
+  trQ.StartTransaction;
+  Q.Open;
+  QRbefore:=Q.Fields[0].AsString;
+  Q.Close;
+  if trQ.Active then trQ.Rollback;
+  if (((QRbefore='') or (QRbefore='!')) and (qsl_r='Q')) then
+     Begin
+      Q.SQL.Text :='UPDATE cqrlog_main set qslr_date=current_date';
+      trQ.StartTransaction;
+      Q.ExecSQL;
+      trQ.Commit;
+      Q.Close;
+     end;
+
+
   if trQ.Active then trQ.Rollback;
   band  := dmUtils.GetBandFromFreq(CurrToStr(freq));
   state := copy(state,1,4);
@@ -3059,24 +3069,6 @@ begin
       if old_version < 8 then
       begin
         PrepareEmptyLogUploadStatusTables(Q1,trQ1);
-        {
-        trQ1.StartTransaction;
-        Q1.SQL.Text := 'insert into log_changes (id,cmd) values(1,'+QuotedStr(C_ALLDONE)+')';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-
-        Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HAMQTH)+',1)';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-
-        Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_CLUBLOG)+',1)';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-
-        Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HRDLOG)+',1)';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-        trQ1.Commit}
       end;
 
       if old_version < 9 then
@@ -3310,6 +3302,48 @@ begin
               end;
       end;
 
+      if (old_version < 20) then   //changes to current log for QRZlog usage
+            begin
+              trQ1.StartTransaction;
+              Q1.SQL.Clear;
+              Q1.SQL.Text := 'DROP TABLE IF EXISTS  id_store';
+              if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              Q1.SQL.Clear;
+              Q1.SQL.Add('CREATE TABLE id_store (');
+              Q1.SQL.Add('  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,');
+              Q1.SQL.Add('  id_cqrlog_main int(11) NULL,');
+              Q1.SQL.Add('  qrz_logid varchar(20) NULL');
+              Q1.SQL.Add(') COLLATE '+QuotedStr('utf8_bin')+';');
+              if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              Q1.SQL.Text := 'CREATE UNIQUE INDEX id_cqrlog_main ON id_store(id_cqrlog_main)';
+              if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              trQ1.Commit;
+
+              //Make sure we do not create duplicate line with logname QRZLog (as we can not use "insert into if not exist")
+              trQ1.StartTransaction;
+              Q1.SQL.Text := 'select count(logname) from upload_status where logname="QRZLog"';
+              Q1.Open;
+              max := Q1.Fields[0].AsInteger;
+              Q1.Close;
+              trQ1.Commit;
+
+              if max=0 then
+               Begin
+                trQ1.StartTransaction;
+                Q1.SQL.Text := 'select max(id) from log_changes';
+                Q1.Open;
+                max := Q1.Fields[0].AsInteger;
+                Q1.Close;
+                Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_QRZLOG)+','+IntToStr(max)+')';
+                if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+                Q1.ExecSQL;
+                trQ1.Commit;
+               end;
+      end;
+
       if TableExists('view_cqrlog_main_by_callsign') then
       begin
         trQ1.StartTransaction;
@@ -3416,7 +3450,7 @@ begin
   finally
     if trQ.Active then trQ.Commit
   end
-//^^ because of bug in  TSQLSript. For the firt time cretreates the database,
+//^^ because of bug in  TSQLSript. For the first time creatreates the database,
 //second database - no effect. My workaround works. Semicolon is a delimitter.
 end;
 
@@ -3872,6 +3906,10 @@ begin
   lQ.ExecSQL;
 
   lQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_UDPLOG)+',1)';
+  if fDebugLevel>=1 then Writeln(lQ.SQL.Text);
+  lQ.ExecSQL;
+
+  lQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_QRZLOG)+',1)';
   if fDebugLevel>=1 then Writeln(lQ.SQL.Text);
   lQ.ExecSQL;
 

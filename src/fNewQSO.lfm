@@ -1,16 +1,16 @@
 object frmNewQSO: TfrmNewQSO
   Left = 0
-  Height = 593
+  Height = 543
   Top = 0
-  Width = 1098
+  Width = 1072
   HelpType = htKeyword
   HelpKeyword = 'help/index.html'
   HorzScrollBar.Page = 1025
-  VertScrollBar.Page = 593
+  VertScrollBar.Page = 543
   AutoScroll = True
   Caption = 'New QSO ... (CqrlogAlpha for Linux)'
-  ClientHeight = 593
-  ClientWidth = 1098
+  ClientHeight = 543
+  ClientWidth = 1072
   Constraints.MinHeight = 200
   Constraints.MinWidth = 400
   Icon.Data = {
@@ -2149,10 +2149,10 @@ object frmNewQSO: TfrmNewQSO
     Left = 0
     Height = 565
     Top = 50
-    Width = 1098
+    Width = 1072
     Align = alBottom
     ClientHeight = 565
-    ClientWidth = 1098
+    ClientWidth = 1072
     TabOrder = 0
     object pnlQsoInfo: TPanel
       AnchorSideLeft.Control = sbNewQSO
@@ -2163,12 +2163,12 @@ object frmNewQSO: TfrmNewQSO
       Left = 1
       Height = 506
       Top = 35
-      Width = 618
+      Width = 592
       Anchors = [akTop, akLeft, akRight, akBottom]
       BorderSpacing.Bottom = 3
       BevelOuter = bvNone
       ClientHeight = 506
-      ClientWidth = 618
+      ClientWidth = 592
       TabOrder = 0
       object pnlQSOinput: TPanel
         AnchorSideLeft.Control = pnlQsoInfo
@@ -2180,12 +2180,12 @@ object frmNewQSO: TfrmNewQSO
         Left = 0
         Height = 506
         Top = 0
-        Width = 618
+        Width = 592
         Anchors = [akTop, akLeft, akRight, akBottom]
         BorderSpacing.InnerBorder = 2
         BevelOuter = bvNone
         ClientHeight = 506
-        ClientWidth = 618
+        ClientWidth = 592
         ParentShowHint = False
         TabOrder = 0
         object lblCommentToCallsign: TLabel
@@ -3117,7 +3117,7 @@ object frmNewQSO: TfrmNewQSO
           Left = 12
           Height = 135
           Top = 368
-          Width = 606
+          Width = 580
           ActivePage = tabSatellite
           Anchors = [akTop, akLeft, akRight, akBottom]
           BorderSpacing.Top = 3
@@ -3131,14 +3131,14 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideBottom.Side = asrBottom
             Caption = 'DXCC statistic'
             ClientHeight = 104
-            ClientWidth = 596
+            ClientWidth = 570
             object sgrdStatistic: TStringGrid
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Side = asrBottom
               Left = 0
               Height = 104
               Top = 0
-              Width = 596
+              Width = 570
               Align = alClient
               AutoFillColumns = True
               ColCount = 2
@@ -3153,22 +3153,22 @@ object frmNewQSO: TfrmNewQSO
               TitleStyle = tsNative
               OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
               ColWidths = (
-                296
-                296
+                283
+                283
               )
             end
           end
           object tabCallStat: TTabSheet
             Caption = 'Call statistic'
             ClientHeight = 104
-            ClientWidth = 596
+            ClientWidth = 570
             object sgrdCallStatistic: TStringGrid
               AnchorSideRight.Side = asrBottom
               AnchorSideBottom.Side = asrBottom
               Left = 0
               Height = 104
               Top = 0
-              Width = 596
+              Width = 570
               Align = alClient
               AutoFillColumns = True
               ColCount = 2
@@ -3183,8 +3183,8 @@ object frmNewQSO: TfrmNewQSO
               TitleStyle = tsNative
               OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
               ColWidths = (
-                296
-                296
+                283
+                283
               )
             end
           end
@@ -3192,7 +3192,7 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideBottom.Side = asrBottom
             Caption = 'Satellite'
             ClientHeight = 104
-            ClientWidth = 596
+            ClientWidth = 570
             object cmbPropagation: TComboBox
               AnchorSideLeft.Control = lblStatellite
               AnchorSideTop.Control = lblPropagation
@@ -3322,7 +3322,7 @@ object frmNewQSO: TfrmNewQSO
             AnchorSideBottom.Side = asrBottom
             Caption = 'LO Config'
             ClientHeight = 104
-            ClientWidth = 596
+            ClientWidth = 570
             object cbTxLo: TCheckBox
               Left = 8
               Height = 23
@@ -4072,7 +4072,7 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = pnlAll
       AnchorSideBottom.Side = asrBottom
-      Left = 819
+      Left = 793
       Height = 509
       Top = 35
       Width = 278
@@ -4695,12 +4695,12 @@ object frmNewQSO: TfrmNewQSO
       Left = 1
       Height = 34
       Top = 1
-      Width = 1096
+      Width = 1070
       Align = alTop
       AutoSize = True
       BevelOuter = bvNone
       ClientHeight = 34
-      ClientWidth = 1096
+      ClientWidth = 1070
       TabOrder = 2
       object lblQSONr: TLabel
         AnchorSideLeft.Control = lblQSONrDesc
@@ -4803,7 +4803,7 @@ object frmNewQSO: TfrmNewQSO
       Left = 1
       Height = 20
       Top = 544
-      Width = 1096
+      Width = 1070
       AutoSize = False
       Panels = <      
         item
@@ -4827,7 +4827,7 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = pnlDXCCinfo
       AnchorSideRight.Control = pnlDXCCinfo
-      Left = 619
+      Left = 593
       Height = 215
       Top = 35
       Width = 200
@@ -4989,7 +4989,7 @@ object frmNewQSO: TfrmNewQSO
     Left = 0
     Height = 50
     Top = 0
-    Width = 1098
+    Width = 1072
     Align = alClient
     Color = clWindow
     Columns = <>
@@ -5299,6 +5299,12 @@ object frmNewQSO: TfrmNewQSO
         Caption = 'UDP Log'
         object MenuItem96: TMenuItem
           Action = acUploadToUDPLog
+        end
+      end
+      object MenuItem_QrzLog: TMenuItem
+        Caption = 'QRZ.com'
+        object MenuItem_QrzUpload: TMenuItem
+          Action = acUploadToQrzLog
         end
       end
       object MenuItem88: TMenuItem
@@ -5781,6 +5787,11 @@ object frmNewQSO: TfrmNewQSO
       Category = 'OnlineLog'
       Caption = 'Upload all changes'
       OnExecute = acUploadToUDPLogExecute
+    end
+    object acUploadToQrzLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Upload all changes'
+      OnExecute = acUploadToQrzLogExecute
     end
     object acUploadToAll: TAction
       Category = 'OnlineLog'
@@ -6552,6 +6563,7 @@ object frmNewQSO: TfrmNewQSO
   end
   object tmrUploadAll: TTimer
     Enabled = False
+    Interval = 500
     OnTimer = tmrUploadAllTimer
     Left = 40
     Top = 32

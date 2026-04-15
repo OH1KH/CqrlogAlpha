@@ -361,6 +361,8 @@ type
     procedure acMarkAllHamQTHExecute(Sender: TObject);
     procedure acMarkAllHrdLogExecute(Sender: TObject);
     procedure acMarkAllUDPLogExecute(Sender: TObject);
+    procedure acMarkAllQrzLogExecute(Sender: TObject);
+    procedure acUploadToQrzLogExecute(Sender: TObject);
     procedure acPnlDetailsExecute(Sender: TObject);
     procedure acQRZExecute(Sender: TObject);
     procedure acQSLImageExecute(Sender: TObject);
@@ -474,7 +476,7 @@ type
     procedure mnuSMDClick(Sender: TObject);
     procedure pnlButtonsClick(Sender: TObject);
     procedure tmrTimeTimer(Sender: TObject);
-    procedure tmrUploadAllTimer(Sender: TObject);
+  //  procedure tmrUploadAllTimer(Sender: TObject);
   private
     InRefresh  : Boolean;
     WhatUpNext : TWhereToUpload;
@@ -692,7 +694,7 @@ begin
   dmUtils.DateInRightFormat(now , tmp, sDate);
   sbMain.Panels[0].Text :=uVersion.cBUILD_DATE;
 end;
-
+{ OH1KH  seems that this is not used anywhere!
 procedure TfrmMain.tmrUploadAllTimer(Sender: TObject);
 begin
   if (not frmLogUploadStatus.thRunning) then
@@ -708,6 +710,10 @@ begin
                   end;
       upHrdLog  : begin
                     frmLogUploadStatus.UploadDataToHrdLog;
+                    WhatUpNext := upQrzLog
+                  end;
+      upQrzLog  : begin
+                    frmLogUploadStatus.UploadDataToQrzLog;
                     WhatUpNext := upUDPLog
                   end;
       upUDPLog  : begin
@@ -717,7 +723,7 @@ begin
     end //case
   end
 end;
-
+}
 
 procedure TfrmMain.acNewQSOExecute(Sender: TObject);
 begin
@@ -1365,7 +1371,7 @@ procedure TfrmMain.MenuItem107Click(Sender: TObject);
 var
   s: PChar;
 
-  Procedure RemoveTriggers;
+Procedure RemoveTriggers;
    Begin
     dmLogUpload.DisableOnlineLogSupport;
     dmLogUpload.EnableOnlineLogSupport;
@@ -1376,7 +1382,8 @@ begin
   if not (cqrini.ReadBool('OnlineLog','HaUP',False)
           or cqrini.ReadBool('OnlineLog','ClUP',False)
           or cqrini.ReadBool('OnlineLog','HrUP',False)
-          or cqrini.ReadBool('OnlineLog','UdUP',False) ) then
+          or cqrini.ReadBool('OnlineLog','UdUP',False)
+          or cqrini.ReadBool('OnlineLog','QrzUP',False)) then
      Begin
        //warn: none of uploads selected
        s:= 'You do not have any log uploads enabled!'+LineEnding+LineEnding+
@@ -1390,13 +1397,14 @@ begin
        if not (cqrini.ReadBool('OnlineLog','HaUpOnline',False)
            or cqrini.ReadBool('OnlineLog','ClUpOnline',False)
            or cqrini.ReadBool('OnlineLog','HrUpOnline',False)
-           or cqrini.ReadBool('OnlineLog','UdUpOnline',False) ) then
+           or cqrini.ReadBool('OnlineLog','UdUpOnline',False)
+           or cqrini.ReadBool('OnlineLog','QrzUpOnline',False)) then
          Begin
            //Warn: none of online uploads
            s:= 'You do not have any immediately uploads active'+LineEnding+LineEnding+
                'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
                'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
-               'Are you SURE you want to remove ALL upload triggers?';
+               'Are you SURE you want to remove ALL upload triggers from ALL online logs?';
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
             RemoveTriggers;
            exit;
@@ -1405,7 +1413,7 @@ begin
          Begin
           s:= 'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
               'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
-              'Are you sure you want to remove ALL upload triggers?';
+              'Are you sure you want to remove ALL upload triggers from ALL online logs?';
           if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
            RemoveTriggers;
           exit;
@@ -2847,5 +2855,14 @@ function TfrmMain.CalcQrb(Myloc,loc:string;showUnits:boolean):string;
      Result := qrb;
   end;
 
+procedure TfrmMain.acMarkAllQrzLogExecute(Sender: TObject);
+begin
+  dmLogUpload.MarkAsUploaded(C_QRZLOG)
+end;
+
+procedure TfrmMain.acUploadToQrzLogExecute(Sender: TObject);
+begin
+  frmLogUploadStatus.UploadDataToQrzLog
+end;
 end.
 

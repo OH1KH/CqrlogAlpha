@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
   Left = 159
-  Height = 541
+  Height = 466
   Top = 83
   Width = 912
   HelpType = htKeyword
@@ -10,7 +10,7 @@ object frmMain: TfrmMain
   ActiveControl = pnlCounts
   AutoScroll = True
   Caption = 'CqrlogAlpha for Linux'
-  ClientHeight = 541
+  ClientHeight = 466
   ClientWidth = 912
   Constraints.MinHeight = 148
   Constraints.MinWidth = 536
@@ -170,7 +170,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 19
-    Top = 522
+    Top = 447
     Width = 912
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
@@ -201,7 +201,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Control = sbMain
     Left = 0
     Height = 46
-    Top = 470
+    Top = 395
     Width = 912
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Bottom = 6
@@ -431,7 +431,7 @@ object frmMain: TfrmMain
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = pnlDetails
     Left = 0
-    Height = 291
+    Height = 216
     Top = 69
     Width = 912
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -741,7 +741,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Control = pnlButtons
     Left = 0
     Height = 110
-    Top = 360
+    Top = 285
     Width = 912
     Anchors = [akLeft, akRight, akBottom]
     BevelOuter = bvNone
@@ -1730,6 +1730,15 @@ object frmMain: TfrmMain
           Action = acMarkAllUDPLog
         end
       end
+      object MenuItem_QrzLog: TMenuItem
+        Caption = 'QRZ.com'
+        object MenuItem_UploadToQrz: TMenuItem
+          Action = acUploadToQrzLog
+        end
+        object MenuItem_MarkAllQrz: TMenuItem
+          Action = acMarkAllQrzLog
+        end
+      end
       object MenuItem94: TMenuItem
         Caption = '-'
       end
@@ -2068,6 +2077,16 @@ object frmMain: TfrmMain
       Category = 'OnlineLog'
       Caption = 'Mark all QSO as uploaded'
       OnExecute = acMarkAllUDPLogExecute
+    end
+    object acUploadToQrzLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Upload all changes'
+      OnExecute = acUploadToQrzLogExecute
+    end
+    object acMarkAllQrzLog: TAction
+      Category = 'OnlineLog'
+      Caption = 'Mark all QSO as uploaded'
+      OnExecute = acMarkAllQrzLogExecute
     end
     object acUploadToAll: TAction
       Category = 'OnlineLog'
@@ -2979,8 +2998,7 @@ object frmMain: TfrmMain
   end
   object tmrUploadAll: TTimer
     Enabled = False
-    Interval = 2000
-    OnTimer = tmrUploadAllTimer
+    Interval = 500
     Left = 848
     Top = 80
   end

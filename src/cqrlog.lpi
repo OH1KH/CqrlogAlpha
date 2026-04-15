@@ -337,6 +337,7 @@
         <Filename Value="fUpgrade.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="frmUpgrade"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
       </Unit34>
       <Unit35>
@@ -953,6 +954,7 @@
       <Debugging>
         <GenerateDebugInfo Value="False"/>
         <RunWithoutDebug Value="True"/>
+        <UseLineInfoUnit Value="False"/>
       </Debugging>
     </Linking>
     <Other>

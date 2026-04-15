@@ -16,11 +16,12 @@ const
   C_CLUBLOG      = 'ClubLog';
   C_HRDLOG       = 'HRDLog';
   C_UDPLOG       = 'UDPLog';
+  C_QRZLOG       = 'QRZLog';
   C_ALLDONE      = 'ALLDONE';
   C_CLUBLOG_API  = '21507885dece41ca049fec7fe02a813f2105aff2';
 
 type
-  TWhereToUpload = (upHamQTH, upClubLog, upHrdLog, upUDPLog);
+  TWhereToUpload = (upHamQTH, upClubLog, upHrdLog, upUDPLog, upQrzLog);
 
 type
 
@@ -39,6 +40,7 @@ type
     procedure Q2BeforeOpen(DataSet: TDataSet);
     procedure QBeforeOpen(DataSet: TDataSet);
   private
+    debug : Boolean;
     function  GetAdifValue(Field,Value : String) : String;
     function  RemoveSpaces(s : String) : String;
     function  GetQSOInAdif(id_cqrlog_main : Integer) : String;
@@ -58,12 +60,12 @@ type
     function  GetResultMessage(where : TWhereToUpload; Response : String; ResultCode : Integer; var ErrorCode : Integer) : String;
     function  LogUploadEnabled : Boolean;
 
-    procedure MarkAsUploadedToAllOnlineLogs;
-    procedure MarkAsUploaded(LogName : String);
     procedure PrepareUserInfoHeader(where : TWhereToUpload; data : TStringList);
     procedure PrepareInsertHeader(where : TWhereToUpload; id_log_changes,id_cqrlog_main : Integer; data : TStringList);
     procedure PrepareDeleteHeader(where : TWhereToUpload; id_log_changes,id_cqrlog_main : Integer; data : TStringList);
-    procedure MarkAsUploaded(LogName : String; id_log_changes : Integer);
+    procedure MarkAsUploadedToAllOnlineLogs;
+    procedure MarkAsUploaded(LogName : String);
+    procedure MarkOneAsUploaded(LogName : String; id_log_changes : Integer);
     procedure MarkAsUpDeleted(id_log_upload : Integer);
     procedure DisableOnlineLogSupport;
     procedure EnableOnlineLogSupport(RemoveOldChanges : Boolean = True);
@@ -75,12 +77,14 @@ var
 implementation
   {$R *.lfm}
 
-uses dData, dDXCluster, uMyIni, dSatellite;
+uses dData, dDXCluster, uMyIni, dSatellite, uVersion;
 
 procedure TdmLogUpload.DataModuleCreate(Sender: TObject);
 var
   i : Integer;
 begin
+  debug := //True;
+           dmData.DebugLevel >=1;
   InitCriticalSection(csLogUpload);
 
   dmData.LogUploadCon.KeepConnection := True;  //OH1KH 2025-01 that is set at connection creation already -> TdmData.getNewMySQLConnectionObject!!
@@ -100,23 +104,26 @@ end;
 
 procedure TdmLogUpload.Q1BeforeOpen(DataSet: TDataSet);
 begin
-  if dmData.DebugLevel >=1 then Writeln(Q1.SQL.Text)
+  if debug then
+   Writeln(Q1.SQL.Text)
 end;
 
 procedure TdmLogUpload.Q2BeforeOpen(DataSet: TDataSet);
 begin
-  if dmData.DebugLevel >=1 then Writeln(Q2.SQL.Text)
+  if debug then
+   Writeln(Q2.SQL.Text)
 end;
 
 procedure TdmLogUpload.QBeforeOpen(DataSet: TDataSet);
 begin
-  if dmData.DebugLevel >=1 then Writeln(Q.SQL.Text)
+  if debug then
+   Writeln(Q.SQL.Text)
 end;
 
 function TdmLogUpload.UploadLogData(where : TWhereToUpload; cmd: String; data : TStringList; var Response : String; var ResultCode : Integer) : Boolean;
 begin
   case where of
-    upUDPLog  : Result := UploadLogDataUDP(cmd,data,Response,ResultCode);
+       upUDPLog  : Result := UploadLogDataUDP(cmd,data,Response,ResultCode);
     else
        Result := UploadLogDataHTTP(dmLogUpload.GetUploadUrl(where,cmd), data, Response, ResultCode);
   end; // case
@@ -144,6 +151,8 @@ begin
     HTTP.ProxyPort := cqrini.ReadString('Program','Port','');
     HTTP.UserName  := cqrini.ReadString('Program','User','');
     HTTP.Password  := cqrini.ReadString('Program','Passwd','');
+    if pos('QRZ.COM',UpCase(Url))>0 then  //QRZlog wants program name/version as UserAgent
+                     HTTP.UserAgent := 'CqrlogAlpha/'+cVersion;
 
 
     for i:=0 to data.Count-1 do
@@ -179,7 +188,7 @@ begin
     end;
     WriteStrToStream(HTTP.Document,'--' + Bound + '--' + CRLF);
 
-    if dmData.DebugLevel >=1 then
+    if debug then
       begin
         writeln('**HTTP.Document contents:');
         Dummy := TStringList.Create;
@@ -324,7 +333,8 @@ begin
     if trQ.Active then trQ.RollBack;
     trQ.StartTransaction;
     Q.SQL.Text := 'insert into log_changes (cmd) values('+QuotedStr(C_ALLDONE)+')';
-    if dmData.DebugLevel >= 1 then Writeln(Q.SQL.Text);
+    if debug then
+     Writeln(Q.SQL.Text);
     Q.ExecSQL;
 
     Q.SQL.Text := 'select max(id) from log_changes';
@@ -333,12 +343,20 @@ begin
     Q.Close;
 
     Q.SQL.Text := 'update upload_status set id_log_changes='+IntToStr(max);
-    if dmData.DebugLevel >= 1 then Writeln(Q.SQL.Text);
+    if debug then
+     Writeln(Q.SQL.Text);
     Q.ExecSQL;
 
-    Q.SQL.Text := 'delete from log_changes where id < '+IntToStr(max);
-    if dmData.DebugLevel >= 1 then Writeln(Q.SQL.Text);
-    Q.ExecSQL
+    Q.SQL.Text := 'delete from log_changes where id<'+IntToStr(max);
+    if debug then
+     Writeln(Q.SQL.Text);
+    Q.ExecSQL;
+
+    Q.SQL.Text := 'delete from  id_store where not exists(select null from cqrlog_main where id_store.id_cqrlog_main=cqrlog_main.id_cqrlog_main)';
+    if debug then
+             Writeln(Q.SQL.Text);
+    Q.ExecSQL;
+
   except
     on E : Exception do
     begin
@@ -367,18 +385,22 @@ begin
     Q.Close;
     if trQ.Active then trQ.RollBack;
     trQ.StartTransaction;
+    { OH1KH: what is this needed for? Debug?
     Q.SQL.Text := 'insert into log_changes (cmd) values('+QuotedStr(LogName+'DONE')+')';
-    if dmData.DebugLevel >= 1 then Writeln(Q.SQL.Text);
+    if debug then
+     Writeln(Q.SQL.Text);
     Q.ExecSQL;
-
+    }
     Q.SQL.Text := 'select max(id) from log_changes';
     Q.Open;
     max := Q.Fields[0].AsInteger;
 
     Q.Close;
-    Q.SQL.Text := 'update upload_status set id_log_changes='+IntToStr(max);
-    if dmData.DebugLevel >= 1 then Writeln(Q.SQL.Text);
-    Q.ExecSQL
+    Q.SQL.Text := 'update upload_status set id_log_changes='+IntToStr(max)+' where logname='+QuotedStr(LogName);
+    if debug then
+     Writeln(Q.SQL.Text);
+    Q.ExecSQL;
+
   except
     on E : Exception do
     begin
@@ -393,6 +415,36 @@ begin
       trQ.Commit;
     Q.Close;
     LeaveCriticalsection(csLogUpload)
+  end
+end;
+
+procedure TdmLogUpload.MarkOneAsUploaded(LogName : String; id_log_changes : Integer);
+const
+  C_UPD = 'update upload_status set id_log_changes=%d where logname=%s';
+var
+  err : Boolean = False;
+begin
+  Q2.Close;
+  if trQ2.Active then trQ2.RollBack;
+  try try
+    trQ2.StartTransaction;
+    Q2.SQL.Text := Format(C_UPD,[id_log_changes,QuotedStr(LogName)]);
+    if debug then
+        Writeln(Q2.SQL.Text);
+    Q2.ExecSQL
+  except
+    on E : Exception do
+    begin
+      err := True;
+      Writeln(E.Message)
+    end
+  end
+  finally
+    Q2.Close;
+    if err then
+      trQ2.Rollback
+    else
+      trQ2.Commit
   end
 end;
 
@@ -428,12 +480,13 @@ begin
 
   trQ1.StartTransaction;
   try
-    Q1.SQL.Text := 'select * from cqrlog_main where id_cqrlog_main = '+IntToStr(id_cqrlog_main);
+    Q1.SQL.Text := 'select * from cqrlog_main where id_cqrlog_main='+IntToStr(id_cqrlog_main);
     Q1.Open;
 
     if Q1.Fields[0].IsNull then
     begin  //this shouldn't happen
-      if dmData.DebugLevel>=1 then Writeln('GetQSOInAdif: QSO not found in the log. ID:', id_cqrlog_main);
+      if debug then
+       Writeln('GetQSOInAdif: QSO not found in the log. ID:', id_cqrlog_main);
       Result := '<EOR>';
       exit
     end;
@@ -616,7 +669,6 @@ end;
 
 function TdmLogUpload.ParseHrdLogOutput(Output : String; var Response : String) : Integer;
 var
-  msg    : String = '';
   ErrPos : Integer;
 begin
   Result := 200;
@@ -626,12 +678,12 @@ begin
   begin
     Response := copy(Output,ErrPos+7,Pos('</error>',Output)-ErrPos-7);
 
-    if (LowerCase(msg)='unknown user') then
+    if (LowerCase(Response)='unknown user') then
       Result := 403
-    else if (LowerCase(msg)='unable to find qso') then
-      Result := 404
-    else
-      Result := 500
+     else if (LowerCase(Response)='unable to find qso') then
+       Result := 404
+      else
+        Result := 500
   end
 end;
 
@@ -642,12 +694,13 @@ begin
 
   trQ1.StartTransaction;
   try
-    Q1.SQL.Text := 'select * from cqrlog_main where id_cqrlog_main = '+IntToStr(id_cqrlog_main);
+    Q1.SQL.Text := 'select * from cqrlog_main where id_cqrlog_main='+IntToStr(id_cqrlog_main);
     Q1.Open;
 
     if Q1.Fields[0].IsNull then
     begin  //this should not happen
-      if dmData.DebugLevel>=1 then Writeln('AddQsoKeyValue: QSO not found in the log. ID:', id_cqrlog_main);
+      if debug then
+       Writeln('AddQsoKeyValue: QSO not found in the log. ID:', id_cqrlog_main);
       exit
     end;
 
@@ -690,13 +743,25 @@ begin
   Result := '';
   case where of
     upHamQTH  : begin
-                  if (cqrini.ReadString('OnlineLog','HaUserName','')='') then
+                  if debug then
+                      writeln('Uploading to: '+C_HAMQTH );
+                  if (cqrini.ReadString('OnlineLog','HaUrl','')='') then
+                    Result := C_HAMQTH + ' ' + Format(C_IS_NOT_SET,['Url'])
+                  else if (cqrini.ReadString('OnlineLog','HaUserName','')='') then
                     Result := C_HAMQTH + ' ' + Format(C_IS_NOT_SET,['User name'])
                   else if (cqrini.ReadString('OnlineLog','HaPasswd','')='') then
                     Result := C_HAMQTH + ' ' + Format(C_IS_NOT_SET,['Password'])
                 end;
     upClubLog : begin
-                  if (cqrini.ReadString('OnlineLog','ClUserName','')='') then
+                  if debug then
+                      writeln('Uploading to: '+C_CLUBLOG );
+                  if (cqrini.ReadString('OnlineLog','ClUrl','')='') then
+                    Result := C_CLUBLOG + ' ' + Format(C_IS_NOT_SET,['Url'])
+                  else if (cqrini.ReadString('OnlineLog','ClUrlDel','')='') then
+                    Result := C_CLUBLOG + ' ' + Format(C_IS_NOT_SET,['Url delete'])
+                  else if (cqrini.ReadString('OnlineLog','ClUrlBulk','')='') then
+                    Result := C_CLUBLOG + ' ' + Format(C_IS_NOT_SET,['Url bulk'])
+                  else if (cqrini.ReadString('OnlineLog','ClUserName','')='') then
                     Result := C_CLUBLOG + ' ' + Format(C_IS_NOT_SET,['Callsign'])
                   else if (cqrini.ReadString('OnlineLog','ClPasswd','')='') then
                     Result := C_CLUBLOG + ' ' + Format(C_IS_NOT_SET,['Password'])
@@ -704,14 +769,28 @@ begin
                     Result := C_CLUBLOG + ' ' + Format(C_IS_NOT_SET,['Email'])
                 end;
     upHrdLog :  begin
-                  if (cqrini.ReadString('OnlineLog','HrUserName','')='') then
+                  if debug then
+                      writeln('Uploading to: '+C_HRDLOG );
+                  if (cqrini.ReadString('OnlineLog','HrUrl','')='') then
+                    Result := C_HRDLOG + ' ' + Format(C_IS_NOT_SET,['Url'])
+                  else if (cqrini.ReadString('OnlineLog','HrUserName','')='') then
                     Result := C_HRDLOG + ' ' + Format(C_IS_NOT_SET,['Callsign'])
                   else if (cqrini.ReadString('OnlineLog','HrCode','')='') then
                     Result := C_HRDLOG + ' ' + Format(C_IS_NOT_SET,['Code'])
                 end;
     upUDPLog :  begin
+                  if debug then
+                      writeln('Uploading to: '+C_UDPLOG );
                   if (cqrini.ReadString('OnlineLog','UdAddress','')='') then
                     Result := C_UDPLOG + ' ' + Format(C_IS_NOT_SET,['Address'])
+                end;
+    upQrzLog :  begin
+                  if debug then
+                      writeln('Uploading to: '+C_QRZLOG );
+                  if (cqrini.ReadString('OnlineLog','QrzUrl','')='') then
+                    Result := C_QRZLOG + ' ' + Format(C_IS_NOT_SET,['Url'])
+                  else if (cqrini.ReadString('OnlineLog','QrzApiKey','')='') then
+                    Result := C_QRZLOG + ' ' + Format(C_IS_NOT_SET,['API key'])
                 end
   end //case
 end;
@@ -723,7 +802,8 @@ begin
     upHamQTH  : Result := cqrini.ReadInteger('OnlineLog','HaColor',clBlue);
     upClubLog : Result := cqrini.ReadInteger('OnlineLog','ClColor',clRed);
     upHrdLog  : Result := cqrini.ReadInteger('OnlineLog','HrColor',clPurple);
-    upUDPLog  : Result := cqrini.ReadInteger('OnlineLog','UdColor',clGreen)
+    upUDPLog  : Result := cqrini.ReadInteger('OnlineLog','UdColor',clGreen);
+    upQrzLog  : Result := cqrini.ReadInteger('OnlineLog','QrzColor',clTeal)
   end
 end;
 
@@ -751,12 +831,15 @@ begin
                    data.Add('mycall='+cqrini.ReadString('Station', 'Call', ''));
                    data.Add('app=CQRLOG')
                  end;
+    upQrzLog  :  begin
+                   data.Add('KEY='+cqrini.ReadString('OnlineLog','QrzApiKey',''));
+                 end;
   end //case
 end;
 
 procedure TdmLogUpload.PrepareInsertHeader(where : TWhereToUpload; id_log_changes,id_cqrlog_main : Integer; data : TStringList);
 const
-  C_SEL_LOG_CHANGES = 'select * from log_changes where id = %d';
+  C_SEL_LOG_CHANGES = 'select * from log_changes where id=%d';
 var
   adif    : String;
   qsodate : String;
@@ -818,7 +901,12 @@ begin
                        data.Add('oldtimestamp='+Q2.FieldByName('old_qsodate').AsString+' '+Q2.FieldByName('old_time_on').AsString+':00');
                        data.Add('oldcall='+Q2.FieldByName('old_callsign').AsString);
                      end
-                   end
+                   end;
+      upQrzLog  :  begin
+                     data.Add('ACTION=INSERT');
+                     data.Add('ADIF='+StringReplace(adif,'<EOR>','',[rfReplaceAll])+
+                              GetAdifValue('STATION_CALLSIGN',cqrini.ReadString('Station','Call',''))+'<EOR>');
+                   end;
     end //case
   finally
     Q2.Close;
@@ -845,6 +933,7 @@ begin
     qsodate := copy(qsodate,1,4) + copy(qsodate,6,2) + copy(qsodate,9,2);
     time_on := Q2.FieldByName('old_time_on').AsString;
     time_on := copy(time_on,1,2) + copy(time_on,4,2);
+    id_cqrlog_main := Q2.FieldByName('id_cqrlog_main').AsInteger;
 
     case where of
       upHamQTH  :  begin
@@ -878,7 +967,15 @@ begin
                      begin
                         data.Add('ID='+MD5Print(MD5String(cqrini.ReadString('Station', 'Call', '') + ':' + IntToStr(id_cqrlog_main))));
                      end
-                   end
+                   end;
+      upQrzLog  :  begin
+                     Q2.Close;
+                     trQ2.RollBack;
+                     Q2.SQL.Text :='select qrz_logid from id_store where id_cqrlog_main='+IntToStr(id_cqrlog_main);
+                     Q2.Open;
+                     data.Add('ACTION=DELETE');
+                     data.Add('LOGIDS='+Trim(Q2.FieldByName('qrz_logid').AsString));
+                   end;
     end //case
   finally
     Q2.Close;
@@ -900,13 +997,16 @@ begin
                  end;
                 end;
     upHrdLog  : Result := cqrini.ReadString('OnlineLog','HrUrl','http://robot.hrdlog.net/NewEntry.aspx');
+    upQrzLog  : Result := cqrini.ReadString('OnlineLog','QrzUrl', 'https://logbook.qrz.com/api');
   end //case
 end;
 
 function TdmLogUpload.GetResultMessage(where : TWhereToUpload; Response : String; ResultCode : Integer; var ErrorCode : Integer) : String;
+var
+  qrzLogId : String;
 begin
   Result     := '';
-  ErrorCode  := 0;
+  ErrorCode  := 0;  //all ok so far...
   Response   := Trim(Response);
 
   case where of
@@ -915,14 +1015,14 @@ begin
                     200 : Result := 'OK';
                     500 : begin
                             Result     := Response;
-                            ErrorCode  := 1;
+                            ErrorCode  := 4;
                           end;//something wrong with HamQTH server
                     400 : begin
                             Result := Response;
                             if (Response = 'QSO already exists in the log')  then
                               Result := 'Already exists'
                             else if (Response = 'QSO not found in the log!') then
-                              ErrorCode := 0
+                              ErrorCode := 1
                             else begin
                               ErrorCode  := 2; //QSO rejected; continue with next one
                               Result     := Response
@@ -930,50 +1030,86 @@ begin
                           end;
                     403 : begin
                             Result     := 'Access denied';
-                            Errorcode := 1
-                          end
-                    else begin
-                      Result     := Response;
-                      ErrorCode  := 1
-                    end
+                            Errorcode := 3
+                          end;
+
+                    else  begin
+                            Result     := Response;
+                            ErrorCode  := 5
+                          end;
                   end
                 end;
+
+  //errorcode 1:  QSO not found / already exist
+  //errorcode 2:  QSO rejected (INSERT or DELETE) but perhaps upload can continue
+  //errorcode 3:  access denied, wrong password or key
+  //errorcode 4:  internal server error
+  //errorcode 5:  undefined
+
     upClubLog : begin
                   case ResultCode of
-                    200 : Result := 'OK';
-                    400 : begin
+                    200 : Begin    //200 means HTTP transaction was ok, but payload may carry qso handling error
+                           Result := 'OK';
+                           case  LowerCase(Response) of
+                                 'qso details not matched':begin
+                                                              Result:= Response;
+                                                              ErrorCode := 1;
+                                                           end;
+                                'access denied'           :begin
+                                                              Result:= Response;
+                                                              ErrorCode := 1;
+                                                           end;
+                                'internal error'          :begin
+                                                              Result:= Response;
+                                                              ErrorCode := 3;
+                                                           end;
+                                'skipping qso'            :begin
+                                                              Result:= Response;
+                                                              ErrorCode := 2;
+                                                           end;
+                           end;
+                         end;
+
+                    400 : begin   //these are HTTP errors
                             Result     := Response;
                             if (Pos('skipping qso',LowerCase(Response))=0) then //consider skiping QSO as non fatal error, the app can live with it :)
                               ErrorCode := 2
                           end;
                     403 : begin
                             Result := 'Access denied';
-                            ErrorCode := 1
+                            ErrorCode := 3
                           end;
                     500 : begin
                             Result := 'Internal error';
-                            ErrorCode := 2
+                            ErrorCode := 4
                           end;
                     404 : begin
                             Result     := Response;
                             if (Response = 'QSO Details Not Matched') then
                             begin
-                                ErrorCode := 2;
-                            end
-                            else
-                            begin
                                 ErrorCode := 1;
+                            end
+                    else
+                            begin
+                                ErrorCode := 5;
                             end;
                           end
                   end //case
                 end;
+
+    //errorcode 1:  QSO not found / already exist
+    //errorcode 2:  QSO rejected (INSERT or DELETE) but perhaps upload can continue
+    //errorcode 3:  access denied, wrong password or key
+    //errorcode 4:  internal server error
+    //errorcode 5:  undefined
+
     upHrdLog  : begin
                   case ParseHrdLogOutput(Response,Result) of
                     200 : Result := 'OK';
-                    400 : ErrorCode := 2;
-                    403 : ErrorCode := 2;
-                    500 : ErrorCode := 1;
-                    404 : ErrorCode := 2
+                    400 : ErrorCode := 5;
+                    403 : ErrorCode := 3;
+                    404 : ErrorCode := 1;
+                    500 : ErrorCode := 5;
                   end //case
                 end;
     upUDPLog  : begin
@@ -988,41 +1124,73 @@ begin
                             ErrorCode := 1
                           end
                   end //case
+                end;
+
+    upQrzLog  : begin
+                // this need still checking with true QRZ server
+                  case ResultCode of
+                    200 : begin
+
+                           if (Pos('RESULT=OK', Response)>0 )
+                              or (Pos('RESULT=REPLACE', Response)>0 )then
+                               begin
+                                  qrzLogId := '';
+                                  if Pos('LOGID', Response) > 0 then
+                                   begin
+                                    qrzLogId := ExtractWord(1,ExtractWord(2,copy(Response, Pos('LOGID',Response), Length(Response)),['=']),['&']);
+                                   end;
+                                  Result := 'OK '+qrzLogId;
+                                  ErrorCode:=0;
+                               end;
+
+                           if (Pos('RESULT=FAIL', Response)>0) then
+                               begin
+                                 if pos('DELETE',Response)>0 then
+                                    Result := 'Fail: '+copy(Response,pos('ACTION',Response),length(Response));
+                                 if  pos('STATUS=FAIL&RESULT=FAIL&REASON=',Response)>0  then
+                                    Result:= copy(Response,pos('STATUS=FAIL&RESULT=FAIL&REASON=',Response)+31,length(Response));
+                                 Result  := StringReplace(Result,LineEnding,'',[rfReplaceAll]);
+                                 if  pos('&',Result)>0 then
+                                     Result := copy(Result,1,pos('&',Result)-1);
+                                 if (Pos('duplicate', Response)>0) then
+                                   ErrorCode:=2
+                                 else
+                                   ErrorCode:=1;
+                               end;
+
+                           if (Pos('RESULT=AUTH', Response)>0) then
+                               begin
+                                 Result :='AUTH: '+copy(Response,pos('STATUS=AUTH&RESULT=AUTH&REASON=',Response)+31,length(Response));
+                                 Result  := StringReplace(Result,LineEnding,'',[rfReplaceAll]);
+                                 Result := copy(Result,1,pos('&EXTENDED',Result));
+                                 ErrorCode:=3;
+                               end;
+                          End;
+                     //check these, just quess..
+                    400 : Begin Result := 'Bad Request';ErrorCode:=1;       End;
+                    401 : Begin Result := 'Unauthorized';ErrorCode:=3;      End;
+                    402 : Begin Result := 'Payment Required';ErrorCode:=5;  End;
+                    403 : Begin Result := 'Forbidden';ErrorCode:=3;         End;
+                    404 : Begin Result := 'URL Not Found';ErrorCode:=1;     End; //tested with wrong url
+                    405 : Begin Result := 'Method Not Allowed';ErrorCode:=5;End;
+                    406 : Begin Result := 'Not Acceptable';ErrorCode:=5;    End;
+
+                    500 : begin
+                            ErrorCode := 4;
+                            Result := 'Server not found'
+                          end;
+                    501 : begin
+                            ErrorCode := 2;
+                            Result := 'Duplicate'
+                          end;
+                  end //case
                 end
   end //case
 end;
 
-procedure TdmLogUpload.MarkAsUploaded(LogName : String; id_log_changes : Integer);
-const
-  C_UPD = 'update upload_status set id_log_changes = %d where logname = %s';
-var
-  err : Boolean = False;
-begin
-  Q2.Close;
-  if trQ2.Active then trQ2.RollBack;
-  try try
-    Q2.SQL.Text := Format(C_UPD,[id_log_changes,QuotedStr(LogName)]);
-    if dmData.DebugLevel >= 1 then Writeln(Q2.SQL.Text);
-    Q2.ExecSQL
-  except
-    on E : Exception do
-    begin
-      err := True;
-      Writeln(E.Message)
-    end
-  end
-  finally
-    Q2.Close;
-    if err then
-      trQ2.Rollback
-    else
-      trQ2.Commit
-  end
-end;
-
 procedure TdmLogUpload.MarkAsUpDeleted(id_log_upload : Integer);
 const
-  C_UPD = 'update log_changes set upddeleted=0 where id = %d';
+  C_UPD = 'update log_changes set upddeleted=0 where id=%d';
 var
   err : Boolean = False;
 begin
@@ -1030,7 +1198,8 @@ begin
   if trQ2.Active then trQ2.RollBack;
   try try
     Q2.SQL.Text := Format(C_UPD,[id_log_upload]);
-    if dmData.DebugLevel >= 1 then Writeln(Q2.SQL.Text);
+    if debug then
+     Writeln(Q2.SQL.Text);
     Q2.ExecSQL
   except
     on E : Exception do
@@ -1053,7 +1222,8 @@ begin
   Result := cqrini.ReadBool('OnlineLog','HaUp',False) or
             cqrini.ReadBool('OnlineLog','ClUp',False) or
             cqrini.ReadBool('OnlineLog','HrUp',False) or
-            cqrini.ReadBool('OnlineLog','UdUp',False)
+            cqrini.ReadBool('OnlineLog','UdUp',False) or
+            cqrini.ReadBool('OnlineLog','QrzUp',False)
 end;
 
 procedure TdmLogUpload.DisableOnlineLogSupport;
@@ -1073,15 +1243,18 @@ begin
 
     try
       t.SQL.Text := Format(C_DROP,['cqrlog_main_bd']);
-      if dmData.DebugLevel>=1 then Writeln(t.SQL.Text);
+      if debug then
+       Writeln(t.SQL.Text);
       t.ExecSQL;
 
       t.SQL.Text := Format(C_DROP,['cqrlog_main_ai']);
-      if dmData.DebugLevel>=1 then Writeln(t.SQL.Text);
+      if debug then
+       Writeln(t.SQL.Text);
       t.ExecSQL;
 
       t.SQL.Text := Format(C_DROP,['cqrlog_main_bu']);
-      if dmData.DebugLevel>=1 then Writeln(t.SQL.Text);
+      if debug
+       then Writeln(t.SQL.Text);
       t.ExecSQL;
 
       tr.Commit
@@ -1114,11 +1287,13 @@ begin
       try
         tr.StartTransaction;
         t.SQL.Text := Format(C_DEL,['upload_status']);
-        if dmData.DebugLevel>=1 then Writeln(t.SQL.Text);
+        if debug then
+         Writeln(t.SQL.Text);
         t.ExecSQL;
 
         t.SQL.Text := Format(C_DEL,['log_changes']);
-        if dmData.DebugLevel>=1 then Writeln(t.SQL.Text);
+        if debug then
+         Writeln(t.SQL.Text);
         t.ExecSQL;
 
         tr.Commit
@@ -1141,7 +1316,8 @@ begin
           t.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[i])
         else begin
           t.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[i]);
-          if dmData.DebugLevel>=1 then Writeln(t.SQL.Text);
+          if debug then
+           Writeln(t.SQL.Text);
           t.ExecSQL;
           t.SQL.Text := ''
         end
@@ -1166,4 +1342,3 @@ end;
 
 
 end.
-

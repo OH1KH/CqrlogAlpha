@@ -26,7 +26,7 @@ uses
   fWorkedGrids, fPropDK0WCY, fRemind, fContest, fMonWsjtx, fXfldigi,
   dMembership, dSatellite, uRigControl, uRotControl, azidis3, aziloc, fDOKStat,
   fCabrilloExport, uDbUtils, dQTHProfile, uConnectionInfo, znacmech, gline2,
-  fDbSqlSel, fProgress, fDbError, fCountyStat;
+  fDbSqlSel, fProgress, fDbError, fCountyStat, LazVersion;
 var
   Splash    : TfrmSplash;
   SFL       : integer;
@@ -41,6 +41,7 @@ var
 
 begin
   Writeln(LineEnding+'Cqrlog Ver:',cVERSION,' Build:',cBuild,' Date:',cBUILD_DATE+LineEnding);
+  Writeln('LCL Version: ' + laz_version);
   try
     p := TStringList.Create;
     AProcess := TProcess.Create(nil);

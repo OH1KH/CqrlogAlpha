@@ -24,7 +24,7 @@ const
   cMINOR      = 6;
   cRELEAS     = 0;
   cBUILD      = 1;
-  cBUILD_DATE = '2026-04-15';
+  cBUILD_DATE = '2026-04-16';
 
 implementation
 

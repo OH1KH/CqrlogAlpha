@@ -20,7 +20,7 @@ uses
   memds, mysql51conn, sqldb, inifiles, stdctrls, RegExpr,
   dynlibs, lcltype, ExtCtrls, sqlscript, process, mysql51dyn, ssl_openssl_lib,
   mysql55dyn, mysql55conn, CustApp, mysql56dyn, mysql56conn, grids, LazFileUtils,
-  mysql57dyn, mysql57conn, uMyFindFile, Graphics, LazUTF8;
+  mysql57dyn, mysql57conn, uMyFindFile, Graphics, LazUTF8, LCLVersion;
 
 const
   cDB_LIMIT = 500;
@@ -362,9 +362,13 @@ type
   end;
 
 var
+
+{$IF (LCL_FULLVERSION < 4060000)}
+   handle : THandle;  //deprecated on Laz 4.6
+{$ELSE}
+   handle : TLCLHandle;
+{$ENDIF}
   dmData : TdmData;
-//  handle : THandle;   //depreceated on Laz 4.6
-  handle : TLCLHandle;
   reg    : TRegExpr;
   MemNR  : array of integer;
 

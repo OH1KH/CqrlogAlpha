@@ -9,7 +9,7 @@ uses
   dynlibs, lcltype, ExtCtrls, sqlscript, process, mysql51dyn, ssl_openssl_lib,
   mysql55dyn, mysql55conn, mysql51conn, db, httpsend, blcksock, synautil, Forms,
   Graphics, mysql56conn, mysql56dyn, mysql57dyn, mysql57conn,
-  lNet, lNetComponents, laz2_DOM, laz2_XMLWrite, md5, StrUtils, LazFileUtils;
+  lNet, lNetComponents, laz2_DOM, laz2_XMLWrite, md5, StrUtils, LazFileUtils, LazUTF8;
 
 const
   C_HAMQTH       = 'HamQTH';
@@ -226,16 +226,20 @@ var
   Key     : String;
   Value   : String;
   Address : String;
-  udp     : TLUDPComponent;
+  Port    : String;
+  Tries   : integer;
+  SynUDP    : TUDPBlockSocket;
   Doc     : TXMLDocument;
   RootNode,ItemNode,TextNode: TDOMNode;
   msg     : TStringStream;
   msg_len : Integer;
   sent    : Integer;
+  LastErr : integer;
 begin
   Result := False;
   sent := 0;
   Address := '';
+  Tries := 20;
 
   try
     Doc := TXMLDocument.Create;
@@ -284,29 +288,47 @@ begin
   finally
     FreeAndNil(Doc);
   end;
-  msg_len := Length(msg.DataString);
+  msg_len := UTF8Length(msg.DataString);
 
   try
-    udp := TLUDPComponent.Create(nil);
-    if Pos(':', Address) > 0 then
-    begin
-      udp.Host := ExtractWord(1,Address,[':']);
-      udp.Port := StrToInt(ExtractWord(2,Address,[':']));
-    end
-    else
-    begin
-      udp.Host := Address;
-      udp.Port := 5444;
-    end;
+    //udp := TLUDPComponent.Create(nil);  OH1KH Replaced with Synaptic because that does not cause errors with GTK2 (QT5,6 were working ok)
+    SynUDP := TUDPBlockSocket.Create;
+    SynUDP.CreateSocket;
+    SynUDP.EnableReuse(True);
+    Assert(SynUDP.LastError = 0);
 
-    if udp.Connect then sent := udp.SendMessage(msg.DataString, Address);
+    if Pos(':', Address) > 0 then
+      Port:=ExtractWord(2,Address,[':'])
+     else
+      Port := '5444';
+    Address:=ExtractWord(1,Address,[':']);
+
+    SynUDP.Bind(Address,Port);
+    while ((SynUDP.LastError <> 0) and (tries > 0 )) do
+       begin
+         LastErr:= SynUDP.LastError;
+         dec(tries);
+         sleep(10);
+         SynUDP.bind(Address,Port);
+       end;
+    if (Tries=0) then
+                 Begin
+                   ResultCode := 403;
+                   Response := 'Fail: Could not bind address:port';
+                   Result := False
+                 end;
+
+    SynUDP.Connect(Address,Port);
+    SynUDP.SendString(msg.DataString);
+    sent:=SynUDP.SendCounter;
+    LastErr:= SynUDP.LastError;
   finally
-    if udp.Connected then udp.Disconnect;
-    FreeAndNil(udp);
+    SynUDP.CloseSocket;
+    FreeAndNil(SynUDP);
     FreeAndNil(msg);
   end;
 
-  if (sent = msg_len) then
+  if (sent = msg_len) and (LastErr=0) then
   begin
     ResultCode := 200;
     Response := 'Success';
@@ -315,7 +337,7 @@ begin
   else
   begin
     ResultCode := 400;
-    Response := 'Failed. Only sent ' + IntToStr(sent) + ' of ' + IntToStr(msg_len) + ' bytes to ' + Address;
+    Response := 'Failed. Only sent ' + IntToStr(sent) + ' of ' + IntToStr(msg_len) + ' bytes to ' + Address +':'+Port+' with LatError:'+IntToStr(LastErr);
     Result := False
   end;
 

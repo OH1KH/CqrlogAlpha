@@ -3246,8 +3246,6 @@ begin
     cmbThirdZip.Items.Add(cmbFirstZip.Items[i]);
   end;
   dmData.InsertProfiles(cmbProfiles, False);
-  Top := cqrini.ReadInteger('Pref', 'Top', 20);
-  Left := cqrini.ReadInteger('Pref', 'Left', 20);
   ActPageIdx := cqrini.ReadInteger('Pref', 'ActPageIdx', 0);
 
   edtCall.Text := cqrini.ReadString('Station', 'Call', '');

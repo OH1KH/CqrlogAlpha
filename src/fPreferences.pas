@@ -1226,8 +1226,8 @@ Begin
   Result:= chk;
   if chk then
      begin
-           s:= 'Using this option MAY GIVE UNEXPECTED RESULTS'+LineEnding+
-               'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
+           s:= 'This option disables ALL Online Log updating'+LineEnding+
+               'when CHANGE(S) to QSO in local log happens.'+LineEnding+
                'Are you SURE you want to check this?';
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idNo then
                                                                                            Result:=False;

@@ -1368,6 +1368,13 @@ begin
 end;
 
 procedure TfrmMain.MenuItem107Click(Sender: TObject);
+
+const
+  C_ARE_YOU_SURE =  'if you use MORE THAN ONE ONLINE LOG some qsos may'+LineEnding+
+                    'leave UNUPLOADED.'+LineEnding+
+                    'Be sure that ALL Online Logs are up to date before issuing this'+LineEnding+
+                    'command or be prepared to manually fix them later.'+LineEnding+LineEnding+
+                    'Are you sure you want to remove ALL upload triggers from ALL online logs?';
 var
   s: PChar;
 
@@ -1401,19 +1408,14 @@ begin
            or cqrini.ReadBool('OnlineLog','QrzUpOnline',False)) then
          Begin
            //Warn: none of online uploads
-           s:= 'You do not have any immediately uploads active'+LineEnding+LineEnding+
-               'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
-               'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
-               'Are you SURE you want to remove ALL upload triggers from ALL online logs?';
+           s:= 'You do not have any immediately uploads active.'+LineEnding+LineEnding+ C_ARE_YOU_SURE;
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
             RemoveTriggers;
            exit;
          end
         else
          Begin
-          s:= 'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
-              'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
-              'Are you sure you want to remove ALL upload triggers from ALL online logs?';
+          s:= C_ARE_YOU_SURE;
           if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
            RemoveTriggers;
           exit;

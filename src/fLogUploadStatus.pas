@@ -25,6 +25,7 @@ type
     MenuItem3: TMenuItem;
     mnuStatus: TMenuItem;
     pnlLogStatus: TPanel;
+    tmrClose: TTimer;
     procedure acClearMessagesExecute(Sender: TObject);
     procedure acFontSettingsExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
@@ -32,6 +33,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormShow(Sender: TObject);
+    procedure tmrCloseTimer(Sender: TObject);
   private
     mFont     : TFont;
     mStatus   : TColorMemo;
@@ -701,8 +703,11 @@ begin
         Writeln('SyncUpdate:',SyncUpdate);
         Writeln('SyncMsg   :',SyncMsg);
    end;
+   if ((SyncUpdate<>'') or (SyncMsg<>'')) then
+      tmrClose.Enabled:=False;
+
   if (SyncUpdate<>'') then
-  begin
+   begin
     //cti_vetu(var te:string;var bpi,bpo:Tcolor;var pom:longint;kam:longint):boolean;
     mStatus.ReadLine(item,c,c,tmp,mStatus.LastLineNumber);
     item := item + ' ... ' + SyncUpdate;
@@ -710,15 +715,16 @@ begin
        Writeln('Item:',item);
     //prepis_vetu(te:string;bpi,bpo:Tcolor;pom:longint;kam:longint;msk:longint):boolean;
     mStatus.ReplaceLine(item,SyncColor,clWhite,0,mStatus.LastLineNumber,0)
-  end
+   end
   else
-    mStatus.AddLine(SyncMsg,SyncColor,clWhite,0);
+   mStatus.AddLine(SyncMsg,SyncColor,clWhite,0);
 
   if (Pos('Done ...',SyncMsg)>0) or (Pos('All QSO already uploaded',SyncMsg)>0) then
-  begin
-    if cqrini.ReadBool('OnlineLog','CloseAfterUpload',False) then
-      Close
-  end
+    begin
+     if cqrini.ReadBool('OnlineLog','CloseAfterUpload',False) then
+       tmrClose.Enabled:=True; //tmr to prevent window close/open while several immediate uploads still running
+    end
+
 end;
 
 procedure TfrmLogUploadStatus.acClearMessagesExecute(Sender: TObject);
@@ -784,7 +790,14 @@ begin
   mStatus.AutoScroll := True;
   mStatus.Align      := alClient;
   dmUtils.LoadWindowPos(Self);
-  LoadFonts
+  LoadFonts;
+  tmrClose.Enabled:=False;
+end;
+
+procedure TfrmLogUploadStatus.tmrCloseTimer(Sender: TObject);
+begin
+  tmrClose.Enabled:=False;
+  Self.Close;
 end;
 
 procedure TfrmLogUploadStatus.LoadFonts;

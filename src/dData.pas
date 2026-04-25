@@ -3416,7 +3416,7 @@ begin
       Q1.SQL.Text := 'update db_version set nr='+IntToStr(cDB_MAIN_VER);
       if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
       Q1.ExecSQL;
-      trQ1.Commit
+      trQ1.Commit;
     except
       on E : Exception do
       begin
@@ -3427,7 +3427,29 @@ begin
       if trQ1.Active then
         trQ1.Rollback
     end
-  end
+  end;
+
+  //if user wants to receate triggers this is safe point
+   if Application.HasOption('fixtriggers') then
+     Begin
+      trQ1.StartTransaction;
+      Q1.SQL.Text := '';
+      for max:=0 to dmData.scOnlineLogTriggers.Script.Count-1 do
+      begin
+        if Pos('$', dmData.scOnlineLogTriggers.Script.Strings[max]) = 0 then
+          Q1.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[max])
+        else begin
+          if fDebugLevel>=1 then
+             Writeln(Q1.SQL.Text);
+          Q1.ExecSQL;
+          Q1.SQL.Text := ''
+        end
+      end;
+      trQ1.Commit;
+      trQ1.Rollback;
+      Application.MessageBox('Triggers recreated','Info',mb_ok);
+     end;
+
 end;
 
 procedure TdmData.RepairTables(nr : Word);

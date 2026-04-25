@@ -1374,15 +1374,18 @@ const
                     'leave UNUPLOADED.'+LineEnding+
                     'Be sure that ALL Online Logs are up to date before issuing this'+LineEnding+
                     'command or be prepared to manually fix them later.'+LineEnding+LineEnding+
-                    'Are you sure you want to recreate ALL upload triggers?';
+                    'Are you sure you want to get log_changes cleaned?';
 var
   s: PChar;
 
-Procedure RemoveTriggers;
+Procedure CleanLogChanges;
    Begin
     dmLogUpload.DisableOnlineLogSupport;
-    dmLogUpload.EnableOnlineLogSupport(True,True);
-    Application.MessageBox('Triggers removed','Info ...',mb_ok + mb_IconInformation);
+    dmLogUpload.EnableOnlineLogSupport;
+    Application.MessageBox(PChar('log_changes cleaned.'+LineEnding+
+                                 'If you want also recreate upload triggers'+LineEnding+
+                                  'start Cqrlog from command console as:'+LineEnding+LineEnding+
+                                  'cqrlog --fixtriggers'),'Info',Mb_Ok);
    end;
 
 begin
@@ -1395,8 +1398,8 @@ begin
        //warn: none of uploads selected
        s:= 'You do not have any log uploads enabled!'+LineEnding+LineEnding+
            'If you have just disabled them all because of problems'+LineEnding+
-           'you need to enable at least one to get old triggers recreated.';
-       Application.MessageBox(s,'Info ...',mb_ok + mb_IconInformation);
+           'you need to enable at least one to get log_changes cleaned.';
+       Application.MessageBox(s,'Info',mb_ok + mb_IconInformation);
        exit
      end
    else
@@ -1410,14 +1413,14 @@ begin
            //Warn: none of online uploads
            s:= 'You do not have any immediately uploads active.'+LineEnding+LineEnding+ C_ARE_YOU_SURE;
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
-            RemoveTriggers;
+            CleanLogChanges;
            exit;
          end
         else
          Begin
           s:= C_ARE_YOU_SURE;
           if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
-           RemoveTriggers;
+           CleanLogChanges;
           exit;
          end;
      end;

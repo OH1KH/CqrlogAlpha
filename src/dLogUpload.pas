@@ -1337,7 +1337,7 @@ begin
      t.Close;
      tr.Rollback;
 
-     if (i < 3 ) or ForceRecreateTrigs then //some or all triggers missing
+     if (i < 3 ) or ForceRecreateTrigs then //Trigger recreation works properly only with (nearly) empty logs or called from database version update.
       Begin
       t.SQL.Text := '';
       for i:=0 to dmData.scOnlineLogTriggers.Script.Count-1 do

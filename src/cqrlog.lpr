@@ -75,12 +75,13 @@ begin
      Begin
         if Application.HasOption('v','version') then exit;
         Writeln;
-        Writeln('-h     --help           Print this help and exit');
-        Writeln('-r KEY --remote=KEY     Start with remote mode KEY= one of J,M,K');
-        Writeln('                        (for KEY see: NewQSO shortcut keys)');
-        Writeln('-q     --quiet          Start without spash at beginning');
-        Writeln('-v     --version        Print version and exit');
-        Writeln('       --debug=NR       Set debug level to NR');
+        Writeln('-h     --help             Print this help and exit');
+        Writeln('-r KEY --remote=KEY       Start with remote mode KEY= one of J,M,K');
+        Writeln('                          (for KEY see: NewQSO shortcut keys)');
+        Writeln('-q     --quiet            Start without spash at beginning');
+        Writeln('-v     --version          Print version and exit');
+        Writeln('       --debug=NR         Set debug level to NR');
+        Writeln('       --fixtriggers      Recreate triggers for online logs');
         Writeln;
         Writeln('Debug level NRs:');
         Writeln('     0  No debug messages');

@@ -68,7 +68,7 @@ type
     procedure MarkOneAsUploaded(LogName : String; id_log_changes : Integer);
     procedure MarkAsUpDeleted(id_log_upload : Integer);
     procedure DisableOnlineLogSupport;
-    procedure EnableOnlineLogSupport(RemoveOldChanges : Boolean = True);
+    procedure EnableOnlineLogSupport(RemoveOldChanges : Boolean = True;ForceRecreateTrigs : Boolean = False);
   end;
 
 var
@@ -1249,21 +1249,22 @@ begin
 end;
 
 procedure TdmLogUpload.DisableOnlineLogSupport;
-const
-  C_DROP = 'DROP TRIGGER IF EXISTS %s';
+//const
+  //C_DROP = 'DROP TRIGGER IF EXISTS %s';
 var
   t  : TSQLQuery;
-  tr : TSQLTransaction;
-  i  : Integer;
 begin
   t := TSQLQuery.Create(nil);
-  tr := TSQLTransaction.Create(nil);
   try
-    t.Transaction := tr;
-    tr.DataBase   := dmData.MainCon;
     t.DataBase    := dmData.MainCon;
 
     try
+      t.SQL.Text := 'update db_version set stop_trigs=1';
+      if debug then
+         Writeln(t.SQL.Text);
+      t.ExecSQL;
+
+      {
       t.SQL.Text := Format(C_DROP,['cqrlog_main_bd']);
       if debug then
        Writeln(t.SQL.Text);
@@ -1275,39 +1276,37 @@ begin
       t.ExecSQL;
 
       t.SQL.Text := Format(C_DROP,['cqrlog_main_bu']);
-      if debug
-       then Writeln(t.SQL.Text);
+      if debug then
+         Writeln(t.SQL.Text);
       t.ExecSQL;
-
-      tr.Commit
+       }
     except
-      tr.Rollback
+        on E : Exception do
+          Writeln('DeleteTriggers:',E.Message);
     end
   finally
-    t.Close;
-    FreeAndNil(t);
-    FreeAndNil(tr)
+    t.Free;
   end
 end;
 
-procedure TdmLogUpload.EnableOnlineLogSupport(RemoveOldChanges : Boolean = True);
+procedure TdmLogUpload.EnableOnlineLogSupport(RemoveOldChanges : Boolean = True;ForceRecreateTrigs : Boolean = False);
 const
   C_DEL = 'DELETE FROM %s';
 var
-  t  : TSQLQuery;
   tr : TSQLTransaction;
+  t  : TSQLQuery;
   i  : Integer;
+
 begin
   t := TSQLQuery.Create(nil);
-  tr := TSQLTransaction.Create(nil);
+  tr:= TSQLTransaction.Create(nil);
   try
-    t.Transaction := tr;
-    tr.DataBase   := dmData.MainCon;
     t.DataBase    := dmData.MainCon;
+   tr.DataBase    := dmData.MainCon;
+
     if RemoveOldChanges then
     begin
       try
-        tr.StartTransaction;
         t.SQL.Text := Format(C_DEL,['upload_status']);
         if debug then
          Writeln(t.SQL.Text);
@@ -1318,26 +1317,34 @@ begin
          Writeln(t.SQL.Text);
         t.ExecSQL;
 
-        tr.Commit
       except
         on E : Exception do
         begin
-          Writeln('EnableOnlineLogSupport:',E.Message);
-          tr.Rollback;
+          Writeln('EnableOnlineLogSupport_tables:',E.Message);
           exit
         end
       end
     end;
 
     try
-      tr.StartTransaction;
+
+     t.SQL.Text := 'select count(trigger_name) as count from information_schema.triggers where trigger_schema = '+ QuotedStr(dmData.DBName);
+     if debug then
+         Writeln(t.SQL.Text);
+     tr.StartTransaction;
+     t.Open;
+     i:=t.Fields[0].AsInteger;
+     t.Close;
+     tr.Rollback;
+
+     if (i < 3 ) or ForceRecreateTrigs then //some or all triggers missing
+      Begin
       t.SQL.Text := '';
       for i:=0 to dmData.scOnlineLogTriggers.Script.Count-1 do
       begin
-        if Pos(';', dmData.scOnlineLogTriggers.Script.Strings[i]) = 0 then
+        if Pos('$', dmData.scOnlineLogTriggers.Script.Strings[i]) = 0 then
           t.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[i])
         else begin
-          t.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[i]);
           if debug then
            Writeln(t.SQL.Text);
           t.ExecSQL;
@@ -1345,20 +1352,24 @@ begin
         end
       end;
 
+      end;
+
+      t.SQL.Text := 'update db_version set stop_trigs=0';
+      if debug then
+         Writeln(t.SQL.Text);
+      t.ExecSQL;
+
+
       if RemoveOldChanges then
-        dmData.PrepareEmptyLogUploadStatusTables(t,tr)
+        dmData.PrepareEmptyLogUploadStatusTables(t)
 
     except
       on E : Exception do
-      begin
-        Writeln('EnableOnlineLogSupport:',E.Message);
-        tr.Rollback
-      end
+        Writeln('EnableOnlineLogSupport_triggers/tables:',E.Message);
     end
   finally
-    t.Close;
-    FreeAndNil(t);
-    FreeAndNil(tr)
+    tr.Free;
+    t.Free;
   end
 end;
 

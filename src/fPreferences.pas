@@ -1226,7 +1226,7 @@ Begin
   Result:= chk;
   if chk then
      begin
-           s:= 'This option disables ALL Online Log updating'+LineEnding+
+           s:= 'This option disables EVERY Online Log'+#39+'s updating'+LineEnding+
                'when CHANGE(S) to QSO in local log happens.'+LineEnding+
                'Are you SURE you want to check this?';
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idNo then

@@ -1,6 +1,6 @@
 object frmMain: TfrmMain
   Left = 159
-  Height = 466
+  Height = 441
   Top = 83
   Width = 912
   HelpType = htKeyword
@@ -10,7 +10,7 @@ object frmMain: TfrmMain
   ActiveControl = pnlCounts
   AutoScroll = True
   Caption = 'CqrlogAlpha for Linux'
-  ClientHeight = 466
+  ClientHeight = 441
   ClientWidth = 912
   Constraints.MinHeight = 148
   Constraints.MinWidth = 536
@@ -170,7 +170,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Side = asrBottom
     Left = 0
     Height = 19
-    Top = 447
+    Top = 422
     Width = 912
     Align = alNone
     Anchors = [akLeft, akRight, akBottom]
@@ -201,7 +201,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Control = sbMain
     Left = 0
     Height = 46
-    Top = 395
+    Top = 370
     Width = 912
     Anchors = [akLeft, akRight, akBottom]
     BorderSpacing.Bottom = 6
@@ -431,7 +431,7 @@ object frmMain: TfrmMain
     AnchorSideRight.Side = asrBottom
     AnchorSideBottom.Control = pnlDetails
     Left = 0
-    Height = 216
+    Height = 191
     Top = 69
     Width = 912
     Anchors = [akTop, akLeft, akRight, akBottom]
@@ -741,7 +741,7 @@ object frmMain: TfrmMain
     AnchorSideBottom.Control = pnlButtons
     Left = 0
     Height = 110
-    Top = 285
+    Top = 260
     Width = 912
     Anchors = [akLeft, akRight, akBottom]
     BevelOuter = bvNone
@@ -1744,6 +1744,7 @@ object frmMain: TfrmMain
       end
       object MenuItem95: TMenuItem
         Action = acMarkAll
+        Caption = 'Mark EVERY QSO as uploaded to ALL logs'
       end
       object MenuItem97: TMenuItem
         Caption = '-'
@@ -1752,7 +1753,7 @@ object frmMain: TfrmMain
         Action = acUploadToAll
       end
       object MenuItem107: TMenuItem
-        Caption = 'Remove all upload triggers'
+        Caption = 'Rebuild all upload triggers'
         OnClick = MenuItem107Click
       end
     end

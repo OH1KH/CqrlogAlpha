@@ -353,7 +353,7 @@ type
                                       Bcw, Ecw, Bdata, Edata, Bssb, Essb, Bam, Eam, Bfm, Efm:currency);
     procedure GetRXTXOffset(Freq : Currency; var RXOffset,TXOffset : Currency);
     procedure LoadQSODateColorSettings;
-    procedure PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery;lTr : TSQLTransaction);
+    procedure PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery);
 
   protected
    // This procedure will receive the events that are logged by the connection:
@@ -528,7 +528,7 @@ begin
   mQ.ExecSQL;
   trmQ.Commit;
 
-  PrepareEmptyLogUploadStatusTables(mQ,trmQ);
+  PrepareEmptyLogUploadStatusTables(mQ);
 
   RefreshLogList(nr)
 end;
@@ -3072,7 +3072,7 @@ begin
 
       if old_version < 8 then
       begin
-        PrepareEmptyLogUploadStatusTables(Q1,trQ1);
+        PrepareEmptyLogUploadStatusTables(Q1);
       end;
 
       if old_version < 9 then
@@ -3309,7 +3309,6 @@ begin
       if (old_version < 20) then   //changes to current log for QRZlog usage
             begin
               trQ1.StartTransaction;
-              Q1.SQL.Clear;
               Q1.SQL.Text := 'DROP TABLE IF EXISTS  id_store';
               if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
               Q1.ExecSQL;
@@ -3322,7 +3321,8 @@ begin
               if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
               Q1.ExecSQL;
               Q1.SQL.Text := 'CREATE UNIQUE INDEX id_cqrlog_main ON id_store(id_cqrlog_main)';
-              if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+              if fDebugLevel>=1 then
+                 Writeln(Q1.SQL.Text);
               Q1.ExecSQL;
               trQ1.Commit;
 
@@ -3342,17 +3342,52 @@ begin
                 max := Q1.Fields[0].AsInteger;
                 Q1.Close;
                 Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_QRZLOG)+','+IntToStr(max)+')';
-                if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+                if fDebugLevel>=1 then
+                   Writeln(Q1.SQL.Text);
                 Q1.ExecSQL;
                 trQ1.Commit;
                end;
-      end;
+
+              trQ1.StartTransaction;
+              Q1.SQL.Text := 'ALTER table db_version ADD COLUMN IF NOT EXISTS stop_trigs SMALLINT DEFAULT 0';
+              if fDebugLevel>=1 then
+                                Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              trQ1.Commit;
+
+              Q1.SQL.Text := 'select count(trigger_name) as count from information_schema.triggers where trigger_schema = '+ QuotedStr(dmData.DBName);
+               if fDebugLevel>=1 then
+                   Writeln(Q1.SQL.Text);
+               trQ1.StartTransaction;
+               Q1.Open;
+               max:=Q1.Fields[0].AsInteger;
+               Q1.Close;
+               trQ1.Rollback;
+
+               if (max > 0 ) then //recreate triggers
+                Begin
+                trQ1.StartTransaction;
+                Q1.SQL.Text := '';
+                for max:=0 to dmData.scOnlineLogTriggers.Script.Count-1 do
+                begin
+                  if Pos('$', dmData.scOnlineLogTriggers.Script.Strings[max]) = 0 then
+                    Q1.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[max])
+                  else begin
+                    if fDebugLevel>=1 then
+                       Writeln(Q1.SQL.Text);
+                    Q1.ExecSQL;
+                    Q1.SQL.Text := ''
+                  end
+                end;
+                trQ1.Commit;
+                end;
+            end;
 
       if TableExists('view_cqrlog_main_by_callsign') then
       begin
         trQ1.StartTransaction;
         Q1.SQL.Text := 'drop view view_cqrlog_main_by_callsign';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+        if fDebugLevel>=1 then  Writeln(Q1.SQL.Text);
         Q1.ExecSQL;
         trQ1.Commit
       end;
@@ -3884,14 +3919,9 @@ begin
 end;
 
 
-procedure TdmData.PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery;lTr : TSQLTransaction);
-var
-  Commit : Boolean = False;
-begin
-  Commit := not lTr.Active;
+procedure TdmData.PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery);
 
-  if Commit then
-    lTr.StartTransaction;
+begin
 
   lQ.SQL.Text := 'insert into log_changes (id,cmd) values(1,'+QuotedStr(C_ALLDONE)+')';
   if fDebugLevel>=1 then Writeln(lQ.SQL.Text);
@@ -3917,8 +3947,6 @@ begin
   if fDebugLevel>=1 then Writeln(lQ.SQL.Text);
   lQ.ExecSQL;
 
-  if Commit then
-    lTr.Commit
 end;
 
 
@@ -3931,38 +3959,25 @@ const
   C_UPD = 'update cqrlog_main set eqsl_qsl_sent=%s,eqsl_qslsdate=NULL where id_cqrlog_main=%d';
 var
   t  : TSQLQuery;
-  tr : TSQLTransaction;
 begin
   t := TSQLQuery.Create(nil);
-  tr := TSQLTransaction.Create(nil);
   try try
     dmLogUpload.DisableOnlineLogSupport;
 
-    t.Transaction := tr;
-    tr.DataBase   := MainCon;
     t.DataBase    := MainCon;
 
-    tr.StartTransaction;
     t.SQL.Text := Format(C_UPD,[QuotedStr(''),id]);
     if fDebugLevel>=1 then Writeln(t.SQL.Text);
     t.ExecSQL
   except
     on E : Exception do
-    begin
       Writeln(E.Message);
-      tr.Rollback
-    end
   end;
   finally
-    t.Close;
-    if tr.Active then
-      tr.Commit;
 
     if dmLogUpload.LogUploadEnabled then
       dmLogUpload.EnableOnlineLogSupport(False);
-
-    FreeAndNil(t);
-    FreeAndNil(tr)
+    t.Free;
   end
 end;
 
@@ -3975,38 +3990,24 @@ const
   C_UPD = 'update cqrlog_main set lotw_qsls=%s,lotw_qslsdate=NULL where id_cqrlog_main=%d';
 var
   t  : TSQLQuery;
-  tr : TSQLTransaction;
 begin
   t := TSQLQuery.Create(nil);
-  tr := TSQLTransaction.Create(nil);
   try try
     dmLogUpload.DisableOnlineLogSupport;
 
-    t.Transaction := tr;
-    tr.DataBase   := MainCon;
     t.DataBase    := MainCon;
 
-    tr.StartTransaction;
     t.SQL.Text := Format(C_UPD,[QuotedStr(''),id]);
     if fDebugLevel>=1 then Writeln(t.SQL.Text);
     t.ExecSQL
   except
     on E : Exception do
-    begin
       Writeln(E.Message);
-      tr.Rollback
-    end
   end;
   finally
-    t.Close;
-    if tr.Active then
-      tr.Commit;
-
     if dmLogUpload.LogUploadEnabled then
       dmLogUpload.EnableOnlineLogSupport(False);
-
-    FreeAndNil(t);
-    FreeAndNil(tr)
+    t.Free;
   end
 end;
 

@@ -107,6 +107,7 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkAutoClean: TCheckBox;
     chkCbSH: TCheckBox;
     chkLoSH: TCheckBox;
     chkHrSH: TCheckBox;
@@ -1729,6 +1730,7 @@ begin
   cqrini.WriteString('OnlineLog','QrzUrl',edtQrzUrl.Text);
 
   cqrini.WriteBool('OnlineLog','CloseAfterUpload',chkCloseAfterUpload.Checked);
+  cqrini.WriteBool('OnlineLog','AutoClean',chkAutoClean.Checked);
   cqrini.WriteBool('OnlineLog','IgnoreLoTWeQSL',chkIgnoreLoTW.Checked);
   cqrini.WriteBool('OnlineLog','IgnoreQSL',chkIgnoreQSL.Checked);
   cqrini.WriteBool('OnlineLog','IgnoreEdit',chkIgnoreEdit.Checked);
@@ -3753,15 +3755,16 @@ begin
 
   chkQrzUpEnabled.Checked := cqrini.ReadBool('OnlineLog','QrzUP',False);
   chkQrzUpOnline.Checked  := cqrini.ReadBool('OnlineLog','QrzUpOnline',False);
-  edtQrzApiKey.Text         := cqrini.ReadString('OnlineLog','QrzApiKey','');
+  edtQrzApiKey.Text       := cqrini.ReadString('OnlineLog','QrzApiKey','');
   cmbQrzColor.Selected    := cqrini.ReadInteger('OnlineLog','QrzColor',clTeal);
   edtQrzUrl.Text          := cqrini.ReadString('OnlineLog','QrzUrl', 'https://logbook.qrz.com/api');
   chkQrzUpEnabledChange(nil);
 
   chkCloseAfterUpload.Checked := cqrini.ReadBool('OnlineLog','CloseAfterUpload',False);
-  chkIgnoreLoTW.Checked  := cqrini.ReadBool('OnlineLog','IgnoreLoTWeQSL',False);
-  chkIgnoreQSL.Checked   := cqrini.ReadBool('OnlineLog','IgnoreQSL',False);
-  chkIgnoreEdit.Checked  := cqrini.ReadBool('OnlineLog','IgnoreEdit',False);
+  chkAutoClean.Checked        := cqrini.ReadBool('OnlineLog','AutoClean',False);
+  chkIgnoreLoTW.Checked       := cqrini.ReadBool('OnlineLog','IgnoreLoTWeQSL',False);
+  chkIgnoreQSL.Checked        := cqrini.ReadBool('OnlineLog','IgnoreQSL',False);
+  chkIgnoreEdit.Checked       := cqrini.ReadBool('OnlineLog','IgnoreEdit',False);
 
   edtCondxImageUrl.Text      := cqrini.ReadString('prop','Url','http://www.hamqsl.com/solarbrief.php');
   edtCondxTextUrl.Text       := cqrini.ReadString('prop','UrlTxt','https://www.hamqsl.com/solarxml.php' );

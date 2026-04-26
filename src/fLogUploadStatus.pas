@@ -53,6 +53,7 @@ type
     procedure UploadDataToQrzLog(ToAll : Boolean = False);
     //procedure UploadDataToAll;
     procedure SyncUploadInformation;
+    procedure DoAutoCleanup;
   end; 
 
 type
@@ -747,6 +748,8 @@ end;
 procedure TfrmLogUploadStatus.FormClose(Sender: TObject;
   var CloseAction: TCloseAction);
 begin
+  if cqrini.ReadBool('OnlineLog','AutoClean',False) then
+                                                    DoAutoCleanup;
   dmUtils.SaveWindowPos(Self);
 end;
 
@@ -850,15 +853,42 @@ procedure TfrmLogUploadStatus.UploadDataToQrzLog(ToAll : Boolean = False);
 begin
   UploadDataToOnlineLogs(upQrzLog, ToAll)
 end;
- { OH1KH  seems that this is not used anywhere!
-procedure TfrmLogUploadStatus.UploadDataToAll;
-begin
-  UploadDataToOnlineLogs(upHamQTH, True);
-  UploadDataToOnlineLogs(upClubLog, True);
-  UploadDataToOnlineLogs(upHrdLog, True);
-  UploadDataToOnlineLogs(upUDPLog, True);
-  UploadDataToOnlineLogs(upQrzLog, True)
+Procedure TfrmLogUploadStatus.DoAutoCleanup;        //makes auto cleanup to table log_changes if all selected OnlineLogs are completed and user has selected autoclean
+Var
+  p       : integer;
+
+Function Pending(where : String):integer;
+Begin
+  Result:=0;
+  dmLogUpload.Q2.Close;
+  if dmLogUpload.trQ2.Active then dmLogUpload.trQ2.RollBack;
+  dmLogUpload.trQ2.StartTransaction;
+  dmLogUpload.Q2.SQL.Text :=  'select (select max(id) from log_changes)-(select id_log_changes  from upload_status where logname='+QuotedStr(where)+') as A';
+  if debug then
+       writeln(dmLogUpload.Q2.SQL.Text );
+  dmLogUpload.Q2.Open;
+  Result:=dmLogUpload.Q2.Fields[0].AsInteger;
+  dmLogUpload.Q2.Close;
+  dmLogUpload.trQ2.Rollback;
 end;
-  }
+
+Begin
+     p:=0;
+     if cqrini.ReadBool('OnlineLog','HaUP',False)  then
+                                                   p:=p+Pending('HamQTH');
+     if cqrini.ReadBool('OnlineLog','ClUP',False)  then
+                                                   p:=p+Pending('ClubLog');
+     if cqrini.ReadBool('OnlineLog','HrUP',False)  then
+                                                   p:=p+Pending('HRDLog');
+     if cqrini.ReadBool('OnlineLog','UdUP',False)  then
+                                                   p:=p+Pending('UDPLog');
+     if cqrini.ReadBool('OnlineLog','QrzUP',False) then
+                                                   p:=p+Pending('QRZLog');
+
+     if (p=0) then
+              dmLogUpload.MarkAsUploadedToAllOnlineLogs;  //this cleans table log_changes but keeps it's last ID value.
+
+end;
+
 end.
 

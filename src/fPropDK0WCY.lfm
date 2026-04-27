@@ -9,12 +9,12 @@ object frmPropDK0WCY: TfrmPropDK0WCY
   Constraints.MinHeight = 275
   Constraints.MinWidth = 200
   KeyPreview = True
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnDblClick = FormDblClick
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  LCLVersion = '3.8.0.0'
   object lblBoulAidx: TLabel
     AnchorSideLeft.Control = lblInfoDate
     AnchorSideTop.Control = lblInfo
@@ -185,9 +185,9 @@ object frmPropDK0WCY: TfrmPropDK0WCY
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000
     }
-    OnClick = sbtnRefreshClick
     ShowHint = True
     ParentShowHint = False
+    OnClick = sbtnRefreshClick
   end
   object lblSolAct: TLabel
     AnchorSideLeft.Control = lblInfoDate

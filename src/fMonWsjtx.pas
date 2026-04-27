@@ -1674,7 +1674,7 @@ begin
              exit;
             end;
 
-          if (not frmWorkedGrids.GridOK(msgLocator)) or (msgLocator = 'RR73') then //disble false used "RR73" being a loc
+          if (not dmUtils.IsLoc46(msgLocator)) or (msgLocator = 'RR73') then //disble false used "RR73" being a loc
                   msgLocator := '';
 
           if isItACall(msgCall) then
@@ -1703,7 +1703,7 @@ begin
             if msgLocator <> '' then
             begin
               PrintLoc(msgLocator, timeToAlert, msgTime);
-              if frmWorkedGrids.GridOK(msgLocator) then  AddXplanetList(msgCall,msgLocator);
+              if dmUtils.IsLoc46(msgLocator) then  AddXplanetList(msgCall,msgLocator);
             end;
             adif:= dmDXCC.id_country(msgCall, Now(), pfx, msgRes);
 
@@ -1756,7 +1756,7 @@ begin
   if (( msgList.Count < 2 ) and (pos(edtFollowCall.Text,msgList[0])>0))//1 items: Fcall exist: "OH1KH/IMAGE"
    or (( msgList.Count > 1 ) and (pos(edtFollowCall.Text,msgList[0])=0))//2 or more items and Fcall is not 1st
     or (( msgList.Count > 1 ) and (pos(edtFollowCall.Text,msgList[0])=1) //special call is 1st and second is
-       and frmWorkedGrids.GridOK(msgList[1]) )                                         //locator like "F5MYK/MM OJ12"
+       and dmUtils.IsLoc46(msgList[1]) )                                         //locator like "F5MYK/MM OJ12"
      then
           begin
             edtFollow.Font.Color := clBlack;
@@ -1850,7 +1850,7 @@ begin
   Pcall := trim(Pcall);
   RepBuf := Pcall;
   //We have plain callsign now for database search and coloback printing
-  i:= frmWorkedGrids.WkdCall(Pcall, CurBand, CurMode);
+  i:= dmUtils.WkdCall(Pcall, CurBand, CurMode);
   case i of
     0: Begin
         PCallColor :=wkdnever;
@@ -1911,7 +1911,7 @@ Begin
      Begin
         L1:= UpperCase(copy(PLoc, 1, 2));
         L2:= copy(PLoc, 3, 2);
-        case frmWorkedGrids.WkdGrid(PLoc, CurBand, CurMode) of
+        case dmUtils.WkdGrid(PLoc, CurBand, CurMode) of
           //returns 0=not wkd
           //        1=full grid this band and mode
           //        2=full grid this band but NOT this mode
@@ -1974,7 +1974,7 @@ Begin
        end
    else
        begin
-        case frmWorkedGrids.WkdMainGrid(PLoc, CurBand, CurMode) of
+        case dmUtils.WkdMainGrid(PLoc, CurBand, CurMode) of
           //returns 0=not wkd
           //        1=main grid this band and mode
           //        2=main grid this band but NOT this mode
@@ -2193,7 +2193,7 @@ begin
      Fox73 := ((msgCall = 'RR73') and (msgLocator =''));
 
      if LocalDbg then  Writeln('caller:', msgCall, '  loc:', msgLocator);
-     if (not frmWorkedGrids.GridOK(msgLocator)) or (msgLocator = 'RR73') then //disble false used "RR73" being a loc
+     if (not dmUtils.IsLoc46(msgLocator)) or (msgLocator = 'RR73') then //disble false used "RR73" being a loc
             msgLocator := '*QSO'; //if not real loc it is report, RRR, or 73
 
      if Fox73 then
@@ -2302,7 +2302,7 @@ begin
       begin
         if msgList[index] = 'DX' then
           CqDir:='DX'
-        else if frmWorkedGrids.GridOK(msgList[index]) AND (msgList[index] <> 'RR73') then
+        else if dmUtils.IsLoc46(msgList[index]) AND (msgList[index] <> 'RR73') then
           msgLocator:=msgList[index]
         else if isItACall(msgList[index]) then
           msgCall:=msgList[index]
@@ -2312,7 +2312,7 @@ begin
       // if its match to nothing it will be ignored
       if index = 3 then
       begin
-        if frmWorkedGrids.GridOK(msgList[index]) AND (msgList[index] <> 'RR73') then
+        if dmUtils.IsLoc46(msgList[index]) AND (msgList[index] <> 'RR73') then
           msgLocator:=msgList[index]
         else if isItACall(msgList[index]) then
           msgCall:=msgList[index]
@@ -2423,7 +2423,7 @@ begin
     end;
 
    PrintLoc(msgLocator, timeToAlert, msgTime,chkCbCQ.Checked);
-   if frmWorkedGrids.GridOK(msgLocator) then AddXplanetList(msgCall,msgLocator);
+   if dmUtils.IsLoc46(msgLocator) then AddXplanetList(msgCall,msgLocator);
 
      dxcc_number_adif := dmDXCC.id_country(msgCall, '', Now(), pfx, cont,
        msgRes, WAZ, posun, ITU, lat, long);
@@ -2610,7 +2610,7 @@ begin
 
      if Stat <>''  then
        begin
-        us := frmWorkedGrids.WkdState(Stat,Curband, Curmode);
+        us := dmUtils.WkdState(Stat,Curband, Curmode);
          case us of
               0: Begin
                   StatClr :=wkdnever;

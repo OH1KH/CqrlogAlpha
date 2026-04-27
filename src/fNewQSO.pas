@@ -1490,6 +1490,7 @@ begin
 end;
 
 procedure TfrmNewQSO.LoadSettings;
+
 begin
   dmUtils.ModifyXplanetConf;
   dmUtils.LoadFontSettings(frmNewQSO);
@@ -1584,13 +1585,25 @@ begin
     dmUtils.RunXplanet;
 
   if cqrini.ReadBool('Window','Prop',False) then
-    frmPropagation.Show;
+    Begin
+     if (frmPropagation=nil)  then
+        Application.CreateForm(TfrmPropagation,  frmPropagation);
+     frmPropagation.Show;
+    end;
 
   if cqrini.ReadBool('Window','pDK0WCY',False) then
-    frmPropDK0WCY.Show;
+    Begin
+     if (frmPropDK0WCY=nil)  then
+        Application.CreateForm(TfrmPropDK0WCY,  frmPropDK0WCY);
+     frmPropDK0WCY.Show;
+    end;
 
    if cqrini.ReadBool('Window','WorkedGrids',False) then
-    frmWorkedGrids.Show;
+    Begin
+     if (frmWorkedGrids=nil)  then
+        Application.CreateForm(TfrmWorkedGrids,  frmWorkedGrids);
+     frmWorkedGrids.Show;
+    end;
 
   if cqrini.ReadBool('Window','CWKeys',False) then
     acCWFKey.Execute;
@@ -1627,14 +1640,10 @@ begin
   frmNewQSO.pgDetails.Pages[2].TabVisible := cqrini.ReadBool('NewQSO','SatelliteMode', False);
   frmNewQSO.pgDetails.Pages[3].TabVisible := cqrini.ReadBool('NewQSO','SatelliteMode', False);
 
-  //this have to be done here when log is selected (settings at database)
-  frmReminder.chRemi.Checked := cqrini.ReadBool('Reminder','chRemi',False);
-  frmReminder.chUTRemi.Checked := cqrini.ReadBool('Reminder','chUTRemi',False);
-  frmReminder.RemindTimeSet.Text := cqrini.ReadString('Reminder','RemindTimeSet','');
-  frmReminder.RemindUThour.Text := cqrini.ReadString('Reminder','RemindUThour','');
-  frmReminder.RemiMemo.Lines.Clear;
-  frmReminder.RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
-  frmReminder.btCloseClick(nil);
+  //this have to be done here when log is selected (settings from database)
+  if ((cqrini.ReadBool('Reminder','chRemi',False))
+     or (cqrini.ReadBool('Reminder','chUTRemi',False))) then
+       acReminderExecute(Self.btnSave); //fake to get diffrent Tobject
 
   dmUtils.InsertQSL_S(cmbQSL_S);
   dmUtils.InsertQSL_R(cmbQSL_R);
@@ -1662,154 +1671,63 @@ begin
 end;
 
 procedure TfrmNewQSO.CloseAllWindows;
+
+  Procedure ClFrm(a:TForm);
+      var
+         name:string;
+      Begin
+       if (a<>nil) then
+        begin
+         name:=copy(a.Name,4,length(a.Name));
+         case name of //exceptions where save name is not form name
+            'TRXControl' :	name:='TRX';
+            'RotControl' :	name:='ROT';
+            'QSODetails' :	name:='Details';
+            'Propagation':	name:='Prop';
+            'PropDK0WCY' :	name:='pDK0WCY';
+            'Main'       :	name:='QSOList';
+         end;
+         if (a.Showing) then
+          begin
+            a.Close;
+            cqrini.WriteBool('Window',name,True)
+          end
+          else
+            cqrini.WriteBool('Window',name,False);
+        end;
+      end;
+
 begin
   dmUtils.SaveDBGridInForm(frmNewQSO) ;
   tmrRadio.Enabled := False;
   tmrEnd.Enabled   := False;
   tmrStart.Enabled := False;
 
-  if Assigned(cqrini) then
+
+  if Assigned(cqrini) then   //this should always be
   begin
-    cqrini.WriteBool('Window','CWKeys',frmCWKeys.Showing);
 
     //I have to close window manually because of bug in lazarus.
+    cqrini.WriteBool('Window','CWKeys',frmCWKeys.Showing);
 
-    if frmGrayline.Showing then
-    begin
-      frmGrayline.Close;
-      cqrini.WriteBool('Window','Grayline',True)
-    end
-    else
-      cqrini.WriteBool('Window','Grayline',False);
-
-    if frmTRXControl.Showing then
-    begin
-      frmTRXControl.Close;
-      cqrini.WriteBool('Window','TRX',True)
-    end
-    else begin
-      cqrini.WriteBool('Window','TRX',False)
-    end;
-    frmTRXControl.CloseRigs;
-
-    if frmRotControl.Showing then
-    begin
-      frmRotControl.Close;
-      cqrini.WriteBool('Window','ROT',True)
-    end
-    else
-      cqrini.WriteBool('Window','ROT',False);
-
-    if frmDXCluster.Showing then
-    begin
-      frmDXCluster.Close;
-      cqrini.WriteBool('Window','Dxcluster',True)
-    end
-    else
-      cqrini.WriteBool('Window','Dxcluster',False);
-
-    if frmQSODetails.Showing then
-    begin
-      frmQSODetails.Close;
-      cqrini.WriteBool('Window','Details',True)
-    end
-    else
-      cqrini.WriteBool('Window','Details',False);
-
-    if frmBandMap.Showing then
-    begin
-      frmBandMap.Close;
-      cqrini.WriteBool('Window','BandMap',True)
-    end
-    else
-      cqrini.WriteBool('Window','BandMap',False);
-
-    if frmPropagation.Showing then
-    begin
-      frmPropagation.Close;
-      cqrini.WriteBool('Window','Prop',True)
-    end
-    else
-      cqrini.WriteBool('Window','Prop',False);
-
-    if frmPropDK0WCY.Showing then
-    begin
-      frmPropDK0WCY.Close;
-      cqrini.WriteBool('Window','pDK0WCY',True)
-    end
-    else
-      cqrini.WriteBool('Window','pDK0WCY',False);
-
-   if frmWorkedGrids.Showing then
-    begin
-      frmWorkedGrids.Close;
-      cqrini.WriteBool('Window','WorkedGrids',True)
-    end
-    else
-      cqrini.WriteBool('Window','WorkedGrids',False);
-
-   if (frmMonWsjtx <> nil) and frmMonWsjtx.Showing then
-     begin
-       frmMonWsjtx.Close;
-     end;
-
-    if frmCWKeys.Showing then
-    begin
-      frmCWKeys.Close;
-      cqrini.WriteBool('Window','CWKeys',True)
-    end
-    else
-      cqrini.WriteBool('Window','CWKeys',False);
-
-    if frmSCP.Showing then
-    begin
-      cqrini.WriteBool('Window','SCP',True);
-      frmSCP.Close
-    end
-    else
-      cqrini.WriteBool('Window','SCP',False);
-
-    if frmMain.Showing then
-    begin
-      cqrini.WriteBool('Window','QSOList',True);
-      frmMain.Close
-    end
-    else
-      cqrini.WriteBool('Window','QSOList',False);
-
-    if frmLogUploadStatus.Showing then
-    begin
-      cqrini.WriteBool('Window','LogUploadStatus', True);
-      frmLogUploadStatus.Close
-    end
-    else
-      cqrini.WriteBool('Window','LogUploadStatus', False);
-
-    if frmCWType.Showing then
-    begin
-      cqrini.WriteBool('Window','CWType',True);
-      frmCWType.Close
-    end
-    else
-      cqrini.WriteBool('Window','CWType',False);
-
-    if frmRBNMonitor.Showing then
-    begin
-      cqrini.WriteBool('Window','RBNMonitor',True);
-      frmRBNMonitor.Close
-    end
-    else
-      cqrini.WriteBool('Window','RBNMonitor',False)
-  end ;
-
-  if frmContest.Showing then
-    begin
-      cqrini.WriteBool('Window','Contest',True);
-      frmContest.Close
-    end
-    else
-      cqrini.WriteBool('Window','Contest',False)
-
+    ClFrm(frmGrayline);
+    ClFrm(frmTRXControl);
+    ClFrm(frmRotControl);
+    ClFrm(frmDXCluster);
+    ClFrm(frmQSODetails);
+    ClFrm(frmBandMap);
+    ClFrm(frmPropagation);
+    ClFrm(frmPropDK0WCY);
+    ClFrm(frmWorkedGrids);
+    ClFrm(frmMonWsjtx);
+    ClFrm(frmCWKeys);
+    ClFrm(frmSCP);
+    ClFrm(frmMain);
+    ClFrm(frmLogUploadStatus);
+    ClFrm(frmCWType);
+    ClFrm(frmRBNMonitor);
+    ClFrm(frmContest);
+  end;
 end;
 
 procedure TfrmNewQSO.SaveSettings;
@@ -2591,7 +2509,7 @@ var
           and ( not frmContest.rbIgnoreDupes.Checked )
           and frmContest.chkMarkDupe.Checked then
            Begin
-             ContestDupe:=frmWorkedGrids.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
+             ContestDupe:=dmUtils.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
              if frmContest.rbNoMode4Dupe.Checked and ( ContestDupe=2) then
                                                   ContestDupe:=0;
              if (ContestDupe=1) or (ContestDupe=2)  then
@@ -3538,7 +3456,7 @@ begin
 
   fEditQSO := False; //this should be cleared by clearAll. Needed here ???
   frmNewQSO.UploadAllQSOOnline;
-  if frmWorkedGrids.Showing then frmWorkedGrids.UpdateMap;
+  if (frmWorkedGrids<>nil) and (frmWorkedGrids.Showing) then frmWorkedGrids.UpdateMap;
   Op := cqrini.ReadString('TMPQSO','OP','');
   ShowOperator;
 
@@ -4739,7 +4657,19 @@ end;
 
 procedure TfrmNewQSO.acReminderExecute(Sender: TObject);
 begin
-  frmReminder.OpenReminder;
+  if (frmReminder=nil) then
+   begin
+    Application.CreateForm(TfrmReminder, frmReminder);
+    frmReminder.chRemi.Checked := cqrini.ReadBool('Reminder','chRemi',False);
+    frmReminder.chUTRemi.Checked := cqrini.ReadBool('Reminder','chUTRemi',False);
+    frmReminder.RemindTimeSet.Text := cqrini.ReadString('Reminder','RemindTimeSet','');
+    frmReminder.RemindUThour.Text := cqrini.ReadString('Reminder','RemindUThour','');
+    frmReminder.RemiMemo.Lines.Clear;
+    frmReminder.RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
+    frmReminder.btCloseClick(nil);
+   end;
+  if (Sender<>Self.btnSave) then
+                     frmReminder.Show;
 end;
 
 procedure TfrmNewQSO.acRemoteWsjtExecute(Sender: TObject);
@@ -4842,6 +4772,8 @@ end;
 
 procedure TfrmNewQSO.acPropExecute(Sender: TObject);
 begin
+   if (frmPropagation=nil)  then
+        Application.CreateForm(TfrmPropagation,  frmPropagation);
    frmPropagation.Show
 end;
 
@@ -4901,6 +4833,7 @@ end;
 
 procedure TfrmNewQSO.acLocatorMapExecute(Sender: TObject);
 begin
+  if (frmWorkedGrids = nil) then  Application.CreateForm(TfrmWorkedGrids, frmWorkedGrids);
   frmWorkedGrids.Show
 end;
 
@@ -4990,6 +4923,8 @@ end;
 
 procedure TfrmNewQSO.acpDK0WCYExecute(Sender: TObject);
 begin
+   if (frmPropDK0WCY=nil)  then
+        Application.CreateForm(TfrmPropDK0WCY,  frmPropDK0WCY);
    frmPropDK0WCY.Show
 end;
 
@@ -5981,7 +5916,7 @@ begin
     Exit;
   end;
 
-  // keys for CW speed up / down
+                                                                    // keys for CW speed up / down
   n:=IntToStr(frmTRXControl.cmbRig.ItemIndex);
   if( (key in [33,34]) and (not dbgrdQSOBefore.Focused) and (Assigned(CWint)) )then
   begin
@@ -6000,7 +5935,7 @@ begin
     Exit;
   end;
 
-  // CTRL-Key > Keyboard Shortcuts for NewQSO with CTRL
+                                                                    // CTRL-Key > Keyboard Shortcuts for NewQSO with CTRL
  if (Shift = [ssCtrl]) then
   begin
       if (key = VK_F2) then                                         //VK_F2
@@ -6035,21 +5970,12 @@ begin
         key := 0;
         Exit;
       end;
-      if (key = VK_A) then                                          //VK_A
-      begin
-        acAddToBandMap.Execute;
-        key := 0;
-        Exit;
-      end;
+                            //from NewQso-menu-shortcut keys (NewQso.lfm):
+                                                                    //VK_A
+
       if (key = VK_D) then                                          //VK_D
       begin
         acDXCCCfm.Execute;
-        key := 0;
-        Exit;
-      end;
-      if (key = VK_I) then                                          //VK_I
-      begin
-        acDetails.Execute;
         key := 0;
         Exit;
       end;
@@ -6059,30 +5985,20 @@ begin
         key := 0;
         Exit;
       end;
-      if (key = VK_M) then                                          //VK_M
+      if (key = VK_I) then                                          //VK_I
       begin
-        acRemoteMode.Execute;
+        acDetails.Execute;
         key := 0;
         Exit;
       end;
-      if (key = VK_N) then                                          //VK_N
-      begin
-        acLongNote.Execute;
-        key := 0;
-        Exit;
-      end;
-      if(key = VK_P) then                                           //VK_P
-      begin
-        acPreferences.Execute;
-        key := 0;
-        Exit;
-      end;
-      if (key = VK_Q) then                                          //VK_Q
-      begin
-        btnCancelClick(nil);
-        key := 0;
-        Exit;
-      end;
+                            //from NewQso-menu-shortcut keys (NewQso.lfm):
+                                                                    //VK_J
+                                                                    //VK_K
+                                                                    //VK_M
+                                                                    //VK_N
+                                                                    //VK_P
+                                                                    //VK_Q
+
       if (key = VK_R) then                                          //VK_R
       begin
         if edtCall.Text <> '' then
@@ -6103,6 +6019,9 @@ begin
         key := 0;
         Exit;
       end;
+                            //from NewQso-menu-shortcut keys (NewQso.lfm):
+                                                                    //VK_T
+
       if (key = VK_U) then                                          //VK_U
       begin
         if frmLogUploadStatus.Showing then
@@ -6110,12 +6029,8 @@ begin
         key := 0;
         Exit;
       end;
-      if (key = VK_W) then                                          //VK_W
-        Begin
-         acSendSpot.Execute;
-         key := 0;
-         Exit;
-        end;
+                                                                    //VK_W
+
       if key in [VK_1..VK_9] then                                   //VK_1..VK_9
          Begin
           SetSplit(chr(key));
@@ -6129,7 +6044,7 @@ begin
  end;
 
 
- //three cases of VK_O
+                                                     //three cases of
    if (key = VK_O) then                                             //VK_O
    Begin
    if (Shift = [ssCtrl,ssShift]) then

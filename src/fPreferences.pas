@@ -1815,8 +1815,9 @@ begin
     end
   end;
 
-  if frmPropagation.Showing then
-    frmPropagation.RefreshPropagation;
+  if (frmPropagation<>nil) then
+     if frmPropagation.Showing then
+        frmPropagation.RefreshPropagation;
 
   frmNewQSO.Op:=edtOperator.text;
   cqrini.WriteString('TMPQSO','OP',edtOperator.text);

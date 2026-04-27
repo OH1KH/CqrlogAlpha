@@ -1784,7 +1784,7 @@ Begin
    if not (rbIgnoreDupes.Checked) then
    begin
      //dupe check
-     dupe := frmWorkedGrids.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
+     dupe := dmUtils.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
      // 1= wkd this band and mode
      // 2= wkd this band but NOT this mode
      if  ( (rbNoMode4Dupe.Checked) and (dupe = 1) )

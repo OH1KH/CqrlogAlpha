@@ -94,6 +94,7 @@ begin
         Writeln('   -16  Grayline map RBN debug messages');
         Writeln('   -32  RBNmonitor debug messages');
         Writeln('   -64  SQL action debug messages');
+        Writeln('  -128  utils unit debug messages');
         Writeln;
         Exit;
      end;
@@ -142,21 +143,18 @@ begin
   Application.CreateForm(TfrmDXCluster, frmDXCluster);
   Application.CreateForm(TfrmQSODetails, frmQSODetails);
   Application.CreateForm(TfrmBandMap, frmBandMap);
-  Application.CreateForm(TfrmPropagation, frmPropagation);
   Application.CreateForm(TfrmCWKeys, frmCWKeys);
   Application.CreateForm(TfrmSCP, frmSCP);
   Application.CreateForm(TfrmRotControl, frmRotControl);
   Application.CreateForm(TfrmLogUploadStatus, frmLogUploadStatus);
   Application.CreateForm(TfrmCWType, frmCWType);
   Application.CreateForm(TfrmRbnMonitor, frmRbnMonitor);
-  Application.CreateForm(TfrmWorkedGrids, frmWorkedGrids);
-  Application.CreateForm(TfrmPropDK0WCY, frmPropDK0WCY);
-  Application.CreateForm(TfrmReminder, frmReminder);
   Application.CreateForm(TfrmContest, frmContest);
   Application.CreateForm(Tfrmxfldigi, frmxfldigi);
   Application.CreateForm(TdmMembership, dmMembership);
   Application.CreateForm(TdmSatellite, dmSatellite);
   Application.CreateForm(TfrmProgress, frmProgress);
+
 
    if (not Application.HasOption('q','quiet')) then
   Begin

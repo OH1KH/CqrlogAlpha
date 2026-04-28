@@ -3135,7 +3135,7 @@ begin
   myqth := cqrini.ReadString('Station', 'QTH', '');
   if key <> '' then
    Begin
-    if (frmContest.Showing) and ( not (cqrini.ReadBool('CW','S&P',True))) then //if contest and run mode keys are F11-F20
+    if ((frmContest <> nil) and frmContest.Showing) and ( not (cqrini.ReadBool('CW','S&P',True))) then //if contest and run mode keys are F11-F20
      Begin
       if key='F10' then key:='F20'
        else
@@ -6194,7 +6194,7 @@ var
 begin
   if LocalDbg then Writeln('Start WkdCall');
   //in case we were called from contest form open
-  if ((frmContest.Showing) and ((frmContest.rbDupeCheck.Checked) or (frmContest.rbNoMode4Dupe.Checked)))
+  if (((frmContest <> nil) and frmContest.Showing) and ((frmContest.rbDupeCheck.Checked) or (frmContest.rbNoMode4Dupe.Checked)))
       then
             daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('frmContest', 'DupeFrom', '1900-01-01')) //default date check all qsos
    else

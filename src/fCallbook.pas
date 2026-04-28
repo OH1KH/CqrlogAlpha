@@ -120,15 +120,17 @@ begin
   begin
     key := #0;
     ClearAll;
-    Close
+    Self.Close
   end;
 end;
 
 procedure TfrmCallbook.btnCloseClick(Sender: TObject);
 begin
    ClearAll;
-   Close
+   Self.Close
 end;
+
+
 
 end.
 

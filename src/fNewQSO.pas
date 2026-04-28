@@ -16,12 +16,14 @@ unit fNewQSO;
 interface
 
 uses
+  uCWKeying,
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   DBGrids, StdCtrls, Buttons, ComCtrls, Grids, inifiles,
   LCLType, httpsend, Menus, ActnList, process, db,
-  uCWKeying, ipc, baseunix, dLogUpload, blcksock, dateutils,
-  fMonWsjtx, fWorkedGrids,fPropDK0WCY, fAdifImport, RegExpr,
-  FileUtil, LazFileUtils, sqldb, strutils, LazUTF8;
+  ipc, baseunix, dLogUpload, blcksock, dateutils,
+  RegExpr, FileUtil, LazFileUtils, sqldb, strutils, LazUTF8;
+
+
 
 const
   cRefCall = 'Ref.call (CTRL+R): ';
@@ -848,9 +850,8 @@ uses dUtils, fChangeLocator, fChangeOperator, dDXCC, dDXCluster, dData, fMain, f
      fLongNote, fRefCall, fKeyTexts, fCWType, fExportProgress, fPropagation, fCallAttachment,
      fQSLViewer, fCWKeys, uMyIni, fDBConnect, fAbout, uVersion, fChangelog,
      fBigSquareStat, fSCP, fRotControl, fLogUploadStatus, fRbnMonitor, fException, fCommentToCall,
-     fRemind, fContest, fXfldigi, dMembership, dSatellite, fCountyStat,fFreq;
-
-
+     fRemind, fContest, fXfldigi, dMembership, dSatellite, fCountyStat,fFreq,
+     fMonWsjtx, fWorkedGrids,fPropDK0WCY, fAdifImport;
 
 procedure TQSLTabThread.Execute;
 var
@@ -2505,7 +2506,8 @@ var
   var
      ContestDupe : integer;
      begin
-       if frmContest.Showing
+       if (frmContest <> nil)
+          and frmContest.Showing
           and ( not frmContest.rbIgnoreDupes.Checked )
           and frmContest.chkMarkDupe.Checked then
            Begin
@@ -3079,12 +3081,12 @@ begin
                  end;
                  case ContestNr of
                       0         : Begin   //user may want to store event qsos (like WWA) with "contest" name. Therefore contest #0 must be chekcked
-                                      if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
+                                      if ((frmContest <> nil) and frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
                                             edtContestName.Text :=frmContest.cmbContestName.Text;
                                   end;
                       1,2,3,4   : Begin
                                        edtContestSerialReceived.Text := copy( edtContestSerialReceived.Text,1,6); //Max Db length=6
-                                       if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
+                                       if ((frmContest <> nil) and frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
                                             edtContestName.Text :=frmContest.cmbContestName.Text;
                                   end;
                  end;
@@ -3438,7 +3440,7 @@ begin
      frmMain.acRefresh.Execute;
      if not fEditQso then
        begin
-            if frmContest.Showing and frmContest.chkSetFilter.Checked then
+            if (frmContest <> nil) and frmContest.Showing and frmContest.chkSetFilter.Checked then
               frmContest.chkSetFilterClick(nil) //shows last logged qso
             else
              frmMain.dbgrdMainKeyUp(nil,key,[ssCtrl]); //shows last logged qso
@@ -4326,6 +4328,7 @@ end;
 
 procedure TfrmNewQSO.acGraylineExecute(Sender: TObject);
 begin
+
   if frmGrayline.Showing then
     frmGrayline.BringToFront
   else
@@ -4634,6 +4637,8 @@ end;
 
 procedure TfrmNewQSO.acRBNMonitorExecute(Sender: TObject);
 begin
+  if (frmRBNMonitor=nil) then
+             Application.CreateForm(TfrmRbnMonitor, frmRbnMonitor);
   frmRBNMonitor.Show
 end;
 
@@ -4844,7 +4849,8 @@ end;
 
 procedure TfrmNewQSO.acMonitorWsjtxExecute(Sender: TObject);
 begin
-  if (frmMonWsjtx = nil) then  Application.CreateForm(TfrmMonWsjtx, frmMonWsjtx);
+  if (frmMonWsjtx = nil) then
+                  Application.CreateForm(TfrmMonWsjtx, frmMonWsjtx);
   frmMonWsjtx.Show;
   cqrini.WriteBool('Window','MonWsjtx',true);
 end;
@@ -4871,6 +4877,8 @@ end;
 
 procedure TfrmNewQSO.acContestExecute(Sender: TObject);
 begin
+  if (frmContest = nil) then
+                        Application.CreateForm(TfrmContest, frmContest);
   frmContest.Show;
 end;
 
@@ -5308,16 +5316,16 @@ begin
     ShowModal;
     if ModalResult = mrOK then
     begin
+      dmUtils.LoadFontSettings(frmNewQSO);
       if frmMain.Showing then
         dmUtils.LoadFontSettings(frmMain);
-      dmUtils.LoadFontSettings(frmNewQSO);
       if frmTRXControl.Showing then
         dmUtils.LoadFontSettings(frmTRXControl);
       if frmQSODetails.Showing then
         frmQSODetails.LoadFonts;
-      if frmRbnMonitor.Showing then
+      if (frmRbnMonitor <> nil) and frmRbnMonitor.Showing then
         dmUtils.LoadFontSettings(frmRbnMonitor);
-      if frmPropDK0WCY.Showing then
+      if (frmPropDK0WCY <> nil) and frmPropDK0WCY.Showing then
         dmUtils.LoadFontSettings(frmPropDK0WCY);
       if (frmMonWsjtx <> nil) and frmMonWsjtx.Showing then
                          dmUtils.LoadFontSettings(frmMonWsjtx);
@@ -5881,7 +5889,7 @@ begin
    if LastFkey = 0 then
     begin
       if (Sender <> nil ) then LastFKey := Key;   //LastKey resets by  KeyUp. Nil sender is a mouse click on button
-      if ( frmContest.Showing and (key = VK_F1)) then  //set the "lastCqFreq" @contest window
+      if ((frmContest <> nil) and  frmContest.Showing and (key = VK_F1)) then  //set the "lastCqFreq" @contest window
         Begin
           frmContest.lblCqMode.Caption:=frmTRXControl.GetRawMode;
           frmContest.lblCqFreq.Caption := FormatFloat('0.00',frmTRXControl.GetFreqkHz);
@@ -6932,7 +6940,7 @@ end;
 procedure TfrmNewQSO.SavePosition;
 begin
   dmUtils.SaveWindowPos(Self);
-  if frmContest.Showing then  frmContest.SaveSettings;
+  if (frmContest <> nil) and frmContest.Showing then  frmContest.SaveSettings;
   cqrini.WriteBool('NewQSO','StatBar',sbNewQSO.Visible);
   cqrini.SaveToDisk
 end;
@@ -7129,7 +7137,7 @@ begin
                    end
                  else
                    BringToFront;
-    if frmContest.Showing then
+    if (frmContest <> nil) and frmContest.Showing then
      Begin
      //this makes "double round" setting new qso but works with minimal code
      frmContest.edtCall.Text:=frmNewQSO.edtCall.Text;
@@ -7780,7 +7788,7 @@ end;
 
 procedure TfrmNewQSO.ReturnToNewQSO;
 begin
-  if frmContest.Showing  and frmContest.ContestReady then
+  if ( frmContest <> nil) and  frmContest.Showing  and frmContest.ContestReady then
       frmContest.edtCall.SetFocus
     else
       if edtCall.Enabled then
@@ -7856,10 +7864,12 @@ begin
                   run                   := cqrini.ReadBool('fldigi','run',False);
                   path                  := cqrini.ReadString('fldigi','path','');
                   FldigiXmlRpc          := cqrini.ReadBool('fldigi','xmlrpc',False);
-                  tmrFldigi.Enabled     := true;
                   if FldigiXmlRpc then
-                     frmxfldigi.Visible := true;
+                  if (frmxfldigi = nil) then
+                                        Application.CreateForm(Tfrmxfldigi, frmxfldigi);
+                  frmxfldigi.Visible := true;
                   RemoteActive := 'fldigi';
+                  tmrFldigi.Enabled     := true;
                 end;
     rmtWsjt   : begin
                   RememberAutoMode := chkAutoMode.Checked;

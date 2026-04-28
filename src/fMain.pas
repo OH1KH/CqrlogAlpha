@@ -939,8 +939,11 @@ end;
 
 procedure TfrmMain.acCallBookExecute(Sender: TObject);
 begin
+  if (frmCallbook = nil) then
+                     frmCallbook:= TfrmCallbook.Create(nil);
   frmCallbook.edtCall.Text := dmData.qCQRLOG.FieldByName('callsign').AsString;
-  frmCallbook.ShowModal
+  frmCallbook.ShowModal;
+  FreeAndNil(frmCallbook);
 end;
 
 procedure TfrmMain.FormActivate(Sender: TObject);

@@ -235,7 +235,7 @@ begin
       frmNewQSO.edtHisRST.Text, frmNewQSO.edtContestSerialSent.Text,frmNewQSO.edtContestExchangeMessageSent.Text,
       frmNewQSO.edtContestSerialReceived.Text,frmNewQSO.edtContestExchangeMessageReceived.Text,
       frmNewQSO.edtName.Text,frmNewQSO.lblGreeting.Caption,''));
-      if frmContest.Showing then  //set the "lastCqFreq" @contest window
+      if (frmContest <> nil) and frmContest.Showing then  //set the "lastCqFreq" @contest window
         Begin
           frmContest.lblCqMode.Caption:=frmTRXControl.GetRawMode;
           frmContest.lblCqFreq.Caption := FormatFloat('0.00',frmTRXControl.GetFreqkHz);

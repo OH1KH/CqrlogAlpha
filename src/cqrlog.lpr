@@ -130,30 +130,29 @@ begin
      end;
   end;
 
-  Application.CreateForm(TfrmNewQSO, frmNewQSO);
   Application.CreateForm(TdmData, dmData);
   Application.CreateForm(TdmLogUpload, dmLogUpload);
-  Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TdmUtils, dmUtils);
   Application.CreateForm(TdmDXCC, dmDXCC);
   Application.CreateForm(TdmDXCluster, dmDXCluster);
-  Application.CreateForm(TfrmGrayline, frmGrayline);
-  Application.CreateForm(TfrmCallbook, frmCallbook);
+  Application.CreateForm(TdmSatellite, dmSatellite);
+  Application.CreateForm(TdmMembership, dmMembership);
+
+  Application.CreateForm(TfrmNewQSO, frmNewQSO);
+  Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmTRXControl, frmTRXControl);
+  Application.CreateForm(TfrmRotControl, frmRotControl);
+  Application.CreateForm(TfrmCWKeys, frmCWKeys);
+  Application.CreateForm(TfrmCWType, frmCWType);
+  Application.CreateForm(TfrmSCP, frmSCP);
+  Application.CreateForm(TfrmGrayline, frmGrayline);
   Application.CreateForm(TfrmDXCluster, frmDXCluster);
   Application.CreateForm(TfrmQSODetails, frmQSODetails);
   Application.CreateForm(TfrmBandMap, frmBandMap);
-  Application.CreateForm(TfrmCWKeys, frmCWKeys);
-  Application.CreateForm(TfrmSCP, frmSCP);
-  Application.CreateForm(TfrmRotControl, frmRotControl);
   Application.CreateForm(TfrmLogUploadStatus, frmLogUploadStatus);
-  Application.CreateForm(TfrmCWType, frmCWType);
-  Application.CreateForm(TfrmRbnMonitor, frmRbnMonitor);
-  Application.CreateForm(TfrmContest, frmContest);
-  Application.CreateForm(Tfrmxfldigi, frmxfldigi);
-  Application.CreateForm(TdmMembership, dmMembership);
-  Application.CreateForm(TdmSatellite, dmSatellite);
-  Application.CreateForm(TfrmProgress, frmProgress);
+
+  //Application.CreateForm(TfrmRbnMonitor, frmRbnMonitor);
+  //Application.CreateForm(TfrmContest, frmContest);    leaving this off needs special testing still
 
 
    if (not Application.HasOption('q','quiet')) then

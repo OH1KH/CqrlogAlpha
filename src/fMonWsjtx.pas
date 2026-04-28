@@ -486,6 +486,7 @@ begin
   else
     SaveFormPos('Cq');  //to be same as intial save
   dmUtils.SaveWindowPos(Self);
+  CloseAction:= caFree;
 end;
  
 procedure TfrmMonWsjtx.Setbitmap(bm: TBitmap; col: Tcolor);
@@ -941,6 +942,8 @@ begin
                     +#13+#13+'(More info: Help/Digital modes: wjstx/Checking "USt”)' ;
               if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
                 Begin
+                 if frmProgress = nil then
+                                  frmProgress:=TfrmProgress.Create(frmNewQSO);
                  frmProgress.UpdateUSDBState(SourceFile); //direct this via NewQSO so that closing WSJT remote does not kill it's owner
                 end
                else
@@ -960,6 +963,8 @@ begin
                'Found '+IntToStr(c)+' callsigns. '+#13+ 'Try to rebuild? (NO = use as is)';
         if Application.MessageBox(PChar(msg),'Question ...',MB_ICONQUESTION + MB_YESNO) = IDYES Then
            begin
+            if frmProgress = nil then
+                                  frmProgress:=TfrmProgress.Create(frmNewQSO);
             frmProgress.BuildUSDBState;
             StateCallCount(c);
            end

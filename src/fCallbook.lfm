@@ -115,10 +115,10 @@ object frmCallbook: TfrmCallbook
     FFFF
   }
   KeyPreview = True
+  Position = poWorkAreaCenter
+  LCLVersion = '4.6.0.0'
   OnKeyPress = FormKeyPress
   OnShow = FormShow
-  Position = poWorkAreaCenter
-  LCLVersion = '3.8.0.0'
   object pnlCallsign: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner

@@ -484,6 +484,7 @@ begin
                   dmLogUpload.MarkAsUpDeleted(dmLogUpload.Q.Fields[0].AsInteger)
                 end;
               ToMainThread('Upload failed! Check Internet connection','');
+              ToMainThread(Response,'');
               ErrorCode := 1;
               Break
             end;

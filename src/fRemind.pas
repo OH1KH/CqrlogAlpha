@@ -92,6 +92,9 @@ begin
   RemindTimeSet.Text  := cqrini.ReadString('Reminder','RemindTimeSet','');
   RemindUThour.Text   := cqrini.ReadString('Reminder','RemindUThour','');
   RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
+  lblRemi1.Font.Style := [fsBold,fsItalic];
+  lblRemi1.Repaint;
+  lblRemi1.Refresh;
 end;
 
 procedure TfrmReminder.FormKeyUp(Sender : TObject; var Key : Word;

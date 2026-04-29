@@ -225,21 +225,28 @@ var
   i       : Integer;
   Key     : String;
   Value   : String;
-  Address : String;
+  Address,
+  Add     : String;
   Port    : String;
   Tries   : integer;
-  SynUDP    : TUDPBlockSocket;
+  SynUDP  : TUDPBlockSocket;
   Doc     : TXMLDocument;
-  RootNode,ItemNode,TextNode: TDOMNode;
+  RootNode,
+  ItemNode,
+  TextNode: TDOMNode;
   msg     : TStringStream;
   msg_len : Integer;
   sent    : Integer;
   LastErr : integer;
+  Cut     : Boolean;
 begin
-  Result := False;
-  sent := 0;
+  Result  := False;
+  sent    := 0;
   Address := '';
-  Tries := 20;
+  Add     :='';
+  Port    :='';
+  Tries   := 20;
+  Cut     := False;
 
   try
     Doc := TXMLDocument.Create;
@@ -288,7 +295,7 @@ begin
   finally
     FreeAndNil(Doc);
   end;
-  msg_len := UTF8Length(msg.DataString);
+  msg_len := msg.Size;
 
   try
     //udp := TLUDPComponent.Create(nil);  OH1KH Replaced with Synaptic because that does not cause errors with GTK2 (QT5,6 were working ok)
@@ -297,11 +304,35 @@ begin
     SynUDP.EnableReuse(True);
     Assert(SynUDP.LastError = 0);
 
-    if Pos(':', Address) > 0 then
-      Port:=ExtractWord(2,Address,[':'])
-     else
-      Port := '5444';
-    Address:=ExtractWord(1,Address,[':']);
+    //--------------------- this should handle also IPv6 address with ":port" and check port range.
+    for i:=length(Address) downto 1 do
+     Begin
+      if (Address[i]=':') and (not Cut)  then
+        Begin
+          Cut := true;
+        end
+       else
+        begin
+          if not cut then
+                      Port := Address[i]+Port
+                      else
+                      Add:= Address[i]+Add;
+        end;
+      end;
+     Address := Add;
+     if (not Cut) then
+                      Port := '5444'; //defaults when no ":" found. Assume only address given.
+
+    i:= StrToInt(Port);
+    if ((i<1024) or (i>65535)) then
+     begin
+      ResultCode := 500;
+      Response   := 'Port value should be between 1024-65535!';
+      Result := False;
+      exit
+     end;
+    //--------------------- this should handle also IPv6 address with ":port" and check port range.
+
 
     SynUDP.Bind(Address,Port);
     while ((SynUDP.LastError <> 0) and (tries > 0 )) do
@@ -338,7 +369,7 @@ begin
   begin
     ResultCode := 400;
     Response := 'Failed. Only sent ' + IntToStr(sent) + ' of ' + IntToStr(msg_len) + ' bytes to ' + Address +':'+Port+' with LatError:'+IntToStr(LastErr);
-    Result := False
+    Result := False;
   end;
 
 end;

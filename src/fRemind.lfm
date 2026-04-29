@@ -113,6 +113,7 @@ object frmReminder: TfrmReminder
     Width = 609
     Alignment = taCenter
     Anchors = [akTop, akLeft, akRight]
+    AutoSize = False
     BorderSpacing.CellAlignHorizontal = ccaCenter
     BorderSpacing.CellAlignVertical = ccaCenter
     Caption = 'Sitting is killing you!  Take a short walk!'

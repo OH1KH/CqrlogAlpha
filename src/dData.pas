@@ -3326,27 +3326,38 @@ begin
               Q1.ExecSQL;
               trQ1.Commit;
 
-              //Make sure we do not create duplicate line with logname QRZLog (as we can not use "insert into if not exist")
+              //check there is rows in table first
               trQ1.StartTransaction;
-              Q1.SQL.Text := 'select count(logname) from upload_status where logname="QRZLog"';
+              Q1.SQL.Text := 'select exists (select 1 from upload_status)';
               Q1.Open;
               max := Q1.Fields[0].AsInteger;
               Q1.Close;
               trQ1.Commit;
 
-              if max=0 then
-               Begin
-                trQ1.StartTransaction;
-                Q1.SQL.Text := 'select max(id) from log_changes';
-                Q1.Open;
-                max := Q1.Fields[0].AsInteger;
-                Q1.Close;
-                Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_QRZLOG)+','+IntToStr(max)+')';
-                if fDebugLevel>=1 then
-                   Writeln(Q1.SQL.Text);
-                Q1.ExecSQL;
-                trQ1.Commit;
-               end;
+              if max=1 then  //there are rows  We can add one for QRZlog
+                 Begin
+                  //Make sure we do not create duplicate line with logname QRZLog (as we can not use "insert into if not exist")
+                  trQ1.StartTransaction;
+                  Q1.SQL.Text := 'select count(logname) from upload_status where logname="QRZLog"';
+                  Q1.Open;
+                  max := Q1.Fields[0].AsInteger;
+                  Q1.Close;
+                  trQ1.Commit;
+
+                  if max=0 then
+                   Begin
+                    trQ1.StartTransaction;
+                    Q1.SQL.Text := 'select max(id) from log_changes';
+                    Q1.Open;
+                    max := Q1.Fields[0].AsInteger;
+                    Q1.Close;
+                    Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_QRZLOG)+','+IntToStr(max)+')';
+                    if fDebugLevel>=1 then
+                       Writeln(Q1.SQL.Text);
+                    Q1.ExecSQL;
+                    trQ1.Commit;
+                   end;
+                 end;
 
               trQ1.StartTransaction;
               Q1.SQL.Text := 'ALTER table db_version ADD COLUMN IF NOT EXISTS stop_trigs SMALLINT DEFAULT 0';
@@ -3929,7 +3940,8 @@ begin
     t.DataBase    := MainCon;
 
     t.SQL.Text := Format(C_SEL,[QuotedStr(fDBName),QuotedStr(TableName), QuotedStr(ConstraintName)]);
-    if fDebugLevel>=1 then Writeln(t.SQL.Text);
+    if fDebugLevel>=1 then
+                      Writeln(t.SQL.Text);
     t.Open;
     Result := t.RecordCount>0
   finally

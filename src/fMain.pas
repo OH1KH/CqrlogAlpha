@@ -25,6 +25,7 @@ type
   { TfrmMain }
 
   TfrmMain = class(TForm)
+    acMarkAllQrzLog: TAction;
     acNewQSO:    TAction;
     acEditQSO:   TAction;
     acDeleteQSO: TAction;
@@ -88,9 +89,11 @@ type
     acCreateLoadFilter: TAction;
     acCounty: TAction;
     aceQSLImage: TAction;
+    acToggleOnTop: TAction;
     acUploadAllToLoTW: TAction;
     acUploadToAll: TAction;
     acUploadToHrdLog: TAction;
+    acUploadToQrzLog: TAction;
     acUploadToUDPLog: TAction;
     acUploadToClubLog: TAction;
     acUploadToHamQTH: TAction;
@@ -148,6 +151,9 @@ type
     MenuItem110: TMenuItem;
     MenuItem15: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem_MarkAllQrz: TMenuItem;
+    MenuItem_QrzLog: TMenuItem;
+    MenuItem_UploadToQrz: TMenuItem;
     mnuOR: TMenuItem;
     MenuItemStats: TMenuItem;
     MenuItem100: TMenuItem;
@@ -331,6 +337,7 @@ type
     ToolButton35 : TToolButton;
     ToolButton36 : TToolButton;
     ToolButton37: TToolButton;
+    ToolButton38: TToolButton;
     toolMain:   TToolBar;
     ToolButton1: TToolButton;
     ToolButton10: TToolButton;
@@ -362,6 +369,7 @@ type
     procedure acMarkAllHrdLogExecute(Sender: TObject);
     procedure acMarkAllUDPLogExecute(Sender: TObject);
     procedure acMarkAllQrzLogExecute(Sender: TObject);
+    procedure acToggleOnTopExecute(Sender: TObject);
     procedure acUploadToQrzLogExecute(Sender: TObject);
     procedure acPnlDetailsExecute(Sender: TObject);
     procedure acQRZExecute(Sender: TObject);
@@ -694,36 +702,6 @@ begin
   dmUtils.DateInRightFormat(now , tmp, sDate);
   sbMain.Panels[0].Text :=uVersion.cBUILD_DATE;
 end;
-{ OH1KH  seems that this is not used anywhere!
-procedure TfrmMain.tmrUploadAllTimer(Sender: TObject);
-begin
-  if (not frmLogUploadStatus.thRunning) then
-  begin
-    case WhatUpNext of
-      upHamQTH :  begin
-                    frmLogUploadStatus.UploadDataToHamQTH;
-                    WhatUpNext := upClubLog
-                  end;
-      upClubLog : begin
-                    frmLogUploadStatus.UploadDataToClubLog;
-                    WhatUpNext := upHrdLog
-                  end;
-      upHrdLog  : begin
-                    frmLogUploadStatus.UploadDataToHrdLog;
-                    WhatUpNext := upQrzLog
-                  end;
-      upQrzLog  : begin
-                    frmLogUploadStatus.UploadDataToQrzLog;
-                    WhatUpNext := upUDPLog
-                  end;
-      upUDPLog  : begin
-                    frmLogUploadStatus.UploadDataToUDPLog;
-                    tmrUploadAll.Enabled := False
-                  end;
-    end //case
-  end
-end;
-}
 
 procedure TfrmMain.acNewQSOExecute(Sender: TObject);
 begin
@@ -1860,7 +1838,26 @@ begin
       dbgrdMain.Options:=[dgTitles,dgIndicator,dgColumnResize,dgColumnMove,dgColLines,dgRowLines,dgTabs,dgRowSelect,dgAlwaysShowSelection,dgConfirmDelete,dgCancelOnExit,dgMultiselect];
   end;
 end;
-
+ 
+procedure TfrmMain.acToggleOnTopExecute(Sender: TObject);
+var
+   OnTop :boolean;
+begin
+  OnTop :=  cqrini.ReadBool('Main', 'ToggleOnTop', false);
+  //called from formShow (with nil) just sets saved value.
+  if Sender <> nil then  OnTop := not OnTop;
+  cqrini.WriteBool('Main', 'ToggleOnTop', OnTop);
+  if OnTop then
+  begin
+    ToolButton38.ImageIndex:=18;
+    frmMain.FormStyle:=fsStayOnTop;
+  end
+ else
+  Begin
+      ToolButton38.ImageIndex:=17;
+      frmMain.FormStyle:=fsNormal;
+  end;
+end;
 procedure TfrmMain.acCountyExecute(Sender: TObject);
 begin
   frmCountyStat := TfrmCountyStat.Create(frmNewQSO);
@@ -2513,6 +2510,7 @@ begin
   mnuShowDetails.Checked := pnlDetails.Visible;
   //Sets AutoSizeColumns to saved value
   acAutoSizeColumnsExecute(nil);
+  acToggleOnTopExecute(nil);
   idlist:='';
   Self.Caption:=dmUtils.GetNewQSOCaption('');
 end;

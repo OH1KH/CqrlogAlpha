@@ -1163,7 +1163,7 @@ end;
 
 procedure TfrmContest.FormHide(Sender: TObject);
 begin
-  frmNewQSO.gbContest.Visible := false;
+  frmNewQSO.pnlContest.Visible := false;
   dmUtils.SaveWindowPos(Self);
   tmrScore.Enabled:=false;
   tmrESC2.Enabled:=false;
@@ -1176,7 +1176,7 @@ var
   f: integer;
 
 begin
-  frmNewQSO.gbContest.Visible := true;
+  frmNewQSO.pnlContest.Visible := true;
   dmUtils.LoadWindowPos(Self);
 
   chkTabAll.Checked         := cqrini.ReadBool('frmContest', 'TabAll', False);

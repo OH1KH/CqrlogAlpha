@@ -40,8 +40,7 @@ var
 {$R *.res}
 
 begin
-  Writeln(LineEnding+'Cqrlog Ver:',cVERSION,' Build:',cBuild,' Date:',cBUILD_DATE+LineEnding);
-  Writeln('LCL Version: ' + laz_version);
+  Writeln(LineEnding+'Cqrlog Ver:',cVERSION,' Build:',cBuild,' Date:',cBUILD_DATE+' LCL Version: ' + laz_version+LineEnding);
   try
     p := TStringList.Create;
     AProcess := TProcess.Create(nil);
@@ -150,10 +149,6 @@ begin
   Application.CreateForm(TfrmQSODetails, frmQSODetails);
   Application.CreateForm(TfrmBandMap, frmBandMap);
   Application.CreateForm(TfrmLogUploadStatus, frmLogUploadStatus);
-
-  //Application.CreateForm(TfrmRbnMonitor, frmRbnMonitor);
-  //Application.CreateForm(TfrmContest, frmContest);    leaving this off needs special testing still
-
 
    if (not Application.HasOption('q','quiet')) then
   Begin

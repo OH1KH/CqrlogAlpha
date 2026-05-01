@@ -1489,7 +1489,6 @@ end;
 procedure TfrmNewQSO.LoadSettings;
 
 begin
-  Self.pnlAll.Height:= Self.pnlAll.Height-90;
   dmUtils.ModifyXplanetConf;
   dmUtils.LoadFontSettings(frmNewQSO);
 

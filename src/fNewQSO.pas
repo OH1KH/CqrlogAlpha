@@ -175,8 +175,8 @@ type
     lblRXMhz: TLabel;
     lblStartTime: TLabel;
     lblState: TLabel;
-    lblStatellite: TLabel;
     lblCallbookInformation : TLabel;
+    lblStatellite: TLabel;
     lblStimeFormat: TLabel;
     lblWazEdit: TLabel;
     mCallBook : TMemo;
@@ -346,14 +346,14 @@ type
     mnuFile: TMenuItem;
     mnuTRXControl: TMenuItem;
     opEQSL: TOpenDialog;
-    pnlContest: TPanel;
     pgDetails: TPageControl;
+    pnlContest: TPanel;
     pnlAll: TPanel;
     pnlDXCCinfo: TPanel;
     pnlOffline: TPanel;
-    pnlQsoInfo: TPanel;
     pnlProfiles: TPanel;
     pnlDXCCCountry : TPanel;
+    pnlQsoInfo: TPanel;
     pnlQSOinput: TPanel;
     pnlSbtn: TPanel;
     popEditQSO: TPopupMenu;
@@ -1489,6 +1489,7 @@ end;
 procedure TfrmNewQSO.LoadSettings;
 
 begin
+  Self.pnlAll.Height:= Self.pnlAll.Height-90;
   dmUtils.ModifyXplanetConf;
   dmUtils.LoadFontSettings(frmNewQSO);
 

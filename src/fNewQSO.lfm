@@ -1,18 +1,18 @@
 object frmNewQSO: TfrmNewQSO
   Left = 90
-  Height = 607
+  Height = 635
   Top = 0
-  Width = 972
+  Width = 1009
   HelpType = htKeyword
   HelpKeyword = 'help/index.html'
   HorzScrollBar.Increment = 100
-  HorzScrollBar.Page = 972
+  HorzScrollBar.Page = 997
   VertScrollBar.Increment = 40
-  VertScrollBar.Page = 607
+  VertScrollBar.Page = 615
   AutoScroll = True
   Caption = 'New QSO ... (CqrlogAlpha for Linux)'
-  ClientHeight = 607
-  ClientWidth = 972
+  ClientHeight = 635
+  ClientWidth = 1009
   Constraints.MinHeight = 200
   Constraints.MinWidth = 420
   Icon.Data = {
@@ -2152,11 +2152,11 @@ object frmNewQSO: TfrmNewQSO
     Left = 0
     Height = 610
     Top = 0
-    Width = 1001
+    Width = 1009
     Anchors = [akTop, akLeft, akRight, akBottom]
-    BevelWidth = 2
+    BevelOuter = bvNone
     ClientHeight = 610
-    ClientWidth = 1001
+    ClientWidth = 1009
     TabOrder = 0
     object dbgrdQSOBefore: TDBGrid
       AnchorSideLeft.Control = pnlAll
@@ -2164,339 +2164,20 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideRight.Control = pnlAll
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = pnlProfiles
-      Left = 2
-      Height = 50
-      Top = 2
-      Width = 997
+      Left = 0
+      Height = 70
+      Top = 0
+      Width = 1009
       Anchors = [akTop, akLeft, akRight, akBottom]
       Color = clWindow
       Columns = <>
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColumnMove, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
       PopupMenu = popEditQSO
-      TabOrder = 4
+      TabOrder = 3
       TitleFont.Height = 8
       OnColumnSized = dbgrdQSOBeforeColumnSized
       OnDrawColumnCell = dbgrdQSOBeforeDrawColumnCell
       OnExit = dbgrdQSOBeforeExit
-    end
-    object pnlQsoInfo: TPanel
-      AnchorSideLeft.Control = pnlQSOinput
-      AnchorSideTop.Side = asrBottom
-      AnchorSideRight.Control = pnlQSOinput
-      AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = pnlAll
-      AnchorSideBottom.Side = asrBottom
-      Left = 4
-      Height = 157
-      Top = 451
-      Width = 544
-      Anchors = [akLeft, akRight, akBottom]
-      BorderSpacing.Left = 1
-      ClientHeight = 157
-      ClientWidth = 544
-      TabOrder = 0
-      object pgDetails: TPageControl
-        AnchorSideLeft.Control = pnlQsoInfo
-        AnchorSideTop.Control = pnlQsoInfo
-        AnchorSideRight.Control = pnlQsoInfo
-        AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = pnlQsoInfo
-        AnchorSideBottom.Side = asrBottom
-        Left = 1
-        Height = 152
-        Top = 4
-        Width = 542
-        ActivePage = tabDXCCStat
-        Anchors = [akTop, akLeft, akRight, akBottom]
-        BorderSpacing.Top = 3
-        ParentFont = False
-        TabIndex = 0
-        TabOrder = 0
-        OnChange = pgDetailsChange
-        object tabDXCCStat: TTabSheet
-          AnchorSideRight.Side = asrBottom
-          AnchorSideBottom.Side = asrBottom
-          Caption = 'DXCC statistic'
-          ClientHeight = 121
-          ClientWidth = 532
-          object sgrdStatistic: TStringGrid
-            AnchorSideBottom.Side = asrBottom
-            Left = 0
-            Height = 118
-            Top = 0
-            Width = 532
-            Align = alTop
-            AutoFillColumns = True
-            ColCount = 2
-            DefaultColWidth = 35
-            FixedCols = 0
-            FixedRows = 0
-            ParentFont = False
-            RowCount = 4
-            TabOrder = 0
-            TitleFont.Color = clBlue
-            TitleFont.Height = 8
-            TitleStyle = tsNative
-            OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
-            ColWidths = (
-              265
-              265
-            )
-          end
-        end
-        object tabCallStat: TTabSheet
-          Tag = 1
-          Caption = 'Call statistic'
-          ClientHeight = 121
-          ClientWidth = 532
-          object sgrdCallStatistic: TStringGrid
-            AnchorSideBottom.Side = asrBottom
-            Left = 0
-            Height = 118
-            Top = 0
-            Width = 532
-            Align = alTop
-            AutoFillColumns = True
-            ColCount = 2
-            DefaultColWidth = 35
-            FixedCols = 0
-            FixedRows = 0
-            ParentFont = False
-            RowCount = 4
-            TabOrder = 0
-            TitleFont.Color = clBlue
-            TitleFont.Height = 8
-            TitleStyle = tsNative
-            OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
-            ColWidths = (
-              264
-              264
-            )
-          end
-        end
-        object tabSatellite: TTabSheet
-          Tag = 2
-          AnchorSideBottom.Side = asrBottom
-          Caption = 'Satellite'
-          ClientHeight = 121
-          ClientWidth = 532
-          object cmbPropagation: TComboBox
-            AnchorSideLeft.Control = lblStatellite
-            AnchorSideTop.Control = lblPropagation
-            AnchorSideTop.Side = asrBottom
-            Left = 6
-            Height = 33
-            Top = 85
-            Width = 272
-            BorderSpacing.Top = 3
-            ItemHeight = 0
-            MaxLength = 30
-            ParentFont = False
-            Style = csDropDownList
-            TabOrder = 1
-            OnChange = cmbPropagationChange
-          end
-          object lblPropagation: TLabel
-            AnchorSideLeft.Control = lblStatellite
-            AnchorSideTop.Control = cmbSatellite
-            AnchorSideTop.Side = asrBottom
-            Left = 6
-            Height = 17
-            Top = 65
-            Width = 78
-            BorderSpacing.Top = 6
-            Caption = 'Propagation'
-            ParentFont = False
-          end
-          object lblStatellite: TLabel
-            AnchorSideLeft.Control = tabSatellite
-            AnchorSideTop.Control = tabSatellite
-            Left = 6
-            Height = 17
-            Top = 6
-            Width = 54
-            BorderSpacing.Left = 6
-            BorderSpacing.Top = 6
-            Caption = 'Satellite'
-            ParentFont = False
-          end
-          object cmbSatellite: TComboBox
-            AnchorSideLeft.Control = lblStatellite
-            AnchorSideTop.Control = lblStatellite
-            AnchorSideTop.Side = asrBottom
-            Left = 6
-            Height = 33
-            Top = 26
-            Width = 272
-            BorderSpacing.Top = 3
-            ItemHeight = 0
-            MaxLength = 30
-            ParentFont = False
-            Style = csDropDownList
-            TabOrder = 0
-            OnChange = cmbSatelliteChange
-          end
-          object lblRXFreq: TLabel
-            AnchorSideLeft.Control = edtRXFreq
-            AnchorSideTop.Control = lblStatellite
-            AnchorSideTop.Side = asrCenter
-            Left = 290
-            Height = 17
-            Top = 6
-            Width = 87
-            Caption = 'RX frequency'
-            ParentFont = False
-          end
-          object edtRXFreq: TEdit
-            AnchorSideLeft.Control = cmbSatellite
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = cmbSatellite
-            Left = 290
-            Height = 34
-            Top = 26
-            Width = 128
-            BorderSpacing.Left = 12
-            ParentFont = False
-            TabOrder = 2
-            OnChange = edtRXFreqChange
-            OnExit = edtRXFreqExit
-          end
-          object btnClearSatellite: TButton
-            AnchorSideLeft.Control = edtRXFreq
-            AnchorSideTop.Control = cbSpotRX
-            AnchorSideTop.Side = asrBottom
-            Left = 290
-            Height = 33
-            Top = 85
-            Width = 70
-            AutoSize = True
-            BorderSpacing.Right = 10
-            Caption = 'Clear all'
-            TabOrder = 4
-            OnClick = btnClearSatelliteClick
-          end
-          object lblRXMhz: TLabel
-            AnchorSideLeft.Control = edtRXFreq
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = edtRXFreq
-            AnchorSideTop.Side = asrCenter
-            Left = 424
-            Height = 17
-            Top = 35
-            Width = 29
-            BorderSpacing.Left = 6
-            Caption = 'MHz'
-          end
-          object cbSpotRX: TCheckBox
-            AnchorSideLeft.Control = lblRXFreq
-            AnchorSideTop.Control = lblPropagation
-            AnchorSideTop.Side = asrCenter
-            Left = 290
-            Height = 23
-            Hint = 'Use RX frequency from the Satellite tab instead of Frequency for DX spots'
-            Top = 62
-            Width = 226
-            Caption = 'Use RX frequency for DX spots'
-            Color = clNone
-            ParentColor = False
-            ParentFont = False
-            TabOrder = 3
-            OnChange = cbSpotRXChange
-          end
-        end
-        object tabLOConfig: TTabSheet
-          Tag = 3
-          AnchorSideRight.Side = asrBottom
-          AnchorSideBottom.Side = asrBottom
-          Caption = 'LO Config'
-          ClientHeight = 121
-          ClientWidth = 532
-          object cbTxLo: TCheckBox
-            Left = 8
-            Height = 23
-            Top = 16
-            Width = 97
-            Caption = 'Use TX LO:'
-            TabOrder = 0
-            OnChange = cbTxLoChange
-          end
-          object cbRxLo: TCheckBox
-            AnchorSideTop.Control = cbTxLo
-            Left = 8
-            Height = 23
-            Top = 48
-            Width = 98
-            BorderSpacing.Top = 32
-            Caption = 'Use RX LO:'
-            TabOrder = 2
-            OnChange = cbRxLoChange
-          end
-          object edtTXLO: TEdit
-            AnchorSideLeft.Control = cbTxLo
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = cbTxLo
-            AnchorSideTop.Side = asrCenter
-            Left = 110
-            Height = 34
-            Top = 10
-            Width = 80
-            BorderSpacing.Left = 5
-            TabOrder = 1
-            OnExit = edtTXLOExit
-          end
-          object edtRXLO: TEdit
-            AnchorSideLeft.Control = cbRxLo
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = cbRxLo
-            AnchorSideTop.Side = asrCenter
-            Left = 111
-            Height = 34
-            Top = 42
-            Width = 80
-            BorderSpacing.Left = 5
-            TabOrder = 3
-            OnExit = edtRXLOExit
-          end
-          object Label37: TLabel
-            AnchorSideLeft.Control = edtTXLO
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = edtTXLO
-            AnchorSideTop.Side = asrCenter
-            Left = 196
-            Height = 17
-            Top = 19
-            Width = 29
-            BorderSpacing.Left = 6
-            Caption = 'MHz'
-          end
-          object Label38: TLabel
-            AnchorSideLeft.Control = edtRXLO
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = edtRXLO
-            AnchorSideTop.Side = asrCenter
-            Left = 197
-            Height = 17
-            Top = 51
-            Width = 29
-            BorderSpacing.Left = 6
-            Caption = 'MHz'
-          end
-          object cbSplitTX: TCheckBox
-            AnchorSideLeft.Control = Label37
-            AnchorSideLeft.Side = asrBottom
-            AnchorSideTop.Control = cbTxLo
-            AnchorSideTop.Side = asrCenter
-            Left = 249
-            Height = 23
-            Top = 16
-            Width = 134
-            BorderSpacing.Left = 24
-            Caption = 'Use split TX freq'
-            TabOrder = 4
-            OnChange = cbSplitTXChange
-          end
-        end
-      end
     end
     object pnlDXCCinfo: TPanel
       AnchorSideLeft.Control = pnlContest
@@ -2505,15 +2186,14 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = pnlAll
       AnchorSideBottom.Side = asrBottom
-      Left = 748
-      Height = 517
-      Top = 91
+      Left = 746
+      Height = 501
+      Top = 109
       Width = 250
-      Anchors = [akTop, akLeft, akBottom]
       BorderSpacing.Right = 1
-      ClientHeight = 517
+      ClientHeight = 501
       ClientWidth = 250
-      TabOrder = 1
+      TabOrder = 0
       object gbDXCCdata: TGroupBox
         AnchorSideLeft.Control = pnlDXCCinfo
         AnchorSideTop.Control = pnlDXCCinfo
@@ -2521,12 +2201,12 @@ object frmNewQSO: TfrmNewQSO
         AnchorSideRight.Side = asrBottom
         AnchorSideBottom.Control = btnSave
         Left = 1
-        Height = 477
+        Height = 461
         Top = 1
         Width = 248
         Anchors = [akTop, akLeft, akRight, akBottom]
         Caption = 'DXCC info'
-        ClientHeight = 459
+        ClientHeight = 443
         ClientWidth = 246
         ParentFont = False
         ParentShowHint = False
@@ -3069,7 +2749,7 @@ object frmNewQSO: TfrmNewQSO
           AnchorSideTop.Control = lblCallbookInformation
           AnchorSideTop.Side = asrBottom
           Left = 0
-          Height = 138
+          Height = 122
           Top = 321
           Width = 246
           Align = alBottom
@@ -3099,7 +2779,7 @@ object frmNewQSO: TfrmNewQSO
         AnchorSideBottom.Side = asrBottom
         Left = 1
         Height = 35
-        Top = 478
+        Top = 462
         Width = 130
         Anchors = [akLeft, akBottom]
         AutoSize = True
@@ -3116,7 +2796,7 @@ object frmNewQSO: TfrmNewQSO
         AnchorSideBottom.Side = asrBottom
         Left = 136
         Height = 35
-        Top = 478
+        Top = 462
         Width = 113
         Anchors = [akTop, akRight]
         AutoSize = True
@@ -3131,21 +2811,22 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideLeft.Control = pnlAll
       AnchorSideTop.Side = asrBottom
       AnchorSideRight.Side = asrBottom
-      AnchorSideBottom.Control = pnlQsoInfo
-      Left = 3
-      Height = 357
-      Top = 91
+      AnchorSideBottom.Control = pnlAll
+      AnchorSideBottom.Side = asrBottom
+      Left = 1
+      Height = 498
+      Top = 109
       Width = 545
       Anchors = [akLeft, akBottom]
       BorderSpacing.Left = 1
       BorderSpacing.Bottom = 3
       BorderSpacing.InnerBorder = 2
-      ClientHeight = 357
+      ClientHeight = 498
       ClientWidth = 545
       Constraints.MinHeight = 300
       Constraints.MinWidth = 545
       ParentShowHint = False
-      TabOrder = 3
+      TabOrder = 2
       object lblCommentToCallsign: TLabel
         AnchorSideLeft.Control = lblCounty
         AnchorSideTop.Control = lblDate
@@ -4161,16 +3842,17 @@ object frmNewQSO: TfrmNewQSO
       end
       object pnlSbtn: TPanel
         AnchorSideLeft.Control = pnlQSOinput
+        AnchorSideTop.Control = mComment
         AnchorSideTop.Side = asrBottom
         AnchorSideRight.Control = pnlQSOinput
         AnchorSideRight.Side = asrBottom
-        AnchorSideBottom.Control = pnlQSOinput
         AnchorSideBottom.Side = asrBottom
         Left = 1
         Height = 27
-        Top = 329
+        Top = 328
         Width = 543
-        Anchors = [akLeft, akRight, akBottom]
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 3
         ClientHeight = 27
         ClientWidth = 543
         Constraints.MinHeight = 27
@@ -4648,6 +4330,325 @@ object frmNewQSO: TfrmNewQSO
           Visible = False
         end
       end
+      object pnlQsoInfo: TPanel
+        AnchorSideLeft.Control = pnlQSOinput
+        AnchorSideTop.Control = pnlSbtn
+        AnchorSideTop.Side = asrBottom
+        AnchorSideRight.Control = pnlQSOinput
+        AnchorSideRight.Side = asrBottom
+        AnchorSideBottom.Side = asrBottom
+        Left = 1
+        Height = 140
+        Top = 358
+        Width = 543
+        Anchors = [akTop, akLeft, akRight]
+        BorderSpacing.Top = 3
+        ClientHeight = 140
+        ClientWidth = 543
+        TabOrder = 30
+        object pgDetails: TPageControl
+          AnchorSideLeft.Control = pnlQsoInfo
+          AnchorSideTop.Control = pnlQsoInfo
+          AnchorSideRight.Control = pnlQsoInfo
+          AnchorSideRight.Side = asrBottom
+          AnchorSideBottom.Control = pnlQsoInfo
+          AnchorSideBottom.Side = asrBottom
+          Left = 1
+          Height = 135
+          Top = 4
+          Width = 541
+          ActivePage = tabDXCCStat
+          Anchors = [akTop, akLeft, akRight, akBottom]
+          BorderSpacing.Top = 3
+          ParentFont = False
+          TabIndex = 0
+          TabOrder = 0
+          OnChange = pgDetailsChange
+          object tabDXCCStat: TTabSheet
+            AnchorSideRight.Side = asrBottom
+            AnchorSideBottom.Side = asrBottom
+            Caption = 'DXCC statistic'
+            ClientHeight = 104
+            ClientWidth = 531
+            object sgrdStatistic: TStringGrid
+              AnchorSideBottom.Side = asrBottom
+              Left = 0
+              Height = 118
+              Top = 0
+              Width = 531
+              Align = alTop
+              AutoFillColumns = True
+              ColCount = 2
+              DefaultColWidth = 35
+              FixedCols = 0
+              FixedRows = 0
+              ParentFont = False
+              RowCount = 4
+              TabOrder = 0
+              TitleFont.Color = clBlue
+              TitleFont.Height = 8
+              TitleStyle = tsNative
+              OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
+              ColWidths = (
+                265
+                264
+              )
+            end
+          end
+          object tabCallStat: TTabSheet
+            Tag = 1
+            Caption = 'Call statistic'
+            ClientHeight = 104
+            ClientWidth = 531
+            object sgrdCallStatistic: TStringGrid
+              AnchorSideBottom.Side = asrBottom
+              Left = 0
+              Height = 118
+              Top = 0
+              Width = 531
+              Align = alTop
+              AutoFillColumns = True
+              ColCount = 2
+              DefaultColWidth = 35
+              FixedCols = 0
+              FixedRows = 0
+              ParentFont = False
+              RowCount = 4
+              TabOrder = 0
+              TitleFont.Color = clBlue
+              TitleFont.Height = 8
+              TitleStyle = tsNative
+              OnPrepareCanvas = sgrdCallStatisticPrepareCanvas
+              ColWidths = (
+                264
+                263
+              )
+            end
+          end
+          object tabSatellite: TTabSheet
+            Tag = 2
+            AnchorSideBottom.Side = asrBottom
+            Caption = 'Satellite'
+            ClientHeight = 104
+            ClientWidth = 531
+            object cmbPropagation: TComboBox
+              AnchorSideLeft.Control = lblStatellite
+              AnchorSideTop.Control = lblPropagation
+              AnchorSideTop.Side = asrBottom
+              Left = 6
+              Height = 33
+              Top = 85
+              Width = 272
+              BorderSpacing.Top = 3
+              ItemHeight = 0
+              MaxLength = 30
+              ParentFont = False
+              Style = csDropDownList
+              TabOrder = 1
+              OnChange = cmbPropagationChange
+            end
+            object lblPropagation: TLabel
+              AnchorSideLeft.Control = lblStatellite
+              AnchorSideTop.Control = cmbSatellite
+              AnchorSideTop.Side = asrBottom
+              Left = 6
+              Height = 17
+              Top = 65
+              Width = 78
+              BorderSpacing.Top = 6
+              Caption = 'Propagation'
+              ParentFont = False
+            end
+            object lblStatellite: TLabel
+              AnchorSideLeft.Control = tabSatellite
+              AnchorSideTop.Control = tabSatellite
+              Left = 6
+              Height = 17
+              Top = 6
+              Width = 54
+              BorderSpacing.Left = 6
+              BorderSpacing.Top = 6
+              Caption = 'Satellite'
+              ParentFont = False
+            end
+            object cmbSatellite: TComboBox
+              AnchorSideLeft.Control = lblStatellite
+              AnchorSideTop.Control = lblStatellite
+              AnchorSideTop.Side = asrBottom
+              Left = 6
+              Height = 33
+              Top = 26
+              Width = 272
+              BorderSpacing.Top = 3
+              ItemHeight = 0
+              MaxLength = 30
+              ParentFont = False
+              Style = csDropDownList
+              TabOrder = 0
+              OnChange = cmbSatelliteChange
+            end
+            object lblRXFreq: TLabel
+              AnchorSideLeft.Control = edtRXFreq
+              AnchorSideTop.Control = lblStatellite
+              AnchorSideTop.Side = asrCenter
+              Left = 290
+              Height = 17
+              Top = 6
+              Width = 87
+              Caption = 'RX frequency'
+              ParentFont = False
+            end
+            object edtRXFreq: TEdit
+              AnchorSideLeft.Control = cmbSatellite
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = cmbSatellite
+              Left = 290
+              Height = 34
+              Top = 26
+              Width = 128
+              BorderSpacing.Left = 12
+              ParentFont = False
+              TabOrder = 2
+              OnChange = edtRXFreqChange
+              OnExit = edtRXFreqExit
+            end
+            object btnClearSatellite: TButton
+              AnchorSideLeft.Control = edtRXFreq
+              AnchorSideTop.Control = cbSpotRX
+              AnchorSideTop.Side = asrBottom
+              Left = 290
+              Height = 33
+              Top = 85
+              Width = 70
+              AutoSize = True
+              BorderSpacing.Right = 10
+              Caption = 'Clear all'
+              TabOrder = 4
+              OnClick = btnClearSatelliteClick
+            end
+            object lblRXMhz: TLabel
+              AnchorSideLeft.Control = edtRXFreq
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = edtRXFreq
+              AnchorSideTop.Side = asrCenter
+              Left = 424
+              Height = 17
+              Top = 35
+              Width = 29
+              BorderSpacing.Left = 6
+              Caption = 'MHz'
+            end
+            object cbSpotRX: TCheckBox
+              AnchorSideLeft.Control = lblRXFreq
+              AnchorSideTop.Control = lblPropagation
+              AnchorSideTop.Side = asrCenter
+              Left = 290
+              Height = 23
+              Hint = 'Use RX frequency from the Satellite tab instead of Frequency for DX spots'
+              Top = 62
+              Width = 226
+              Caption = 'Use RX frequency for DX spots'
+              Color = clNone
+              ParentColor = False
+              ParentFont = False
+              TabOrder = 3
+              OnChange = cbSpotRXChange
+            end
+          end
+          object tabLOConfig: TTabSheet
+            Tag = 3
+            AnchorSideRight.Side = asrBottom
+            AnchorSideBottom.Side = asrBottom
+            Caption = 'LO Config'
+            ClientHeight = 104
+            ClientWidth = 531
+            object cbTxLo: TCheckBox
+              Left = 8
+              Height = 23
+              Top = 16
+              Width = 97
+              Caption = 'Use TX LO:'
+              TabOrder = 0
+              OnChange = cbTxLoChange
+            end
+            object cbRxLo: TCheckBox
+              AnchorSideTop.Control = cbTxLo
+              Left = 8
+              Height = 23
+              Top = 48
+              Width = 98
+              BorderSpacing.Top = 32
+              Caption = 'Use RX LO:'
+              TabOrder = 2
+              OnChange = cbRxLoChange
+            end
+            object edtTXLO: TEdit
+              AnchorSideLeft.Control = cbTxLo
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = cbTxLo
+              AnchorSideTop.Side = asrCenter
+              Left = 110
+              Height = 34
+              Top = 10
+              Width = 80
+              BorderSpacing.Left = 5
+              TabOrder = 1
+              OnExit = edtTXLOExit
+            end
+            object edtRXLO: TEdit
+              AnchorSideLeft.Control = cbRxLo
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = cbRxLo
+              AnchorSideTop.Side = asrCenter
+              Left = 111
+              Height = 34
+              Top = 42
+              Width = 80
+              BorderSpacing.Left = 5
+              TabOrder = 3
+              OnExit = edtRXLOExit
+            end
+            object Label37: TLabel
+              AnchorSideLeft.Control = edtTXLO
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = edtTXLO
+              AnchorSideTop.Side = asrCenter
+              Left = 196
+              Height = 17
+              Top = 19
+              Width = 29
+              BorderSpacing.Left = 6
+              Caption = 'MHz'
+            end
+            object Label38: TLabel
+              AnchorSideLeft.Control = edtRXLO
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = edtRXLO
+              AnchorSideTop.Side = asrCenter
+              Left = 197
+              Height = 17
+              Top = 51
+              Width = 29
+              BorderSpacing.Left = 6
+              Caption = 'MHz'
+            end
+            object cbSplitTX: TCheckBox
+              AnchorSideLeft.Control = Label37
+              AnchorSideLeft.Side = asrBottom
+              AnchorSideTop.Control = cbTxLo
+              AnchorSideTop.Side = asrCenter
+              Left = 249
+              Height = 23
+              Top = 16
+              Width = 134
+              BorderSpacing.Left = 24
+              Caption = 'Use split TX freq'
+              TabOrder = 4
+              OnChange = cbSplitTXChange
+            end
+          end
+        end
+      end
     end
     object pnlProfiles: TPanel
       AnchorSideLeft.Control = pnlAll
@@ -4655,9 +4656,9 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideRight.Control = pnlDXCCinfo
       AnchorSideRight.Side = asrBottom
       AnchorSideBottom.Control = pnlQSOinput
-      Left = 3
+      Left = 1
       Height = 36
-      Top = 52
+      Top = 70
       Width = 994
       Anchors = [akLeft, akRight, akBottom]
       AutoSize = True
@@ -4666,7 +4667,7 @@ object frmNewQSO: TfrmNewQSO
       BorderSpacing.Bottom = 3
       ClientHeight = 36
       ClientWidth = 994
-      TabOrder = 2
+      TabOrder = 1
       object lblQSONr: TLabel
         AnchorSideLeft.Control = lblQSONrDesc
         AnchorSideLeft.Side = asrBottom
@@ -4766,14 +4767,14 @@ object frmNewQSO: TfrmNewQSO
       AnchorSideLeft.Control = pnlQSOinput
       AnchorSideLeft.Side = asrBottom
       AnchorSideTop.Control = pnlQSOinput
-      Left = 548
+      Left = 546
       Height = 253
-      Top = 91
+      Top = 109
       Width = 200
       Caption = 'pnlContest'
       ClientHeight = 253
       ClientWidth = 200
-      TabOrder = 5
+      TabOrder = 4
       Visible = False
       object gbContest: TGroupBox
         AnchorSideLeft.Control = pnlContest
@@ -4949,7 +4950,7 @@ object frmNewQSO: TfrmNewQSO
     Left = 0
     Height = 25
     Top = 610
-    Width = 1001
+    Width = 1009
     AutoSize = False
     Panels = <    
       item

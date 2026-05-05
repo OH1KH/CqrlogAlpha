@@ -2196,7 +2196,7 @@ object frmNewQSO: TfrmNewQSO
       Width = 160
       Anchors = [akTop, akLeft, akBottom]
       BorderSpacing.Left = 6
-      Caption = 'pnlContest'
+      Caption = ''
       ClientHeight = 473
       ClientWidth = 160
       TabOrder = 1

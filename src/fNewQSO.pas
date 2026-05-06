@@ -4784,6 +4784,7 @@ end;
 
 procedure TfrmNewQSO.btnClearSatelliteClick(Sender : TObject);
 begin
+  tabSatellite.Font.Color := clDefault;
   cmbPropagation.ItemIndex := 0;
   cmbSatellite.ItemIndex   := 0;
   edtRXFreq.Clear;

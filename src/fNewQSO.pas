@@ -85,6 +85,7 @@ type
     acContest: TAction;
     acRemoteModeADIF: TAction;
     acCounty: TAction;
+    acShowRecentQSOs: TAction;
     acUploadToAll: TAction;
     acUploadToHrdLog: TAction;
     acUploadToClubLog: TAction;
@@ -241,6 +242,7 @@ type
     MenuItem94 : TMenuItem;
     MenuItem95: TMenuItem;
     MenuItem96: TMenuItem;
+    MenuItem97: TMenuItem;
     MenuItem_QrzLog: TMenuItem;
     MenuItem_QrzUpload: TMenuItem;
     mnueQSLView: TMenuItem;
@@ -330,7 +332,6 @@ type
     MenuItem83: TMenuItem;
     mnuHamQth : TMenuItem;
     MenuItem85 : TMenuItem;
-    mnuQSOBefore: TMenuItem;
     mnuRemoteMode: TMenuItem;
     mnuIOTA: TMenuItem;
     mnuQSOList: TMenuItem;
@@ -403,6 +404,7 @@ type
     procedure acSendSpotExecute(Sender : TObject);
     procedure acShowStatBarExecute(Sender: TObject);
     procedure acRemoteModeADIFExecute(Sender: TObject);
+    procedure acShowRecentQSOsExecute(Sender: TObject);
     procedure acTuneExecute(Sender : TObject);
     procedure acUploadToAllExecute(Sender: TObject);
     procedure acUploadToClubLogExecute(Sender: TObject);
@@ -587,7 +589,6 @@ type
     procedure mCommentKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mnueQSLViewClick(Sender: TObject);
     procedure mnuIOTAClick(Sender: TObject);
-    procedure mnuQSOBeforeClick(Sender: TObject);
     procedure mnuQSOListClick(Sender: TObject);
     procedure pgDetailsChange(Sender: TObject);
     procedure popEditQSOPopup(Sender: TObject);
@@ -1515,9 +1516,9 @@ begin
    end;
 
   if dbgrdQSOBefore.Visible then
-    mnuQSOBefore.Caption := 'Disable QSO before grid'
+     acShowRecentQSOs.Checked := True
   else
-    mnuQSOBefore.Caption := 'Enable QSO before grid';
+     acShowRecentQSOs.Checked := false;
 
   if cqrini.ReadBool('Window','Grayline',False) then
     frmGrayline.Show;
@@ -2282,11 +2283,18 @@ begin
 end;
 
 procedure TfrmNewQSO.tmrStartTimer(Sender: TObject);
+var
+   i:integer;
 begin
   if not cbOffline.Checked then
   begin
     FillDateTimeFields;
     StartUpRemote;
+    if (cmbProfiles.Top<>7) then //this removes gap/overflow between panelAll and QthProfile selector when used font changes.
+     begin
+      i:= 7 - cmbProfiles.Top;
+      pnlAll.Height:=pnlAll.Height+i;
+     end;
   end
 end;
 
@@ -4700,7 +4708,7 @@ begin
   end
   else begin
     sbNewQSO.Visible := True;
-    acShowStatBar.Checked := False
+    acShowStatBar.Checked := True
   end
 end;
 
@@ -4710,6 +4718,19 @@ begin
     DisableRemoteMode
   else
     GoToRemoteMode(rmtADIF)
+end;
+
+procedure TfrmNewQSO.acShowRecentQSOsExecute(Sender: TObject);
+begin
+  if dbgrdQSOBefore.Visible then
+  begin
+    dbgrdQSOBefore.Visible := False;
+    acShowRecentQSOs.Checked := False
+  end
+  else begin
+    dbgrdQSOBefore.Visible := True;
+    acShowRecentQSOs.Checked := True
+  end
 end;
 
 procedure TfrmNewQSO.acTuneExecute(Sender : TObject);
@@ -4784,7 +4805,6 @@ end;
 
 procedure TfrmNewQSO.btnClearSatelliteClick(Sender : TObject);
 begin
-  tabSatellite.Font.Color := clDefault;
   cmbPropagation.ItemIndex := 0;
   cmbSatellite.ItemIndex   := 0;
   edtRXFreq.Clear;
@@ -6300,15 +6320,6 @@ begin
   end;
 end;
 
-procedure TfrmNewQSO.mnuQSOBeforeClick(Sender: TObject);
-begin
-  dbgrdQSOBefore.Visible := not dbgrdQSOBefore.Visible;
-  if dbgrdQSOBefore.Visible then
-    mnuQSOBefore.Caption := 'Disable QSO before grid'
-  else
-    mnuQSOBefore.Caption := 'Enable QSO before grid'
-end;
-
 procedure TfrmNewQSO.mnuQSOListClick(Sender: TObject);
 begin
   if frmMain.WindowState = wsMinimized then
@@ -6321,7 +6332,6 @@ procedure TfrmNewQSO.pgDetailsChange(Sender: TObject);
 begin
   cqrini.WriteInteger('NewQSO','DetailsTabIndex', pgDetails.TabIndex);
 end;
-
 
 procedure TfrmNewQSO.popEditQSOPopup(Sender: TObject);
 var
@@ -8240,10 +8250,10 @@ Begin
      else   Result := mode;
 end;
 
-
 procedure TfrmNewQSO.acUploadToQrzLogExecute(Sender: TObject);
 begin
   frmLogUploadStatus.UploadDataToQrzLog
 end;
+
 
 end.

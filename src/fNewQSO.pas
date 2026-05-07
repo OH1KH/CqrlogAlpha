@@ -2066,14 +2066,14 @@ begin
            and(pos('<APP>N1MM',Uppercase(Buf))>0 ) then
                                                  Begin
                                                   Buf:=dmUtils.FromN1MMToAdif(Buf);
-                                                  lblCall.Caption := 'rmt ADIF N1MM+';
+                                                  cbOffline.Caption := 'rmt ADIF N1MM+';
                                                   fixed:=true;
                                                  end;
          //if JS8CALL JSON with ADIF inside
           if (pos('"LOG.QSO","value":"',Buf)>0) and (pos('"}',Buf)>0)  then
                                                 Begin
                                                  Buf:=dmUtils.FromJS8CALLToAdif(Buf);
-                                                 lblCall.Caption := 'rmt ADIF JS8CALL';
+                                                 cbOffline.Caption := 'rmt ADIF JS8CALL';
                                                  IsJS8Callrmt :=true;
                                                  fixed:=true;
                                                 end;
@@ -2084,7 +2084,7 @@ begin
             and (not IsJS8Callrmt)     then
                                                Begin
                                                  Buf:='<ADIF_VER:5>3.1.0<EOH>'+Buf;
-                                                 lblCall.Caption := 'rmt ADIF hdless';
+                                                 cbOffline.Caption := 'rmt ADIF hdless';
                                                  fixed:=true;
                                                 end;
 
@@ -2097,7 +2097,7 @@ begin
           and (pos('<EOR',uppercase (Buf))>0) ) then //we have at least one full record
             Begin  //remove header
                Buf:=copy(Buf,pos('<EOH>',uppercase (Buf))+5,length(Buf));
-               if not fixed then lblCall.Caption := 'REMOTE ADIF';
+               if not fixed then cbOffline.Caption := 'REMOTE ADIF';
             end
            else
             Begin      //nothing to do
@@ -2544,7 +2544,7 @@ begin
     if index < 1 then
              begin
               if dmData.DebugLevel>=1 then Writeln(index,':--------Not wjst message!!------------');
-              lblCall.Caption:= 'Not wjst msg!';
+              cbOffline.Caption:= 'Not wjst msg!';
               break;
              end;
     RepStart := index; //for possibly reply creation
@@ -2558,7 +2558,7 @@ begin
 
     MsgType :=  ui32Buf(index);
     if dmData.DebugLevel>=1 then Write(' Message type:', MsgType,' ');
-    lblCall.Caption       := 'Wsjt-x remote #'+intToStr(MsgType);   //changed to see last received msgtype
+    cbOffline.Caption       := 'Wsjt-x remote #'+intToStr(MsgType);   //changed to see last received msgtype
 
     tmpindex := index;
     RemoteName := StrBuf(index);       //read remote name to get index point to RepHead end
@@ -2572,11 +2572,6 @@ begin
     0 : begin //Heartbeat
           ParStr := StrBuf(index);
           if dmData.DebugLevel>=1 then Writeln('HeartBeat Id:', ParStr);
-
-          if lblCall.Font.Color = clRed then
-            lblCall.Font.Color    := clBlue
-          else
-            lblCall.Font.Color    := clRed;
 
           if WsjtxMode = '' then
           begin
@@ -5451,11 +5446,16 @@ begin
   end;
 
   if not AnyRemoteOn then
-  Begin
-   lblDateFormat.Visible:=cbOffline.Checked;
-   lblStimeFormat.Visible:=cbOffline.Checked;
-   lblEtimeFormat.Visible:=cbOffline.Checked;
-  end;
+   Begin
+    lblDateFormat.Visible:=cbOffline.Checked;
+    lblStimeFormat.Visible:=cbOffline.Checked;
+    lblEtimeFormat.Visible:=cbOffline.Checked;
+   end
+  else
+   begin
+      if (not cbOffline.Checked) then
+                                 DisableRemoteMode;
+   end;
 end;
 
 procedure TfrmNewQSO.cmbFreqChange(Sender: TObject);
@@ -7156,7 +7156,7 @@ end;
 
 procedure TfrmNewQSO.SetEditLabel;
 begin
-  lblCall.Caption    := 'Call (edit mode):';
+  lblCall.Caption    := 'Call (edit mode)';
   lblCall.Font.Color := clRed;
   Caption := dmUtils.GetNewQSOCaption('Edit QSO');
   cbOffline.Checked :=true;
@@ -7164,7 +7164,7 @@ end;
 
 procedure TfrmNewQSO.UnsetEditLabel;
 begin
-  lblCall.Caption    := 'Call:';
+  lblCall.Caption    := 'Call';
   lblCall.Font.Color := clDefault;
   Caption := dmUtils.GetNewQSOCaption('New QSO');
   cbOffline.Checked := cqrini.ReadBool('TMPQSO','OFF',False);
@@ -7867,15 +7867,17 @@ begin
                         DisableRemoteMode;
                   mnuRemoteMode.Checked := True;
                   AnyRemoteOn := True;
-                  lblCall.Caption       := 'Fldigi remote';
+                  cbOffline.Caption     := 'Fldigi remote';
                   tmrFldigi.Interval    := cqrini.ReadInteger('fldigi','interval',2)*1000;
                   run                   := cqrini.ReadBool('fldigi','run',False);
                   path                  := cqrini.ReadString('fldigi','path','');
                   FldigiXmlRpc          := cqrini.ReadBool('fldigi','xmlrpc',False);
                   if FldigiXmlRpc then
-                  if (frmxfldigi = nil) then
-                                        Application.CreateForm(Tfrmxfldigi, frmxfldigi);
-                  frmxfldigi.Visible := true;
+                   begin
+                     if (frmxfldigi = nil) then
+                                        Application.CreateForm(Tfrmxfldigi,frmxfldigi);
+                     frmxfldigi.Visible := true;
+                   end;
                   RemoteActive := 'fldigi';
                   tmrFldigi.Enabled     := true;
                 end;
@@ -7889,7 +7891,7 @@ begin
                   mnuRemoteModeWsjt.Checked := True;
                   AnyRemoteOn := True;
                   WsjtxDecodeRunning        := false;
-                  lblCall.Caption           := 'Wsjtx remote';
+                  cbOffline.Caption         := 'Wsjtx remote';
                   path                      := cqrini.ReadString('wsjt','path','');
                   run                       := cqrini.ReadBool('wsjt','run',False);
 
@@ -7970,7 +7972,7 @@ begin
                   mnuRemoteModeADIF.Checked := True;
                   AnyRemoteOn := True;
 
-                  lblCall.Caption           := 'remote ADIF';
+                  cbOffline.Caption         := 'Remote ADIF';
                   IsJS8Callrmt              := false;
 
                   // start UDP server  http://synapse.ararat.cz/doc/help/blcksock.TBlockSocket.html
@@ -8002,12 +8004,9 @@ begin
                 end;
            end; //case remote type
 
-  cbOffline.Caption:='Remote';
   ClearAll;
-  lblCall.Font.Color    := clRed;
   edtCall.Enabled       := False;
   cbOffline.Checked     := True;
-  cbOffline.Enabled     := False;
   btnSave.Enabled       := False;  //disable manual saving when remote is on
   tmrADIF.Interval      := 250;    //rate to read qsos from UDP (msec)
 
@@ -8062,12 +8061,9 @@ begin
   AnyRemoteOn := False;
   RemoteActive := '';
   chkAutoMode.Checked:= RememberAutoMode;
-  lblCall.Caption           := 'Call:';
-  lblCall.Font.Color        := clDefault;
   edtCall.Enabled           := True;
-  cbOffline.Checked         := False;
-  cbOffline.Enabled         := True;
   cbOffline.Caption         := 'Offline';
+  cbOffline.Checked         := False;
   btnSave.Enabled           := True;
   ReturnToNewQSO;
   //clear TMPQSO mode on close. Otherwise it shows up on next remote mode (procedure ClearAll makes it)

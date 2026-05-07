@@ -7127,7 +7127,8 @@ begin
     old_cfreq := freq;
 
     edtCall.Text := '';
-    cbOffline.Checked := False;
+    if not AnyRemoteOn then
+           cbOffline.Checked := False;
     etmp := dmUtils.MyStrToFloat(freq);
     etmp := etmp/1000;
     freq := FloatToStrF(etmp,ffFixed,10,8);

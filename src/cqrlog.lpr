@@ -94,6 +94,7 @@ begin
         Writeln('   -32  RBNmonitor debug messages');
         Writeln('   -64  SQL action debug messages');
         Writeln('  -128  utils unit debug messages');
+        Writeln('  -256  Online log upload debug messages');
         Writeln;
         Exit;
      end;

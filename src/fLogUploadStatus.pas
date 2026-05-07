@@ -208,8 +208,10 @@ var
 
 
 begin
-  debug := //true;
-           dmData.DebugLevel >=1;
+   if dmData.DebugLevel < 0 then
+        debug := ((abs(dmData.DebugLevel) and 256) = 256 )
+       else
+        debug := dmData.DebugLevel >= 1 ;
 
   data := TStringList.Create;
   tmpdata := TStringList.Create;
@@ -763,8 +765,10 @@ end;
 
 procedure TfrmLogUploadStatus.FormCreate(Sender: TObject);
 begin
-  debug := //True;
-           dmData.DebugLevel >=1;
+  if dmData.DebugLevel < 0 then
+        debug := ((abs(dmData.DebugLevel) and 256) = 256 )
+       else
+        debug := dmData.DebugLevel >= 1 ;
   thRunning := False
 end;
 

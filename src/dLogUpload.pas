@@ -83,8 +83,12 @@ procedure TdmLogUpload.DataModuleCreate(Sender: TObject);
 var
   i : Integer;
 begin
-  debug := //True;
-           dmData.DebugLevel >=1;
+   //set debug rules for this form
+  if dmData.DebugLevel < 0 then
+        debug := ((abs(dmData.DebugLevel) and 256) = 256 )
+       else
+        debug := dmData.DebugLevel >= 1 ;
+
   InitCriticalSection(csLogUpload);
 
   dmData.LogUploadCon.KeepConnection := True;  //OH1KH 2025-01 that is set at connection creation already -> TdmData.getNewMySQLConnectionObject!!

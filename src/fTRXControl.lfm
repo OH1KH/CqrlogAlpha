@@ -148,7 +148,7 @@ object frmTRXControl: TfrmTRXControl
   }
   KeyPreview = True
   Menu = mnuMem
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy

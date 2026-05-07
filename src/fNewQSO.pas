@@ -4086,12 +4086,21 @@ begin
       CreateAutoBackup()
   end;
   frmTRXControl.StopPwrUpdate:=-254; //prevent rig power polling while Cqrlog is closing
+  Application.ProcessMessages;
   RunST('stop.sh'); //run "when cqrlog is closing" -script
+  Application.ProcessMessages;
   sleep(1000); //give scirpt time to use rigctld if that is needed
+  Application.ProcessMessages;
   if  AnyRemoteOn then DisableRemoteMode;
+  Application.ProcessMessages;
+  frmTRXControl.CloseRigs;
+  Application.ProcessMessages;
   CloseAllWindows;
+  Application.ProcessMessages;
   SaveSettings;
-  dmData.CloseDatabases
+  Application.ProcessMessages;
+  dmData.CloseDatabases;
+  Application.ProcessMessages;
 end;
 
 procedure TfrmNewQSO.cmbFreqKeyDown(Sender: TObject; var Key: Word;

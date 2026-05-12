@@ -26,7 +26,7 @@ uses
   fWorkedGrids, fPropDK0WCY, fRemind, fContest, fMonWsjtx, fXfldigi,
   dMembership, dSatellite, uRigControl, uRotControl, azidis3, aziloc, fDOKStat,
   fCabrilloExport, uDbUtils, dQTHProfile, uConnectionInfo, znacmech, gline2,
-  fDbSqlSel, fProgress, fDbError, fCountyStat;
+  fDbSqlSel, fProgress, fDbError, fCountyStat, LazVersion;
 var
   Splash    : TfrmSplash;
   SFL       : integer;
@@ -40,7 +40,7 @@ var
 {$R *.res}
 
 begin
-  Writeln(LineEnding+'Cqrlog Ver:',cVERSION,' Build:',cBuild,' Date:',cBUILD_DATE+LineEnding);
+  Writeln(LineEnding+'Cqrlog Ver:',cVERSION,' Build:',cBuild,' Date:',cBUILD_DATE+' LCL Version: ' + laz_version+LineEnding);
   try
     p := TStringList.Create;
     AProcess := TProcess.Create(nil);
@@ -74,12 +74,13 @@ begin
      Begin
         if Application.HasOption('v','version') then exit;
         Writeln;
-        Writeln('-h     --help           Print this help and exit');
-        Writeln('-r KEY --remote=KEY     Start with remote mode KEY= one of J,M,K');
-        Writeln('                        (for KEY see: NewQSO shortcut keys)');
-        Writeln('-q     --quiet          Start without spash at beginning');
-        Writeln('-v     --version        Print version and exit');
-        Writeln('       --debug=NR       Set debug level to NR');
+        Writeln('-h     --help             Print this help and exit');
+        Writeln('-r KEY --remote=KEY       Start with remote mode KEY= one of J,M,K');
+        Writeln('                          (for KEY see: NewQSO shortcut keys)');
+        Writeln('-q     --quiet            Start without spash at beginning');
+        Writeln('-v     --version          Print version and exit');
+        Writeln('       --debug=NR         Set debug level to NR');
+        Writeln('       --fixtriggers      Recreate triggers for online logs');
         Writeln;
         Writeln('Debug level NRs:');
         Writeln('     0  No debug messages');
@@ -92,6 +93,8 @@ begin
         Writeln('   -16  Grayline map RBN debug messages');
         Writeln('   -32  RBNmonitor debug messages');
         Writeln('   -64  SQL action debug messages');
+        Writeln('  -128  utils unit debug messages');
+        Writeln('  -256  Online log upload debug messages');
         Writeln;
         Exit;
      end;
@@ -127,34 +130,26 @@ begin
      end;
   end;
 
-  Application.CreateForm(TfrmNewQSO, frmNewQSO);
   Application.CreateForm(TdmData, dmData);
   Application.CreateForm(TdmLogUpload, dmLogUpload);
-  Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TdmUtils, dmUtils);
   Application.CreateForm(TdmDXCC, dmDXCC);
   Application.CreateForm(TdmDXCluster, dmDXCluster);
-  Application.CreateForm(TfrmGrayline, frmGrayline);
-  Application.CreateForm(TfrmCallbook, frmCallbook);
+  Application.CreateForm(TdmSatellite, dmSatellite);
+  Application.CreateForm(TdmMembership, dmMembership);
+
+  Application.CreateForm(TfrmNewQSO, frmNewQSO);
+  Application.CreateForm(TfrmMain, frmMain);
   Application.CreateForm(TfrmTRXControl, frmTRXControl);
+  Application.CreateForm(TfrmRotControl, frmRotControl);
+  Application.CreateForm(TfrmCWKeys, frmCWKeys);
+  Application.CreateForm(TfrmCWType, frmCWType);
+  Application.CreateForm(TfrmSCP, frmSCP);
+  Application.CreateForm(TfrmGrayline, frmGrayline);
   Application.CreateForm(TfrmDXCluster, frmDXCluster);
   Application.CreateForm(TfrmQSODetails, frmQSODetails);
   Application.CreateForm(TfrmBandMap, frmBandMap);
-  Application.CreateForm(TfrmPropagation, frmPropagation);
-  Application.CreateForm(TfrmCWKeys, frmCWKeys);
-  Application.CreateForm(TfrmSCP, frmSCP);
-  Application.CreateForm(TfrmRotControl, frmRotControl);
   Application.CreateForm(TfrmLogUploadStatus, frmLogUploadStatus);
-  Application.CreateForm(TfrmCWType, frmCWType);
-  Application.CreateForm(TfrmRbnMonitor, frmRbnMonitor);
-  Application.CreateForm(TfrmWorkedGrids, frmWorkedGrids);
-  Application.CreateForm(TfrmPropDK0WCY, frmPropDK0WCY);
-  Application.CreateForm(TfrmReminder, frmReminder);
-  Application.CreateForm(TfrmContest, frmContest);
-  Application.CreateForm(Tfrmxfldigi, frmxfldigi);
-  Application.CreateForm(TdmMembership, dmMembership);
-  Application.CreateForm(TdmSatellite, dmSatellite);
-  Application.CreateForm(TfrmProgress, frmProgress);
 
    if (not Application.HasOption('q','quiet')) then
   Begin

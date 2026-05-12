@@ -89,11 +89,11 @@ type
 
 var
   frmPropDK0WCY: TfrmPropDK0WCY;
-  KValues: KData;
-  BkColor: TColor = clGray; //background and borderline in KidxGraph
-  FrColor: TColor = clBlack;
-
-  tstcolor: integer;    // for color testing
+  KValues  : KData;
+  BkColor  : TColor = clGray; //background and borderline in KidxGraph
+  FrColor  : TColor = clBlack;
+  localdbg : Boolean;
+  tstcolor : integer;    // for color testing
 
 implementation
 {$R *.lfm}
@@ -103,16 +103,24 @@ uses dData, dUtils, uMyIni, fNewQSO;
 
 procedure TPropThread.Execute;
 var
-  HTTP: THTTPSend;
-  tmp: string;
-  m: TStringList;
-  p: integer;
-  ki: integer;
-  t: string;
+  HTTP     : THTTPSend;
+  tmp      : string;
+  m        : TStringList;
+  p        : integer;
+  ki       : integer;
+  t        : string;
+  LocalDbg : Boolean;
 
 begin
   if frmPropDK0WCY.running then
     exit;
+
+   //set debug rules
+  //if dmData.DebugLevel < 0 then
+      //LocaDbg :=  ((abs(dmData.DebugLevel) and 64) = 64 );
+    //else
+      LocalDbg:= dmData.DebugLevel >= 1;
+
   frmPropDK0WCY.running := True;
   frmPropDK0WCY.ak := '';
   frmPropDK0WCY.ab := '';
@@ -143,7 +151,7 @@ begin
       m.LoadFromStream(HTTP.Document);
       tmp := m.Text;
 
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
       begin
         Writeln('TMP:      ', tmp);
       end;
@@ -193,7 +201,7 @@ begin
       frmPropDK0WCY.k3h := copy(frmPropDK0WCY.k3h, 1, Pos('</b>', frmPropDK0WCY.k3h) - 1);
     end;
 
-    if dmData.DebugLevel >= 1 then
+    if LocalDbg then
     begin
       Writeln('Time:     ', frmPropDK0WCY.time);
       Writeln('UTC:     ', frmPropDK0WCY.UTC);
@@ -239,7 +247,7 @@ begin
     KValues[kloop] := -1;
   end;
 
- { if dmData.DebugLevel >=1 then
+ { if LocalDbg >=1 then
       begin
        tstcolor :=0;
       end; }
@@ -321,7 +329,7 @@ end;
 function TfrmPropDK0WCY.getKindexColor(kIndex: integer): TColor;
 begin
 
- { if dmData.DebugLevel >=1 then
+ { if LocalDbg >=1 then
       begin
        kIndex := tstcolor;
        Writeln('Color selection by:      ',kIndex)
@@ -386,7 +394,7 @@ begin
 
   frmPropDK0WCY.KidxGraph;
 
-{if dmData.DebugLevel >=1 then
+{if LocalDbg >=1 then
  begin
   if tstcolor < 950 then
     tstcolor := tstcolor +50
@@ -410,7 +418,7 @@ begin
     ImageKidx.Canvas.pen.Color := FrColor;
   end;
 
-  if dmData.DebugLevel >= 1 then
+  if LocalDbg then
   begin
     Writeln('Rounded Kidx for Graph:      ', round(dk * 100));
   end;
@@ -423,7 +431,7 @@ begin
       if KValues[kloop] = -1 then  //all data is not yet filled
       begin
         KValues[kloop] := round(dk * 100);      //place new value  to first free
-        if dmData.DebugLevel >= 1 then
+        if LocalDbg then
         begin
           Writeln('There are :   ', kloop + 1, ' Kdata entries');
         end;
@@ -443,7 +451,7 @@ begin
           KValues[kloop] := KValues[kloop + 1] //scroll data
         else
         begin
-          if dmData.DebugLevel >= 1 then
+          if LocalDbg then
           begin
             Writeln('All Kdata entries filled; scroll and place new to end');
           end;

@@ -16,12 +16,14 @@ unit fNewQSO;
 interface
 
 uses
+  uCWKeying,
   Classes, SysUtils, LResources, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   DBGrids, StdCtrls, Buttons, ComCtrls, Grids, inifiles,
   LCLType, httpsend, Menus, ActnList, process, db,
-  uCWKeying, ipc, baseunix, dLogUpload, blcksock, dateutils,
-  fMonWsjtx, fWorkedGrids,fPropDK0WCY, fAdifImport, RegExpr,
-  FileUtil, LazFileUtils, sqldb, strutils, LazUTF8;
+  ipc, baseunix, dLogUpload, blcksock, dateutils,
+  RegExpr, FileUtil, LazFileUtils, sqldb, strutils, LazUTF8;
+
+
 
 const
   cRefCall = 'Ref.call (CTRL+R): ';
@@ -83,50 +85,138 @@ type
     acContest: TAction;
     acRemoteModeADIF: TAction;
     acCounty: TAction;
+    acShowRecentQSOs: TAction;
     acUploadToAll: TAction;
     acUploadToHrdLog: TAction;
     acUploadToClubLog: TAction;
     acUploadToHamQTH: TAction;
     acUploadToUDPLog: TAction;
+    acUploadToQrzLog: TAction;
     acTune : TAction;
-    btnClearSatellite : TButton;
+    blbQTHProfile: TLabel;
+    btnCancel: TButton;
+    btnClearSatellite: TButton;
+    btnDXCCRef: TButton;
+    btnQSLMgr: TButton;
+    btnSave: TButton;
+    btnSunRise: TSpeedButton;
+    btnSunSet: TSpeedButton;
     cbOffline: TCheckBox;
-    cbTxLo: TCheckBox;
     cbRxLo: TCheckBox;
-    cbSpotRX: TCheckBox;
     cbSplitTX: TCheckBox;
+    cbSpotRX: TCheckBox;
+    cbTxLo: TCheckBox;
     chkAutoMode: TCheckBox;
-    cmbPropagation : TComboBox;
-    cmbSatellite : TComboBox;
+    cmbFreq: TComboBox;
+    cmbIOTA: TComboBox;
+    cmbMode: TComboBox;
+    cmbProfiles: TComboBox;
+    cmbPropagation: TComboBox;
+    cmbQSL_R: TComboBox;
+    cmbQSL_S: TComboBox;
+    cmbSatellite: TComboBox;
     dbgrdQSOBefore: TDBGrid;
+    edtAward: TEdit;
+    edtCall: TEdit;
     edtContestExchangeMessageReceived: TEdit;
     edtContestExchangeMessageSent: TEdit;
     edtContestName: TEdit;
     edtContestSerialReceived: TEdit;
     edtContestSerialSent: TEdit;
+    edtCounty: TEdit;
+    edtDate: TEdit;
     edtDOK: TEdit;
-    edtTXLO: TEdit;
+    edtDXCCRef: TEdit;
+    edtEndTime: TEdit;
+    edtGrid: TEdit;
+    edtHisRST: TEdit;
+    edtITU: TEdit;
+    edtMyRST: TEdit;
+    edtName: TEdit;
+    edtPWR: TEdit;
+    edtQSL_VIA: TEdit;
+    edtQTH: TEdit;
+    edtRemQSO: TEdit;
+    edtRXFreq: TEdit;
     edtRXLO: TEdit;
-    edtRXFreq : TEdit;
+    edtStartTime: TEdit;
+    edtState: TEdit;
+    edtTXLO: TEdit;
+    edtWAZ: TEdit;
     gbContest: TGroupBox;
+    lblDXCCinfo: TLabel;
+    Label37: TLabel;
+    Label38: TLabel;
+    lblAmbiguous: TLabel;
+    lblAward: TLabel;
+    lblAzi: TLabel;
+    lblAzim: TLabel;
+    lblCall: TLabel;
+    lblCallbookInformation: TLabel;
+    lblCommentToCallsign: TLabel;
+    lblCommentToQSO: TLabel;
+    lblCont: TLabel;
+    lblContCaption: TLabel;
     lblContestExchangeMessageReceived: TLabel;
     lblContestExchangeMessageSent: TLabel;
     lblContestName: TLabel;
     lblContestSerialReceived: TLabel;
     lblContestSerialSent: TLabel;
-    lblStimeFormat: TLabel;
-    lblEtimeFormat: TLabel;
+    lblCountryInfo: TLabel;
+    lblCounty: TLabel;
+    lblDate: TLabel;
     lblDateformat: TLabel;
-    Label38: TLabel;
-    Label37: TLabel;
-    lblCallbookInformation : TLabel;
-    lblPropagation : TLabel;
+    lblDistCaption: TLabel;
     lblDOK: TLabel;
-    lblStatellite : TLabel;
-    lblRXFreq : TLabel;
-    lblRXMhz : TLabel;
-    mCallBook : TMemo;
-    mCountry : TMemo;
+    lblDXCC: TLabel;
+    lblDXCCCaption: TLabel;
+    lblDXCCRef: TLabel;
+    lblEndTime: TLabel;
+    lblEtimeFormat: TLabel;
+    lblFrequency: TLabel;
+    lblGreeting: TLabel;
+    lblGrid: TLabel;
+    lblHisTime: TLabel;
+    lblIOTA: TLabel;
+    lblITU: TLabel;
+    lblITUCaption: TLabel;
+    lblItuEdit: TLabel;
+    lblLat: TLabel;
+    lblLatCaption: TLabel;
+    lblLocalCaption: TLabel;
+    lblLocSunRise: TLabel;
+    lblLocSunSet: TLabel;
+    lblLong: TLabel;
+    lblLongCaption: TLabel;
+    lblMode: TLabel;
+    lblName: TLabel;
+    lblPropagation: TLabel;
+    lblPwr: TLabel;
+    lblQRA: TLabel;
+    lblQSLMgr: TLabel;
+    lblQSLR: TLabel;
+    lblQSLS: TLabel;
+    lblQSLVia: TLabel;
+    lblQSONr: TLabel;
+    lblQSONrDesc: TLabel;
+    lblQSOTakes: TLabel;
+    lblQTH: TLabel;
+    lblRSTRcvd: TLabel;
+    lblRstSent: TLabel;
+    lblRXFreq: TLabel;
+    lblRXMhz: TLabel;
+    lblStartTime: TLabel;
+    lblState: TLabel;
+    lblStatellite: TLabel;
+    lblStimeFormat: TLabel;
+    lblTarSunRise: TLabel;
+    lblTarSunSet: TLabel;
+    lblWAZ: TLabel;
+    lblWAZCaption: TLabel;
+    lblWazEdit: TLabel;
+    mCallBook: TMemo;
+    mComment: TMemo;
+    mCountry: TMemo;
     MenuItem32 : TMenuItem;
     MenuItem33 : TMenuItem;
     MenuItem34 : TMenuItem;
@@ -152,6 +242,9 @@ type
     MenuItem94 : TMenuItem;
     MenuItem95: TMenuItem;
     MenuItem96: TMenuItem;
+    MenuItem97: TMenuItem;
+    MenuItem_QrzLog: TMenuItem;
+    MenuItem_QrzUpload: TMenuItem;
     mnueQSLView: TMenuItem;
     mnuRemoteModeADIF: TMenuItem;
     mnuReminder: TMenuItem;
@@ -177,93 +270,9 @@ type
     acXplanet: TAction;
     ActionList1: TActionList;
     acTRXControl: TAction;
-    btnCancel: TButton;
-    btnDXCCRef: TButton;
-    btnQSLMgr: TButton;
-    btnSave: TButton;
-    cmbFreq: TComboBox;
-    cmbIOTA: TComboBox;
-    cmbMode: TComboBox;
-    cmbProfiles: TComboBox;
-    cmbQSL_R: TComboBox;
-    cmbQSL_S: TComboBox;
-    edtAward: TEdit;
-    edtCall: TEdit;
-    edtCounty: TEdit;
-    edtDate: TEdit;
-    edtDXCCRef: TEdit;
-    edtEndTime: TEdit;
-    edtGrid: TEdit;
-    edtHisRST: TEdit;
-    edtITU: TEdit;
-    edtMyRST: TEdit;
-    edtName: TEdit;
-    edtPWR: TEdit;
-    edtQSL_VIA: TEdit;
-    edtQTH: TEdit;
-    edtRemQSO: TEdit;
-    edtStartTime: TEdit;
-    edtState: TEdit;
-    edtWAZ: TEdit;
-    gbDXCCdata: TGroupBox;
     imgMain: TImageList;
     imgMain1: TImageList;
-    lblDate: TLabel;
-    lblQTH: TLabel;
-    lblCommentToCallsign: TLabel;
-    lblPwr: TLabel;
-    lblItuEdit: TLabel;
-    lblLocalCaption: TLabel;
-    lblTarSunSet: TLabel;
-    lblTarSunRise: TLabel;
-    lblLocSunSet: TLabel;
-    lblLocSunRise: TLabel;
-    lblGrid: TLabel;
-    lblCounty: TLabel;
-    lblQSLS: TLabel;
-    lblQSLR: TLabel;
-    lblStartTime: TLabel;
-    lblAward: TLabel;
-    lblDXCCRef: TLabel;
-    lblWazEdit: TLabel;
-    lblCommentToQSO: TLabel;
-    lblQSONrDesc: TLabel;
-    lblState: TLabel;
-    lblDXCCCaption: TLabel;
-    lblWAZCaption: TLabel;
-    lblITUCaption: TLabel;
-    lblEndTime: TLabel;
-    lblContCaption: TLabel;
-    lblLatCaption: TLabel;
-    lblLongCaption: TLabel;
-    lblDistCaption: TLabel;
-    lblAzim: TLabel;
-    lblMode: TLabel;
-    lblFrequency: TLabel;
-    blbQTHProfile: TLabel;
-    lblRstSent: TLabel;
-    lblRSTRcvd: TLabel;
-    lblName: TLabel;
-    lblAmbiguous: TLabel;
-    lblAzi: TLabel;
-    lblCall: TLabel;
-    lblCont: TLabel;
-    lblCountryInfo: TLabel;
-    lblDXCC: TLabel;
-    lblGreeting: TLabel;
-    lblHisTime: TLabel;
-    lblIOTA: TLabel;
-    lblITU: TLabel;
-    lblLat: TLabel;
-    lblLong: TLabel;
-    lblQRA: TLabel;
-    lblQSLMgr: TLabel;
-    lblQSLVia: TLabel;
-    lblQSONr: TLabel;
-    lblQSOTakes: TLabel;
-    lblWAZ: TLabel;
     MainMenu1: TMainMenu;
-    mComment: TMemo;
     MenuItem1: TMenuItem;
     MenuItem10: TMenuItem;
     MenuItem11: TMenuItem;
@@ -323,7 +332,6 @@ type
     MenuItem83: TMenuItem;
     mnuHamQth : TMenuItem;
     MenuItem85 : TMenuItem;
-    mnuQSOBefore: TMenuItem;
     mnuRemoteMode: TMenuItem;
     mnuIOTA: TMenuItem;
     mnuQSOList: TMenuItem;
@@ -341,43 +349,29 @@ type
     mnuFile: TMenuItem;
     mnuTRXControl: TMenuItem;
     opEQSL: TOpenDialog;
-    pnlSbtn2: TPanel;
-    pnlSbtn0: TPanel;
-    pnlOffline: TPanel;
-    pgDetails : TPageControl;
+    pgDetails: TPageControl;
+    pnlContest: TPanel;
     pnlAll: TPanel;
-    pnlDXCCinfo: TPanel;
-    pnlQsoInfo: TPanel;
-    pnlProfiles: TPanel;
-    pnlDXCCCountry : TPanel;
-    pnlQSOinput: TPanel;
-    pnlSbtn1: TPanel;
-    pnlSbtn3: TPanel;
-    pnlSbtn4: TPanel;
-    pnlSbtn5: TPanel;
-    pnlSbtn6: TPanel;
-    pnlSbtn7: TPanel;
+    pnlOffline: TPanel;
     popEditQSO: TPopupMenu;
     sbNewQSO: TStatusBar;
     sbtnAttach: TSpeedButton;
     sbtneQSL: TSpeedButton;
     sbtnHamQTH: TSpeedButton;
     sbtnLocatorMap: TSpeedButton;
-    sbtnUsrbtn: TSpeedButton;
     sbtnLoTW: TSpeedButton;
     sbtnQRZ: TSpeedButton;
     sbtnQSL: TSpeedButton;
-    sgrdStatistic : TStringGrid;
-    btnSunRise: TSpeedButton;
+    sbtnRefreshTime: TSpeedButton;
+    sbtnUsrbtn: TSpeedButton;
     sgrdCallStatistic: TStringGrid;
+    sgrdStatistic: TStringGrid;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
-    btnSunSet: TSpeedButton;
-    sbtnRefreshTime: TSpeedButton;
-    tabDXCCStat : TTabSheet;
-    tabSatellite : TTabSheet;
-    tabLOConfig: TTabSheet;
     tabCallStat: TTabSheet;
+    tabDXCCStat: TTabSheet;
+    tabLOConfig: TTabSheet;
+    tabSatellite: TTabSheet;
     tmrADIF: TTimer;
     tmrWsjtx: TTimer;
     tmrUploadAll: TTimer;
@@ -410,12 +404,14 @@ type
     procedure acSendSpotExecute(Sender : TObject);
     procedure acShowStatBarExecute(Sender: TObject);
     procedure acRemoteModeADIFExecute(Sender: TObject);
+    procedure acShowRecentQSOsExecute(Sender: TObject);
     procedure acTuneExecute(Sender : TObject);
     procedure acUploadToAllExecute(Sender: TObject);
     procedure acUploadToClubLogExecute(Sender: TObject);
     procedure acUploadToHamQTHExecute(Sender: TObject);
     procedure acUploadToHrdLogExecute(Sender: TObject);
     procedure acUploadToUDPLogExecute(Sender: TObject);
+    procedure acUploadToQrzLogExecute(Sender: TObject);
     procedure acPropExecute(Sender: TObject);
     procedure btnCancelExit(Sender: TObject);
     procedure btnClearSatelliteClick(Sender : TObject);
@@ -472,6 +468,7 @@ type
     procedure lblDOKClick(Sender: TObject);
     procedure lblModeClick(Sender: TObject);
     procedure lblQRAChangeBounds(Sender: TObject);
+    procedure lblRstSentClick(Sender: TObject);
     procedure lblStateClick(Sender: TObject);
     procedure MenuItem11Click(Sender: TObject);
     procedure MenuItem12Click(Sender: TObject);
@@ -592,7 +589,6 @@ type
     procedure mCommentKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure mnueQSLViewClick(Sender: TObject);
     procedure mnuIOTAClick(Sender: TObject);
-    procedure mnuQSOBeforeClick(Sender: TObject);
     procedure mnuQSOListClick(Sender: TObject);
     procedure pgDetailsChange(Sender: TObject);
     procedure popEditQSOPopup(Sender: TObject);
@@ -846,9 +842,8 @@ uses dUtils, fChangeLocator, fChangeOperator, dDXCC, dDXCluster, dData, fMain, f
      fLongNote, fRefCall, fKeyTexts, fCWType, fExportProgress, fPropagation, fCallAttachment,
      fQSLViewer, fCWKeys, uMyIni, fDBConnect, fAbout, uVersion, fChangelog,
      fBigSquareStat, fSCP, fRotControl, fLogUploadStatus, fRbnMonitor, fException, fCommentToCall,
-     fRemind, fContest, fXfldigi, dMembership, dSatellite, fCountyStat,fFreq;
-
-
+     fRemind, fContest, fXfldigi, dMembership, dSatellite, fCountyStat,fFreq,
+     fMonWsjtx, fWorkedGrids,fPropDK0WCY, fAdifImport;
 
 procedure TQSLTabThread.Execute;
 var
@@ -1474,6 +1469,11 @@ begin
   btnCancel.Hint:='';
   btnCancel.ShowHint:=False;
 
+  lblGrid.Font.Style:=[];
+  lblGrid.Font.Color:=clDefault;
+  edtGrid.Font.Style:=[];
+  edtGrid.Font.Color:=clDefault;
+
   btnCancel.Caption:='Quit [CTRL+Q]';
   btnCancel.Font.Color:=clDefault;
   btnCancel.Font.Style:=[];
@@ -1483,6 +1483,7 @@ begin
 end;
 
 procedure TfrmNewQSO.LoadSettings;
+
 begin
   dmUtils.ModifyXplanetConf;
   dmUtils.LoadFontSettings(frmNewQSO);
@@ -1515,9 +1516,9 @@ begin
    end;
 
   if dbgrdQSOBefore.Visible then
-    mnuQSOBefore.Caption := 'Disable QSO before grid'
+     acShowRecentQSOs.Checked := True
   else
-    mnuQSOBefore.Caption := 'Enable QSO before grid';
+     acShowRecentQSOs.Checked := false;
 
   if cqrini.ReadBool('Window','Grayline',False) then
     frmGrayline.Show;
@@ -1577,13 +1578,25 @@ begin
     dmUtils.RunXplanet;
 
   if cqrini.ReadBool('Window','Prop',False) then
-    frmPropagation.Show;
+    Begin
+     if (frmPropagation=nil)  then
+        Application.CreateForm(TfrmPropagation,  frmPropagation);
+     frmPropagation.Show;
+    end;
 
   if cqrini.ReadBool('Window','pDK0WCY',False) then
-    frmPropDK0WCY.Show;
+    Begin
+     if (frmPropDK0WCY=nil)  then
+        Application.CreateForm(TfrmPropDK0WCY,  frmPropDK0WCY);
+     frmPropDK0WCY.Show;
+    end;
 
    if cqrini.ReadBool('Window','WorkedGrids',False) then
-    frmWorkedGrids.Show;
+    Begin
+     if (frmWorkedGrids=nil)  then
+        Application.CreateForm(TfrmWorkedGrids,  frmWorkedGrids);
+     frmWorkedGrids.Show;
+    end;
 
   if cqrini.ReadBool('Window','CWKeys',False) then
     acCWFKey.Execute;
@@ -1620,14 +1633,10 @@ begin
   frmNewQSO.pgDetails.Pages[2].TabVisible := cqrini.ReadBool('NewQSO','SatelliteMode', False);
   frmNewQSO.pgDetails.Pages[3].TabVisible := cqrini.ReadBool('NewQSO','SatelliteMode', False);
 
-  //this have to be done here when log is selected (settings at database)
-  frmReminder.chRemi.Checked := cqrini.ReadBool('Reminder','chRemi',False);
-  frmReminder.chUTRemi.Checked := cqrini.ReadBool('Reminder','chUTRemi',False);
-  frmReminder.RemindTimeSet.Text := cqrini.ReadString('Reminder','RemindTimeSet','');
-  frmReminder.RemindUThour.Text := cqrini.ReadString('Reminder','RemindUThour','');
-  frmReminder.RemiMemo.Lines.Clear;
-  frmReminder.RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
-  frmReminder.btCloseClick(nil);
+  //this have to be done here when log is selected (settings from database)
+  if ((cqrini.ReadBool('Reminder','chRemi',False))
+     or (cqrini.ReadBool('Reminder','chUTRemi',False))) then
+       acReminderExecute(Self.btnSave); //fake to get diffrent Tobject
 
   dmUtils.InsertQSL_S(cmbQSL_S);
   dmUtils.InsertQSL_R(cmbQSL_R);
@@ -1655,154 +1664,63 @@ begin
 end;
 
 procedure TfrmNewQSO.CloseAllWindows;
+
+  Procedure ClFrm(a:TForm);
+      var
+         name:string;
+      Begin
+       if (a<>nil) then
+        begin
+         name:=copy(a.Name,4,length(a.Name));
+         case name of //exceptions where save name is not form name
+            'TRXControl' :	name:='TRX';
+            'RotControl' :	name:='ROT';
+            'QSODetails' :	name:='Details';
+            'Propagation':	name:='Prop';
+            'PropDK0WCY' :	name:='pDK0WCY';
+            'Main'       :	name:='QSOList';
+         end;
+         if (a.Showing) then
+          begin
+            a.Close;
+            cqrini.WriteBool('Window',name,True)
+          end
+          else
+            cqrini.WriteBool('Window',name,False);
+        end;
+      end;
+
 begin
   dmUtils.SaveDBGridInForm(frmNewQSO) ;
   tmrRadio.Enabled := False;
   tmrEnd.Enabled   := False;
   tmrStart.Enabled := False;
 
-  if Assigned(cqrini) then
+
+  if Assigned(cqrini) then   //this should always be
   begin
-    cqrini.WriteBool('Window','CWKeys',frmCWKeys.Showing);
 
     //I have to close window manually because of bug in lazarus.
+    cqrini.WriteBool('Window','CWKeys',frmCWKeys.Showing);
 
-    if frmGrayline.Showing then
-    begin
-      frmGrayline.Close;
-      cqrini.WriteBool('Window','Grayline',True)
-    end
-    else
-      cqrini.WriteBool('Window','Grayline',False);
-
-    if frmTRXControl.Showing then
-    begin
-      frmTRXControl.Close;
-      cqrini.WriteBool('Window','TRX',True)
-    end
-    else begin
-      cqrini.WriteBool('Window','TRX',False)
-    end;
-    frmTRXControl.CloseRigs;
-
-    if frmRotControl.Showing then
-    begin
-      frmRotControl.Close;
-      cqrini.WriteBool('Window','ROT',True)
-    end
-    else
-      cqrini.WriteBool('Window','ROT',False);
-
-    if frmDXCluster.Showing then
-    begin
-      frmDXCluster.Close;
-      cqrini.WriteBool('Window','Dxcluster',True)
-    end
-    else
-      cqrini.WriteBool('Window','Dxcluster',False);
-
-    if frmQSODetails.Showing then
-    begin
-      frmQSODetails.Close;
-      cqrini.WriteBool('Window','Details',True)
-    end
-    else
-      cqrini.WriteBool('Window','Details',False);
-
-    if frmBandMap.Showing then
-    begin
-      frmBandMap.Close;
-      cqrini.WriteBool('Window','BandMap',True)
-    end
-    else
-      cqrini.WriteBool('Window','BandMap',False);
-
-    if frmPropagation.Showing then
-    begin
-      frmPropagation.Close;
-      cqrini.WriteBool('Window','Prop',True)
-    end
-    else
-      cqrini.WriteBool('Window','Prop',False);
-
-    if frmPropDK0WCY.Showing then
-    begin
-      frmPropDK0WCY.Close;
-      cqrini.WriteBool('Window','pDK0WCY',True)
-    end
-    else
-      cqrini.WriteBool('Window','pDK0WCY',False);
-
-   if frmWorkedGrids.Showing then
-    begin
-      frmWorkedGrids.Close;
-      cqrini.WriteBool('Window','WorkedGrids',True)
-    end
-    else
-      cqrini.WriteBool('Window','WorkedGrids',False);
-
-   if (frmMonWsjtx <> nil) and frmMonWsjtx.Showing then
-     begin
-       frmMonWsjtx.Close;
-     end;
-
-    if frmCWKeys.Showing then
-    begin
-      frmCWKeys.Close;
-      cqrini.WriteBool('Window','CWKeys',True)
-    end
-    else
-      cqrini.WriteBool('Window','CWKeys',False);
-
-    if frmSCP.Showing then
-    begin
-      cqrini.WriteBool('Window','SCP',True);
-      frmSCP.Close
-    end
-    else
-      cqrini.WriteBool('Window','SCP',False);
-
-    if frmMain.Showing then
-    begin
-      cqrini.WriteBool('Window','QSOList',True);
-      frmMain.Close
-    end
-    else
-      cqrini.WriteBool('Window','QSOList',False);
-
-    if frmLogUploadStatus.Showing then
-    begin
-      cqrini.WriteBool('Window','LogUploadStatus', True);
-      frmLogUploadStatus.Close
-    end
-    else
-      cqrini.WriteBool('Window','LogUploadStatus', False);
-
-    if frmCWType.Showing then
-    begin
-      cqrini.WriteBool('Window','CWType',True);
-      frmCWType.Close
-    end
-    else
-      cqrini.WriteBool('Window','CWType',False);
-
-    if frmRBNMonitor.Showing then
-    begin
-      cqrini.WriteBool('Window','RBNMonitor',True);
-      frmRBNMonitor.Close
-    end
-    else
-      cqrini.WriteBool('Window','RBNMonitor',False)
-  end ;
-
-  if frmContest.Showing then
-    begin
-      cqrini.WriteBool('Window','Contest',True);
-      frmContest.Close
-    end
-    else
-      cqrini.WriteBool('Window','Contest',False)
-
+    ClFrm(frmGrayline);
+    ClFrm(frmTRXControl);
+    ClFrm(frmRotControl);
+    ClFrm(frmDXCluster);
+    ClFrm(frmQSODetails);
+    ClFrm(frmBandMap);
+    ClFrm(frmPropagation);
+    ClFrm(frmPropDK0WCY);
+    ClFrm(frmWorkedGrids);
+    ClFrm(frmMonWsjtx);
+    ClFrm(frmCWKeys);
+    ClFrm(frmSCP);
+    ClFrm(frmMain);
+    ClFrm(frmLogUploadStatus);
+    ClFrm(frmCWType);
+    ClFrm(frmRBNMonitor);
+    ClFrm(frmContest);
+  end;
 end;
 
 procedure TfrmNewQSO.SaveSettings;
@@ -2148,14 +2066,14 @@ begin
            and(pos('<APP>N1MM',Uppercase(Buf))>0 ) then
                                                  Begin
                                                   Buf:=dmUtils.FromN1MMToAdif(Buf);
-                                                  lblCall.Caption := 'rmt ADIF N1MM+';
+                                                  cbOffline.Caption := 'rmt ADIF N1MM+';
                                                   fixed:=true;
                                                  end;
          //if JS8CALL JSON with ADIF inside
           if (pos('"LOG.QSO","value":"',Buf)>0) and (pos('"}',Buf)>0)  then
                                                 Begin
                                                  Buf:=dmUtils.FromJS8CALLToAdif(Buf);
-                                                 lblCall.Caption := 'rmt ADIF JS8CALL';
+                                                 cbOffline.Caption := 'rmt ADIF JS8CALL';
                                                  IsJS8Callrmt :=true;
                                                  fixed:=true;
                                                 end;
@@ -2166,7 +2084,7 @@ begin
             and (not IsJS8Callrmt)     then
                                                Begin
                                                  Buf:='<ADIF_VER:5>3.1.0<EOH>'+Buf;
-                                                 lblCall.Caption := 'rmt ADIF hdless';
+                                                 cbOffline.Caption := 'rmt ADIF hdless';
                                                  fixed:=true;
                                                 end;
 
@@ -2179,7 +2097,7 @@ begin
           and (pos('<EOR',uppercase (Buf))>0) ) then //we have at least one full record
             Begin  //remove header
                Buf:=copy(Buf,pos('<EOH>',uppercase (Buf))+5,length(Buf));
-               if not fixed then lblCall.Caption := 'REMOTE ADIF';
+               if not fixed then cbOffline.Caption := 'REMOTE ADIF';
             end
            else
             Begin      //nothing to do
@@ -2365,11 +2283,18 @@ begin
 end;
 
 procedure TfrmNewQSO.tmrStartTimer(Sender: TObject);
+var
+   i:integer;
 begin
   if not cbOffline.Checked then
   begin
     FillDateTimeFields;
     StartUpRemote;
+    if (cmbProfiles.Top<>7) then //this removes gap/overflow between panelAll and QthProfile selector when used font changes.
+     begin
+      i:= 7 - cmbProfiles.Top;
+      pnlAll.Height:=pnlAll.Height+i;
+     end;
   end
 end;
 
@@ -2403,7 +2328,7 @@ begin
                       if cqrini.ReadBool('OnlineLog','HrUpOnline',False) then
                         frmLogUploadStatus.UploadDataToHrdLog
                     end;
-                    WhatUpNext           := upUDPLog
+                    WhatUpNext := upUDPLog
                   end;
       upUDPLog  : begin
                     if UploadAll then
@@ -2412,6 +2337,17 @@ begin
                       if cqrini.ReadBool('OnlineLog','UdUpOnline',False) then
                         frmLogUploadStatus.UploadDataToUDPLog
                     end;
+                    WhatUpNext := upQrzLog
+                  end;
+
+      upQrzLog  : begin
+                    if UploadAll then
+                      frmLogUploadStatus.UploadDataToQrzLog(UploadAll)
+                    else begin
+                      if cqrini.ReadBool('OnlineLog','QrzUpOnline',False) then
+                        frmLogUploadStatus.UploadDataToQrzLog;
+                    end;
+
                     tmrUploadAll.Enabled := False;
                     UploadAll            := False;
                     WhatUpNext           := upHamQTH
@@ -2569,11 +2505,12 @@ var
   var
      ContestDupe : integer;
      begin
-       if frmContest.Showing
+       if (frmContest <> nil)
+          and frmContest.Showing
           and ( not frmContest.rbIgnoreDupes.Checked )
           and frmContest.chkMarkDupe.Checked then
            Begin
-             ContestDupe:=frmWorkedGrids.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
+             ContestDupe:=dmUtils.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
              if frmContest.rbNoMode4Dupe.Checked and ( ContestDupe=2) then
                                                   ContestDupe:=0;
              if (ContestDupe=1) or (ContestDupe=2)  then
@@ -2607,7 +2544,7 @@ begin
     if index < 1 then
              begin
               if dmData.DebugLevel>=1 then Writeln(index,':--------Not wjst message!!------------');
-              lblCall.Caption:= 'Not wjst msg!';
+              cbOffline.Caption:= 'Not wjst msg!';
               break;
              end;
     RepStart := index; //for possibly reply creation
@@ -2621,7 +2558,7 @@ begin
 
     MsgType :=  ui32Buf(index);
     if dmData.DebugLevel>=1 then Write(' Message type:', MsgType,' ');
-    lblCall.Caption       := 'Wsjt-x remote #'+intToStr(MsgType);   //changed to see last received msgtype
+    cbOffline.Caption       := 'Wsjt-x remote #'+intToStr(MsgType);   //changed to see last received msgtype
 
     tmpindex := index;
     RemoteName := StrBuf(index);       //read remote name to get index point to RepHead end
@@ -2635,11 +2572,6 @@ begin
     0 : begin //Heartbeat
           ParStr := StrBuf(index);
           if dmData.DebugLevel>=1 then Writeln('HeartBeat Id:', ParStr);
-
-          if lblCall.Font.Color = clRed then
-            lblCall.Font.Color    := clBlue
-          else
-            lblCall.Font.Color    := clRed;
 
           if WsjtxMode = '' then
           begin
@@ -3143,12 +3075,12 @@ begin
                  end;
                  case ContestNr of
                       0         : Begin   //user may want to store event qsos (like WWA) with "contest" name. Therefore contest #0 must be chekcked
-                                      if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
+                                      if ((frmContest <> nil) and frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
                                             edtContestName.Text :=frmContest.cmbContestName.Text;
                                   end;
                       1,2,3,4   : Begin
                                        edtContestSerialReceived.Text := copy( edtContestSerialReceived.Text,1,6); //Max Db length=6
-                                       if (frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
+                                       if ((frmContest <> nil) and frmContest.Showing and (frmContest.cmbContestName.Text<>'')) then
                                             edtContestName.Text :=frmContest.cmbContestName.Text;
                                   end;
                  end;
@@ -3502,7 +3434,7 @@ begin
      frmMain.acRefresh.Execute;
      if not fEditQso then
        begin
-            if frmContest.Showing and frmContest.chkSetFilter.Checked then
+            if (frmContest <> nil) and frmContest.Showing and frmContest.chkSetFilter.Checked then
               frmContest.chkSetFilterClick(nil) //shows last logged qso
             else
              frmMain.dbgrdMainKeyUp(nil,key,[ssCtrl]); //shows last logged qso
@@ -3519,8 +3451,8 @@ begin
     frmTRXControl.ClearRIT;
 
   fEditQSO := False; //this should be cleared by clearAll. Needed here ???
-  UploadAllQSOOnline;
-  if frmWorkedGrids.Showing then frmWorkedGrids.UpdateMap;
+  frmNewQSO.UploadAllQSOOnline;
+  if (frmWorkedGrids<>nil) and (frmWorkedGrids.Showing) then frmWorkedGrids.UpdateMap;
   Op := cqrini.ReadString('TMPQSO','OP','');
   ShowOperator;
 
@@ -3597,7 +3529,6 @@ begin
     begin
       mode := dmUtils.GetModeFromFreq(FloatToStr(tmp/1000));
       frmTRXControl.SetModeFreq(mode,FloatToStr(tmp));
-      key := 0;
       edtCall.Text := '';
       exit
     end
@@ -4155,12 +4086,21 @@ begin
       CreateAutoBackup()
   end;
   frmTRXControl.StopPwrUpdate:=-254; //prevent rig power polling while Cqrlog is closing
+  Application.ProcessMessages;
   RunST('stop.sh'); //run "when cqrlog is closing" -script
+  Application.ProcessMessages;
   sleep(1000); //give scirpt time to use rigctld if that is needed
+  Application.ProcessMessages;
   if  AnyRemoteOn then DisableRemoteMode;
+  Application.ProcessMessages;
+  frmTRXControl.CloseRigs;
+  Application.ProcessMessages;
   CloseAllWindows;
+  Application.ProcessMessages;
   SaveSettings;
-  dmData.CloseDatabases
+  Application.ProcessMessages;
+  dmData.CloseDatabases;
+  Application.ProcessMessages;
 end;
 
 procedure TfrmNewQSO.cmbFreqKeyDown(Sender: TObject; var Key: Word;
@@ -4391,6 +4331,7 @@ end;
 
 procedure TfrmNewQSO.acGraylineExecute(Sender: TObject);
 begin
+
   if frmGrayline.Showing then
     frmGrayline.BringToFront
   else
@@ -4582,6 +4523,8 @@ begin
     frmSCP.mSCP.Clear;
   lblGrid.Font.Style:=[];
   lblGrid.Font.Color:=clDefault;
+  edtGrid.Font.Style:=[];
+  edtGrid.Font.Color:=clDefault;
 end;
 
 
@@ -4625,11 +4568,19 @@ begin
   edtGrid.Text := dmUtils.StdFormatLocator(edtGrid.Text);
   edtGrid.SelStart := Length(edtGrid.Text);
   edtGrid.SelLength:=0;
+  if ( edtGrid.SelStart in [1,3,5] )then
+       edtGrid.Font.Color:=clRed
+      else
+       edtGrid.Font.Color:=clDefault;
 end;
 
 procedure TfrmNewQSO.edtGridEnter(Sender: TObject);
 begin
-  edtGrid.SelectAll
+  edtGrid.SelectAll;
+  lblGrid.Font.Style:=[];
+  lblGrid.Font.Color:=clDefault;
+  edtGrid.Font.Style:=[];
+  edtGrid.Font.Color:=clDefault;
 end;
 
 procedure TfrmNewQSO.edtGridExit(Sender: TObject);
@@ -4647,15 +4598,19 @@ begin
      lblGrid.Font.Color:=clDefault;
     end
    else
-    Begin
-     lblGrid.Font.Style:=[fsBold];
-     lblGrid.Font.Color:=clRed;
-    end;
+    if  (edtGrid.Text<>'') then
+      Begin
+       lblGrid.Font.Style:=[fsBold];
+       edtGrid .Font.Style:=[fsBold];
+       lblGrid.Font.Color:=clRed;
+       edtGrid.Font.Color:=clRed;
+      end;
 end;
 
 procedure TfrmNewQSO.edtGridKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
+  writeln(length(edtGrid.text));
   if (key = 40) then  //down arrow
   begin
     edtPWR.SetFocus;
@@ -4685,6 +4640,8 @@ end;
 
 procedure TfrmNewQSO.acRBNMonitorExecute(Sender: TObject);
 begin
+  if (frmRBNMonitor=nil) then
+             Application.CreateForm(TfrmRbnMonitor, frmRbnMonitor);
   frmRBNMonitor.Show
 end;
 
@@ -4708,7 +4665,19 @@ end;
 
 procedure TfrmNewQSO.acReminderExecute(Sender: TObject);
 begin
-  frmReminder.OpenReminder;
+  if (frmReminder=nil) then
+   begin
+    Application.CreateForm(TfrmReminder, frmReminder);
+    frmReminder.chRemi.Checked := cqrini.ReadBool('Reminder','chRemi',False);
+    frmReminder.chUTRemi.Checked := cqrini.ReadBool('Reminder','chUTRemi',False);
+    frmReminder.RemindTimeSet.Text := cqrini.ReadString('Reminder','RemindTimeSet','');
+    frmReminder.RemindUThour.Text := cqrini.ReadString('Reminder','RemindUThour','');
+    frmReminder.RemiMemo.Lines.Clear;
+    frmReminder.RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
+    frmReminder.btCloseClick(nil);
+   end;
+  if (Sender<>Self.btnSave) then
+                     frmReminder.Show;
 end;
 
 procedure TfrmNewQSO.acRemoteWsjtExecute(Sender: TObject);
@@ -4743,7 +4712,7 @@ begin
   end
   else begin
     sbNewQSO.Visible := True;
-    acShowStatBar.Checked := False
+    acShowStatBar.Checked := True
   end
 end;
 
@@ -4753,6 +4722,19 @@ begin
     DisableRemoteMode
   else
     GoToRemoteMode(rmtADIF)
+end;
+
+procedure TfrmNewQSO.acShowRecentQSOsExecute(Sender: TObject);
+begin
+  if dbgrdQSOBefore.Visible then
+  begin
+    dbgrdQSOBefore.Visible := False;
+    acShowRecentQSOs.Checked := False
+  end
+  else begin
+    dbgrdQSOBefore.Visible := True;
+    acShowRecentQSOs.Checked := True
+  end
 end;
 
 procedure TfrmNewQSO.acTuneExecute(Sender : TObject);
@@ -4780,6 +4762,15 @@ begin
   end
 end;
 
+procedure TfrmNewQSO.UploadAllQSOOnline;
+begin
+  if not tmrUploadAll.Enabled then
+  begin
+    UploadAll            := False;
+    tmrUploadAll.Enabled := True
+  end
+end;
+
 procedure TfrmNewQSO.acUploadToClubLogExecute(Sender: TObject);
 begin
   frmLogUploadStatus.UploadDataToClubLog
@@ -4802,6 +4793,8 @@ end;
 
 procedure TfrmNewQSO.acPropExecute(Sender: TObject);
 begin
+   if (frmPropagation=nil)  then
+        Application.CreateForm(TfrmPropagation,  frmPropagation);
    frmPropagation.Show
 end;
 
@@ -4816,6 +4809,7 @@ end;
 
 procedure TfrmNewQSO.btnClearSatelliteClick(Sender : TObject);
 begin
+  tabSatellite.Font.Color := clDefault;
   cmbPropagation.ItemIndex := 0;
   cmbSatellite.ItemIndex   := 0;
   edtRXFreq.Clear;
@@ -4861,6 +4855,7 @@ end;
 
 procedure TfrmNewQSO.acLocatorMapExecute(Sender: TObject);
 begin
+  if (frmWorkedGrids = nil) then  Application.CreateForm(TfrmWorkedGrids, frmWorkedGrids);
   frmWorkedGrids.Show
 end;
 
@@ -4871,7 +4866,8 @@ end;
 
 procedure TfrmNewQSO.acMonitorWsjtxExecute(Sender: TObject);
 begin
-  if (frmMonWsjtx = nil) then  Application.CreateForm(TfrmMonWsjtx, frmMonWsjtx);
+  if (frmMonWsjtx = nil) then
+                  Application.CreateForm(TfrmMonWsjtx, frmMonWsjtx);
   frmMonWsjtx.Show;
   cqrini.WriteBool('Window','MonWsjtx',true);
 end;
@@ -4898,6 +4894,8 @@ end;
 
 procedure TfrmNewQSO.acContestExecute(Sender: TObject);
 begin
+  if (frmContest = nil) then
+                        Application.CreateForm(TfrmContest, frmContest);
   frmContest.Show;
 end;
 
@@ -4950,6 +4948,8 @@ end;
 
 procedure TfrmNewQSO.acpDK0WCYExecute(Sender: TObject);
 begin
+   if (frmPropDK0WCY=nil)  then
+        Application.CreateForm(TfrmPropDK0WCY,  frmPropDK0WCY);
    frmPropDK0WCY.Show
 end;
 
@@ -5238,6 +5238,11 @@ begin
   RefreshInfoLabels
 end;
 
+procedure TfrmNewQSO.lblRstSentClick(Sender: TObject);
+begin
+
+end;
+
 procedure TfrmNewQSO.MenuItem11Click(Sender: TObject);
 begin
   with TfrmWAZITUStat.Create(self) do
@@ -5333,16 +5338,16 @@ begin
     ShowModal;
     if ModalResult = mrOK then
     begin
+      dmUtils.LoadFontSettings(frmNewQSO);
       if frmMain.Showing then
         dmUtils.LoadFontSettings(frmMain);
-      dmUtils.LoadFontSettings(frmNewQSO);
       if frmTRXControl.Showing then
         dmUtils.LoadFontSettings(frmTRXControl);
       if frmQSODetails.Showing then
         frmQSODetails.LoadFonts;
-      if frmRbnMonitor.Showing then
+      if (frmRbnMonitor <> nil) and frmRbnMonitor.Showing then
         dmUtils.LoadFontSettings(frmRbnMonitor);
-      if frmPropDK0WCY.Showing then
+      if (frmPropDK0WCY <> nil) and frmPropDK0WCY.Showing then
         dmUtils.LoadFontSettings(frmPropDK0WCY);
       if (frmMonWsjtx <> nil) and frmMonWsjtx.Showing then
                          dmUtils.LoadFontSettings(frmMonWsjtx);
@@ -5443,18 +5448,24 @@ begin
   if cbOffline.Checked then
   begin
     pnlOffline.Color := clRed;
+    lblQSOTakes.Visible := not cbOffline.Checked;
   end
   else begin
     SetDateTime();
     pnlOffline.Color := ColorToRGB(clBtnFace);
   end;
-  lblQSOTakes.Visible := not cbOffline.Checked;
+
   if not AnyRemoteOn then
-  Begin
-   lblDateFormat.Visible:=cbOffline.Checked;
-   lblStimeFormat.Visible:=cbOffline.Checked;
-   lblEtimeFormat.Visible:=cbOffline.Checked;
-  end;
+   Begin
+    lblDateFormat.Visible:=cbOffline.Checked;
+    lblStimeFormat.Visible:=cbOffline.Checked;
+    lblEtimeFormat.Visible:=cbOffline.Checked;
+   end
+  else
+   begin
+      if (not cbOffline.Checked) then
+                                 DisableRemoteMode;
+   end;
 end;
 
 procedure TfrmNewQSO.cmbFreqChange(Sender: TObject);
@@ -5906,7 +5917,7 @@ begin
    if LastFkey = 0 then
     begin
       if (Sender <> nil ) then LastFKey := Key;   //LastKey resets by  KeyUp. Nil sender is a mouse click on button
-      if ( frmContest.Showing and (key = VK_F1)) then  //set the "lastCqFreq" @contest window
+      if ((frmContest <> nil) and  frmContest.Showing and (key = VK_F1)) then  //set the "lastCqFreq" @contest window
         Begin
           frmContest.lblCqMode.Caption:=frmTRXControl.GetRawMode;
           frmContest.lblCqFreq.Caption := FormatFloat('0.00',frmTRXControl.GetFreqkHz);
@@ -5941,7 +5952,7 @@ begin
     Exit;
   end;
 
-  // keys for CW speed up / down
+                                                                    // keys for CW speed up / down
   n:=IntToStr(frmTRXControl.cmbRig.ItemIndex);
   if( (key in [33,34]) and (not dbgrdQSOBefore.Focused) and (Assigned(CWint)) )then
   begin
@@ -5960,7 +5971,7 @@ begin
     Exit;
   end;
 
-  // CTRL-Key > Keyboard Shortcuts for NewQSO with CTRL
+                                                                    // CTRL-Key > Keyboard Shortcuts for NewQSO with CTRL
  if (Shift = [ssCtrl]) then
   begin
       if (key = VK_F2) then                                         //VK_F2
@@ -5995,21 +6006,12 @@ begin
         key := 0;
         Exit;
       end;
-      if (key = VK_A) then                                          //VK_A
-      begin
-        acAddToBandMap.Execute;
-        key := 0;
-        Exit;
-      end;
+                            //from NewQso-menu-shortcut keys (NewQso.lfm):
+                                                                    //VK_A
+
       if (key = VK_D) then                                          //VK_D
       begin
         acDXCCCfm.Execute;
-        key := 0;
-        Exit;
-      end;
-      if (key = VK_I) then                                          //VK_I
-      begin
-        acDetails.Execute;
         key := 0;
         Exit;
       end;
@@ -6019,30 +6021,20 @@ begin
         key := 0;
         Exit;
       end;
-      if (key = VK_M) then                                          //VK_M
+      if (key = VK_I) then                                          //VK_I
       begin
-        acRemoteMode.Execute;
+        acDetails.Execute;
         key := 0;
         Exit;
       end;
-      if (key = VK_N) then                                          //VK_N
-      begin
-        acLongNote.Execute;
-        key := 0;
-        Exit;
-      end;
-      if(key = VK_P) then                                           //VK_P
-      begin
-        acPreferences.Execute;
-        key := 0;
-        Exit;
-      end;
-      if (key = VK_Q) then                                          //VK_Q
-      begin
-        btnCancelClick(nil);
-        key := 0;
-        Exit;
-      end;
+                            //from NewQso-menu-shortcut keys (NewQso.lfm):
+                                                                    //VK_J
+                                                                    //VK_K
+                                                                    //VK_M
+                                                                    //VK_N
+                                                                    //VK_P
+                                                                    //VK_Q
+
       if (key = VK_R) then                                          //VK_R
       begin
         if edtCall.Text <> '' then
@@ -6063,12 +6055,18 @@ begin
         key := 0;
         Exit;
       end;
-      if (key = VK_W) then                                          //VK_W
-        Begin
-         acSendSpot.Execute;
-         key := 0;
-         Exit;
-        end;
+                            //from NewQso-menu-shortcut keys (NewQso.lfm):
+                                                                    //VK_T
+
+      if (key = VK_U) then                                          //VK_U
+      begin
+        if frmLogUploadStatus.Showing then
+            frmLogUploadStatus.Hide;
+        key := 0;
+        Exit;
+      end;
+                                                                    //VK_W
+
       if key in [VK_1..VK_9] then                                   //VK_1..VK_9
          Begin
           SetSplit(chr(key));
@@ -6082,7 +6080,7 @@ begin
  end;
 
 
- //three cases of VK_O
+                                                     //three cases of
    if (key = VK_O) then                                             //VK_O
    Begin
    if (Shift = [ssCtrl,ssShift]) then
@@ -6332,15 +6330,6 @@ begin
   end;
 end;
 
-procedure TfrmNewQSO.mnuQSOBeforeClick(Sender: TObject);
-begin
-  dbgrdQSOBefore.Visible := not dbgrdQSOBefore.Visible;
-  if dbgrdQSOBefore.Visible then
-    mnuQSOBefore.Caption := 'Disable QSO before grid'
-  else
-    mnuQSOBefore.Caption := 'Enable QSO before grid'
-end;
-
 procedure TfrmNewQSO.mnuQSOListClick(Sender: TObject);
 begin
   if frmMain.WindowState = wsMinimized then
@@ -6353,7 +6342,6 @@ procedure TfrmNewQSO.pgDetailsChange(Sender: TObject);
 begin
   cqrini.WriteInteger('NewQSO','DetailsTabIndex', pgDetails.TabIndex);
 end;
-
 
 procedure TfrmNewQSO.popEditQSOPopup(Sender: TObject);
 var
@@ -6970,7 +6958,7 @@ end;
 procedure TfrmNewQSO.SavePosition;
 begin
   dmUtils.SaveWindowPos(Self);
-  if frmContest.Showing then  frmContest.SaveSettings;
+  if (frmContest <> nil) and frmContest.Showing then  frmContest.SaveSettings;
   cqrini.WriteBool('NewQSO','StatBar',sbNewQSO.Visible);
   cqrini.SaveToDisk
 end;
@@ -7140,7 +7128,8 @@ begin
     old_cfreq := freq;
 
     edtCall.Text := '';
-    cbOffline.Checked := False;
+    if not AnyRemoteOn then
+           cbOffline.Checked := False;
     etmp := dmUtils.MyStrToFloat(freq);
     etmp := etmp/1000;
     freq := FloatToStrF(etmp,ffFixed,10,8);
@@ -7167,7 +7156,7 @@ begin
                    end
                  else
                    BringToFront;
-    if frmContest.Showing then
+    if (frmContest <> nil) and frmContest.Showing then
      Begin
      //this makes "double round" setting new qso but works with minimal code
      frmContest.edtCall.Text:=frmNewQSO.edtCall.Text;
@@ -7178,7 +7167,7 @@ end;
 
 procedure TfrmNewQSO.SetEditLabel;
 begin
-  lblCall.Caption    := 'Call (edit mode):';
+  lblCall.Caption    := 'Call (edit mode)';
   lblCall.Font.Color := clRed;
   Caption := dmUtils.GetNewQSOCaption('Edit QSO');
   cbOffline.Checked :=true;
@@ -7186,7 +7175,7 @@ end;
 
 procedure TfrmNewQSO.UnsetEditLabel;
 begin
-  lblCall.Caption    := 'Call:';
+  lblCall.Caption    := 'Call';
   lblCall.Font.Color := clDefault;
   Caption := dmUtils.GetNewQSOCaption('New QSO');
   cbOffline.Checked := cqrini.ReadBool('TMPQSO','OFF',False);
@@ -7809,15 +7798,6 @@ begin
   end
 end;
 
-procedure TfrmNewQSO.UploadAllQSOOnline;
-begin
-  if not tmrUploadAll.Enabled then
-  begin
-    UploadAll            := False;
-    tmrUploadAll.Enabled := True
-  end
-end;
-
 function TfrmNewQSO.CheckFreq(freq : String) : String;
 begin
   if (Pos(',',freq) > 0) then
@@ -7827,7 +7807,7 @@ end;
 
 procedure TfrmNewQSO.ReturnToNewQSO;
 begin
-  if frmContest.Showing  and frmContest.ContestReady then
+  if ( frmContest <> nil) and  frmContest.Showing  and frmContest.ContestReady then
       frmContest.edtCall.SetFocus
     else
       if edtCall.Enabled then
@@ -7898,15 +7878,19 @@ begin
                         DisableRemoteMode;
                   mnuRemoteMode.Checked := True;
                   AnyRemoteOn := True;
-                  lblCall.Caption       := 'Fldigi remote';
+                  cbOffline.Caption     := 'Fldigi remote';
                   tmrFldigi.Interval    := cqrini.ReadInteger('fldigi','interval',2)*1000;
                   run                   := cqrini.ReadBool('fldigi','run',False);
                   path                  := cqrini.ReadString('fldigi','path','');
                   FldigiXmlRpc          := cqrini.ReadBool('fldigi','xmlrpc',False);
-                  tmrFldigi.Enabled     := true;
                   if FldigiXmlRpc then
+                   begin
+                     if (frmxfldigi = nil) then
+                                        Application.CreateForm(Tfrmxfldigi,frmxfldigi);
                      frmxfldigi.Visible := true;
+                   end;
                   RemoteActive := 'fldigi';
+                  tmrFldigi.Enabled     := true;
                 end;
     rmtWsjt   : begin
                   RememberAutoMode := chkAutoMode.Checked;
@@ -7918,7 +7902,7 @@ begin
                   mnuRemoteModeWsjt.Checked := True;
                   AnyRemoteOn := True;
                   WsjtxDecodeRunning        := false;
-                  lblCall.Caption           := 'Wsjtx remote';
+                  cbOffline.Caption         := 'Wsjtx remote';
                   path                      := cqrini.ReadString('wsjt','path','');
                   run                       := cqrini.ReadBool('wsjt','run',False);
 
@@ -7999,7 +7983,7 @@ begin
                   mnuRemoteModeADIF.Checked := True;
                   AnyRemoteOn := True;
 
-                  lblCall.Caption           := 'remote ADIF';
+                  cbOffline.Caption         := 'Remote ADIF';
                   IsJS8Callrmt              := false;
 
                   // start UDP server  http://synapse.ararat.cz/doc/help/blcksock.TBlockSocket.html
@@ -8031,12 +8015,9 @@ begin
                 end;
            end; //case remote type
 
-  cbOffline.Caption:='Remote';
   ClearAll;
-  lblCall.Font.Color    := clRed;
   edtCall.Enabled       := False;
   cbOffline.Checked     := True;
-  cbOffline.Enabled     := False;
   btnSave.Enabled       := False;  //disable manual saving when remote is on
   tmrADIF.Interval      := 250;    //rate to read qsos from UDP (msec)
 
@@ -8091,12 +8072,9 @@ begin
   AnyRemoteOn := False;
   RemoteActive := '';
   chkAutoMode.Checked:= RememberAutoMode;
-  lblCall.Caption           := 'Call:';
-  lblCall.Font.Color        := clDefault;
   edtCall.Enabled           := True;
-  cbOffline.Checked         := False;
-  cbOffline.Enabled         := True;
   cbOffline.Caption         := 'Offline';
+  cbOffline.Checked         := False;
   btnSave.Enabled           := True;
   ReturnToNewQSO;
   //clear TMPQSO mode on close. Otherwise it shows up on next remote mode (procedure ClearAll makes it)
@@ -8279,6 +8257,10 @@ Begin
      else   Result := mode;
 end;
 
+procedure TfrmNewQSO.acUploadToQrzLogExecute(Sender: TObject);
+begin
+  frmLogUploadStatus.UploadDataToQrzLog
+end;
+
+
 end.
-
-

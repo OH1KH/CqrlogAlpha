@@ -1,3 +1,4 @@
+
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -10,8 +11,42 @@
     <br>
     <strong>CQRLOG α (Alpha)</strong><br>
     What is new:
-    <ul style="list-style: square;text-align:left; color: green;" >
-    <li>(141) 2026-03-17</li><ul>
+    <ul style="list-style: square;text-align:left; color: green;" >    
+    <li>(142)</li><ul>
+    <li>NewQSO:Fix: load qso from DXcluster,RBN, BandMap does not break remote mode</li>
+    <li>TRXControl:Fix: Destroy rigctld when program ends</li>
+    <li>Remote modes:Fix: show indicaton on Offline panel. Uncheking checkbox disables remote. fldigi remote start (non xml) bugfix</li>
+    <li>Online log:Add: get online log debug messages (only) with --debug=-256. Use: cqrlog --help for more info</li>
+    <li>NewQSO:Fix: again more adjust, works now if font changes (I hope). Add: Menu/View/Show recent QSOs</li>
+    <li>NewQSO:Satellite tab:Fix: 'clean all' restores default text color</li>
+    <li>NewQSO:Fix: again more adjust, can't make better</li>
+    <li>NewQSO:Fix: little more adjust , but it does not get better. Quit</lI>
+    <li>NewQSO:Fix: view and items anchoring, more adjust. Is perfect with default fonts and GTK2, but not with QT5,QT6. Still needs adjust</li>
+    <li>NewQSO:Fix: view and items anchoring. QSOList:Add: toolbutton "stay on top"</li>
+    <li>Database Version Update:Fix: check that update_status table has rows before doing changes</li>
+    <li>Online log:UDP:Fix: address/port parse, error text, proper msg length count if 3 byte Utf8 chars</li>	
+    <li>CqrlogAlpha:Fix: source fixes (common) Part2 (testing needed!)</li>
+    <li>CqrlogAlpha:Fix: source fixes (common)</li>
+    <li>Online log:Add: auto cleanup to table log_changes when all pending jobs are done,  Upload status window closes and user has checked auto clean in Preferences/Online logs
+        <br>Cleaning is recommended (but not checked as default) to keep table log_changes small<li>
+    <li>Online log:Add: possibility to recreate upload database triggers with startup parameter (only safe trigger delete/create point)</li>
+    <li>Online Log:Fix: replaced triggers delete/create with conditional triggers </li>
+    <li>Online log upload status:Add: timer for delayed close to prevent flashing</li>
+    <li>OnlineLog:Fix: change to warning texts </li>
+    <li>Preferences:Fix: window position set wrong when opening</li>
+    <li>Online logs:UDPLog:Fix: changed LNET UDP socket to Synaptic UDPsocket. That seems to remove crash with GTK2 versions UDPLog uploads</li>
+    <li>dData.pas:Fix: made compiler directive that detects LCLVersion and removes compile error on older than 4.6 LCLs</li>
+    <li>Preferences:Add: show password checkboxes. State of checbox is not saved (I.E. always hidden when first show)</li>
+    <li>Online logs:Add: support to QRZlog (Tnx for idea and support: Jon, E8EM)</li>
+    <li>NewQSO:Fix: set qsl received time when user saves edited qso and has turn QSLr to state "Q"</li>
+    <li>Shortcut keys:Add: NewQSO:close LogUploadStatus form with Ctrl+U<br>
+	 QSOList:close LogUploadStatus form with Ctrl+U<br>
+	 LogUploadStatus: close and return to NewQSO form with ESC</li>
+    <li>NewQSO:DXCC info:Add: hint texts</li>
+    <li>Online logs:Fix: some small code cleanup</li>
+    <li>Locator routines:Fix: small change to loc error indicator</li>
+    <li>Locator routines:Fix:Use only caps letters (see:Wikipedia change 18Oct2023). Fix: coordinates from loc counting</li>
+    </ul><li>(141) 2026-03-17</li><ul>
     <li>TRXControl:Memories:Fix: Mem Up/Dn button procedures</li>	
     <li>Mode list:Add: FT2 to modelist so that user has no need to add it to "user defined digital modes"</li>
     <li>ADIF export:Add: support for MFSK/FT2</li>
@@ -21,7 +56,7 @@
     <li>Preferences:Bands:Frequencies:Modify:Fix: Txoffset column anchoring</li>
     <li>Preferences:fldigi/wsjt remote:Fix: Check qso from fldigi spin edit went negative, fixed to keep between 1-200</li>
     <li>Onlinelogs:Clublog:Fix: set realtime/bulk upload switch limit for more than 3 operations.</li>
-    <li>Onlinelogs:Clublog:Add: if there is more than one change use bulk upload (putlogs.php)</li>
+    <li>Onlinelogs:Clublog:Add: if there is more than one change use bulk upload (putlogs.php)(Tu: info G8TMV</li>
     <li>RigControl:Fix: missing set/get params info added. TRXControl:Fix Set Rig time only if params allow it</li>
     </ul><li>(140) 2026-01-27</li><ul>
     <li>Remote:Fix: replaced '%rig' with '%radio' (as TRXControl uses 'radio', too) and fixed help files too</li>

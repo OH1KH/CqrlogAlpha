@@ -13,7 +13,7 @@ object frmChangelog: TfrmChangelog
   DefaultMonitor = dmPrimary
   FormStyle = fsStayOnTop
   Position = poWorkAreaCenter
-  LCLVersion = '3.8.0.0'
+  LCLVersion = '4.6.0.0'
   object Panel1: TPanel
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = Owner
@@ -30,11 +30,16 @@ object frmChangelog: TfrmChangelog
     ClientWidth = 798
     TabOrder = 0
     object Button1: TButton
-      Left = 715
+      AnchorSideTop.Control = Panel1
+      AnchorSideTop.Side = asrCenter
+      AnchorSideRight.Control = Panel1
+      AnchorSideRight.Side = asrBottom
+      Left = 671
       Height = 25
-      Top = 5
+      Top = 6
       Width = 75
       Anchors = [akTop, akRight]
+      BorderSpacing.Right = 52
       Cancel = True
       Caption = 'Close'
       ModalResult = 2

@@ -118,6 +118,8 @@ type
     ImportMode : TStringlist;
     ExceptMode : TStringlist;
     WaitTime   : longint;
+    LocalDbg   : boolean;
+    LogTable   : String;
 
     procedure LoadRigList(RigCtlBinaryPath : String;RigList : TStringList);
     procedure LoadRigListCombo(CurrentRigId : String; RigList : TStringList; RigComboBox : TComboBox);
@@ -125,7 +127,6 @@ type
     procedure MakeMissingModeFile(num:integer);
     procedure TheButtonClick(Sender: TObject);
 
-    function nr(ch: char): integer;
     function GetTagValue(Data, tg: string): string;
     function GetQRZSession(var ErrMsg: string): boolean;
     function GetQRZCQSession(var ErrMsg: string): boolean;
@@ -245,6 +246,7 @@ type
         function  IsHeDx(call:String; CqDir:String = ''):boolean;
         function  IsIOTAOK(iota : String) : Boolean;
         function  IsItIOTA(spot : String) : Boolean;
+        function  IsLoc46(Loc: string): boolean;
         function  IsLocOK(loc : String) : Boolean;
         function  IsModeOK(mode : String) : Boolean;
         function  IsNonAsciiChrs(s:string):Boolean;
@@ -280,6 +282,10 @@ type
         function  UnTarFiles(FileName,TargetDir : String) : Boolean;
         function  UTF8TransToASCII(s:string):string;
         function  UTF8UpperFirst(Value:UTF8String):UTF8String;
+        function  WkdMainGrid(loc, band, mode: string): integer;
+        function  WkdGrid(loc, band, mode: string): integer;
+        function  WkdCall(call, band, mode: string): integer;
+        function  WkdState(state, band, mode: string): integer;
         procedure AddBandsToStatGrid(g:TStringGrid);
         procedure AdifAsciiTrim(var col:TEdit);
         procedure BandFromDbase;
@@ -561,7 +567,7 @@ var
 begin
   if dmData.DBName = '' then
     exit;
-  if dmData.DebugLevel >= 1 then
+  if LocalDbg then
     Writeln('SaveForm: ', aForm.Name);
   l := TStringList.Create;
   try
@@ -583,7 +589,7 @@ begin
         begin
           Ident := TColumn(Grid.Columns[j]).FieldName;
           cqrini.WriteString(Section, Ident, IntToStr(Grid.Columns[j].Width),cqrini.LocalOnly('ColumnSize'));
-          if dmData.DebugLevel >= 1 then
+          if LocalDbg then
            Writeln('Saving:  Section: ',Section,' Ident: ',Ident,' Width: ',Grid.Columns[j].Width,' LocalOnly: ',cqrini.LocalOnly('ColumnSize'))
         end
       end
@@ -603,7 +609,7 @@ var
   y: integer;
   D: TDataSource;
 begin
-  if dmData.DebugLevel >= 1 then
+  if LocalDbg then
     Writeln('LoadDBGridInForm: ', aForm.Name);
   l := TStringList.Create;
   try
@@ -629,7 +635,7 @@ begin
             Grid.Columns.Add.DisplayName := Ident;
             TColumn(Grid.Columns[y]).FieldName := Ident;
             Grid.Columns[y].Width := cqrini.ReadInteger(section, Ident, 100, cqrini.LocalOnly('ColumnSize'));
-            if dmData.DebugLevel >= 1 then
+            if LocalDbg then
              Writeln('Loading:  Section: ',Section,' Ident: ',Ident,' Width: ',Grid.Columns[y].Width,' LocalOnly: ',cqrini.LocalOnly('ColumnSize'))
           end
         finally
@@ -704,6 +710,15 @@ begin
   USstates[50] := 'WY, Wyoming';
 
   ModeConvListsCreate(True);
+
+  LogTable := 'cqrlog_main';  //assume table name is this always
+
+  //set debug rules for this form
+  if dmData.DebugLevel < 0 then
+        LocalDbg := ((abs(dmData.DebugLevel) and 128) = 128 )
+       else
+        LocalDbg := dmData.DebugLevel >= 1 ;
+
 end;
 
 procedure TdmUtils.DataModuleDestroy(Sender: TObject);
@@ -824,12 +839,12 @@ begin
    dmData.qWorkedContests.SQL.Text := 'SET CHARACTER SET "utf8"';
    dmData.qWorkedContests.ExecSQL;
    dmData.qWorkedContests.SQL.Text := C_SEL;
-    if dmData.DebugLevel >=1 then
+    if LocalDbg then
       Writeln(dmData.qWorkedContests.SQL.Text);
     dmData.qWorkedContests.Open;
     while not dmData.qWorkedContests.EOF do
     begin
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
         Writeln('Contest: ' + dmData.qWorkedContests.Fields[0].AsString);
       cmbContest.Items.Add(dmData.qWorkedContests.Fields[0].AsString);
     dmData.qWorkedContests.Next
@@ -1172,19 +1187,20 @@ end;
 
 procedure TdmUtils.KeyInLoc(Loc:string; var Key:char);
 Begin
-  //pass only format AB12cd34ef and BS/DEL keys
+  //pass only format BL11bh16ef and BS/DEL keys
+  // NOTE2: Wikipedia has changed in late 2023 and now format is BL11BH16EF
+
   if (( Key<>#$8 ) and ( Key<>#$7F) and ( Key<>#22)) then
   begin
     case length(Loc) of
       0,1  :  if Key in ['a'..'r'] then Key:= chr(ord(Key) - $20) else
                   if not (Key in ['A'..'R']) then Key:= #0;
       2,3  :  if not (Key in ['0'..'9']) then Key:= #0;
-      4,5  :  if Key in ['A'..'X'] then Key:= chr(ord(Key) + $20) else
-                 if not (Key in ['a'..'x']) then Key:= #0;
+      4,5  :  if Key in ['a'..'x'] then Key:= chr(ord(Key) - $20) else
+                  if not (Key in ['A'..'X']) then Key:= #0;
       6,7  :  if not (Key in ['0'..'9']) then Key:=  #0;
-      8,9  :  if Key in ['A'..'X'] then Key:= chr(ord(Key) + $20) else
-                 if not (Key in ['a'..'x']) then Key:= #0;
-      else
+      8,9  :  if Key in ['a'..'x'] then Key:= chr(ord(Key) - $20) else
+                        if not (Key in ['A'..'X']) then Key:= #0;       else
         Key:=#0;
     end;
   end;
@@ -1210,7 +1226,13 @@ begin
    end;
   Result := loc;
 end;
-
+function TdmUtils.IsLoc46(Loc: string): boolean;
+//works with 4 or 6 chr locators, but fails with special callsigns that look like locator -> OH60AB
+begin
+  Result := false;
+    if ((Length(Loc) = 4) or (Length(Loc) = 6)) then
+        Result := dmUtils.IsLocOK(Loc);
+end;
 function TdmUtils.IsLocOK(Loc: string): boolean;
 var
   i,
@@ -1241,14 +1263,19 @@ end;
 function TdmUtils.StdFormatLocator(loc:string):String;
 // Format locator to standard form BL11bh16 See:
 // https://en.wikipedia.org/wiki/Maidenhead_Locator_System#Description_of_the_system
+
+// NOTE2: Wikipedia has changed in late 2023 and now format is BL11BH16 I.E. all letters are CAPS. (when do they make their mind?)
+
 // Check TEdit CharCase to be ecNormal, othewise you get runtime error!
 var
   s :String;
 begin
   Result := loc;
   if loc = '' then exit;
-  s :=  Upcase(copy(loc,1,4));
-  s:= s + lowercase(copy(loc,5,6));   //max loc length 10 in database
+  s :=  Upcase(loc);
+  //NOTE2:
+  //s :=  Upcase(copy(loc,1,4));
+  //s:= s + lowercase(copy(loc,5,6));   //max loc length 10 in database
   Result := trim(s);
 end;
 
@@ -1424,7 +1451,7 @@ begin
 
   dmData.qBands.Close;
   dmData.qBands.SQL.Text := 'SELECT '+mode+' FROM cqrlog_common.bands WHERE band = ' + QuotedStr(band);
-  if dmData.DebugLevel >=1 then
+  if LocalDbg then
      Writeln(dmData.qBands.SQL.Text);
 
   if dmData.trBands.Active then
@@ -1435,7 +1462,7 @@ begin
     if dmData.qBands.RecordCount > 0 then
       Result:= dmData.qBands.FieldByName(mode).AsString;
   finally
-    if dmData.DebugLevel >=1 then
+    if LocalDbg then
      Writeln('FreqFromBand('+band+','+mode+')='+Result);
     dmData.qBands.Close;
     dmData.trBands.Rollback
@@ -1537,31 +1564,27 @@ begin
 
 end;
 
-function TdmUtils.nr(ch: char): integer;
-var
-  letters: string;
-begin
-  letters := 'ABCDEFGHIJKLMNOPQRSTUVWX';
-  Result := Pos(ch, letters);
-end;
-
 function TdmUtils.CoordinateFromLocator(loc: string; var latitude, longitude: currency): Boolean;
 var
   a, b, c, d, e, f: integer;
+
 begin
   Result:= IsLocOK(loc);
   if not Result then
     exit;
 
-  a := nr(loc[1]);
-  b := nr(loc[2]);
+  loc:=UpperCase(loc);
+
+  a := ord(loc[1])-64;
+  b := ord(loc[2])-64;
   c := StrToInt(loc[3]);
   d := StrToInt(loc[4]);
-  e := nr(loc[5]);
-  f := nr(loc[6]);
+  e := ord(loc[5])-64;
+  f := ord(loc[6])-64;
 
   longitude := (a - 10) * 20 + c * 2 + (e - 1) * 0.083333333333333333330 + 0.08333333333333333333 / 2;
   latitude := (b - 10) * 10 + d * 1 + (f - 1) * 0.04166666666666666667 + 0.04166666666666666667 / 2;
+
 end;
 
 function TdmUtils.RemoveSpaces(S: string): string;
@@ -1579,7 +1602,7 @@ var
   TagBegin, TagEnd, TagLength: integer;
   TagNum: integer = 0;
 begin
-  if dmData.DebugLevel >= 1 then
+  if LocalDbg then
     Writeln('In StripHTML ...');
   TagBegin := Pos('<', S);      // search position of first <
   while (TagBegin > 0) do
@@ -1676,7 +1699,7 @@ Begin
  AStream := TStringStream.Create(Buf);
  mhz:='';
  Rmhz:='';
-  if dmData.DebugLevel>=1 then
+  if LocalDbg then
                             Writeln('IN->',buf);
   try
     if Assigned(AStream) then
@@ -1747,7 +1770,7 @@ Begin
      AStream.free;
    end;
    adi:=adi+'<EOR>';
-   if dmData.DebugLevel>=1 then
+   if LocalDbg then
                         writeln('OUT->',adi,'   ',IsOriginal);
    if IsOriginal then Result:=adi  else Result :=''; //do not accept relayed connect infos
 end;
@@ -1778,7 +1801,7 @@ begin
         Result:='';
        //this would be against adif.org ADIF definitions as tags withthout _INTL may have just ascii chars (7bit)
        //Result := ATag+':' + IntToStr(UTF8Length(Text)) + '>' + Text;
-       if dmData.DebugLevel >=1 then
+       if LocalDbg then
                              Writeln('"'+ATag+':' + IntToStr(UTF8Length(Text)) + '>' + Text+'" Not ascii(7bit).'+
                              lineEnding+' Breaks adif.org ADIF definitions! Not written to export file!');
        end;
@@ -1786,7 +1809,7 @@ begin
   else
     Result := ATag+':' + IntToStr(Length(Text)) + '>' + Text;
 
-  //if dmData.DebugLevel >=1 then Writeln(Result);
+  //if LocalDbg then Writeln(Result);
 end;
 
 procedure  TdmUtils.AdifAsciiTrim(var col:TEdit);
@@ -2357,7 +2380,7 @@ begin
     d[pos('.', d)] := FormatSettings.DecimalSeparator;
   if not TryStrToCurr(d, longitude) then
     longitude := 0;
-  if dmData.DebugLevel >= 4 then
+  if LocalDbg then
   begin
     //Writeln('Lat:  ',latitude);
     //Writeln('Long: ',longitude);
@@ -2704,7 +2727,7 @@ var
   index     :integer;
   paramList :TStringList;
 begin
-  if dmData.DebugLevel>=1 then Writeln('RunXplanet - start');
+  if LocalDbg then Writeln('RunXplanet - start');
   if (GetXplanetCommand = '') then exit;
   AProcess := TProcess.Create(nil);
   try
@@ -2720,7 +2743,7 @@ begin
       inc(index);
     end;
     paramList.Free;
-    if dmData.DebugLevel>=1 then
+    if LocalDbg then
        Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute;
   finally
@@ -2737,7 +2760,7 @@ begin
     AProcess.Executable  := 'killall';
     AProcess.Parameters.Add('xplanet');
     AProcess.Options := [poNoConsole, poNewProcessGroup];
-    if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
+    if LocalDbg then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute;
   finally
     AProcess.Free
@@ -2791,7 +2814,7 @@ Begin
       + copy(BGRcolor,7,2)  //R
       + copy(BGRcolor,5,2)  //G
       + copy(BGRcolor,3,2); //B
-    if dmData.DebugLevel >= 1 then
+    if LocalDbg then
        Writeln('Color for xplanetQso:',BGRcolor);
 
    //update qso path to xplanet arc file
@@ -2824,7 +2847,7 @@ Begin
           l.SaveToFile(dmData.HomeDir + 'xplanet' + PathDelim + 'marker');
           except
             on e : Exception do
-            if dmData.DebugLevel >=1 then Writeln('Saving xplanet own marker file failed with this message: ',e.Message)
+            if LocalDbg then Writeln('Saving xplanet own marker file failed with this message: ',e.Message)
           end;
         finally
          FreeAndNil(l)
@@ -2832,7 +2855,7 @@ Begin
        end;
     except
         on e : Exception do
-          if dmData.DebugLevel >=1 then Writeln('Saving xplanet qso file failed with this message: ',e.Message)
+          if LocalDbg then Writeln('Saving xplanet qso file failed with this message: ',e.Message)
     end;
    end;
 end;
@@ -2849,7 +2872,7 @@ Begin
       + copy(BGRcolor,7,2)  //R
       + copy(BGRcolor,5,2)  //G
       + copy(BGRcolor,3,2); //B
-    if dmData.DebugLevel >= 1 then
+    if LocalDbg then
        Writeln('Color for xplanetQso:',BGRcolor);
 
    //update beam path to xplanet arc file
@@ -2863,7 +2886,7 @@ Begin
       closeFile(f);
     except
         on e : Exception do
-          if dmData.DebugLevel >=1 then Writeln('Saving xplanet beam file failed with this message: ',e.Message)
+          if LocalDbg then Writeln('Saving xplanet beam file failed with this message: ',e.Message)
     end;
    end;
 end;
@@ -2991,7 +3014,7 @@ begin
     AProcess.Parameters.Add('-xvzf');
     AProcess.Parameters.Add(FileName);
     AProcess.Options := [poNoConsole, poNewProcessGroup, poWaitOnExit];
-    if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
+    if LocalDbg then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
    try
       AProcess.Execute;
     except
@@ -3044,7 +3067,7 @@ function TdmUtils.ExtractZipCode(qth: string; Position: integer): string;
 var
   i: integer;
 begin
-  if dmData.DebugLevel >= 1 then
+  if LocalDbg then
     Writeln('Position: ', Position);
   Result := '';
   if Position = 0 then
@@ -3112,7 +3135,7 @@ begin
   myqth := cqrini.ReadString('Station', 'QTH', '');
   if key <> '' then
    Begin
-    if (frmContest.Showing) and ( not (cqrini.ReadBool('CW','S&P',True))) then //if contest and run mode keys are F11-F20
+    if ((frmContest <> nil) and frmContest.Showing) and ( not (cqrini.ReadBool('CW','S&P',True))) then //if contest and run mode keys are F11-F20
      Begin
       if key='F10' then key:='F20'
        else
@@ -3159,7 +3182,7 @@ begin
 
     Result := StringReplace(Result,'%c',call,[rfReplaceAll, rfIgnoreCase]);
 
-    if dmData.DebugLevel>=1 then
+    if LocalDbg then
                                 Writeln('Sending:',Result)
 end;
 
@@ -3435,7 +3458,7 @@ begin
       inc(index);
     end;
     paramList.Free;
-    if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
+    if LocalDbg then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Options := AProcess.Options + [poWaitOnExit];
     AProcess.Execute
   finally
@@ -3525,7 +3548,7 @@ var
   index     :integer;
   paramList : TStringList;
 begin
- if dmData.DebugLevel>=1 then Writeln('RunOnBackground start ',path);
+ if LocalDbg then Writeln('RunOnBackground start ',path);
   if (path = '') then  exit;
   //following will fail if exec does not have full path or exec is not in current directory!
   //this could be fixed by using getEnv('PATH') for search, but adding "Dos" unit that is then neeed (laz 2.0.12)
@@ -3546,10 +3569,10 @@ begin
         inc(index);
       end;
       paramList.Free;
-    if dmData.DebugLevel>=1 then
+    if LocalDbg then
      Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     if FileExists(AProcess.Executable) then AProcess.Execute
-      else if dmData.DebugLevel>=1 then writeln(AProcess.Executable,' not found!');
+      else if LocalDbg then writeln(AProcess.Executable,' not found!');
   finally
     AProcess.Free
   end;
@@ -3732,7 +3755,7 @@ begin
     cqrini.WriteInteger(section, 'Left', a.Left, cqrini.LocalOnly('WindowSize'));
     cqrini.WriteBool(section, 'Max', False, cqrini.LocalOnly('WindowSize'));
   end;
-  if dmData.DebugLevel >= 1 then
+  if LocalDbg then
   begin
     Writeln('Writing section:',section,' Local only:',cqrini.LocalOnly('WindowSize'));
     Writeln('Saving window size a position (',a.Name,') (height|width|top|left):',
@@ -3745,6 +3768,10 @@ var
   section: string = '';
 begin
   section := a.Name;
+  if LocalDbg then
+      Writeln('Load window pos: ',section);
+  if (a=nil) then
+                  exit;
   LoadFontSettings(a);
   if cqrini.ReadBool(section, 'Max', False, cqrini.LocalOnly('WindowSize')) then
     a.WindowState := wsMaximized
@@ -3758,7 +3785,7 @@ begin
     a.Top := cqrini.ReadInteger(section, 'Top', 20, cqrini.LocalOnly('WindowSize'));
     a.Left := cqrini.ReadInteger(section, 'Left', 20, cqrini.LocalOnly('WindowSize'));
   end;
-  if dmData.DebugLevel >= 1 then
+  if LocalDbg then
   begin
     Writeln('Reading section:',section,' Local only:',cqrini.LocalOnly('WindowSize'));
     Writeln('Loading window size a position (',a.Name,') (height|width|top|left):',
@@ -3981,7 +4008,7 @@ begin
      AProcess.Executable := ResultFile
     else exit;
     AProcess.Parameters.Add('https://www.qrz.com/db/' + GetIDCall(call));
-    if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
+    if LocalDbg then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute
   finally
     AProcess.Free
@@ -4001,7 +4028,7 @@ begin
      AProcess.Executable := ResultFile
     else exit;
     AProcess.Parameters.Add('https://www.k7fry.com/grid/?qth=' + locator + '&from=' + myloc);
-    if dmData.DebugLevel>=1 then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
+    if LocalDbg then Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute
   finally
     AProcess.Free
@@ -4288,7 +4315,7 @@ begin
   begin
     Result := copy(Data, p + Length(tg), Pos(EndTag, Data) - p - Length(tg));
     Result := Trim(Result);
-    if dmData.DebugLevel >= 1 then
+    if LocalDbg then
     begin
       Writeln('Tag: ', tg, '    Value: ', Result);
     end;
@@ -4325,7 +4352,7 @@ begin
     else
     begin
       m.LoadFromStream(http.Document);
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
         Writeln(m.Text);
       //I'd like to parse it as normal XML but it seems XML support in Freepascal
       //2.4.0 is broken :-(
@@ -4385,7 +4412,7 @@ begin
     else
     begin
       m.LoadFromStream(http.Document);
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
         Writeln(m.Text);
       //I'd like to parse it as normal XML but it seems XML support in Freepascal
       //2.4.0 is broken :-(
@@ -4439,7 +4466,7 @@ begin
     else
     begin
       m.LoadFromStream(http.Document);
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
         Writeln(m.Text);
       //I'd like to parse it as normal XML but it seems XML support in Freepascal
       //2.4.0 is broken :-(
@@ -4499,7 +4526,7 @@ begin
     else
     begin
       m.LoadFromStream(http.Document);
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
         Writeln(m.Text);
       if Pos('<error>Session does not exist or expired</error>', m.Text) > 0 then
       begin
@@ -4572,7 +4599,7 @@ begin
      AProcess.Executable := ResultFile
     else exit;
     AProcess.Parameters.Add(cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com') +'/'+ GetIDCall(call));
-    if dmData.DebugLevel>=1 then ;
+    if LocalDbg then ;
     Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
     AProcess.Execute
   finally
@@ -4602,7 +4629,7 @@ begin
           AProcess.Executable := ResultFile
          else exit;
         AProcess.Parameters.Add(cmd);
-        if dmData.DebugLevel>=1 then ;
+        if LocalDbg then ;
         Writeln('AProcess.Executable: ',AProcess.Executable,' Parameters: ',AProcess.Parameters.Text);
         AProcess.Execute
       finally
@@ -5385,7 +5412,7 @@ begin
           Result:=(pos(cont,c)>0);  //DX in in filter list
       end;
 
-    if dmData.DebugLevel >= 1 then
+    if LocalDbg then
                                     Writeln('My continent is:', mycont, '  His continent is:', cont,'   ',Result,' DX for me.');
 
 end;
@@ -5511,7 +5538,7 @@ Begin
          Begin
             SubmodeMode.Add('FT2=MFSK');
             SubmodeMode.SaveToFile(dmData.HomeDir+C_MODEFILE_DIR+C_SUBMODE_FILE);
-            if dmData.DebugLevel>=1 then
+            if LocalDbg then
                  Writeln('Added  FT2=MFSK to '+dmData.HomeDir+C_MODEFILE_DIR+C_SUBMODE_FILE);
          end;
    except
@@ -5519,7 +5546,7 @@ Begin
    end;
 
 
-   if dmData.DebugLevel>=1 then
+   if LocalDbg then
     Begin
        Writeln('Loaded mode conversion files:');
        Writeln('   ',SubmodeMode.Strings[0]);
@@ -5908,10 +5935,10 @@ Begin
        else
          if ((loc='')and(lat<>'')and(lon<>'')) then
            s:='set_newdx?lat='+lat+'&lng='+lon;
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
          Writeln('HamClock cmd:',s);
       s:=HamClockSendCommand(s);
-     if dmData.DebugLevel >= 1 then
+     if LocalDbg then
          Writeln('HamClock response:',s);
 end;
 procedure TdmUtils.HamClockSetNewDE(loc,lat,lon,mycall:string);
@@ -5925,19 +5952,19 @@ Begin
        else
          if ((loc='')and(lat<>'')and(lon<>'')) then
            s:='set_newde?lat='+lat+'&lng='+lon;
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
          Writeln('HamClock cmd:',s);
       s:=HamClockSendCommand(s);
-      if dmData.DebugLevel >= 1 then
+      if LocalDbg then
          Writeln('HamClock response:',s);
 
      if mycall<>'' then
       Begin
         s:= 'set_newde?call='+mycall;
-        if dmData.DebugLevel >= 1 then
+        if LocalDbg then
           Writeln('HamClock cmd:',s);
         s:=HamClockSendCommand(s);
-        if dmData.DebugLevel >= 1 then
+        if LocalDbg then
          Writeln('HamClock response:',s);
       end;
 
@@ -6021,5 +6048,250 @@ Begin
    end;
 
 end;
+
+function TdmUtils.WkdMainGrid(loc, band, mode: String): integer;
+//returns 0=not wkd
+//        1=main grid this band and mode
+//        2=main grid this band but NOT this mode
+//        3=main grid any other band/mode
+
+var
+  i        : integer;
+  L2,
+  L4       : String;
+  daylimit : String;
+
+  Begin
+    if LocalDbg then Writeln('Start WkdMainGrid');
+    WkdMainGrid := 0;
+    L4:= copy(loc, 1, 4);
+    L2:= copy(loc, 1, 2);
+    if cqrini.ReadBool('wsjt','wb4CLoc', False) then
+              daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4locdate','1900-01-01')) //default date check all qsos
+       else
+              daylimit :='';
+
+    dmData.W.Close;
+    if dmData.trW.Active then dmData.trW.Rollback;
+
+    try
+      dmData.W.SQL.Text :='select count(loc) as sumMG from '+LogTable+
+                          ' where loc like '+QuotedStr(L2+'%')+
+                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
+                          'union all '+
+                          'select count(loc) from '+LogTable+
+                          ' where loc like '+QuotedStr(L2+'%')+
+                          ' and band='+QuotedStr(band)+daylimit+
+                          'union all '+
+                          'select count(loc) from '+LogTable+
+                          ' where loc like '+QuotedStr(L2+'%')+daylimit;
+
+
+      if LocalDbg then Write('Main loc query: ');
+      dmData.W.Open;
+      i := 1;
+      dmData.W.First;
+      while not dmData.W.Eof do
+                begin
+                 if (dmData.W.Fields.FindField('sumMG')<> nil) then
+                    Begin
+                       if (dmData.W.FieldByName('sumMG').AsInteger > 0 ) and (WkdMainGrid = 0) then WkdMainGrid := i;
+                       if LocalDbg then writeln(dmData.W.FieldByName('sumMG').AsInteger);
+                    end;
+                 inc(i);
+                 dmData.W.Next;
+                end;
+       dmData.W.Close;
+    finally
+      dmData.trW.Rollback;
+    end;
+     if LocalDbg then  Writeln('WkdMainGrid is:', WkdMainGrid);
+  end;
+
+function TdmUtils.WkdGrid(loc, band, mode: String): integer;
+
+//returns 0=not wkd
+//        1=full grid this band and mode
+//        2=full grid this band but NOT this mode
+//        3=full grid any other band/mode
+//        4=main grid this band and mode
+//        5=main grid this band but NOT this mode
+//        6=main grid any other band/mode
+
+var
+  i        : integer;
+  L2,
+  L4       : String;
+  daylimit : String;
+
+begin
+  if LocalDbg then Writeln('Start WkdGrid');
+  WkdGrid := 0;
+  L4:= copy(loc, 1, 4);
+  L2:= copy(loc, 1, 2);
+  if cqrini.ReadBool('wsjt','wb4CLoc', False) then
+            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4locdate','1900-01-01')) //default date check all qsos
+     else
+            daylimit :='';
+
+  dmData.W.Close;
+  if dmData.trW.Active then dmData.trW.Rollback;
+
+  try
+    dmData.W.SQL.Text := 'select count(loc) as sumG from '+LogTable+
+                          ' where loc like '+QuotedStr(L4+'%')+
+                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
+                          'union all '+
+                          'select count(loc) from '+LogTable+
+                          ' where loc like '+QuotedStr(L4+'%')+
+                          ' and band='+QuotedStr(band)+daylimit+
+                          'union all '+
+                          'select count(loc) from '+LogTable+
+                          ' where loc like '+QuotedStr(L4+'%')+daylimit+
+                          'union all '+
+                          'select count(loc) from '+LogTable+
+                          ' where loc like '+QuotedStr(L2+'%')+
+                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
+                          'union all '+
+                          'select count(loc) from '+LogTable+
+                          ' where loc like '+QuotedStr(L2+'%')+
+                          ' and band='+QuotedStr(band)+daylimit+
+                          'union all '+
+                          'select count(loc) from '+LogTable+
+                          ' where loc like '+QuotedStr(L2+'%')+daylimit ;
+
+    if LocalDbg then Write('loc query: ');
+    dmData.W.Open;
+    i := 1;
+    dmData.W.First;
+    while not dmData.W.Eof do
+              begin
+                if (dmData.W.Fields.FindField('sumG')<> nil) then
+                  Begin
+                    if (dmData.W.FieldByName('sumG').AsInteger > 0 ) and (WkdGrid = 0) then WkdGrid := i;
+                    if LocalDbg then writeln(dmData.W.FieldByName('sumG').AsInteger);
+                  end;
+               inc(i);
+               dmData.W.Next;
+              end;
+     dmData.W.Close;
+  finally
+    dmData.trW.Rollback;
+  end;
+   if LocalDbg then  Writeln('WkdGrid is:', WkdGrid);
+end;
+
+function TdmUtils.WkdCall(call, band, mode: string): integer;
+//returns 0=not wkd
+//        1= this band and mode
+//        2=this band but NOT this mode
+//        3=any other band or mode
+
+var
+  i : integer;
+  daylimit : String;
+
+begin
+  if LocalDbg then Writeln('Start WkdCall');
+  //in case we were called from contest form open
+  if (((frmContest <> nil) and frmContest.Showing) and ((frmContest.rbDupeCheck.Checked) or (frmContest.rbNoMode4Dupe.Checked)))
+      then
+            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('frmContest', 'DupeFrom', '1900-01-01')) //default date check all qsos
+   else
+     Begin
+        if cqrini.ReadBool('wsjt','wb4CCall', False) then
+            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4Calldate','1900-01-01'))
+          else
+            daylimit :='';
+     end;
+
+  WkdCall := 0;
+  dmData.W.Close;
+  if dmData.trW.Active then dmData.trW.Rollback;
+  try
+     dmData.W.SQL.Text := 'select count(callsign) as sumCA from '+LogTable+
+                          ' where callsign='+QuotedStr(call)+
+                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
+                          'union all '+
+                          'select count(callsign) from '+LogTable+
+                          ' where callsign='+QuotedStr(call)+
+                          ' and band='+QuotedStr(band)+daylimit+
+                          'union all '+
+                          'select count(callsign) from '+LogTable+
+                          ' where callsign='+QuotedStr(call)+daylimit;
+
+    if LocalDbg then Write('call query: ');
+    dmData.W.Open;
+    i := 1;
+    dmData.W.First;
+    while not dmData.W.Eof do
+              begin
+               if (dmData.W.Fields.FindField('sumCA')<> nil) then
+                    Begin
+                         if (dmData.W.FieldByName('sumCA').AsInteger > 0 ) and (WkdCall = 0) then WkdCall := i;
+                         if LocalDbg then writeln(dmData.W.FieldByName('sumCA').AsInteger);
+                    end;
+               inc(i);
+               dmData.W.Next;
+              end;
+    dmData.W.Close;
+    finally
+      dmData.trW.Rollback;
+    end;
+  if LocalDbg then  Writeln('WkdCall is:', WkdCall);
+end;
+function TdmUtils.WkdState(state, band, mode: string): integer;
+//returns 0=not wkd
+//        1= this band and mode
+//        2=this band but NOT this mode
+//        3=any other band or mode
+
+var
+  i : integer;
+  daylimit : String;
+
+begin
+  if LocalDbg then Writeln('Start WkdState');
+  if cqrini.ReadBool('wsjt','wb4CCall', False) then
+            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4Calldate','1900-01-01')) //default date check all qsos
+     else
+            daylimit :='';
+
+  WkdState := 0;
+  dmData.W.Close;
+  if dmData.trW.Active then dmData.trW.Rollback;
+  try
+     dmData.W.SQL.Text := 'select count(state) as sumST from '+LogTable+
+                          ' where state='+QuotedStr(state)+
+                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
+                          'union all '+
+                          'select count(state) from '+LogTable+
+                          ' where state='+QuotedStr(state)+
+                          ' and band='+QuotedStr(band)+daylimit+
+                          'union all '+
+                          'select count(state) from '+LogTable+
+                          ' where state='+QuotedStr(state)+daylimit;
+
+    if LocalDbg then Write('state query: ');
+    dmData.W.Open;
+    i := 1;
+    dmData.W.First;
+    while not dmData.W.Eof do
+              begin
+               if (dmData.W.Fields.FindField('sumST')<> nil) then
+                    Begin
+                         if (dmData.W.FieldByName('sumST').AsInteger > 0 ) and (WkdState = 0) then WkdState := i;
+                         if LocalDbg then writeln(dmData.W.FieldByName('sumST').AsInteger);
+                    end;
+               inc(i);
+               dmData.W.Next;
+              end;
+    dmData.W.Close;
+    finally
+      dmData.trW.Rollback;
+    end;
+  if LocalDbg then  Writeln('WkdState is:', WkdState);
+end;
+
 end.
 

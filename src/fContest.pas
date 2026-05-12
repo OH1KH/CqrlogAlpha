@@ -467,6 +467,7 @@ end;
 
 procedure TfrmContest.btSaveClick(Sender: TObject);
 begin
+  if (edtSRXStr.Font.Color=clRed) and chkLoc.Checked then exit; //there is error in loc, no save until fixed
   if frmNewQSO.AnyRemoteOn then
     begin
       Application.MessageBox('Log is in remote mode, please disable it.','Info ...',mb_ok + mb_IconInformation);
@@ -1162,7 +1163,7 @@ end;
 
 procedure TfrmContest.FormHide(Sender: TObject);
 begin
-  frmNewQSO.gbContest.Visible := false;
+  frmNewQSO.pnlContest.Visible := false;
   dmUtils.SaveWindowPos(Self);
   tmrScore.Enabled:=false;
   tmrESC2.Enabled:=false;
@@ -1175,7 +1176,7 @@ var
   f: integer;
 
 begin
-  frmNewQSO.gbContest.Visible := true;
+  frmNewQSO.pnlContest.Visible := true;
   dmUtils.LoadWindowPos(Self);
 
   chkTabAll.Checked         := cqrini.ReadBool('frmContest', 'TabAll', False);
@@ -1783,7 +1784,7 @@ Begin
    if not (rbIgnoreDupes.Checked) then
    begin
      //dupe check
-     dupe := frmWorkedGrids.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
+     dupe := dmUtils.WkdCall(edtCall.Text, dmUtils.GetBandFromFreq(frmNewQSO.cmbFreq.Text) ,frmNewQSO.cmbMode.Text);
      // 1= wkd this band and mode
      // 2= wkd this band but NOT this mode
      if  ( (rbNoMode4Dupe.Checked) and (dupe = 1) )

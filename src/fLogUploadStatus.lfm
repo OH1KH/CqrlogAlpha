@@ -11,7 +11,7 @@ object frmLogUploadStatus: TfrmLogUploadStatus
   Constraints.MinWidth = 250
   KeyPreview = True
   Menu = MainMenu1
-  LCLVersion = '4.4.0.0'
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -46,7 +46,7 @@ object frmLogUploadStatus: TfrmLogUploadStatus
   end
   object acLogUploadStatus: TActionList
     Left = 48
-    Top = 24
+    Top = 8
     object acClearMessages: TAction
       Caption = 'Clear messages'
       OnExecute = acClearMessagesExecute
@@ -59,7 +59,14 @@ object frmLogUploadStatus: TfrmLogUploadStatus
   object dlgFont: TFontDialog
     MinFontSize = 0
     MaxFontSize = 0
-    Left = 168
-    Top = 32
+    Left = 176
+    Top = 8
+  end
+  object tmrClose: TTimer
+    Enabled = False
+    Interval = 3000
+    OnTimer = tmrCloseTimer
+    Left = 176
+    Top = 80
   end
 end

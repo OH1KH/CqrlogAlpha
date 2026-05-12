@@ -10,12 +10,12 @@ object frmWorkedGrids: TfrmWorkedGrids
   ClientWidth = 721
   Constraints.MinHeight = 290
   Constraints.MinWidth = 430
+  Position = poDefault
+  LCLVersion = '4.6.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   OnShow = FormShow
-  Position = poDefault
-  LCLVersion = '3.8.0.0'
   object BandSelector: TComboBox
     AnchorSideLeft.Control = Owner
     AnchorSideTop.Control = BandLabel
@@ -199,11 +199,11 @@ object frmWorkedGrids: TfrmWorkedGrids
     Width = 721
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoSize = True
-    OnChangeBounds = ZooMapChangeBounds
-    OnClick = ZooMapClick
     Proportional = True
     Stretch = True
     Visible = False
+    OnChangeBounds = ZooMapChangeBounds
+    OnClick = ZooMapClick
   end
   object LocMapBase: TImage
     AnchorSideLeft.Control = Owner
@@ -235,11 +235,11 @@ object frmWorkedGrids: TfrmWorkedGrids
     Width = 721
     Anchors = [akTop, akLeft, akRight, akBottom]
     AutoSize = True
+    Proportional = True
+    Stretch = True
     OnChangeBounds = LocMapChangeBounds
     OnClick = LocMapClick
     OnMouseMove = LocMapMouseMove
-    Proportional = True
-    Stretch = True
   end
   object SaveMapImage: TSaveDialog
     OnClose = SaveMapImageClose

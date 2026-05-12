@@ -285,7 +285,7 @@ end;
 procedure TfraCWKeys.UpdateFKeyLabels;
 var n,f:integer;
 begin
-    if (frmContest.Showing) and ( not (cqrini.ReadBool('CW','S&P',True))) then //if contest and run mode keys are F11-F20
+    if (frmContest <> nil) and (frmContest.Showing) and ( not (cqrini.ReadBool('CW','S&P',True))) then //if contest and run mode keys are F11-F20
       n:=11
      else
       n:=1;

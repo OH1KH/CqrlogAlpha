@@ -1262,7 +1262,7 @@ begin
    begin
     radio := TRigControl.Create;
     if (dmData.DebugLevel > 0) or cqrini.ReadBool('TRX', 'Debug', False) then
-    radio.DebugMode := True;
+                                                                         radio.DebugMode := True;
     radio.RigId := id;
    end;
 

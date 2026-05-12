@@ -355,7 +355,7 @@ begin
         end;
       end;
       loc := UpperCase(dmData.Q.FieldByName('srx_string').AsString);
-      if (loc = '') then //or not frmWorkedGrids.GridOK(loc) then
+      if (loc = '') then //or not dmUtils.IsLoc46(loc) then
       begin
         pbExport.StepIt;
         dmData.Q.Next;

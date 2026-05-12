@@ -20,11 +20,11 @@ uses
   memds, mysql51conn, sqldb, inifiles, stdctrls, RegExpr,
   dynlibs, lcltype, ExtCtrls, sqlscript, process, mysql51dyn, ssl_openssl_lib,
   mysql55dyn, mysql55conn, CustApp, mysql56dyn, mysql56conn, grids, LazFileUtils,
-  mysql57dyn, mysql57conn, uMyFindFile, Graphics, LazUTF8;
+  mysql57dyn, mysql57conn, uMyFindFile, Graphics, LazUTF8, LCLVersion;
 
 const
   cDB_LIMIT = 500;
-  cDB_MAIN_VER = 19;
+  cDB_MAIN_VER = 20;
   cDB_COMN_VER = 8;
   cDB_PING_INT = 300;  //ping interval for database connection in seconds
                        //program crashed after long time of inactivity
@@ -353,7 +353,7 @@ type
                                       Bcw, Ecw, Bdata, Edata, Bssb, Essb, Bam, Eam, Bfm, Efm:currency);
     procedure GetRXTXOffset(Freq : Currency; var RXOffset,TXOffset : Currency);
     procedure LoadQSODateColorSettings;
-    procedure PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery;lTr : TSQLTransaction);
+    procedure PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery);
 
   protected
    // This procedure will receive the events that are logged by the connection:
@@ -362,8 +362,13 @@ type
   end;
 
 var
+
+{$IF (LCL_FULLVERSION < 4060000)}
+   handle : THandle;  //deprecated on Laz 4.6
+{$ELSE}
+   handle : TLCLHandle;
+{$ENDIF}
   dmData : TdmData;
-  handle : THandle;
   reg    : TRegExpr;
   MemNR  : array of integer;
 
@@ -523,26 +528,7 @@ begin
   mQ.ExecSQL;
   trmQ.Commit;
 
-  PrepareEmptyLogUploadStatusTables(mQ,trmQ);
-  {
-  trmQ.StartTransaction;
-  mQ.SQL.Text := 'insert into log_changes (id,cmd) values(1,'+QuotedStr(C_ALLDONE)+')';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-
-  mQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HAMQTH)+',1)';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-
-  mQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_CLUBLOG)+',1)';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-
-  mQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HRDLOG)+',1)';
-  if fDebugLevel>=1 then Writeln(mQ.SQL.Text);
-  mQ.ExecSQL;
-  trmQ.Commit;
-  }
+  PrepareEmptyLogUploadStatusTables(mQ);
 
   RefreshLogList(nr)
 end;
@@ -1202,8 +1188,6 @@ begin
 
   fDebugLevel := GetDebugLevel;
 
-  Writeln('');
-  Writeln('Cqrlog Ver:',cVERSION,' Date:',cBUILD_DATE);
   Writeln('**** DEBUG LEVEL ',fDebugLevel,' ****');
   if fDebugLevel=0 then
    Begin
@@ -1498,8 +1482,36 @@ var
   changed : Integer;
   sWAZ, sITU : String;
   rx_freq : String;
+  QRbefore : String;
 begin
   Q.Close;
+  if trQ.Active then trQ.Rollback;
+
+  {
+  OH1KH fix:
+   Check first if old qsl_r has been "" or "!"
+   and if it is now something else ("Q") user has edited qsl received
+   Then we need to add also qslr_date here.
+
+   It does not happen here but if it is done via QSOlist/Group edit
+   the date is added as should
+  }
+  Q.SQL.Text := 'select qsl_r, current_date from cqrlog_main where id_cqrlog_main = ' + IntToStr(idx);
+  trQ.StartTransaction;
+  Q.Open;
+  QRbefore:=Q.Fields[0].AsString;
+  Q.Close;
+  if trQ.Active then trQ.Rollback;
+  if (((QRbefore='') or (QRbefore='!')) and (qsl_r='Q')) then
+     Begin
+      Q.SQL.Text :='UPDATE cqrlog_main set qslr_date=current_date';
+      trQ.StartTransaction;
+      Q.ExecSQL;
+      trQ.Commit;
+      Q.Close;
+     end;
+
+
   if trQ.Active then trQ.Rollback;
   band  := dmUtils.GetBandFromFreq(CurrToStr(freq));
   state := copy(state,1,4);
@@ -3058,25 +3070,7 @@ begin
 
       if old_version < 8 then
       begin
-        PrepareEmptyLogUploadStatusTables(Q1,trQ1);
-        {
-        trQ1.StartTransaction;
-        Q1.SQL.Text := 'insert into log_changes (id,cmd) values(1,'+QuotedStr(C_ALLDONE)+')';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-
-        Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HAMQTH)+',1)';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-
-        Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_CLUBLOG)+',1)';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-
-        Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_HRDLOG)+',1)';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
-        Q1.ExecSQL;
-        trQ1.Commit}
+        PrepareEmptyLogUploadStatusTables(Q1);
       end;
 
       if old_version < 9 then
@@ -3310,11 +3304,99 @@ begin
               end;
       end;
 
+      if (old_version < 20) then   //changes to current log for QRZlog usage
+            begin
+              trQ1.StartTransaction;
+              Q1.SQL.Text := 'DROP TABLE IF EXISTS  id_store';
+              if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              Q1.SQL.Clear;
+              Q1.SQL.Add('CREATE TABLE id_store (');
+              Q1.SQL.Add('  id int NOT NULL AUTO_INCREMENT PRIMARY KEY,');
+              Q1.SQL.Add('  id_cqrlog_main int(11) NULL,');
+              Q1.SQL.Add('  qrz_logid varchar(20) NULL');
+              Q1.SQL.Add(') COLLATE '+QuotedStr('utf8_bin')+';');
+              if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              Q1.SQL.Text := 'CREATE UNIQUE INDEX id_cqrlog_main ON id_store(id_cqrlog_main)';
+              if fDebugLevel>=1 then
+                 Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              trQ1.Commit;
+
+              //check there is rows in table first
+              trQ1.StartTransaction;
+              Q1.SQL.Text := 'select exists (select 1 from upload_status)';
+              Q1.Open;
+              max := Q1.Fields[0].AsInteger;
+              Q1.Close;
+              trQ1.Commit;
+
+              if max=1 then  //there are rows  We can add one for QRZlog
+                 Begin
+                  //Make sure we do not create duplicate line with logname QRZLog (as we can not use "insert into if not exist")
+                  trQ1.StartTransaction;
+                  Q1.SQL.Text := 'select count(logname) from upload_status where logname="QRZLog"';
+                  Q1.Open;
+                  max := Q1.Fields[0].AsInteger;
+                  Q1.Close;
+                  trQ1.Commit;
+
+                  if max=0 then
+                   Begin
+                    trQ1.StartTransaction;
+                    Q1.SQL.Text := 'select max(id) from log_changes';
+                    Q1.Open;
+                    max := Q1.Fields[0].AsInteger;
+                    Q1.Close;
+                    Q1.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_QRZLOG)+','+IntToStr(max)+')';
+                    if fDebugLevel>=1 then
+                       Writeln(Q1.SQL.Text);
+                    Q1.ExecSQL;
+                    trQ1.Commit;
+                   end;
+                 end;
+
+              trQ1.StartTransaction;
+              Q1.SQL.Text := 'ALTER table db_version ADD COLUMN IF NOT EXISTS stop_trigs SMALLINT DEFAULT 0';
+              if fDebugLevel>=1 then
+                                Writeln(Q1.SQL.Text);
+              Q1.ExecSQL;
+              trQ1.Commit;
+
+              Q1.SQL.Text := 'select count(trigger_name) as count from information_schema.triggers where trigger_schema = '+ QuotedStr(dmData.DBName);
+               if fDebugLevel>=1 then
+                   Writeln(Q1.SQL.Text);
+               trQ1.StartTransaction;
+               Q1.Open;
+               max:=Q1.Fields[0].AsInteger;
+               Q1.Close;
+               trQ1.Rollback;
+
+               if (max > 0 ) then //recreate triggers
+                Begin
+                trQ1.StartTransaction;
+                Q1.SQL.Text := '';
+                for max:=0 to dmData.scOnlineLogTriggers.Script.Count-1 do
+                begin
+                  if Pos('$', dmData.scOnlineLogTriggers.Script.Strings[max]) = 0 then
+                    Q1.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[max])
+                  else begin
+                    if fDebugLevel>=1 then
+                       Writeln(Q1.SQL.Text);
+                    Q1.ExecSQL;
+                    Q1.SQL.Text := ''
+                  end
+                end;
+                trQ1.Commit;
+                end;
+            end;
+
       if TableExists('view_cqrlog_main_by_callsign') then
       begin
         trQ1.StartTransaction;
         Q1.SQL.Text := 'drop view view_cqrlog_main_by_callsign';
-        if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
+        if fDebugLevel>=1 then  Writeln(Q1.SQL.Text);
         Q1.ExecSQL;
         trQ1.Commit
       end;
@@ -3343,7 +3425,7 @@ begin
       Q1.SQL.Text := 'update db_version set nr='+IntToStr(cDB_MAIN_VER);
       if fDebugLevel>=1 then Writeln(Q1.SQL.Text);
       Q1.ExecSQL;
-      trQ1.Commit
+      trQ1.Commit;
     except
       on E : Exception do
       begin
@@ -3354,7 +3436,29 @@ begin
       if trQ1.Active then
         trQ1.Rollback
     end
-  end
+  end;
+
+  //if user wants to receate triggers this is safe point
+   if Application.HasOption('fixtriggers') then
+     Begin
+      trQ1.StartTransaction;
+      Q1.SQL.Text := '';
+      for max:=0 to dmData.scOnlineLogTriggers.Script.Count-1 do
+      begin
+        if Pos('$', dmData.scOnlineLogTriggers.Script.Strings[max]) = 0 then
+          Q1.SQL.Add(dmData.scOnlineLogTriggers.Script.Strings[max])
+        else begin
+          if fDebugLevel>=1 then
+             Writeln(Q1.SQL.Text);
+          Q1.ExecSQL;
+          Q1.SQL.Text := ''
+        end
+      end;
+      trQ1.Commit;
+      trQ1.Rollback;
+      Application.MessageBox('Triggers recreated','Info',mb_ok);
+     end;
+
 end;
 
 procedure TdmData.RepairTables(nr : Word);
@@ -3416,7 +3520,7 @@ begin
   finally
     if trQ.Active then trQ.Commit
   end
-//^^ because of bug in  TSQLSript. For the firt time cretreates the database,
+//^^ because of bug in  TSQLSript. For the first time creatreates the database,
 //second database - no effect. My workaround works. Semicolon is a delimitter.
 end;
 
@@ -3834,7 +3938,8 @@ begin
     t.DataBase    := MainCon;
 
     t.SQL.Text := Format(C_SEL,[QuotedStr(fDBName),QuotedStr(TableName), QuotedStr(ConstraintName)]);
-    if fDebugLevel>=1 then Writeln(t.SQL.Text);
+    if fDebugLevel>=1 then
+                      Writeln(t.SQL.Text);
     t.Open;
     Result := t.RecordCount>0
   finally
@@ -3846,14 +3951,9 @@ begin
 end;
 
 
-procedure TdmData.PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery;lTr : TSQLTransaction);
-var
-  Commit : Boolean = False;
-begin
-  Commit := not lTr.Active;
+procedure TdmData.PrepareEmptyLogUploadStatusTables(lQ : TSQLQuery);
 
-  if Commit then
-    lTr.StartTransaction;
+begin
 
   lQ.SQL.Text := 'insert into log_changes (id,cmd) values(1,'+QuotedStr(C_ALLDONE)+')';
   if fDebugLevel>=1 then Writeln(lQ.SQL.Text);
@@ -3875,8 +3975,10 @@ begin
   if fDebugLevel>=1 then Writeln(lQ.SQL.Text);
   lQ.ExecSQL;
 
-  if Commit then
-    lTr.Commit
+  lQ.SQL.Text := 'insert into upload_status (logname, id_log_changes) values ('+QuotedStr(C_QRZLOG)+',1)';
+  if fDebugLevel>=1 then Writeln(lQ.SQL.Text);
+  lQ.ExecSQL;
+
 end;
 
 
@@ -3889,38 +3991,25 @@ const
   C_UPD = 'update cqrlog_main set eqsl_qsl_sent=%s,eqsl_qslsdate=NULL where id_cqrlog_main=%d';
 var
   t  : TSQLQuery;
-  tr : TSQLTransaction;
 begin
   t := TSQLQuery.Create(nil);
-  tr := TSQLTransaction.Create(nil);
   try try
     dmLogUpload.DisableOnlineLogSupport;
 
-    t.Transaction := tr;
-    tr.DataBase   := MainCon;
     t.DataBase    := MainCon;
 
-    tr.StartTransaction;
     t.SQL.Text := Format(C_UPD,[QuotedStr(''),id]);
     if fDebugLevel>=1 then Writeln(t.SQL.Text);
     t.ExecSQL
   except
     on E : Exception do
-    begin
       Writeln(E.Message);
-      tr.Rollback
-    end
   end;
   finally
-    t.Close;
-    if tr.Active then
-      tr.Commit;
 
     if dmLogUpload.LogUploadEnabled then
       dmLogUpload.EnableOnlineLogSupport(False);
-
-    FreeAndNil(t);
-    FreeAndNil(tr)
+    t.Free;
   end
 end;
 
@@ -3933,38 +4022,24 @@ const
   C_UPD = 'update cqrlog_main set lotw_qsls=%s,lotw_qslsdate=NULL where id_cqrlog_main=%d';
 var
   t  : TSQLQuery;
-  tr : TSQLTransaction;
 begin
   t := TSQLQuery.Create(nil);
-  tr := TSQLTransaction.Create(nil);
   try try
     dmLogUpload.DisableOnlineLogSupport;
 
-    t.Transaction := tr;
-    tr.DataBase   := MainCon;
     t.DataBase    := MainCon;
 
-    tr.StartTransaction;
     t.SQL.Text := Format(C_UPD,[QuotedStr(''),id]);
     if fDebugLevel>=1 then Writeln(t.SQL.Text);
     t.ExecSQL
   except
     on E : Exception do
-    begin
       Writeln(E.Message);
-      tr.Rollback
-    end
   end;
   finally
-    t.Close;
-    if tr.Active then
-      tr.Commit;
-
     if dmLogUpload.LogUploadEnabled then
       dmLogUpload.EnableOnlineLogSupport(False);
-
-    FreeAndNil(t);
-    FreeAndNil(tr)
+    t.Free;
   end
 end;
 

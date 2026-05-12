@@ -25,6 +25,7 @@ type
   { TfrmMain }
 
   TfrmMain = class(TForm)
+    acMarkAllQrzLog: TAction;
     acNewQSO:    TAction;
     acEditQSO:   TAction;
     acDeleteQSO: TAction;
@@ -88,9 +89,11 @@ type
     acCreateLoadFilter: TAction;
     acCounty: TAction;
     aceQSLImage: TAction;
+    acToggleOnTop: TAction;
     acUploadAllToLoTW: TAction;
     acUploadToAll: TAction;
     acUploadToHrdLog: TAction;
+    acUploadToQrzLog: TAction;
     acUploadToUDPLog: TAction;
     acUploadToClubLog: TAction;
     acUploadToHamQTH: TAction;
@@ -148,6 +151,9 @@ type
     MenuItem110: TMenuItem;
     MenuItem15: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem_MarkAllQrz: TMenuItem;
+    MenuItem_QrzLog: TMenuItem;
+    MenuItem_UploadToQrz: TMenuItem;
     mnuOR: TMenuItem;
     MenuItemStats: TMenuItem;
     MenuItem100: TMenuItem;
@@ -331,6 +337,7 @@ type
     ToolButton35 : TToolButton;
     ToolButton36 : TToolButton;
     ToolButton37: TToolButton;
+    ToolButton38: TToolButton;
     toolMain:   TToolBar;
     ToolButton1: TToolButton;
     ToolButton10: TToolButton;
@@ -361,6 +368,9 @@ type
     procedure acMarkAllHamQTHExecute(Sender: TObject);
     procedure acMarkAllHrdLogExecute(Sender: TObject);
     procedure acMarkAllUDPLogExecute(Sender: TObject);
+    procedure acMarkAllQrzLogExecute(Sender: TObject);
+    procedure acToggleOnTopExecute(Sender: TObject);
+    procedure acUploadToQrzLogExecute(Sender: TObject);
     procedure acPnlDetailsExecute(Sender: TObject);
     procedure acQRZExecute(Sender: TObject);
     procedure acQSLImageExecute(Sender: TObject);
@@ -474,7 +484,7 @@ type
     procedure mnuSMDClick(Sender: TObject);
     procedure pnlButtonsClick(Sender: TObject);
     procedure tmrTimeTimer(Sender: TObject);
-    procedure tmrUploadAllTimer(Sender: TObject);
+  //  procedure tmrUploadAllTimer(Sender: TObject);
   private
     InRefresh  : Boolean;
     WhatUpNext : TWhereToUpload;
@@ -693,32 +703,6 @@ begin
   sbMain.Panels[0].Text :=uVersion.cBUILD_DATE;
 end;
 
-procedure TfrmMain.tmrUploadAllTimer(Sender: TObject);
-begin
-  if (not frmLogUploadStatus.thRunning) then
-  begin
-    case WhatUpNext of
-      upHamQTH :  begin
-                    frmLogUploadStatus.UploadDataToHamQTH;
-                    WhatUpNext := upClubLog
-                  end;
-      upClubLog : begin
-                    frmLogUploadStatus.UploadDataToClubLog;
-                    WhatUpNext := upHrdLog
-                  end;
-      upHrdLog  : begin
-                    frmLogUploadStatus.UploadDataToHrdLog;
-                    WhatUpNext := upUDPLog
-                  end;
-      upUDPLog  : begin
-                    frmLogUploadStatus.UploadDataToUDPLog;
-                    tmrUploadAll.Enabled := False
-                  end;
-    end //case
-  end
-end;
-
-
 procedure TfrmMain.acNewQSOExecute(Sender: TObject);
 begin
   frmNewQSO.Caption := dmUtils.GetNewQSOCaption('New QSO');
@@ -840,25 +824,53 @@ end;
 
 procedure TfrmMain.FormKeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
 begin
-  if key = VK_F2 then  //why hotkeys doesn't work?
-    acNewQSO.Execute;
-  if key = VK_F6 then
-    acCallBook.Execute;
-  if (Shift = [ssAlt]) and (key = VK_F) then
+
+  if key = VK_F2 then                                    //VK_F2
+    begin
+     acNewQSO.Execute;
+     Key:=0;
+     Exit;
+    end;
+  if key = VK_F6 then                                    //VK_f6
+    begin
+     acCallBook.Execute;
+     key:=0;
+     Exit;
+    end;
+
+ if (Shift = [ssCTRL]) then                              //Ctrl+ key
+ begin
+  if (Key = VK_N) then                                   //VK_N
+  begin
+    mnuDoNotSendClick(nil);
+    key := 0;
+    Exit;
+  end;
+   if (key = VK_H) then                                  //VK_H
+  begin
+    ShowHelp;
+    key := 0;
+    Exit;
+  end;
+  if (key = VK_U) then                                   //VK_U
+      begin
+        if frmLogUploadStatus.Showing then
+            frmLogUploadStatus.Hide;
+        key := 0;
+        Exit;
+      end;
+ end;
+
+ if (Shift = [ssAlt]) then                              //Alt+ key
+ begin
+  if (key = VK_F) then                                  //VK_F
   begin
     dmUtils.EnterFreq;
     key := 0;
+    Exit;
   end;
-  if (Shift = [ssCTRL]) and (Key = VK_N) then
-  begin
-    mnuDoNotSendClick(nil);
-    key := 0
-  end;
-   if ((Shift = [ssCtrl]) and (key = VK_H)) then
-  begin
-    ShowHelp;
-    key := 0
-  end;
+ end;
+
 end;
 
 procedure TfrmMain.mnuOQRSClick(Sender : TObject);
@@ -905,8 +917,11 @@ end;
 
 procedure TfrmMain.acCallBookExecute(Sender: TObject);
 begin
+  if (frmCallbook = nil) then
+                     frmCallbook:= TfrmCallbook.Create(nil);
   frmCallbook.edtCall.Text := dmData.qCQRLOG.FieldByName('callsign').AsString;
-  frmCallbook.ShowModal
+  frmCallbook.ShowModal;
+  FreeAndNil(frmCallbook);
 end;
 
 procedure TfrmMain.FormActivate(Sender: TObject);
@@ -1334,46 +1349,61 @@ begin
 end;
 
 procedure TfrmMain.MenuItem107Click(Sender: TObject);
+
+const
+  C_ARE_YOU_SURE =  'if you use MORE THAN ONE ONLINE LOG some qsos may'+LineEnding+
+                    'leave UNUPLOADED.'+LineEnding+
+                    'Be sure that ALL Online Logs are up to date before issuing this'+LineEnding+
+                    'command or be prepared to manually fix them later.'+LineEnding+LineEnding+
+                    'Are you sure you want to get log_changes cleaned?';
 var
   s: PChar;
 
-  Procedure RemoveTriggers;
+Procedure CleanLogChanges;
    Begin
     dmLogUpload.DisableOnlineLogSupport;
     dmLogUpload.EnableOnlineLogSupport;
-    Application.MessageBox('Triggers removed','Info ...',mb_ok + mb_IconInformation);
+    Application.MessageBox(PChar('log_changes cleaned.'+LineEnding+
+                                 'If you want also recreate upload triggers'+LineEnding+
+                                  'start Cqrlog from command console as:'+LineEnding+LineEnding+
+                                  'cqrlog --fixtriggers'),'Info',Mb_Ok);
    end;
 
 begin
   if not (cqrini.ReadBool('OnlineLog','HaUP',False)
           or cqrini.ReadBool('OnlineLog','ClUP',False)
-          or cqrini.ReadBool('OnlineLog','HrUP',False) ) then
+          or cqrini.ReadBool('OnlineLog','HrUP',False)
+          or cqrini.ReadBool('OnlineLog','UdUP',False)
+          or cqrini.ReadBool('OnlineLog','QrzUP',False)) then
      Begin
        //warn: none of uploads selected
-       Application.MessageBox('You do not have any log uploads enabled!','Info ...',mb_ok + mb_IconInformation);
+       s:= 'You do not have any log uploads enabled!'+LineEnding+LineEnding+
+           'If you have just disabled them all because of problems'+LineEnding+
+           'you need to enable at least one to get log_changes cleaned.';
+       Application.MessageBox(s,'Info',mb_ok + mb_IconInformation);
        exit
      end
    else
      Begin
        if not (cqrini.ReadBool('OnlineLog','HaUpOnline',False)
            or cqrini.ReadBool('OnlineLog','ClUpOnline',False)
-           or cqrini.ReadBool('OnlineLog','HrUpOnline',False) ) then
+           or cqrini.ReadBool('OnlineLog','HrUpOnline',False)
+           or cqrini.ReadBool('OnlineLog','UdUpOnline',False)
+           or cqrini.ReadBool('OnlineLog','QrzUpOnline',False)) then
          Begin
            //Warn: none of online uploads
-           s:= 'You do not have any immediately uploads active'+LineEnding+LineEnding+
-               'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
-               'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
-               'Are you SURE you want to remove ALL upload triggers?';
+           s:= 'You do not have any immediately uploads active.'+LineEnding+LineEnding+ C_ARE_YOU_SURE;
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
-            RemoveTriggers;
+            CleanLogChanges;
            exit;
+         end
+        else
+         Begin
+          s:= C_ARE_YOU_SURE;
+          if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
+           CleanLogChanges;
+          exit;
          end;
-        s:= 'Removing ALL upload triggers MAY GIVE UNEXPECTED RESULTS'+LineEnding+
-            'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
-            'Are you sure you want to remove ALL upload triggers?';
-        if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idYes then
-         RemoveTriggers;
-        exit;
      end;
 end;
 
@@ -1808,7 +1838,26 @@ begin
       dbgrdMain.Options:=[dgTitles,dgIndicator,dgColumnResize,dgColumnMove,dgColLines,dgRowLines,dgTabs,dgRowSelect,dgAlwaysShowSelection,dgConfirmDelete,dgCancelOnExit,dgMultiselect];
   end;
 end;
-
+ 
+procedure TfrmMain.acToggleOnTopExecute(Sender: TObject);
+var
+   OnTop :boolean;
+begin
+  OnTop :=  cqrini.ReadBool('Main', 'ToggleOnTop', false);
+  //called from formShow (with nil) just sets saved value.
+  if Sender <> nil then  OnTop := not OnTop;
+  cqrini.WriteBool('Main', 'ToggleOnTop', OnTop);
+  if OnTop then
+  begin
+    ToolButton38.ImageIndex:=18;
+    frmMain.FormStyle:=fsStayOnTop;
+  end
+ else
+  Begin
+      ToolButton38.ImageIndex:=17;
+      frmMain.FormStyle:=fsNormal;
+  end;
+end;
 procedure TfrmMain.acCountyExecute(Sender: TObject);
 begin
   frmCountyStat := TfrmCountyStat.Create(frmNewQSO);
@@ -2461,6 +2510,7 @@ begin
   mnuShowDetails.Checked := pnlDetails.Visible;
   //Sets AutoSizeColumns to saved value
   acAutoSizeColumnsExecute(nil);
+  acToggleOnTopExecute(nil);
   idlist:='';
   Self.Caption:=dmUtils.GetNewQSOCaption('');
 end;
@@ -2811,5 +2861,14 @@ function TfrmMain.CalcQrb(Myloc,loc:string;showUnits:boolean):string;
      Result := qrb;
   end;
 
+procedure TfrmMain.acMarkAllQrzLogExecute(Sender: TObject);
+begin
+  dmLogUpload.MarkAsUploaded(C_QRZLOG)
+end;
+
+procedure TfrmMain.acUploadToQrzLogExecute(Sender: TObject);
+begin
+  frmLogUploadStatus.UploadDataToQrzLog
+end;
 end.
 

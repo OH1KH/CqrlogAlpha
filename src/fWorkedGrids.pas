@@ -53,16 +53,12 @@ type
     procedure MarkGrid(LocGrid: string; Cfmd: boolean; MCanvas: TCanvas;
       SubBase: boolean);
     procedure MapChangeBounds(Map:Timage);
-  public
-    { public declarations }
     procedure ToRigMode(mode: string);
     procedure ToRigBand(band: string);
     function RecordCount: string;
-    function WkdMainGrid(loc, band, mode: string): integer;
-    function WkdGrid(loc, band, mode: string): integer;
-    function WkdCall(call, band, mode: string): integer;
-    function WkdState(state, band, mode: string): integer;
-    function GridOK(Loc: string): boolean;
+
+  public
+    { public declarations }
     procedure UpdateMap;
   end;
 
@@ -71,27 +67,27 @@ const
   SubMap  : Boolean = true;
 var
   frmWorkedGrids: TfrmWorkedGrids; //Main form
-  MaxRowId,                    //rows in table (Number of qsos in log database)
-  BandQsoCount,                //Number of qsos on selected band
-  FullQsoCount,                  //Number of all qsos
-  LogTable,                    //Table name found from database file (own call ad locator)
-  LogBand,                     //Band that is selected for worked locators
-  LogSave,                     //Default File name for saving image
-  LockMainGrid: string;    //first 2 letters of locator grid clicked from map
-  MouseX, MouseY,              //Mouse position on loc map rounded to grids up/right corner
-  MainGridCount,               //Number of Maingrids (achrs) from query result
-  GridCount: integer;    //Number of subgrids (4chrs) from query result
-  Changes: boolean;   //changes in rig mode/band
-  daylimit : String;  //sql extension when log seek wB4 limited from preferences
+  MaxRowId,                        //rows in table (Number of qsos in log database)
+  BandQsoCount,                    //Number of qsos on selected band
+  FullQsoCount,                    //Number of all qsos
+  LogTable,                        //Table name found from database file (own call ad locator)
+  LogBand,                         //Band that is selected for worked locators
+  LogSave,                         //Default File name for saving image
+  LockMainGrid: string;            //first 2 letters of locator grid clicked from map
+  MouseX, MouseY,                  //Mouse position on loc map rounded to grids up/right corner
+        MainGridCount,             //Number of Maingrids (achrs) from query result
+  GridCount: integer;              //Number of subgrids (4chrs) from query result
+  Changes: boolean;                //changes in rig mode/band
+  daylimit : String;               //sql extension when log seek wB4 limited from preferences
   wb4c,
   wb4l,
-  logname  : string;       //previous states of settings for autoupdate.
+  logname  : string;               //previous states of settings for autoupdate.
   wb4lc,
   wb4cc    : boolean;
   LocalDbg : boolean;
-  SubW     : integer;   //subgrid size on map (in pixels)
+  SubW     : integer;              //subgrid size on map (in pixels)
   SubH     : integer;
-  TrueSizeW,            //streched image pointing area
+  TrueSizeW,                       //streched image pointing area
   TrueSizeH:integer ;
   BmpTmp   : TBitmap;
 
@@ -103,13 +99,6 @@ uses fNewQSO, fTRXControl, dData, dUtils, uMyIni,fContest;
 { TfrmWorkedGrids }
  //441H      753W
 
-function TfrmWorkedGrids.GridOK(Loc: string): boolean;
-//works with 4 or 6 chr locators, but fails with special callsigns that look like locator -> OH60AB
-begin
-  Result := false;
-    if ((Length(Loc) = 4) or (Length(Loc) = 6)) then
-        Result := dmUtils.IsLocOK(Loc);
-end;
 
 procedure TfrmWorkedGrids.ToRigMode(mode: string);
 var
@@ -170,252 +159,9 @@ begin
     if (RecordCount = '') then
       RecordCount := '0';
     dmData.W1.Close;
-
   finally
     dmData.trW1.Rollback;
   end;
-end;
-
-function TfrmWorkedGrids.WkdMainGrid(loc, band, mode: String): integer;
-//returns 0=not wkd
-//        1=main grid this band and mode
-//        2=main grid this band but NOT this mode
-//        3=main grid any other band/mode
-
-var
-  i : integer;
-  L2,
-  L4: String;
-
-  Begin
-    if LocalDbg then Writeln('Start WkdMainGrid');
-    WkdMainGrid := 0;
-    L4:= copy(loc, 1, 4);
-    L2:= copy(loc, 1, 2);
-    if cqrini.ReadBool('wsjt','wb4CLoc', False) then
-              daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4locdate','1900-01-01')) //default date check all qsos
-       else
-              daylimit :='';
-
-    dmData.W.Close;
-    if dmData.trW.Active then dmData.trW.Rollback;
-
-    try
-      dmData.W.SQL.Text :='select count(loc) as sumMG from '+LogTable+
-                          ' where loc like '+QuotedStr(L2+'%')+
-                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
-                          'union all '+
-                          'select count(loc) from '+LogTable+
-                          ' where loc like '+QuotedStr(L2+'%')+
-                          ' and band='+QuotedStr(band)+daylimit+
-                          'union all '+
-                          'select count(loc) from '+LogTable+
-                          ' where loc like '+QuotedStr(L2+'%')+daylimit;
-
-
-      if LocalDbg then Write('Main loc query: ');
-      dmData.W.Open;
-      i := 1;
-      dmData.W.First;
-      while not dmData.W.Eof do
-                begin
-                 if (dmData.W.Fields.FindField('sumMG')<> nil) then
-                    Begin
-                       if (dmData.W.FieldByName('sumMG').AsInteger > 0 ) and (WkdMainGrid = 0) then WkdMainGrid := i;
-                       if LocalDbg then writeln(dmData.W.FieldByName('sumMG').AsInteger);
-                    end;
-                 inc(i);
-                 dmData.W.Next;
-                end;
-       dmData.W.Close;
-    finally
-      dmData.trW.Rollback;
-    end;
-     if LocalDbg then  Writeln('WkdMainGrid is:', WkdMainGrid);
-  end;
-
-function TfrmWorkedGrids.WkdGrid(loc, band, mode: String): integer;
-
-//returns 0=not wkd
-//        1=full grid this band and mode
-//        2=full grid this band but NOT this mode
-//        3=full grid any other band/mode
-//        4=main grid this band and mode
-//        5=main grid this band but NOT this mode
-//        6=main grid any other band/mode
-
-var
-  i : integer;
-  L2,
-  L4: String;
-
-begin
-  if LocalDbg then Writeln('Start WkdGrid');
-  WkdGrid := 0;
-  L4:= copy(loc, 1, 4);
-  L2:= copy(loc, 1, 2);
-  if cqrini.ReadBool('wsjt','wb4CLoc', False) then
-            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4locdate','1900-01-01')) //default date check all qsos
-     else
-            daylimit :='';
-
-  dmData.W.Close;
-  if dmData.trW.Active then dmData.trW.Rollback;
-
-  try
-    dmData.W.SQL.Text := 'select count(loc) as sumG from '+LogTable+
-                          ' where loc like '+QuotedStr(L4+'%')+
-                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
-                          'union all '+
-                          'select count(loc) from '+LogTable+
-                          ' where loc like '+QuotedStr(L4+'%')+
-                          ' and band='+QuotedStr(band)+daylimit+
-                          'union all '+
-                          'select count(loc) from '+LogTable+
-                          ' where loc like '+QuotedStr(L4+'%')+daylimit+
-                          'union all '+
-                          'select count(loc) from '+LogTable+
-                          ' where loc like '+QuotedStr(L2+'%')+
-                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
-                          'union all '+
-                          'select count(loc) from '+LogTable+
-                          ' where loc like '+QuotedStr(L2+'%')+
-                          ' and band='+QuotedStr(band)+daylimit+
-                          'union all '+
-                          'select count(loc) from '+LogTable+
-                          ' where loc like '+QuotedStr(L2+'%')+daylimit ;
-
-    if LocalDbg then Write('loc query: ');
-    dmData.W.Open;
-    i := 1;
-    dmData.W.First;
-    while not dmData.W.Eof do
-              begin
-                if (dmData.W.Fields.FindField('sumG')<> nil) then
-                  Begin
-                    if (dmData.W.FieldByName('sumG').AsInteger > 0 ) and (WkdGrid = 0) then WkdGrid := i;
-                    if LocalDbg then writeln(dmData.W.FieldByName('sumG').AsInteger);
-                  end;
-               inc(i);
-               dmData.W.Next;
-              end;
-     dmData.W.Close;
-  finally
-    dmData.trW.Rollback;
-  end;
-   if LocalDbg then  Writeln('WkdGrid is:', WkdGrid);
-end;
-
-function TfrmWorkedGrids.WkdCall(call, band, mode: string): integer;
-//returns 0=not wkd
-//        1= this band and mode
-//        2=this band but NOT this mode
-//        3=any other band or mode
-
-var
-  i : integer;
-  daylimit : String;
-
-begin
-  if LocalDbg then Writeln('Start WkdCall');
-  //in case we were called from contest form open
-  if ((frmContest.Showing) and ((frmContest.rbDupeCheck.Checked) or (frmContest.rbNoMode4Dupe.Checked)))
-      then
-            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('frmContest', 'DupeFrom', '1900-01-01')) //default date check all qsos
-   else
-     Begin
-        if cqrini.ReadBool('wsjt','wb4CCall', False) then
-            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4Calldate','1900-01-01'))
-          else
-            daylimit :='';
-     end;
-
-  WkdCall := 0;
-  dmData.W.Close;
-  if dmData.trW.Active then dmData.trW.Rollback;
-  try
-     dmData.W.SQL.Text := 'select count(callsign) as sumCA from '+LogTable+
-                          ' where callsign='+QuotedStr(call)+
-                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
-                          'union all '+
-                          'select count(callsign) from '+LogTable+
-                          ' where callsign='+QuotedStr(call)+
-                          ' and band='+QuotedStr(band)+daylimit+
-                          'union all '+
-                          'select count(callsign) from '+LogTable+
-                          ' where callsign='+QuotedStr(call)+daylimit;
-
-    if LocalDbg then Write('call query: ');
-    dmData.W.Open;
-    i := 1;
-    dmData.W.First;
-    while not dmData.W.Eof do
-              begin
-               if (dmData.W.Fields.FindField('sumCA')<> nil) then
-                    Begin
-                         if (dmData.W.FieldByName('sumCA').AsInteger > 0 ) and (WkdCall = 0) then WkdCall := i;
-                         if LocalDbg then writeln(dmData.W.FieldByName('sumCA').AsInteger);
-                    end;
-               inc(i);
-               dmData.W.Next;
-              end;
-    dmData.W.Close;
-    finally
-      dmData.trW.Rollback;
-    end;
-  if LocalDbg then  Writeln('WkdCall is:', WkdCall);
-end;
-function TfrmWorkedGrids.WkdState(state, band, mode: string): integer;
-//returns 0=not wkd
-//        1= this band and mode
-//        2=this band but NOT this mode
-//        3=any other band or mode
-
-var
-  i : integer;
-  daylimit : String;
-
-begin
-  if LocalDbg then Writeln('Start WkdState');
-  if cqrini.ReadBool('wsjt','wb4CCall', False) then
-            daylimit := ' and qsodate >= '+QuotedStr(cqrini.ReadString('wsjt', 'wb4Calldate','1900-01-01')) //default date check all qsos
-     else
-            daylimit :='';
-
-  WkdState := 0;
-  dmData.W.Close;
-  if dmData.trW.Active then dmData.trW.Rollback;
-  try
-     dmData.W.SQL.Text := 'select count(state) as sumST from '+LogTable+
-                          ' where state='+QuotedStr(state)+
-                          ' and band='+QuotedStr(band)+' and mode='+QuotedStr(mode)+daylimit+
-                          'union all '+
-                          'select count(state) from '+LogTable+
-                          ' where state='+QuotedStr(state)+
-                          ' and band='+QuotedStr(band)+daylimit+
-                          'union all '+
-                          'select count(state) from '+LogTable+
-                          ' where state='+QuotedStr(state)+daylimit;
-
-    if LocalDbg then Write('state query: ');
-    dmData.W.Open;
-    i := 1;
-    dmData.W.First;
-    while not dmData.W.Eof do
-              begin
-               if (dmData.W.Fields.FindField('sumST')<> nil) then
-                    Begin
-                         if (dmData.W.FieldByName('sumST').AsInteger > 0 ) and (WkdState = 0) then WkdState := i;
-                         if LocalDbg then writeln(dmData.W.FieldByName('sumST').AsInteger);
-                    end;
-               inc(i);
-               dmData.W.Next;
-              end;
-    dmData.W.Close;
-    finally
-      dmData.trW.Rollback;
-    end;
-  if LocalDbg then  Writeln('WkdState is:', WkdState);
 end;
 
 //mark grid worked with confirmed status (red/green)
@@ -437,7 +183,7 @@ begin
   Grid1 := 1;
   Grid2 := 2;
 
-  if not GridOK(LocGrid) then
+  if not dmUtils.IsLoc46(LocGrid) then
     exit;  // all (4chr) must be valid
 
   if SubBase then

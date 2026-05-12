@@ -912,7 +912,7 @@ There are no known dependencies issues.<br><br>
     CQRLOG supports online log upload to <a href="http://HamQTH.com">HamQTH</a>,
     <a href="https://secure.clublog.org/loginform.php">ClubLog.org</a>,
     <a href="http://hrdlog.net/">HRDLOG.net</a> and
-    <a href="https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/#contact">N1MM+ UDP contact messages</a><br>
+    <a href="https://n1mmwp.hamdocs.com/appendices/external-udp-broadcasts/#contact">N1MM+ UDP contact messages</a><br><br>
     <img src="img/h1116.png"><br><br>
     Both ClubLog and HamQTH need a username and password, Clublog also needs the email address
     used when you registered. HRDLog.net needs only user name and the code you got by e-mail.
@@ -928,26 +928,33 @@ There are no known dependencies issues.<br><br>
 
     <a name=ch8><h3>How to get it to work?</h3></a>
     <ul>
-        <li>check if you have set correct username, password (email, Code)</li>
+        <li>check if you have set correct username, password (email, Code, API key)</li>
         <li>in case Url address of online log API has changed you are able to change it here</li>
         <li>export all data from the log to ADIF file</li>
         <li>import this adif file to the website of online log you are going to use
             (if you are using HamQTH, please wait untill the email about a successful import arrives)
         </li>
-        <li>open QSO list window, click to <strong>Online log</strong> menu and choose
+        <li>open QSOlist window, click to <strong>Online log</strong> menu and choose
             <strong>Mark QSO as uploaded to all logs</strong>, CQRLOG marks all QSO as uploaded
         </li>
-    </ul>
+        <li>If your online log ever gets out of sync repeat above (beginning from "export all data...."). If that does not help try also <strong>Online log</strong> menu
+            <strong>Remove all upload triggers</strong> that is a bit stronger command.
+        </li><ul> <li>Few notes about those commands: </li>  
+    		  <li>Both commands clean up database table 'log_changes'. That means you loose all pending uploads if you have several online logs in use.
+    		    <br> If one fails and you need to use commands <strong>be sure that all used online logs are manually updated before issuing commands</strong>.</li>
+    		  <li> If you use QRZLog command <strong>Mark QSO as uploaded to all logs</strong> will clean also QRZlog qso IDs that do not point to any QSOs in log any more.</li>
+    		  <li>If you have worked long time with online logs, everything works fine and logs are up to date you can still use <strong>Mark QSO as uploaded to all logs</strong> to clean table 'log_changes'
+    		     <br> as it may grow lot bigger than your actual log when time passes by. There is no harm using it when all online logs are up to date.</li>
+    </ul><br>
     That's all, Now if you insert/edit or delete a QSO, it will also be uploaded to the online log.
     <br><br>
-    <strong>Close the "Status of log upload" window after successful upload</strong>
-    if you don't want to have Log upload status window visible, check this option and
-    windows will be closed after upload to online log is finished.
+    Check <strong>Close the "Status of log upload" window after successful upload</strong>
+    if you don't want to have Log upload status window visible. This option closes status window after upload to online log(s) is finished.
     <br><br>
-    <strong>Ignore changes caused by LoTW/eQSL upload or download</strong> - every change of
+    Checking <strong>Ignore changes caused by .................</strong> : Every change of
     a qso will cause a new upload to the online log database. Sometimes it can be useful to
-    have the opportunity to disable it when upload/download data to LoTW/eQSL. These changes
-    won't be logged and QSO won't be uploaded to any online log.
+    have the opportunity to disable it when upload/download data to LoTW/eQSL or printig QSls etc.. These changes
+    won't be logged to 'log_changes' and QSO won't be uploaded to any online log.
 </div>
 <p align=center><img src=img/line.png></p>
 <br>

@@ -87,13 +87,14 @@ end;
 procedure TfrmReminder.FormShow(Sender: TObject);
 begin
   dmUtils.LoadWindowPos(Self);
-  lblRemi1.Font.Size:=18;                //this is fixed label
-  lblRemi1.Font.Style:=[fsBold,fsItalic];
   chRemi.Checked      := cqrini.ReadBool('Reminder','chRemi',false);
   chUTRemi.Checked    := cqrini.ReadBool('Reminder','chUTRemi',False);
   RemindTimeSet.Text  := cqrini.ReadString('Reminder','RemindTimeSet','');
   RemindUThour.Text   := cqrini.ReadString('Reminder','RemindUThour','');
   RemiMemo.Lines.Text := cqrini.ReadString('Reminder','RemiMemo','');
+  lblRemi1.Font.Style := [fsBold,fsItalic];
+  lblRemi1.Repaint;
+  lblRemi1.Refresh;
 end;
 
 procedure TfrmReminder.FormKeyUp(Sender : TObject; var Key : Word;
@@ -245,8 +246,7 @@ begin
 
    if (not  chUTRemi.Checked) and (not chRemi.Checked ) then tmrRemi.Enabled := False;
 
-   if frmReminder.Showing then
-                      frmReminder.hide;
+   frmReminder.hide;
 end;
 
 procedure TfrmReminder.chRemiChange(Sender: TObject);

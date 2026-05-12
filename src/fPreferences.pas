@@ -107,6 +107,15 @@ type
     cb30cm: TCheckBox;
     cgLimit: TCheckGroup;
     cbNoKeyerReset: TCheckBox;
+    chkAutoClean: TCheckBox;
+    chkCbSH: TCheckBox;
+    chkLoSH: TCheckBox;
+    chkHrSH: TCheckBox;
+    chkHaSH: TCheckBox;
+    chkClSH: TCheckBox;
+    chkEqSH: TCheckBox;
+    chkPxSH: TCheckBox;
+    chkQrSH: TCheckBox;
     chkSimpleRig: TCheckBox;
     chkNewQsoUdp: TCheckBox;
     chkProfile: TCheckBox;
@@ -126,6 +135,11 @@ type
     chkUdUpEnabled: TCheckBox;
     chkUdUpOnline: TCheckBox;
     chkUdIncExch: TCheckBox;
+    chkQrzUpEnabled: TCheckBox;
+    chkQrzUpOnline: TCheckBox;
+    edtQrzUrl: TEdit;
+    edtQrzApiKey: TEdit;
+    cmbQrzColor: TColorBox;
     chkVoiceR: TCheckBox;
     chkUseHLBuffer: TCheckBox;
     chkUTC2R: TCheckBox;
@@ -658,7 +672,8 @@ type
     GroupBox32: TGroupBox;
     gbOffsets: TGroupBox;
     GroupBox34: TGroupBox;
-    GroupBox47: TGroupBox;
+    grpQRZLog: TGroupBox;
+    grpUDPLog: TGroupBox;
     grpUsrDigitalModes: TGroupBox;
     gbeQSL: TGroupBox;
     grbRigBandWidths: TGroupBox;
@@ -668,9 +683,9 @@ type
     GroupBox41: TGroupBox;
     gbRot1: TGroupBox;
     gbRot2: TGroupBox;
-    GroupBox44: TGroupBox;
-    GroupBox45: TGroupBox;
-    GroupBox46: TGroupBox;
+    grpHamQTHlog: TGroupBox;
+    grpClubLog: TGroupBox;
+    grpHRDlog: TGroupBox;
     gbDXCAlert: TGroupBox;
     GroupBox48: TGroupBox;
     gbK3NGkey: TGroupBox;
@@ -694,6 +709,9 @@ type
     Label13: TLabel;
     lblHamQTHAddr: TLabel;
     lblQrzAddr: TLabel;
+    lblQrzApiKey: TLabel;
+    lblQrzColorDesc: TLabel;
+    lblQrzColorLbl: TLabel;
     lblQrzcqAddr: TLabel;
     lblRot2Host: TLabel;
     lblRot1Name: TLabel;
@@ -1047,6 +1065,14 @@ type
     procedure btnSplitClick(Sender: TObject);
     procedure btnForceMembershipUpdateClick(Sender : TObject);
     procedure cbNoKeyerResetChange(Sender: TObject);
+    procedure chkCbSHClick(Sender: TObject);
+    procedure chkEqSHClick(Sender: TObject);
+    procedure chkLoSHClick(Sender: TObject);
+    procedure chkPxSHClick(Sender: TObject);
+    procedure chkQrSHClick(Sender: TObject);
+    procedure chkHrSHClick(Sender: TObject);
+    procedure chkClSHClick(Sender: TObject);
+    procedure chkHaSHClick(Sender: TObject);
     procedure chkBeamArcLengthExit(Sender: TObject);
     procedure chkBlenByQsoExit(Sender: TObject);
     procedure chkClUpEnabledChange(Sender: TObject);
@@ -1056,6 +1082,7 @@ type
     procedure chkRotControlDebugChange(Sender: TObject);
     procedure chkSimpleRigChange(Sender: TObject);
     procedure chkUdUpEnabledChange(Sender: TObject);
+    procedure chkQrzUpEnabledChange(Sender: TObject);
     procedure chkIgnoreEditChange(Sender: TObject);
     procedure chkIgnoreLoTWChange(Sender: TObject);
     procedure chkIgnoreQSLChange(Sender: TObject);
@@ -1102,7 +1129,11 @@ type
     procedure edtRotCtldPathChange(Sender: TObject);
     procedure edtMinMaxSpeedChange(Sender: TObject);
     procedure edtHexExit(Sender: TObject);
+    procedure rbHamQTHChange(Sender: TObject);
+    procedure rbQRZChange(Sender: TObject);
+    procedure rbQRZCQChange(Sender: TObject);
     procedure RotorParamsChange(Sender: TObject);
+    procedure tabCallbookShow(Sender: TObject);
     procedure tabCWInterfaceExit(Sender: TObject);
     procedure tabModesExit(Sender: TObject);
     procedure tabTRXcontrolEnter(Sender: TObject);
@@ -1196,8 +1227,8 @@ Begin
   Result:= chk;
   if chk then
      begin
-           s:= 'Using this option MAY GIVE UNEXPECTED RESULTS'+LineEnding+
-               'if you use MORE THAN ONE ONLINE LOG'+LineEnding+LineEnding+
+           s:= 'This option disables EVERY Online Log'+#39+'s updating'+LineEnding+
+               'when CHANGE(S) to QSO in local log happens.'+LineEnding+
                'Are you SURE you want to check this?';
            if Application.MessageBox(s,'Question ...', mb_YesNo + mb_IconQuestion) = idNo then
                                                                                            Result:=False;
@@ -1684,6 +1715,7 @@ begin
   cqrini.WriteString('OnlineLog','HrUserName',edtHrUserName.Text);
   cqrini.WriteString('OnlineLog','HrCode',edtHrCode.Text);
   cqrini.WriteInteger('OnlineLog','HrColor',cmbHrColor.Selected);
+  cqrini.WriteString('OnlineLog','HrUrl',edtHrdUrl.Text);
 
   cqrini.WriteBool('OnlineLog','UdUP',chkUdUpEnabled.Checked);
   cqrini.WriteBool('OnlineLog','UdUpOnline',chkUdUpOnline.Checked);
@@ -1691,11 +1723,17 @@ begin
   cqrini.WriteBool('OnlineLog','UdIncExch',chkUdIncExch.Checked);
   cqrini.WriteInteger('OnlineLog','UdColor',cmbUdColor.Selected);
 
+  cqrini.WriteBool('OnlineLog','QrzUP',chkQrzUpEnabled.Checked);
+  cqrini.WriteBool('OnlineLog','QrzUpOnline',chkQrzUpOnline.Checked);
+  cqrini.WriteString('OnlineLog','QrzApiKey',edtQrzApiKey.Text);
+  cqrini.WriteInteger('OnlineLog','QrzColor',cmbQrzColor.Selected);
+  cqrini.WriteString('OnlineLog','QrzUrl',edtQrzUrl.Text);
+
   cqrini.WriteBool('OnlineLog','CloseAfterUpload',chkCloseAfterUpload.Checked);
+  cqrini.WriteBool('OnlineLog','AutoClean',chkAutoClean.Checked);
   cqrini.WriteBool('OnlineLog','IgnoreLoTWeQSL',chkIgnoreLoTW.Checked);
   cqrini.WriteBool('OnlineLog','IgnoreQSL',chkIgnoreQSL.Checked);
   cqrini.WriteBool('OnlineLog','IgnoreEdit',chkIgnoreEdit.Checked);
-  cqrini.WriteString('OnlineLog','HrUrl',edtHrdUrl.Text);
 
   cqrini.WriteString('prop','Url',edtCondxImageUrl.Text);
   cqrini.WriteString('prop','UrlTxt',edtCondxTextUrl.Text);
@@ -1763,7 +1801,7 @@ begin
     frmNewQSO.cmbMode.Text := cmbMode.Text;
   end;
 
-  if (not (chkHaUpEnabled.Checked or chkClUpEnabled.Checked or chkHrUpEnabled.Checked or chkUdUpEnabled.Checked)) then
+  if (not (chkHaUpEnabled.Checked or chkClUpEnabled.Checked or chkHrUpEnabled.Checked or chkUdUpEnabled.Checked or chkQrzUpEnabled.Checked)) then
   begin
     if wasOnlineLogSupportEnabled then
       dmLogUpload.DisableOnlineLogSupport
@@ -1777,8 +1815,9 @@ begin
     end
   end;
 
-  if frmPropagation.Showing then
-    frmPropagation.RefreshPropagation;
+  if (frmPropagation<>nil) then
+     if frmPropagation.Showing then
+        frmPropagation.RefreshPropagation;
 
   frmNewQSO.Op:=edtOperator.text;
   cqrini.WriteString('TMPQSO','OP',edtOperator.text);
@@ -2355,17 +2394,6 @@ begin
   dmMembership.CheckForMembershipUpdate
 end;
 
-procedure TfrmPreferences.chkClUpEnabledChange(Sender: TObject);
-begin
-  if not chkClUpEnabled.Checked then
-                                chkClupOnline.Checked:=False;
-  edtClUserName.Enabled := chkClUpEnabled.Checked;
-  edtClPasswd.Enabled   := chkClUpEnabled.Checked;
-  edtClEmail.Enabled    := chkClUpEnabled.Checked;
-  chkClupOnline.Enabled := chkClUpEnabled.Checked;
-  cmbClColor.Enabled    := chkClUpEnabled.Checked
-end;
-
 procedure TfrmPreferences.chkHamClockChange(Sender: TObject);
 begin
    if chkHamClock.Checked then
@@ -2384,17 +2412,67 @@ begin
   edtHaUserName.Enabled := chkHaUpEnabled.Checked;
   edtHaPasswd.Enabled   := chkHaUpEnabled.Checked;
   chkHaupOnline.Enabled := chkHaUpEnabled.Checked;
-  cmbHaColor.Enabled    := chkHaUpEnabled.Checked
+  cmbHaColor.Enabled    := chkHaUpEnabled.Checked;
+  edtHamQTHurl.Enabled  := chkHaUpEnabled.Checked;
+  if  chkHaupOnline.Checked=False then
+       chkHaSH.Checked  :=false;
+  chkHaSH.Enabled       :=chkHaUpEnabled.Checked;
+end;
+
+procedure TfrmPreferences.chkClUpEnabledChange(Sender: TObject);
+begin
+  if not chkClUpEnabled.Checked then
+                                chkClupOnline.Checked:=False;
+  edtClUserName.Enabled := chkClUpEnabled.Checked;
+  edtClPasswd.Enabled   := chkClUpEnabled.Checked;
+  edtClEmail.Enabled    := chkClUpEnabled.Checked;
+  chkClupOnline.Enabled := chkClUpEnabled.Checked;
+  cmbClColor.Enabled    := chkClUpEnabled.Checked;
+  edtClubLogUrl.Enabled := chkClUpEnabled.Checked;
+  edtClubLogUrlDel.Enabled  := chkClUpEnabled.Checked;
+  edtClubLogUrlBulk.Enabled := chkClUpEnabled.Checked;
+  if  chkClupOnline.Checked=False then
+       chkClSH.Checked  :=false;
+  chkClSH.Enabled       :=chkClUpEnabled.Checked;
+
 end;
 
 procedure TfrmPreferences.chkHrUpEnabledChange(Sender: TObject);
 begin
   if not chkHrUpEnabled.Checked then
-                             chkHrUpOnline.Checked:=False;
+   chkHrUpOnline.Checked:=False;
   edtHrUserName.Enabled := chkHrUpEnabled.Checked;
   edtHrCode.Enabled     := chkHrUpEnabled.Checked;
   chkHrUpOnline.Enabled := chkHrUpEnabled.Checked;
-  cmbHrColor.Enabled    := chkHrUpEnabled.Checked
+  cmbHrColor.Enabled    := chkHrUpEnabled.Checked;
+  edtHrdUrl.Enabled     := chkHrUpEnabled.Checked;
+  if  chkHrUpOnline.Checked=False then
+       chkHrSH.Checked  :=false;
+  chkHrSH.Enabled       :=chkHrUpEnabled.Checked;
+
+end;
+
+procedure TfrmPreferences.chkUdUpEnabledChange(Sender: TObject);
+begin
+  if not  chkUdUpEnabled.Checked then
+                                 chkUdUpOnline.Checked:=False;
+  edtUdAddress.Enabled  := chkUdUpEnabled.Checked;
+  chkUdIncExch.Enabled  := chkUdUpEnabled.Checked;
+  chkUdUpOnline.Enabled := chkUdUpEnabled.Checked;
+  cmbUdColor.Enabled    := chkUdUpEnabled.Checked
+end;
+
+procedure TfrmPreferences.chkQrzUpEnabledChange(Sender: TObject);
+begin
+  if not chkQrzUpEnabled.Checked then
+    chkQrzUpOnline.Checked := False;
+  edtQrzApiKey.Enabled     := chkQrzUpEnabled.Checked;
+  chkQrzUpOnline.Enabled   := chkQrzUpEnabled.Checked;
+  cmbQrzColor.Enabled      := chkQrzUpEnabled.Checked;
+  edtQrzUrl.Enabled        := chkQrzUpEnabled.Checked;
+  if chkQrzUpOnline.Checked = False then
+           chkQrSH.Checked := false;
+  chkQrSH.Enabled          := chkQrzUpEnabled.Checked;
 end;
 
 procedure TfrmPreferences.chkRotControlDebugChange(Sender: TObject);
@@ -2431,16 +2509,6 @@ begin
   //Warn:
    if not chkIgnoreQSL.Focused then exit;//otherwise triggers on settings load
    chkIgnoreQSL.Checked:=WarnCheck(chkIgnoreQSL.Checked)
-end;
-
-procedure TfrmPreferences.chkUdUpEnabledChange(Sender: TObject);
-begin
-  if not  chkUdUpEnabled.Checked then
-                                 chkUdUpOnline.Checked:=False;
-  edtUdAddress.Enabled  := chkUdUpEnabled.Checked;
-  chkUdIncExch.Enabled  := chkUdUpEnabled.Checked;
-  chkUdUpOnline.Enabled := chkUdUpEnabled.Checked;
-  cmbUdColor.Enabled    := chkUdUpEnabled.Checked
 end;
 
 procedure TfrmPreferences.chkPotSpeedChange(Sender: TObject);
@@ -2585,6 +2653,81 @@ begin
     and (cmbIfaceType.ItemIndex = 4) //type is HamLib
      then cbNoKeyerReset.Checked := false; //restart is always needed  when radio changes
   CWKeyerChanged := True
+end;
+
+procedure TfrmPreferences.chkCbSHClick(Sender: TObject);
+begin
+   if  chkCbSH.Checked then
+     Begin
+        if rbHamQTH.Checked then edtCbHamQTHPass.EchoMode := emNormal
+         else edtCbHamQTHPass.EchoMode := emPassword;
+        if rbQRZ.Checked    then edtCbQRZPass.EchoMode    := emNormal
+         else edtCbQRZPass.EchoMode    := emPassword;
+        if rbQRZCQ.Checked  then edtCbQRZCQPass.EchoMode  := emNormal
+         else edtCbQRZCQPass.EchoMode  := emPassword;
+     end
+    else
+     Begin
+        if rbHamQTH.Checked then edtCbHamQTHPass.EchoMode := emPassword;
+        if rbQRZ.Checked    then edtCbQRZPass.EchoMode    := emPassword;
+        if rbQRZCQ.Checked  then edtCbQRZCQPass.EchoMode  := emPassword;
+     end;
+end;
+
+procedure TfrmPreferences.chkEqSHClick(Sender: TObject);
+begin
+  if chkEqSH.Checked then
+      edteQSLPass.EchoMode:=emNormal
+     else
+      edteQSLPass.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkLoSHClick(Sender: TObject);
+begin
+  if chkLoSH.Checked then
+      edtLoTWPass.EchoMode:=emNormal
+     else
+      edtLoTWPass.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkPxSHClick(Sender: TObject);
+begin
+  if chkPxSH.Checked then
+      edtPasswd.EchoMode:=emNormal
+     else
+      edtPasswd.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkQrSHClick(Sender: TObject);
+begin
+   if chkQrSH.Checked then
+      edtQrzApiKey.EchoMode:=emNormal
+     else
+      edtQrzApiKey.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkHrSHClick(Sender: TObject);
+begin
+     if chkHrSH.Checked then
+      edtHrCode.EchoMode:=emNormal
+     else
+      edtHrCode.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkClSHClick(Sender: TObject);
+begin
+    if chkClSH.Checked then
+      edtClPasswd.EchoMode:=emNormal
+     else
+      edtClPasswd.EchoMode:=emPassword;
+end;
+
+procedure TfrmPreferences.chkHaSHClick(Sender: TObject);
+begin
+    if chkHaSH.Checked then
+      edtHaPasswd.EchoMode:=emNormal
+     else
+      edtHaPasswd.EchoMode:=emPassword;
 end;
 
 procedure TfrmPreferences.chkBeamArcLengthExit(Sender: TObject);
@@ -2900,6 +3043,30 @@ var
   CWKeyerChanged := True
 end;
 
+procedure TfrmPreferences.rbHamQTHChange(Sender: TObject);
+begin
+  edtCbHamQThAddr.Enabled:=rbHamQTH.Checked;
+  edtCbHamQTHUser.Enabled:=rbHamQTH.Checked;
+  edtCbHamQTHPass.Enabled:=rbHamQTH.Checked;
+  chkCbSHClick(nil);
+end;
+
+procedure TfrmPreferences.rbQRZChange(Sender: TObject);
+begin
+  edtCbQrzAddr.Enabled:=rbQRZ.Checked;
+  edtCbQRZUser.Enabled:=rbQRZ.Checked;
+  edtCbQRZPass.Enabled:=rbQRZ.Checked;
+  chkCbSHClick(nil);
+end;
+
+procedure TfrmPreferences.rbQRZCQChange(Sender: TObject);
+begin
+  edtCbQrzcqAddr.Enabled:=rbQRZCQ.Checked;
+  edtCbQRZCQUser.Enabled:=rbQRZCQ.Checked;
+  edtCbQRZCQPass.Enabled:=rbQRZCQ.Checked;
+  chkCbSHClick(nil);
+end;
+
 procedure TfrmPreferences.edtPdfFilesExit(Sender: TObject);
 begin
    if ExtractFilePath(edtPdfFiles.Text)='' then
@@ -2997,6 +3164,13 @@ begin
   RotChanged := True;
 end;
 
+procedure TfrmPreferences.tabCallbookShow(Sender: TObject);
+begin
+  rbHamQTHChange(nil);
+  rbQRZChange(nil);
+  rbQRZCQChange(nil);
+end;
+
 procedure TfrmPreferences.tabCWInterfaceExit(Sender: TObject);
 begin
      SaveCWif(CWifLoaded);  //save currently open CW settings
@@ -3007,7 +3181,7 @@ end;
 procedure TfrmPreferences.tabModesExit(Sender: TObject);
 begin
   SaveBandW(BandWNrLoaded); //save currently loaded modes
-  cmbRadioNr.ItemIndex:=cmbRadioModes.ItemIndex;          //select rig in use
+  cmbRadioNr.ItemIndex:=cmbRadioModes.ItemIndex;             //select rig in use
   cmbCWRadio.ItemIndex:=cmbRadioNr.ItemIndex;
 end;
 
@@ -3075,8 +3249,6 @@ begin
     cmbThirdZip.Items.Add(cmbFirstZip.Items[i]);
   end;
   dmData.InsertProfiles(cmbProfiles, False);
-  Top := cqrini.ReadInteger('Pref', 'Top', 20);
-  Left := cqrini.ReadInteger('Pref', 'Left', 20);
   ActPageIdx := cqrini.ReadInteger('Pref', 'ActPageIdx', 0);
 
   edtCall.Text := cqrini.ReadString('Station', 'Call', '');
@@ -3529,13 +3701,12 @@ begin
   edtCbQRZPass.Text     := cqrini.ReadString('CallBook', 'CbQRZPass', '');
   edtCbQRZCQUser.Text   := cqrini.ReadString('CallBook', 'CbQRZCQUser', '');
   edtCbQRZCQPass.Text   := cqrini.ReadString('CallBook', 'CbQRZCQPass', '');
-  rbHamQTH.Checked      := cqrini.ReadBool('Callbook', 'HamQTH', True);
-  rbQRZ.Checked         := cqrini.ReadBool('Callbook', 'QRZ', False);
-  rbQRZCQ.Checked       := cqrini.ReadBool('Callbook', 'QRZCQ', False);
   edtCbHamQTHAddr.Text  := cqrini.ReadString('CallBook', 'CbHamQTHAddr', 'https://www.hamqth.com' );
   edtCbQRZAddr.Text     := cqrini.ReadString('CallBook', 'CbQRZAddr', 'https://xml.qrz.com');
   edtCbQRZCQAddr.Text   := cqrini.ReadString('CallBook', 'CbQRZCQAddr', 'https://ssl.qrzcq.com' );
-
+  rbHamQTH.Checked      := cqrini.ReadBool('Callbook', 'HamQTH', True);
+  rbQRZ.Checked         := cqrini.ReadBool('Callbook', 'QRZ', False);
+  rbQRZCQ.Checked       := cqrini.ReadBool('Callbook', 'QRZCQ', False);
 
   cmbCl10db.Selected        := cqrini.ReadInteger('RBN','10db',clWhite);
   cmbCl20db.Selected        := cqrini.ReadInteger('RBN','20db',clPurple);
@@ -3578,15 +3749,23 @@ begin
 
   chkUdUpEnabled.Checked := cqrini.ReadBool('OnlineLog','UdUP',False);
   chkUdUpOnline.Checked  := cqrini.ReadBool('OnlineLog','UdUpOnline',False);
-  edtUdAddress.Text      := cqrini.ReadString('OnlineLog','UdAddress','');
+  edtUdAddress.Text      := cqrini.ReadString('OnlineLog','UdAddress','127.0.0.1:5444');
   chkUdIncExch.Checked   := cqrini.ReadBool('OnlineLog','UdIncExch',True);
   cmbUdColor.Selected    := cqrini.ReadInteger('OnlineLog','UdColor',clGreen);
   chkUdUpEnabledChange(nil);
 
+  chkQrzUpEnabled.Checked := cqrini.ReadBool('OnlineLog','QrzUP',False);
+  chkQrzUpOnline.Checked  := cqrini.ReadBool('OnlineLog','QrzUpOnline',False);
+  edtQrzApiKey.Text       := cqrini.ReadString('OnlineLog','QrzApiKey','');
+  cmbQrzColor.Selected    := cqrini.ReadInteger('OnlineLog','QrzColor',clTeal);
+  edtQrzUrl.Text          := cqrini.ReadString('OnlineLog','QrzUrl', 'https://logbook.qrz.com/api');
+  chkQrzUpEnabledChange(nil);
+
   chkCloseAfterUpload.Checked := cqrini.ReadBool('OnlineLog','CloseAfterUpload',False);
-  chkIgnoreLoTW.Checked  := cqrini.ReadBool('OnlineLog','IgnoreLoTWeQSL',False);
-  chkIgnoreQSL.Checked   := cqrini.ReadBool('OnlineLog','IgnoreQSL',False);
-  chkIgnoreEdit.Checked  := cqrini.ReadBool('OnlineLog','IgnoreEdit',False);
+  chkAutoClean.Checked        := cqrini.ReadBool('OnlineLog','AutoClean',False);
+  chkIgnoreLoTW.Checked       := cqrini.ReadBool('OnlineLog','IgnoreLoTWeQSL',False);
+  chkIgnoreQSL.Checked        := cqrini.ReadBool('OnlineLog','IgnoreQSL',False);
+  chkIgnoreEdit.Checked       := cqrini.ReadBool('OnlineLog','IgnoreEdit',False);
 
   edtCondxImageUrl.Text      := cqrini.ReadString('prop','Url','http://www.hamqsl.com/solarbrief.php');
   edtCondxTextUrl.Text       := cqrini.ReadString('prop','UrlTxt','https://www.hamqsl.com/solarxml.php' );
@@ -3599,7 +3778,7 @@ begin
   edtHamClockUrl.Text        := cqrini.ReadString('HamClock','url','http://localhost:8080');
   chkHamClock.Checked        := cqrini.ReadBool('HamClock','enable', false);
 
-  wasOnlineLogSupportEnabled := chkHaUpEnabled.Checked or chkClUpEnabled.Checked or chkHrUpEnabled.Checked or chkUdUpEnabled.Checked;
+  wasOnlineLogSupportEnabled := chkHaUpEnabled.Checked or chkClUpEnabled.Checked or chkHrUpEnabled.Checked or chkUdUpEnabled.Checked or chkQrzUpEnabled.Checked;
 
   fraExportPref1.LoadExportPref;
 
@@ -3994,4 +4173,3 @@ end;
 
 
 end.
-

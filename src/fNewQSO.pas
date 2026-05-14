@@ -5223,13 +5223,13 @@ Begin
    edtState.Visible:= not stat;
    if (stat) then
    begin
-        edtDOK.TabOrder := 14;
-        edtState.TabOrder := 30;
+        edtDOK.TabOrder := 17;
+        edtState.TabOrder := 35;
    end
    else
    begin
-        edtDOK.TabOrder := 30;
-        edtState.TabOrder := 14;
+        edtState.TabOrder := 17;
+        edtDOK.TabOrder := 35;
    end;
 end;
 

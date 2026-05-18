@@ -496,7 +496,7 @@ begin
       end; //while not dmLogUpload.Q.Eof do
 
         if (ErrorCode > 0) then
-          ToMainThread('Failed - check reason! (maybe use --debug=1)','')
+          ToMainThread('Failed - check reason! (maybe start with --debug=-256)','')
         else
           Begin
            ToMainThread('Done ...','');

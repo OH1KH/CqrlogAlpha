@@ -1,3 +1,23 @@
+# THIS PAGE IS OUT OF ORDER !! LOOK AT CqrlogImproved INSTEAD
+
+
+https://github.com/OH1KH/CqrlogImproved/tree/main/compiled
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # CqrlogAlpha is a clone based on the work of OK2CQR & OK1RR.
 ## It has over 570 smaller or bigger differences to official Cqrlog.
 ### I am maintaining this software mainly for my own use, but feel free to use/modify it for your own needs by the rules of Open software licence and HamSprit rules.
